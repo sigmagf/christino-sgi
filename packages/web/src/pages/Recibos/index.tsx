@@ -8,7 +8,7 @@ import {
 
 import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
-import { Input, InputMask } from '~/components/Form';
+import { Input } from '~/components/Form';
 import { Layout } from '~/components/Layout';
 import { Pagination } from '~/components/Pagination';
 import { Table } from '~/components/Table';
