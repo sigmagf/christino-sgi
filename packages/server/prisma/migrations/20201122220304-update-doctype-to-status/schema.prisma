@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+model Client {
+  id         String    @id @default(uuid())
+  name       String
+  document   String
+  group      String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+
+  @@map("clients")
+}
+
+model Vehicle {
+  id          String    @id @default(uuid())
+  plate       String
+  renavam     String
+  brandModel  String
+  type        String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @default(now()) @updatedAt
+
+  @@map("vehicles")
+}
+
+model Crv {
+  id         String    @id @default(uuid())
+  clientId   String
+  vehicleId  String
+  issuedOn   DateTime?
+  details    String?
+  status     String
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+
+  client     Client  @relation("crv-client", fields: [clientId], references: [id])
+  vehicle    Vehicle @relation("crv-veichle", fields: [vehicleId], references: [id])
+  
+  @@map("crvs")
+}

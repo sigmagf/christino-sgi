@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "typeRoots": [
+      "./node_modules/@type",
+      "./src/**/*.d.ts"
+    ],
+    "baseUrl": "./src",
+    "paths": {
+      "~/*": ["./*"]
+    }
+  }
+}

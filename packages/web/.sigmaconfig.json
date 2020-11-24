@@ -1,0 +1,7 @@
+{
+  "projectType": "react",
+  "useTypescript": true,
+  "componentsPath": "src/components",
+  "pagesPath": "src/pages",
+  "pagesStylesPath": "src/pages"
+}

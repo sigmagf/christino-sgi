@@ -1,0 +1,16 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "DeleteField",
+      "model": "Crv",
+      "field": "docType"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "Crv",
+      "field": "status",
+      "type": "String"
+    }
+  ]
+}

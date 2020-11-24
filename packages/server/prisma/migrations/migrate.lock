@@ -1,0 +1,9 @@
+# Prisma Migrate lockfile v1
+
+20201120221756-starting-datbase
+20201120221845-update-model-crv-name
+20201120224546-reload
+20201120230144-update
+20201120231643-updategrade
+20201122215935-corrigindo-o-vehicle
+20201122220304-update-doctype-to-status

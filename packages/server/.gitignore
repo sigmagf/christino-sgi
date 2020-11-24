@@ -1,0 +1,7 @@
+/__legacy__
+/node_modules
+/.vscode
+
+!/node_modules/.prisma
+**/.env
+/dist
