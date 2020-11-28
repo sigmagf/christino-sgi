@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+model User {
+  id               String     @id @default(uuid())
+  name             String
+  email            String
+  password         String
+
+  newEmail         String?
+  newEmailToken    String?
+  newEmailExpires  String?
+
+  pwdRstToken      String?
+  pwdRstExpires    DateTime?
+
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @default(now()) @updatedAt
+
+  @@map("users")
+}
+
+model Client {
+  id         String    @id @default(uuid())
+  name       String
+  document   String    @unique
+  group      String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+
+  @@map("clients")
+}
+
+model Vehicle {
+  id          String     @id @default(uuid())
+  plate       String     @unique
+  renavam     String     @unique
+  brandModel  String
+  type        String
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @default(now()) @updatedAt
+
+  @@map("vehicles")
+}
+
+model Receipt {
+  id         String     @id @default(uuid())
+  clientId   String
+  vehicleId  String
+  details    String?
+  issuedOn   DateTime?
+  status     String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @default(now()) @updatedAt
+
+  client     Client   @relation("receipt-client", fields: [clientId], references: [id])
+  vehicle    Vehicle  @relation("receipt-vehicle", fields: [vehicleId], references: [id])
+  
+  @@map("receipts")
+}

@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 model User {
@@ -55,8 +55,8 @@ model Receipt {
   clientId  String
   vehicleId String
   details   String?
-  status    String
   issuedOn  DateTime?
+  status    String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
 

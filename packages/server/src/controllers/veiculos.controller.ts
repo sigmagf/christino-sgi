@@ -5,14 +5,9 @@ const prisma = new PrismaClient();
 const router = Router();
 
 router.get('/', async (req, res) => {
-  const crvs = await prisma.crv.findMany({
-    include: {
-      client: true,
-      vehicle: true,
-    },
-  });
+  const data = await prisma.vehicle.findMany();
 
-  return res.json(crvs);
+  return res.json(data);
 });
 
-export default (app: Express) => app.use('/crvs', router);
+export default (app: Express) => app.use('/vehicle', router);

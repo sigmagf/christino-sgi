@@ -1,13 +1,15 @@
 import { Express } from 'express';
 
-import clients from './clients';
-import crvs from './crvs';
+import clients from './clients.controller';
+import recibos from './recibos.controller';
+import veiculos from './veiculos.controller';
 
 const routes = (app: Express) => {
   clients(app);
-  crvs(app);
+  recibos(app);
+  veiculos(app);
 
-  app.use('/', (req, res) => {
+  app.use('*', (req, res) => {
     res.json({ hello: 'world' });
   });
 };

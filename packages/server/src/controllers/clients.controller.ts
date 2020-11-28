@@ -5,13 +5,9 @@ const prisma = new PrismaClient();
 const router = Router();
 
 router.get('/', async (req, res) => {
-  const clientes = await prisma.client.findMany();
+  const data = await prisma.client.findMany();
 
-  return res.json({
-    error: null,
-    errorCode: null,
-    data: clientes,
-  });
+  return res.json(data);
 });
 
 export default (app: Express) => app.use('/clients', router);

@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+model Cliente {
+  id         String    @id @default(uuid())
+  nome       String
+  documento  String
+  grupo      String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @default(now()) @updatedAt
+
+  @@map("clientes")
+}
+
+model recibos {
+  id           String    @id @default(uuid())
+  clienteId    String
+  placa        String
+  renavam      String
+  marcaModelo  String
+  tipo         String
+  observacao   String?
+  emitidoEm    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @default(now()) @updatedAt
+
+  cliente     Cliente  @relation("recibo-cliente", fields: [clienteId], references: [id])
+  
+  @@map("recibos")
+}
