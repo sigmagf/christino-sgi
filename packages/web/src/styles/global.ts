@@ -20,7 +20,7 @@ export const GlobalStyle = createGlobalStyle`
 
     width: 100%;
 
-    nav {
+    > nav {
       .expanded ~ main {
         max-width: calc(100% - 232px);
       }
@@ -30,12 +30,13 @@ export const GlobalStyle = createGlobalStyle`
       }
     }
 
-    main {
-      height: 100%;
-      width: 100%;
+    > main {
+      height: 100vh;
+      width: 100vw;
       transition: width 250ms ease;
+      overflow-y: auto;
 
-      section {
+      > section {
         height: calc(100% - 70px - 60px);
         width: 100%;
         max-width: 1080px;

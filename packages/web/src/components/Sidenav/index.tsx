@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { IconType } from 'react-icons';
 import {
   RiDashboardFill as IconDashboard,
@@ -9,6 +9,8 @@ import {
   RiUserFill as Iconuser,
 } from 'react-icons/ri';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+import { usePersistedState } from '~/hooks';
 
 import {
   SidenavContainer,
@@ -26,18 +28,18 @@ interface IMenuItem {
 }
 
 export const Sidenav: React.FC = () => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = usePersistedState('sidebarExpanded', false);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
   const collapseSidenav = useCallback(() => {
     setExpanded(false);
-  }, []);
+  }, [setExpanded]);
 
   const expandSidenav = useCallback(() => {
     setExpanded(true);
-  }, []);
+  }, [setExpanded]);
 
   const menuItems: IMenuItem[] = [
     {

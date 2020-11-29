@@ -8,7 +8,7 @@ type Input = React.InputHTMLAttributes<HTMLInputElement> & {
   name: string;
 };
 
-const Input: React.FC<Input> = ({ name, label, ...props }) => {
+const Input: React.FC<Input> = ({ name, label, style, id, ...props }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { fieldName, defaultValue, registerField } = useField(name);
 
@@ -21,7 +21,7 @@ const Input: React.FC<Input> = ({ name, label, ...props }) => {
   }, [fieldName, registerField]);
 
   return (
-    <InputContainer hasLabel={!!label}>
+    <InputContainer hasLabel={!!label} style={style} id={id}>
       {label && (
         <label htmlFor={name}>
           { label }

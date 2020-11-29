@@ -10,4 +10,4 @@ router.get('/', async (req, res) => {
   return res.json(data);
 });
 
-export default (app: Express) => app.use('/vehicle', router);
+export default (app: Express) => app.use('/vehicles', router);

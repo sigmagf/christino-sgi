@@ -1,8 +1,6 @@
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
-interface IStorage {
-  sidebarExpanded: boolean;
-}
+import { IStorage } from '~/interfaces';
 
 type Response<T extends keyof IStorage> = [IStorage[T], Dispatch<SetStateAction<IStorage[T]>>];
 

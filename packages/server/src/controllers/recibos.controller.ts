@@ -1,13 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import { Router, Express } from 'express';
 
-import { IRecibo } from '~/interface';
+import { IReceipt } from '~/interface';
 
 const prisma = new PrismaClient();
 const router = Router();
 
 router.get('/', async (req, res) => {
-  const data: IRecibo[] = await prisma.receipt.findMany({
+  const data: IReceipt[] = await prisma.receipt.findMany({
     select: {
       id: true,
       client: true,

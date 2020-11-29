@@ -11,12 +11,10 @@ import { useAuthentication } from './hooks';
 import { NotFoundError } from './pages/404';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
-import { Recibos } from './pages/Recibos';
+import { Receipts } from './pages/Receipts';
 
 const PrivateRoute: React.FC<RouteProps> = ({ element, ...rest }) => {
-  const authenticated = useAuthentication();
-
-  return <Route {...rest} element={authenticated ? element : <Navigate to="/login" replace />} />;
+  return <Route {...rest} element={useAuthentication() ? element : <Navigate to="/login" replace />} />;
 };
 
 const App: React.FC = () => {
@@ -27,7 +25,7 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
 
           <PrivateRoute path="/" element={<Home />} />
-          <PrivateRoute path="/recibos" element={<Recibos />} />
+          <PrivateRoute path="/recibos" element={<Receipts />} />
 
           <Route path="*" element={<NotFoundError />} />
         </Routes>

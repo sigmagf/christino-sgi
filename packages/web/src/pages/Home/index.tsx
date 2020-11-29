@@ -4,7 +4,7 @@ import { Card } from '~/components/Card';
 import { Layout } from '~/components/Layout';
 
 export const Home: React.FC = () => {
-  document.title = 'Início | SGI - Christino';
+  document.title = 'Início | Christino';
 
   return (
     <Layout>

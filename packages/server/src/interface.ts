@@ -1,13 +1,18 @@
-export interface ICliente {
+export interface IToken {
+  id: string;
+  iat: number;
+}
+
+export interface IClient {
   id: string;
   name: string;
   document: string;
-  group: string|null;
+  group: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface IVeiculo {
+export interface IVehicle {
   id: string;
   plate: string;
   renavam: string;
@@ -17,11 +22,11 @@ export interface IVeiculo {
   updatedAt: Date;
 }
 
-export interface IRecibo {
+export interface IReceipt {
   id: string;
-  client: ICliente;
-  vehicle: IVeiculo;
-  details: string|null;
+  client: IClient;
+  vehicle: IVehicle;
+  details: string;
   status: string;
   issuedOn: Date;
   createdAt: Date;
