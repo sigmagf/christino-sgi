@@ -10,10 +10,12 @@ const prisma = new PrismaClient();
 const router = Router();
 
 const generateToken = (id: string) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET);
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: 86400,
+  });
 };
 
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, async (req, res) => {
   const data = await prisma.user.findMany({
     select: {
       id: true,
@@ -66,7 +68,7 @@ router.post('/login', async (req, res) => {
   const data = await prisma.user.findOne({ where: { email } });
 
   if(!data) {
-    return res.status(400).json({ code: 'user-auth-email not exists' });
+    return res.status(400).json({ code: 'user-auth-user not exists' });
   }
 
   if(!await bcrypt.compare(password, data.password)) {

@@ -1,7 +1,7 @@
 import { FormHandles, Scope } from '@unform/core';
 import { Form } from '@unform/web';
 import { transparentize } from 'polished';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import {
   RiCloseLine as IconClose,
 } from 'react-icons/ri';

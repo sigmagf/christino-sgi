@@ -2,20 +2,22 @@ import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
 import { IStorage } from '~/interfaces';
 
+import useLocalSotorage from './useLocalStorage';
+
 type Response<T extends keyof IStorage> = [IStorage[T], Dispatch<SetStateAction<IStorage[T]>>];
 
 function usePersistedState<T extends keyof IStorage>(key: T, initialState: IStorage[T]): Response<T> {
-  const keyBase = '@christino-sgi';
+  const storage = useLocalSotorage();
 
-  const [state, setState] = useState(() => {
-    const storageValue = localStorage.getItem(`${keyBase}/${key}`);
+  const [state, setState] = useState<IStorage[T]>(() => {
+    const storageValue = storage.getItem(key);
 
-    return storageValue ? JSON.parse(storageValue) : initialState;
+    return storageValue || initialState;
   });
 
   useEffect(() => {
-    localStorage.setItem(`${keyBase}/${key}`, JSON.stringify(state));
-  }, [key, keyBase, state]);
+    storage.setItem(key, state);
+  }, [key, state, storage]);
 
   return [state, setState];
 }

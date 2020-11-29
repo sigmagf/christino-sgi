@@ -7,14 +7,14 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '~/styles/global';
 import { theme } from '~/styles/theme';
 
-import { useAuthentication } from './hooks';
 import { NotFoundError } from './pages/404';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Receipts } from './pages/Receipts';
+import { isAuthenticated } from './services/isAuthenticated';
 
 const PrivateRoute: React.FC<RouteProps> = ({ element, ...rest }) => {
-  return <Route {...rest} element={useAuthentication() ? element : <Navigate to="/login" replace />} />;
+  return <Route {...rest} element={isAuthenticated() ? element : <Navigate to="/login" replace />} />;
 };
 
 const App: React.FC = () => {

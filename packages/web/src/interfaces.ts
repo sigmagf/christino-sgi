@@ -3,6 +3,13 @@ export interface IStorage {
   sidebarExpanded: boolean;
 }
 
+export interface IPaths {
+  '/receipts': IReceipt[];
+  '/clients': IClient[];
+  '/vehicles': IVehicle[];
+  '/users': IUser[];
+}
+
 export interface IUserAuth {
   user: IUser;
   token: string;
