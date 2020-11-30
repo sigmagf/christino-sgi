@@ -9,7 +9,7 @@ export class UsersUpdateService {
 
   async execute(data: IUsersUpdateRequestDTO) {
     if(!await this.repository.find(data.id, undefined)) {
-      throw new Error('User not founded.');
+      throw new Error('No user founded.');
     }
 
     let hash: string;

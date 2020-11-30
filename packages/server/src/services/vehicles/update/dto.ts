@@ -1,6 +1,7 @@
 export interface IVehiclesUpdateRequestDTO {
   id: string;
-  name: string;
-  document: string;
-  group: string;
+  plate: string;
+  renavam: string;
+  brandModel: string;
+  type: string;
 }

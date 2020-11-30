@@ -7,7 +7,7 @@ export class ClientsUpdateService {
 
   async execute(data: IClientsUpdateRequestDTO) {
     if(!await this.repository.find(data.id, undefined)) {
-      throw new Error('Client not founded.');
+      throw new Error('No client founded.');
     }
 
     const client = await this.repository.update(data.id, data);

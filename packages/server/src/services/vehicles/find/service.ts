@@ -6,12 +6,12 @@ export class VehiclesFindService {
   constructor(private repository: IVehiclesRepository) { }
 
   async execute(data: IVehiclesFindRequestDTO) {
-    const client = await this.repository.find(data.id, undefined);
+    const vehicle = await this.repository.find(data.id, undefined, undefined);
 
-    if(!client) {
-      throw new Error('No client founded.');
+    if(!vehicle) {
+      throw new Error('No vehicle founded.');
     }
 
-    return client;
+    return vehicle;
   }
 }

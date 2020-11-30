@@ -6,12 +6,12 @@ export class VehiclesListService {
   constructor(private repository: IVehiclesRepository) { }
 
   async execute(data: IVehiclesListRequestDTO) {
-    const clients = await this.repository.list(data.page, data.limit, data.filters);
+    const vehicles = await this.repository.list(data.page, data.limit, data.filters);
 
-    if(clients.data.length <= 0) {
-      throw new Error('No clients founded.');
+    if(vehicles.data.length <= 0) {
+      throw new Error('No vehicles founded.');
     }
 
-    return clients;
+    return vehicles;
   }
 }

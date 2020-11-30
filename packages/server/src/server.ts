@@ -4,9 +4,11 @@ import { app } from './app';
 import { authMiddleware } from './middlewares/auth.middleware';
 import { clientsRouter } from './services/clients';
 import { usersRouter } from './services/users';
+import { vehiclesRouter } from './services/vehicles';
 
 app.use('/users', authMiddleware, usersRouter);
 app.use('/clients', authMiddleware, clientsRouter);
+app.use('/vehicles', authMiddleware, vehiclesRouter);
 
 app.listen(process.env.PORT || 3001, () => {
   console.clear();

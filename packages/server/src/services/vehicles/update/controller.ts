@@ -8,10 +8,10 @@ export class VehiclesUpdateController {
 
   async handle(req: Request, res: Response) {
     const { id } = req.params;
-    const { name, document, group } = req.body as IVehiclesUpdateRequestDTO;
+    const { plate, renavam, brandModel, type } = req.body as IVehiclesUpdateRequestDTO;
 
     try {
-      const response = await this.service.execute({ id, name, document, group });
+      const response = await this.service.execute({ id, plate, renavam, brandModel, type });
 
       return res.json(response);
     } catch(err) {
