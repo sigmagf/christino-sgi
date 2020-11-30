@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 
-import { UsersListService } from './service';
+import { UsersUpdateService } from './service';
 
-export class UsersListController {
-  constructor(private service: UsersListService) { }
+export class UsersUpdateController {
+  constructor(private service: UsersUpdateService) { }
 
   async handle(req: Request, res: Response) {
     const { id } = req.params;
@@ -11,10 +11,14 @@ export class UsersListController {
 
     try {
       const response = await this.service.execute({ id, name, email, password });
-
       const responseWithoutPassword: typeof response = {
         ...response,
         password: undefined,
+        newEmail: undefined,
+        newEmailExpires: undefined,
+        newEmailToken: undefined,
+        pwdRstExpires: undefined,
+        pwdRstToken: undefined,
       };
 
       return res.json(responseWithoutPassword);

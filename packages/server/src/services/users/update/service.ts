@@ -4,7 +4,7 @@ import { IUsersRepository } from '~/repositories/IUsersRepository';
 
 import { IUsersUpdateRequestDTO } from './dto';
 
-export class UsersListService {
+export class UsersUpdateService {
   constructor(private repository: IUsersRepository) { }
 
   async execute(data: IUsersUpdateRequestDTO) {

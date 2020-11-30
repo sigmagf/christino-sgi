@@ -1,0 +1,47 @@
+import { PrismaClient } from '@prisma/client';
+
+import { Client } from '~/entities/Client';
+import { IPagination } from '~/interface';
+import { withPagination } from '~/utils/withPagination';
+
+import { IClientsRepository } from '../IClientsRepository';
+
+export class PrismaUsersRepository implements IClientsRepository {
+  private prisma = new PrismaClient();
+
+  async find(id: string, document: string): Promise<Client> {
+    const data = await this.prisma.client.findOne({ where: { id, document } });
+
+    return data;
+  }
+
+  async list(page = 1, limit = 10, filters?: Pick<Client, 'name'|'document'|'group'>): Promise<IPagination<Client>> {
+    const data = await this.prisma.client.findMany({
+      where: {
+        AND: {
+          name: { contains: filters.name },
+          document: { contains: filters.document },
+          group: { contains: filters.group },
+        },
+      },
+    });
+
+    return withPagination(data, page, limit);
+  }
+
+  async save(client: Client): Promise<Client> {
+    const data = await this.prisma.client.create({ data: client });
+
+    return data;
+  }
+
+  async update(id: string, user: Omit<Client, 'id'>): Promise<Client> {
+    const data = await this.prisma.client.update({ where: { id }, data: user });
+
+    return data;
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.client.delete({ where: { id } });
+  }
+}

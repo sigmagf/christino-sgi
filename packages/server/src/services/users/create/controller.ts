@@ -15,7 +15,15 @@ export class UsersCreateController {
 
     try {
       const response = await this.service.execute({ name, email, password });
-      const responseWithoutPassword: typeof response = { ...response, password: undefined };
+      const responseWithoutPassword: typeof response = {
+        ...response,
+        password: undefined,
+        newEmail: undefined,
+        newEmailExpires: undefined,
+        newEmailToken: undefined,
+        pwdRstExpires: undefined,
+        pwdRstToken: undefined,
+      };
 
       return res.json(responseWithoutPassword);
     } catch(err) {

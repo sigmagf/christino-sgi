@@ -1,10 +1,10 @@
 import { PrismaUsersRepository } from '~/repositories/implementations/PrismaUsersRepository';
 
-import { UsersListController } from './controller';
-import { UsersListService } from './service';
+import { UsersUpdateController } from './controller';
+import { UsersUpdateService } from './service';
 
 const repository = new PrismaUsersRepository();
-const service = new UsersListService(repository);
-const controller = new UsersListController(service);
+const service = new UsersUpdateService(repository);
+const controller = new UsersUpdateController(service);
 
-export { controller as usersListController, service as usersListSerivce };
+export { controller as usersUpdateController, service as usersUpdateSerivce };

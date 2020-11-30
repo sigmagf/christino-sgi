@@ -1,4 +1,4 @@
-export interface WithPagination<T> {
+export interface IPagination<T> {
   page: {
     total: number;
     current: number;

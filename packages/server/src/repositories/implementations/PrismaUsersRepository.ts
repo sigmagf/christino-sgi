@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
 import { User } from '~/entities/User';
-import { WithPagination } from '~/interface';
+import { IPagination } from '~/interface';
 import { withPagination } from '~/utils/withPagination';
 
 import { IUsersRepository } from '../IUsersRepository';
@@ -15,7 +15,7 @@ export class PrismaUsersRepository implements IUsersRepository {
     return data;
   }
 
-  async list(page: number, limit: number, filters?: Pick<User, 'name'|'email'>): Promise<WithPagination<User>> {
+  async list(page = 1, limit = 10, filters?: Pick<User, 'name'|'email'>): Promise<IPagination<User>> {
     const data = await this.prisma.user.findMany({
       where: {
         AND: {
@@ -29,7 +29,7 @@ export class PrismaUsersRepository implements IUsersRepository {
   }
 
   async save(user: User): Promise<User> {
-    const data: User = await this.prisma.user.create({ data: user });
+    const data = await this.prisma.user.create({ data: user });
 
     return data;
   }
