@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 
-import { ClientsListService } from './service';
+import { VehiclesListService } from './service';
 
-export class ClientsListController {
-  constructor(private service: ClientsListService) { }
+export class VehiclesListController {
+  constructor(private service: VehiclesListService) { }
 
   async handle(req: Request, res: Response) {
     const page = parseInt(req.query.page as string || '1', 10);

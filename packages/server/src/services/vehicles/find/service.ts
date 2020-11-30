@@ -1,11 +1,11 @@
-import { IClientsRepository } from '~/repositories/IClientsRepository';
+import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
-import { IClientsFindRequestDTO } from './dto';
+import { IVehiclesFindRequestDTO } from './dto';
 
-export class ClientsFindService {
-  constructor(private repository: IClientsRepository) { }
+export class VehiclesFindService {
+  constructor(private repository: IVehiclesRepository) { }
 
-  async execute(data: IClientsFindRequestDTO) {
+  async execute(data: IVehiclesFindRequestDTO) {
     const client = await this.repository.find(data.id, undefined);
 
     if(!client) {

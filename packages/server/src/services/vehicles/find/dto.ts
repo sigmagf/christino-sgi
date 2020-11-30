@@ -1,3 +1,3 @@
-export interface IClientsFindRequestDTO {
+export interface IVehiclesFindRequestDTO {
   id: string;
 }

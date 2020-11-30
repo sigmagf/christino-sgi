@@ -1,11 +1,11 @@
-import { IClientsRepository } from '~/repositories/IClientsRepository';
+import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
-import { IClientsListRequestDTO } from './dto';
+import { IVehiclesListRequestDTO } from './dto';
 
-export class ClientsListService {
-  constructor(private repository: IClientsRepository) { }
+export class VehiclesListService {
+  constructor(private repository: IVehiclesRepository) { }
 
-  async execute(data: IClientsListRequestDTO) {
+  async execute(data: IVehiclesListRequestDTO) {
     const clients = await this.repository.list(data.page, data.limit, data.filters);
 
     if(clients.data.length <= 0) {

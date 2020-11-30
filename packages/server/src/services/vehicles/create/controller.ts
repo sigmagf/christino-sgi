@@ -1,20 +1,20 @@
 import { Request, Response } from 'express';
 
-import { IClientsCreateRequestDTO } from './dto';
+import { IVehiclesCreateRequestDTO } from './dto';
 import { ClientCreateService } from './service';
 
-export class ClientsCreateController {
+export class VehiclesCreateController {
   constructor(private service: ClientCreateService) { }
 
   async handle(req: Request, res: Response) {
-    const { name, document, group } = await req.body as IClientsCreateRequestDTO;
+    const { plate, renavam, brandModel, type } = await req.body as IVehiclesCreateRequestDTO;
 
-    if(!name || !document) {
+    if(!plate || !renavam || !brandModel || !type) {
       return res.status(400).json({ message: 'Invalid sended data.' });
     }
 
     try {
-      const response = await this.service.execute({ name, document, group });
+      const response = await this.service.execute({ plate, renavam, brandModel, type });
 
       return res.json(response);
     } catch(err) {

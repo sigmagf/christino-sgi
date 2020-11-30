@@ -1,12 +1,16 @@
 import { Request, Response } from 'express';
 
-import { ClientsDeleteService } from './service';
+import { VehiclesDeleteService } from './service';
 
-export class ClientsDeleteController {
-  constructor(private service: ClientsDeleteService) { }
+export class VehiclesDeleteController {
+  constructor(private service: VehiclesDeleteService) { }
 
   async handle(req: Request, res: Response) {
     const { id } = req.params;
+
+    if(!id) {
+      return res.status(400).json({ message: 'Invalid sended data.' });
+    }
 
     try {
       await this.service.execute({ id });

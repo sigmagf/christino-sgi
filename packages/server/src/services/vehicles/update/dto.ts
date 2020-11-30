@@ -1,4 +1,4 @@
-export interface IClientsUpdateRequestDTO {
+export interface IVehiclesUpdateRequestDTO {
   id: string;
   name: string;
   document: string;

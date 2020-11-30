@@ -1,11 +1,11 @@
-import { IClientsRepository } from '~/repositories/IClientsRepository';
+import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
-import { IClientsDeleteRequestDTO } from './dto';
+import { IVehiclesDeleteRequestDTO } from './dto';
 
-export class ClientsDeleteService {
-  constructor(private repository: IClientsRepository) { }
+export class VehiclesDeleteService {
+  constructor(private repository: IVehiclesRepository) { }
 
-  async execute(data: IClientsDeleteRequestDTO) {
+  async execute(data: IVehiclesDeleteRequestDTO) {
     await this.repository.delete(data.id);
   }
 }

@@ -1,11 +1,11 @@
-import { IClientsRepository } from '~/repositories/IClientsRepository';
+import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
-import { IClientsUpdateRequestDTO } from './dto';
+import { IVehiclesUpdateRequestDTO } from './dto';
 
-export class ClientsUpdateService {
-  constructor(private repository: IClientsRepository) { }
+export class VehiclesUpdateService {
+  constructor(private repository: IVehiclesRepository) { }
 
-  async execute(data: IClientsUpdateRequestDTO) {
+  async execute(data: IVehiclesUpdateRequestDTO) {
     if(!await this.repository.find(data.id, undefined)) {
       throw new Error('Client not founded.');
     }

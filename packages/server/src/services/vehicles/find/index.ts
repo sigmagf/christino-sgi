@@ -1,10 +1,10 @@
-import { PrismaClientsRepository } from '~/repositories/implementations/PrismaClientsRepository';
+import { PrismaVehiclesRepository } from '~/repositories/implementations/PrismaVehiclesRepository';
 
-import { ClientsFindController } from './controller';
-import { ClientsFindService } from './service';
+import { VehiclesFindController } from './controller';
+import { VehiclesFindService } from './service';
 
-const repository = new PrismaClientsRepository();
-const service = new ClientsFindService(repository);
-const controller = new ClientsFindController(service);
+const repository = new PrismaVehiclesRepository();
+const service = new VehiclesFindService(repository);
+const controller = new VehiclesFindController(service);
 
 export { controller as clientsFindController, service as clientsFindSerivce };

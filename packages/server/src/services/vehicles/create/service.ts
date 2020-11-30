@@ -1,18 +1,22 @@
-import { Client } from '~/entities/Client';
-import { IClientsRepository } from '~/repositories/IClientsRepository';
+import { Vehicle } from '~/entities/Vehicle';
+import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
-import { IClientsCreateRequestDTO } from './dto';
+import { IVehiclesCreateRequestDTO } from './dto';
 
 export class ClientCreateService {
-  constructor(private repository: IClientsRepository) { }
+  constructor(private repository: IVehiclesRepository) { }
 
-  async execute(data: IClientsCreateRequestDTO) {
-    if(await this.repository.find(undefined, data.document)) {
-      throw new Error('Client already exists.');
+  async execute(data: IVehiclesCreateRequestDTO) {
+    if(await this.repository.find(undefined, data.plate, undefined)) {
+      throw new Error('Vehicle already exists with plate.');
     }
 
-    const client = await this.repository.save(new Client(data));
+    if(await this.repository.find(undefined, undefined, data.renavam)) {
+      throw new Error('Vehicle already exists with renavam.');
+    }
 
-    return client;
+    const vehicle = await this.repository.save(new Vehicle(data));
+
+    return vehicle;
   }
 }

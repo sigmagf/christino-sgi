@@ -1,3 +1,3 @@
-export interface IClientsDeleteRequestDTO {
+export interface IVehiclesDeleteRequestDTO {
   id: string;
 }

@@ -6,7 +6,7 @@ import { withPagination } from '~/utils/withPagination';
 
 import { IVehiclesRepository, VehiclesRepositoryListFilters } from '../IVehiclesRepository';
 
-export class PrismaClientsRepository implements IVehiclesRepository {
+export class PrismaVehiclesRepository implements IVehiclesRepository {
   private prisma = new PrismaClient();
 
   async find(id: string, plate: string, renavam: string): Promise<Vehicle> {

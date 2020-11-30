@@ -1,4 +1,4 @@
-export interface IClientsListRequestDTO {
+export interface IVehiclesListRequestDTO {
   page: number;
   limit: number;
   filters: {
