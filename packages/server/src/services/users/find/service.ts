@@ -1,11 +1,11 @@
 import { IUsersRepository } from '~/repositories/IUsersRepository';
 
-import { IUsersFindByIdRequestDTO } from './dto';
+import { IUsersFindRequestDTO } from './dto';
 
-export class UsersFindByIdService {
+export class UsersFindService {
   constructor(private repository: IUsersRepository) { }
 
-  async execute(data: IUsersFindByIdRequestDTO) {
+  async execute(data: IUsersFindRequestDTO) {
     const user = await this.repository.find(data.id, undefined);
 
     return user;

@@ -18,7 +18,15 @@ export class UsersListController {
         page: {
           ...response.page,
         },
-        data: response.data.map((e) => ({ ...e, password: undefined })),
+        data: response.data.map((e) => ({
+          ...e,
+          password: undefined,
+          newEmail: undefined,
+          newEmailExpires: undefined,
+          newEmailToken: undefined,
+          pwdRstExpires: undefined,
+          pwdRstToken: undefined,
+        })),
       };
 
       return res.json(responseWithoutPassword);
