@@ -23,6 +23,7 @@ export class PrismaUsersRepository implements IUsersRepository {
           email: { contains: filters.email },
         },
       },
+      orderBy: { name: 'asc' },
     });
 
     return withPagination(data, page, limit);

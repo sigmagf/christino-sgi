@@ -8,6 +8,10 @@ export class UsersUpdateService {
   constructor(private repository: IUsersRepository) { }
 
   async execute(data: IUsersUpdateRequestDTO) {
+    if(!await this.repository.find(data.id, undefined)) {
+      throw new Error('User not founded.');
+    }
+
     let hash: string;
 
     if(data.password) {

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import { IUsersUpdateRequestDTO } from './dto';
 import { UsersUpdateService } from './service';
 
 export class UsersUpdateController {
@@ -7,7 +8,7 @@ export class UsersUpdateController {
 
   async handle(req: Request, res: Response) {
     const { id } = req.params;
-    const { name, email, password } = req.body;
+    const { name, email, password } = req.body as IUsersUpdateRequestDTO;
 
     try {
       const response = await this.service.execute({ id, name, email, password });

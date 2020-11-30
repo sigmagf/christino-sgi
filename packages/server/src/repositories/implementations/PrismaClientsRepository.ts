@@ -6,7 +6,7 @@ import { withPagination } from '~/utils/withPagination';
 
 import { IClientsRepository } from '../IClientsRepository';
 
-export class PrismaUsersRepository implements IClientsRepository {
+export class PrismaClientsRepository implements IClientsRepository {
   private prisma = new PrismaClient();
 
   async find(id: string, document: string): Promise<Client> {
@@ -24,6 +24,7 @@ export class PrismaUsersRepository implements IClientsRepository {
           group: { contains: filters.group },
         },
       },
+      orderBy: { name: 'asc' },
     });
 
     return withPagination(data, page, limit);

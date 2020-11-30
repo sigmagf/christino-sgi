@@ -8,6 +8,10 @@ export class UsersFindService {
   async execute(data: IUsersFindRequestDTO) {
     const user = await this.repository.find(data.id, undefined);
 
+    if(!user) {
+      throw new Error('User not founded.');
+    }
+
     return user;
   }
 }
