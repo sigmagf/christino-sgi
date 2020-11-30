@@ -1,9 +1,10 @@
 import 'dotenv/config';
 
 import { app } from './app';
-import { routes } from './controllers';
+import { authMiddleware } from './middlewares/auth.middleware';
+import { usersRouter } from './services/users';
 
-routes(app);
+app.use('/users', authMiddleware, usersRouter);
 
 app.listen(process.env.PORT || 3001, () => {
   console.clear();

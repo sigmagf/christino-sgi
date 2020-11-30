@@ -1,3 +1,19 @@
+export interface IPagination<T> {
+  total: number;
+  current: number;
+  limit: number;
+  result: Array<T>;
+}
+
+export interface WithPagination<T> {
+  page: {
+    total: number;
+    current: number;
+    limit: number;
+  };
+  data: Array<T>;
+}
+
 export interface IToken {
   id: string;
   iat: number;

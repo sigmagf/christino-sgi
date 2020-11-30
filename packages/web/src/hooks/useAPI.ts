@@ -5,22 +5,25 @@ import { fetcherFn } from 'swr/dist/types';
 import { IPaths } from '~/interfaces';
 import { api } from '~/services/api';
 
-import useLocalSotorage from './useLocalStorage';
+import useLocalStorage from './useLocalStorage';
 
 type SWRConfig<T> = ConfigInterface<T, any, fetcherFn<T>>;
 type SWRProps<T> = Omit<SWRConfig<T>, 'revalidateOnReconnect'|'errorRetryCount'|'errorRetryInterval'>
 
-type AxiosProps = Omit<AxiosRequestConfig, 'baseURL'|'url'|'method'>;
+type AxiosProps = Omit<AxiosRequestConfig, 'baseURL'|'url'|'method'> & {
+  query: string;
+};
 
 function useAPI<T extends keyof IPaths>(url: T, axiosProps?: AxiosProps, swrProps?: SWRProps<IPaths[T]>) {
-  const storage = useLocalSotorage();
+  const storage = useLocalStorage();
 
   const { data, error, mutate } = useSWR<IPaths[T]>(url, async (path) => {
     const response = await api({
       ...axiosProps,
       method: 'GET',
-      url: path,
+      url: path + (axiosProps?.query && `?${axiosProps.query}`),
       headers: {
+        ...axiosProps?.headers,
         authorization: `Bearer ${storage.getItem('token')}`,
       },
     });

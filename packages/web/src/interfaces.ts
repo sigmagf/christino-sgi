@@ -1,18 +1,20 @@
+export interface IPagination<T> {
+  total: number;
+  current: number;
+  limit: number;
+  result: Array<T>;
+}
+
 export interface IStorage {
   token: string;
   sidebarExpanded: boolean;
 }
 
 export interface IPaths {
-  '/receipts': IReceipt[];
-  '/clients': IClient[];
-  '/vehicles': IVehicle[];
-  '/users': IUser[];
-}
-
-export interface IUserAuth {
-  user: IUser;
-  token: string;
+  '/receipts': IPagination<IReceipt>;
+  '/clients': IPagination<IClient>;
+  '/vehicles': IPagination<IVehicle>;
+  '/users': IPagination<IUser>;
 }
 
 export interface IUser {
@@ -20,6 +22,11 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
+}
+
+export interface IUserAuth {
+  user: IUser;
+  token: string;
 }
 
 export interface IClient {

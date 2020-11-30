@@ -2,9 +2,11 @@ import React from 'react';
 
 import { TableContainer } from './styles';
 
-export const Table: React.FC = ({ children }) => {
+type ITable = React.TableHTMLAttributes<HTMLTableElement>;
+
+export const Table: React.FC<ITable> = ({ children, ...props }) => {
   return (
-    <TableContainer>
+    <TableContainer {...props}>
       { children }
     </TableContainer>
   );

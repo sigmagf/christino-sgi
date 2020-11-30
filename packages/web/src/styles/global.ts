@@ -37,10 +37,10 @@ export const GlobalStyle = createGlobalStyle`
       overflow-y: auto;
 
       > section {
-        height: calc(100% - 70px - 60px);
+        height: calc(100vh - 70px);
         width: 100%;
         max-width: 1080px;
-        margin: 0 auto;
+        margin: 0 auto 30px auto;
       }
     }
   }

@@ -5,7 +5,7 @@ export const ReceiptsModal = styled.div`
     display: grid;
 
     grid-template-columns: 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px 80px;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
     grid-gap: 10px;
 
     grid-template-areas: 'CL CL CL CL CL CL CL CL CD CD GP GP'

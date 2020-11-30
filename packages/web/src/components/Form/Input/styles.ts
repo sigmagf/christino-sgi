@@ -1,4 +1,4 @@
-import { lighten, transparentize } from 'polished';
+import { lighten, shade, transparentize } from 'polished';
 import styled from 'styled-components';
 
 interface IInputContainerStyledProps {
@@ -39,6 +39,10 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
     box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
     background: ${({ theme }) => lighten(0.1, theme.primary.main)};
     border: 2px solid ${({ theme }) => lighten(0.1, theme.primary.main)};
+
+    :disabled {
+      background: ${({ theme }) => shade(0.1, theme.primary.main)};
+    }
 
     :focus {
       border-color: ${({ theme }) => theme.secondary.main};

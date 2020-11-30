@@ -59,8 +59,4 @@ export const ButtonContainer = styled.button<IButtonContainerStyledProps>`
         `;
     }
   }}
-
-  :hover {
-    background: ${({ theme }) => shade(0.5, theme.primary.main)};
-  }
 `;

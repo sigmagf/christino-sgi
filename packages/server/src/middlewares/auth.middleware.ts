@@ -6,24 +6,24 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
   const authHeader = req.headers.authorization;
 
   if(!authHeader) {
-    return res.status(401).json({ code: 'user-auth-no token provided' });
+    return res.status(401).json({ message: 'No token provided' });
   }
 
   const tokenSplit = authHeader.split(' ');
 
   if(tokenSplit.length !== 2) {
-    return res.status(401).json({ code: 'user-auth-token error' });
+    return res.status(401).json({ message: 'Token error' });
   }
 
   const [bearer, token] = tokenSplit;
 
   if(!/^Bearer$/i.test(bearer)) {
-    return res.status(401).json({ code: 'user-auth-token malformated' });
+    return res.status(401).json({ message: 'Token malformated' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decode: { id: string }) => {
     if(err) {
-      return res.status(401).json({ code: 'user-auth-token invalid' });
+      return res.status(401).json({ message: 'Token invalid' });
     }
 
     req.userId = decode.id;

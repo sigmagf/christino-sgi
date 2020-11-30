@@ -1,9 +1,9 @@
 export const isAuthenticated = () => {
   const token = localStorage.getItem('@christino-sgi/token');
 
-  if(token !== null) {
-    return true;
+  if(!token || token === '') {
+    return false;
   }
 
-  return false;
+  return true;
 };

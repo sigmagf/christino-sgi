@@ -4,6 +4,7 @@ import {
 } from 'react-icons/ri';
 
 import { Button } from '~/components/Button';
+import { Card } from '~/components/Card';
 import { Table } from '~/components/Table';
 import { IReceipt } from '~/interfaces';
 
@@ -14,34 +15,36 @@ interface IReceiptsTableProps {
 
 export const ReceiptsTable: React.FC<IReceiptsTableProps> = ({ receipts, onReceiptDetailButton }) => {
   return (
-    <Table>
-      <thead>
-        <tr>
-          <th style={{ width: 500, textAlign: 'left' }}>CLIENTE</th>
-          <th style={{ width: 85 }}>PLACA</th>
-          <th>MARCA/MODELO</th>
-          <th style={{ width: 40 }} />
-        </tr>
-      </thead>
-      <tbody>
-        {!receipts ? (
+    <Card>
+      <Table>
+        <thead>
           <tr>
-            <td style={{ textAlign: 'center' }} colSpan={5}>CARREGANDO...</td>
+            <th style={{ fontFamily: 'monospace', width: 500, textAlign: 'left' }}>CLIENTE</th>
+            <th style={{ fontFamily: 'monospace', width: 85 }}>PLACA</th>
+            <th style={{ fontFamily: 'monospace' }}>MARCA/MODELO</th>
+            <th style={{ fontFamily: 'monospace', width: 40 }} />
           </tr>
-        ) : receipts.map((crv) => (
-          <tr key={crv.id}>
-            <td style={{ maxWidth: 500 }}>{ crv.client.name }</td>
-            <td style={{ textAlign: 'center' }}>{ crv.vehicle.plate }</td>
-            <td style={{ textAlign: 'center' }}>{ crv.vehicle.brandModel }</td>
-            <td>
-              <Button type="button" onClick={() => onReceiptDetailButton(crv)}>
-                <IconSearch />
-              </Button>
-            </td>
-          </tr>
-        ))}
+        </thead>
+        <tbody>
+          {!receipts ? (
+            <tr>
+              <td style={{ fontFamily: 'monospace', textAlign: 'center' }} colSpan={5}>CARREGANDO...</td>
+            </tr>
+          ) : receipts.map((crv) => (
+            <tr key={crv.id}>
+              <td style={{ fontFamily: 'monospace', maxWidth: 500 }}>{ crv.client.name }</td>
+              <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ crv.vehicle.plate }</td>
+              <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ crv.vehicle.brandModel }</td>
+              <td>
+                <Button type="button" onClick={() => onReceiptDetailButton(crv)}>
+                  <IconSearch />
+                </Button>
+              </td>
+            </tr>
+          ))}
 
-      </tbody>
-    </Table>
+        </tbody>
+      </Table>
+    </Card>
   );
 };

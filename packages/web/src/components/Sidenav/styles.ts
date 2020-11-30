@@ -87,18 +87,18 @@ export const SidenavItem = styled.button<ISidenavItemStyledProps>`
 
     :hover {
       ${({ theme, selected }) => (selected ? css`
-        background: ${shade(0.1, theme.secondary.main)}
+        background: ${shade(0.1, theme.secondary.main)};
       ` : css`
-        background: ${lighten(0.05, theme.primary.main)}
+        background: ${lighten(0.05, theme.primary.main)};
       `)}
     }
   }
 
   :disabled {
     ${({ theme, selected }) => (selected ? css`
-      background: ${shade(0.1, theme.secondary.main)}
+      background: ${shade(0.1, theme.secondary.main)};
     ` : css`
-      background: ${shade(0.1, theme.primary.main)}
+      background: ${shade(0.1, theme.primary.main)};
     `)}
   }
 

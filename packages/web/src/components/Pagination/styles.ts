@@ -3,11 +3,31 @@ import styled from 'styled-components';
 
 export const Paginator = styled.div`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  .page-results-count {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 10px;
+
+    select {
+      margin-left: 10px;
+    }
+  }
+`;
+
+export const PaginatorNumbers = styled.div`
+  display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-top: 20px;
 
   button {
     display: flex;

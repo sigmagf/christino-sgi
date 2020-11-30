@@ -6,7 +6,7 @@ export const UserBarContainer = styled.div`
   height: 70px;
   width: 100%;
   max-width: 1080px;
-  margin: 30px auto;
+  margin: 30px auto 15px auto;
   background: ${({ theme }) => theme.primary.main};
   box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
   border-radius: 10px;

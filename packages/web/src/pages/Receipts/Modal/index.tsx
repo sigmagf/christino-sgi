@@ -1,7 +1,7 @@
-import { FormHandles, Scope } from '@unform/core';
+import { FormHandles, Scope, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
 import { transparentize } from 'polished';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   RiCloseLine as IconClose,
 } from 'react-icons/ri';
@@ -23,6 +23,8 @@ interface IEditModalProps {
 Modal.setAppElement('#root');
 export const EditModal: React.FC<IEditModalProps> = ({ receipt, isOpen, onClose }) => {
   const formRef = useRef<FormHandles>(null);
+
+  const [isEditing, setIsEditing] = useState(false);
 
   const customStyles: Modal.Styles = {
     content: {
@@ -60,6 +62,17 @@ export const EditModal: React.FC<IEditModalProps> = ({ receipt, isOpen, onClose 
     return '';
   };
 
+  const onEditButtonClick = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.preventDefault();
+
+    setIsEditing(true);
+  };
+
+  const onSubmit: SubmitHandler<IReceipt> = (data) => {
+    setIsEditing(false);
+    console.log(data);
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -75,32 +88,95 @@ export const EditModal: React.FC<IEditModalProps> = ({ receipt, isOpen, onClose 
           </Button>
         </div>
         {receipt && (
-          <Form ref={formRef} onSubmit={(e) => console.log(e)}>
+          <Form ref={formRef} onSubmit={onSubmit}>
             <Scope path="client">
-              <Input style={{ gridArea: 'CL' }} name="name" label="NOME" value={receipt.client.name} />
-              <Input style={{ gridArea: 'CD' }} name="document" label="DOCUMENTO" value={receipt.client.document} />
-              <Input style={{ gridArea: 'GP' }} name="group" label="GRUPO" value={receipt.client.group} />
+              <Input
+                style={{ gridArea: 'CL' }}
+                name="name"
+                label="NOME"
+                value={receipt.client.name || ''}
+                disabled={!isEditing}
+              />
+              <Input
+                style={{ gridArea: 'CD' }}
+                name="document"
+                label="DOCUMENTO"
+                value={receipt.client.document || ''}
+                disabled={!isEditing}
+              />
+              <Input
+                style={{ gridArea: 'GP' }}
+                name="group"
+                label="GRUPO"
+                value={receipt.client.group || ''}
+                disabled={!isEditing}
+              />
             </Scope>
 
             <Scope path="vehicle">
-              <Input style={{ gridArea: 'PL' }} name="plate" label="PLACA" value={receipt.vehicle.plate} />
-              <Input style={{ gridArea: 'RN' }} name="renavam" label="RENAVAM" value={receipt.vehicle.renavam} />
-              <Input style={{ gridArea: 'MM' }} name="brandModel" label="MARCA/MODELO" value={receipt.vehicle.brandModel} />
-              <Input style={{ gridArea: 'TP' }} name="type" label="TIPO" value={receipt.vehicle.type} />
+              <Input
+                style={{ gridArea: 'PL' }}
+                name="plate"
+                label="PLACA"
+                value={receipt.vehicle.plate || ''}
+                disabled={!isEditing}
+              />
+              <Input
+                style={{ gridArea: 'RN' }}
+                name="renavam"
+                label="RENAVAM"
+                value={receipt.vehicle.renavam || ''}
+                disabled={!isEditing}
+              />
+              <Input
+                style={{ gridArea: 'MM' }}
+                name="brandModel"
+                label="MARCA/MODELO"
+                value={receipt.vehicle.brandModel || ''}
+                disabled={!isEditing}
+              />
+              <Input
+                style={{ gridArea: 'TP' }}
+                name="type"
+                label="TIPO"
+                value={receipt.vehicle.type || ''}
+                disabled={!isEditing}
+              />
             </Scope>
 
-            <Input style={{ gridArea: 'EM' }} name="issuedOn" label="EMITIDO EM" value={formatDate(receipt.issuedOn)} />
-            <Input style={{ gridArea: 'ST' }} name="status" label="STATUS" value={receipt.status} />
-            <Input style={{ gridArea: 'DT' }} name="details" label="OBSERVAÇÕES" value={receipt.details} />
+            <Input
+              style={{ gridArea: 'EM' }}
+              name="issuedOn"
+              label="EMITIDO EM"
+              value={formatDate(receipt.issuedOn)}
+              disabled={!isEditing}
+            />
+            <Input
+              style={{ gridArea: 'ST' }}
+              name="status"
+              label="STATUS"
+              value={receipt.status || ''}
+              disabled={!isEditing}
+            />
+            <Input
+              style={{ gridArea: 'DT' }}
+              name="details"
+              label="OBSERVAÇÕES"
+              value={receipt.details || ''}
+              disabled={!isEditing}
+            />
 
             <div className="buttons">
-              <Button type="submit" apparence="success">
-                SALVAR
-              </Button>
 
-              <Button type="button" apparence="warning">
-                EDITAR
-              </Button>
+              {isEditing ? (
+                <Button type="submit" apparence="success">
+                  SALVAR
+                </Button>
+              ) : (
+                <Button type="button" apparence="warning" onClick={onEditButtonClick}>
+                  EDITAR
+                </Button>
+              )}
             </div>
           </Form>
         )}

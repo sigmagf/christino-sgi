@@ -1,0 +1,24 @@
+import { Request, Response } from 'express';
+
+import { UsersFindByIdService } from './service';
+
+export class UsersFindByIdController {
+  constructor(private service: UsersFindByIdService) { }
+
+  async handle(req: Request, res: Response) {
+    const { id } = req.params;
+
+    if(!id) {
+      return res.status(400).json({ message: 'Invalid sended data.' });
+    }
+
+    try {
+      const response = await this.service.execute({ id });
+      const responseWithoutPassword: typeof response = { ...response, password: undefined };
+
+      return res.json(responseWithoutPassword);
+    } catch(err) {
+      return res.status(400).json({ message: err.message || 'Unexpected error.' });
+    }
+  }
+}

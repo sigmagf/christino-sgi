@@ -2,9 +2,11 @@ import React from 'react';
 
 import { CardContainer } from './styles';
 
-export const Card: React.FC = ({ children }) => {
+type ICardProps = React.HTMLAttributes<HTMLDivElement>;
+
+export const Card: React.FC<ICardProps> = ({ children, ...props }) => {
   return (
-    <CardContainer>
+    <CardContainer {...props}>
       { children }
     </CardContainer>
   );
