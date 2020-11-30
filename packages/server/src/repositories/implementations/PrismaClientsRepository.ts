@@ -36,8 +36,8 @@ export class PrismaClientsRepository implements IClientsRepository {
     return data;
   }
 
-  async update(id: string, user: Omit<Client, 'id'>): Promise<Client> {
-    const data = await this.prisma.client.update({ where: { id }, data: user });
+  async update(id: string, client: Omit<Client, 'id'>): Promise<Client> {
+    const data = await this.prisma.client.update({ where: { id }, data: client });
 
     return data;
   }
