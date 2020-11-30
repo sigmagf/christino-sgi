@@ -2,7 +2,7 @@ import { AxiosRequestConfig } from 'axios';
 import useSWR, { ConfigInterface } from 'swr';
 import { fetcherFn } from 'swr/dist/types';
 
-import { IPaths } from '~/interfaces';
+import { IAPIPaths } from '~/interfaces';
 import { api } from '~/services/api';
 
 import useLocalStorage from './useLocalStorage';
@@ -14,10 +14,10 @@ type AxiosProps = Omit<AxiosRequestConfig, 'baseURL'|'url'|'method'> & {
   query: string;
 };
 
-function useAPI<T extends keyof IPaths>(url: T, axiosProps?: AxiosProps, swrProps?: SWRProps<IPaths[T]>) {
+function useAPI<T extends keyof IAPIPaths>(url: T, axiosProps?: AxiosProps, swrProps?: SWRProps<IAPIPaths[T]>) {
   const storage = useLocalStorage();
 
-  const { data, error, mutate } = useSWR<IPaths[T]>(url, async (path) => {
+  const { data, error, mutate } = useSWR<IAPIPaths[T]>(url, async (path) => {
     const response = await api({
       ...axiosProps,
       method: 'GET',

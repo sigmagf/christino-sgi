@@ -1,8 +1,10 @@
 export interface IPagination<T> {
-  total: number;
-  current: number;
-  limit: number;
-  result: Array<T>;
+  page: {
+    total: number;
+    current: number;
+    limit: number;
+  };
+  data: Array<T>;
 }
 
 export interface IStorage {
@@ -10,23 +12,11 @@ export interface IStorage {
   sidebarExpanded: boolean;
 }
 
-export interface IPaths {
+export interface IAPIPaths {
   '/receipts': IPagination<IReceipt>;
   '/clients': IPagination<IClient>;
   '/vehicles': IPagination<IVehicle>;
   '/users': IPagination<IUser>;
-}
-
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface IUserAuth {
-  user: IUser;
-  token: string;
 }
 
 export interface IClient {
@@ -34,6 +24,14 @@ export interface IClient {
   name: string;
   document: string;
   group: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface IUser {
+  id: string;
+  name: string;
+  email: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -57,4 +55,9 @@ export interface IReceipt {
   issuedOn: Date;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IUserAuth {
+  user: IUser;
+  token: string;
 }

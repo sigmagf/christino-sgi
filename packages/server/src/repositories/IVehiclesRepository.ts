@@ -7,6 +7,6 @@ export interface IVehiclesRepository {
   find(id: string, plate: string, renavam: string): Promise<Vehicle>;
   list(page: number, limit: number, filters?: VehiclesRepositoryListFilters): Promise<IPagination<Vehicle>>;
   save(vehicle: Vehicle): Promise<Vehicle>;
-  update(id: string, data: Omit<Vehicle, 'id'>): Promise<Vehicle>;
+  update(id: string, vehicle: Omit<Vehicle, 'id'>): Promise<Vehicle>;
   delete(id: string): Promise<void>;
 }
