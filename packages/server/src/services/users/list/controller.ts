@@ -16,7 +16,7 @@ export class UsersListController {
 
       const responseWithoutPassword: typeof response = {
         page: response.page,
-        data: response.data.map((e) => ({ ...e, password: undefined })),
+        data: response.data ? response.data.map((e) => ({ ...e, password: undefined })) : [],
       };
 
       return res.json(responseWithoutPassword);

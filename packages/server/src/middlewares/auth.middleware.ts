@@ -28,7 +28,7 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
       return res.status(401).json({ message: 'Token invalid' });
     }
 
-    if(await usersFindSerivce.execute({ id: decode.id })) {
+    if(decode.id) {
       req.userId = decode.id;
       return next();
     }

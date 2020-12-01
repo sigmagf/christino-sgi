@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { Receipt } from '~/entities/Receipts';
 import { IPagination } from '~/interface';
+import { RepoReceiptsListFilters } from '~/types';
 import { withPagination } from '~/utils/withPagination';
 
 import { IReceiptsRepository } from '../IReceiptsRepository';
@@ -22,17 +23,15 @@ export class PrismaReceiptsRepository implements IReceiptsRepository {
     return data;
   }
 
-  async list(page = 1, limit = 10, filters?: Omit<Receipt, 'createdAt'|'updatedAt'>): Promise<IPagination<Receipt>> {
+  async list(page = 1, limit = 10, filters?: RepoReceiptsListFilters): Promise<IPagination<Receipt>> {
     const data = await this.prisma.receipt.findMany({
       where: {
         AND: {
-          clientId: { contains: filters.clientId },
           client: {
             name: { contains: filters.client.name },
             document: { contains: filters.client.document },
             group: { contains: filters.client.group },
           },
-          vehicleId: { contains: filters.vehicleId },
           vehicle: {
             plate: { contains: filters.vehicle.plate },
             renavam: { contains: filters.vehicle.renavam },
@@ -53,14 +52,14 @@ export class PrismaReceiptsRepository implements IReceiptsRepository {
     return withPagination(data, page, limit);
   }
 
-  async save({ clientId, vehicleId, details, status, issuedOn }: Receipt): Promise<Receipt> {
+  async save(receipt: Omit<Receipt, 'client'|'vehicle'>): Promise<Receipt> {
     const data = await this.prisma.receipt.create({
       data: {
-        client: { connect: { id: clientId } },
-        vehicle: { connect: { id: vehicleId } },
-        details,
-        status,
-        issuedOn,
+        client: { connect: { id: receipt.clientId } },
+        vehicle: { connect: { id: receipt.vehicleId } },
+        details: receipt.details,
+        status: receipt.status,
+        issuedOn: receipt.issuedOn,
       },
       include: {
         client: true,

@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { Client } from '~/entities/Client';
 import { IPagination } from '~/interface';
+import { RepoClientFindOrCreate, RepoClientsListFilters } from '~/types';
 import { withPagination } from '~/utils/withPagination';
 
 import { IClientsRepository } from '../IClientsRepository';
@@ -15,7 +16,7 @@ export class PrismaClientsRepository implements IClientsRepository {
     return data;
   }
 
-  async findOrCreate(client: Client): Promise<Client> {
+  async findOrCreate(client: RepoClientFindOrCreate): Promise<Client> {
     let dbClient = await this.prisma.client.findOne({ where: { document: client.document } });
 
     if(!dbClient) {
@@ -25,7 +26,7 @@ export class PrismaClientsRepository implements IClientsRepository {
     return dbClient;
   }
 
-  async list(page = 1, limit = 10, filters?: Pick<Client, 'name'|'document'|'group'>): Promise<IPagination<Client>> {
+  async list(page = 1, limit = 10, filters?: RepoClientsListFilters): Promise<IPagination<Client>> {
     const data = await this.prisma.client.findMany({
       where: {
         AND: {
