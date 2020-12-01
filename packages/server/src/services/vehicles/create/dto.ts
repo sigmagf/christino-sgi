@@ -1,6 +1,3 @@
-export interface IVehiclesCreateRequestDTO {
-  plate: string;
-  renavam: string;
-  brandModel: string;
-  type: string;
-}
+import { RepoVehiclesSave } from '~/types';
+
+export type IVehiclesCreateRequestDTO = RepoVehiclesSave;

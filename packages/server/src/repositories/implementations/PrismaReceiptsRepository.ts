@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { Receipt } from '~/entities/Receipts';
 import { IPagination } from '~/interface';
-import { RepoReceiptsListFilters } from '~/types';
+import { RepoReceiptsListFilters, RepoReceiptsSave, RepoReceiptsUpdate } from '~/types';
 import { withPagination } from '~/utils/withPagination';
 
 import { IReceiptsRepository } from '../IReceiptsRepository';
@@ -52,7 +52,7 @@ export class PrismaReceiptsRepository implements IReceiptsRepository {
     return withPagination(data, page, limit);
   }
 
-  async save(receipt: Omit<Receipt, 'client'|'vehicle'>): Promise<Receipt> {
+  async save(receipt: RepoReceiptsSave): Promise<Receipt> {
     const data = await this.prisma.receipt.create({
       data: {
         client: { connect: { id: receipt.clientId } },
@@ -70,7 +70,7 @@ export class PrismaReceiptsRepository implements IReceiptsRepository {
     return data;
   }
 
-  async update(id: string, { clientId, vehicleId, details, status, issuedOn }: Omit<Receipt, 'id'>): Promise<Receipt> {
+  async update(id: string, { clientId, vehicleId, details, status, issuedOn }: RepoReceiptsUpdate): Promise<Receipt> {
     const data = await this.prisma.receipt.update({
       where: { clientId_vehicleId: { clientId, vehicleId } },
       data: {

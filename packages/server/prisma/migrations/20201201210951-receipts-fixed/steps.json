@@ -1,0 +1,65 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "DeleteModel",
+      "model": "newReceipt"
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Client",
+          "field": "Receipt"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "newValue": "\"receipt-client\""
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Vehicle",
+          "field": "Receipt"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "newValue": "\"receipt-vehicle\""
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Receipt",
+          "field": "client"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "newValue": "\"receipt-client\""
+    },
+    {
+      "tag": "UpdateArgument",
+      "location": {
+        "tag": "Directive",
+        "path": {
+          "tag": "Field",
+          "model": "Receipt",
+          "field": "vehicle"
+        },
+        "directive": "relation"
+      },
+      "argument": "",
+      "newValue": "\"receipt-vehicle\""
+    }
+  ]
+}

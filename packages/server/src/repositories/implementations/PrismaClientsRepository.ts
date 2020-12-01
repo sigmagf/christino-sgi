@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { Client } from '~/entities/Client';
 import { IPagination } from '~/interface';
-import { RepoClientFindOrCreate, RepoClientsListFilters } from '~/types';
+import { RepoClientFindOrCreate, RepoClientsListFilters, RepoClientsSave, RepoClientsUpdate } from '~/types';
 import { withPagination } from '~/utils/withPagination';
 
 import { IClientsRepository } from '../IClientsRepository';
@@ -41,13 +41,13 @@ export class PrismaClientsRepository implements IClientsRepository {
     return withPagination(data, page, limit);
   }
 
-  async save(client: Client): Promise<Client> {
+  async save(client: RepoClientsSave): Promise<Client> {
     const data = await this.prisma.client.create({ data: client });
 
     return data;
   }
 
-  async update(id: string, client: Omit<Client, 'id'>): Promise<Client> {
+  async update(id: string, client: RepoClientsUpdate): Promise<Client> {
     const data = await this.prisma.client.update({ where: { id }, data: client });
 
     return data;

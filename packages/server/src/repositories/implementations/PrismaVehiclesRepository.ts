@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { Vehicle } from '~/entities/Vehicle';
 import { IPagination } from '~/interface';
-import { RepoVehicleFindOrCreate, RepoVehicleListFilters } from '~/types';
+import { RepoVehiclesFindOrCreate, RepoVehiclesListFilters, RepoVehiclesSave, RepoVehiclesUpdate } from '~/types';
 import { withPagination } from '~/utils/withPagination';
 
 import { IVehiclesRepository } from '../IVehiclesRepository';
@@ -11,12 +11,30 @@ export class PrismaVehiclesRepository implements IVehiclesRepository {
   private prisma = new PrismaClient();
 
   async find(id: string, plate: string, renavam: string): Promise<Vehicle> {
-    const data = await this.prisma.vehicle.findOne({ where: { id, plate, renavam } });
+    const dbVehicleId = await this.prisma.vehicle.findOne({ where: { id } });
+    const dbVehiclePlate = await this.prisma.vehicle.findOne({ where: { plate } });
+    const dbVehicleRenavam = await this.prisma.vehicle.findOne({ where: { renavam } });
 
-    return data;
+    if(!dbVehicleId && !dbVehiclePlate && !dbVehicleRenavam) {
+      return null;
+    }
+
+    if(dbVehicleId && dbVehiclePlate && dbVehicleId.id !== dbVehiclePlate.id) {
+      throw new Error('Two diferent entries founded in database.');
+    }
+
+    if(dbVehicleId && dbVehicleRenavam && dbVehicleId.id !== dbVehicleRenavam.id) {
+      throw new Error('Two diferent entries founded in database.');
+    }
+
+    if(dbVehiclePlate && dbVehicleRenavam && dbVehicleRenavam.id !== dbVehiclePlate.id) {
+      throw new Error('Two diferent entries founded in database.');
+    }
+
+    return dbVehicleId || dbVehiclePlate || dbVehicleRenavam;
   }
 
-  async findOrCreate(vehicle: RepoVehicleFindOrCreate): Promise<Vehicle> {
+  async findOrCreate(vehicle: RepoVehiclesFindOrCreate): Promise<Vehicle> {
     const dbVehiclePlate = await this.prisma.vehicle.findOne({ where: { plate: vehicle.plate } });
     const dbVehicleRenavam = await this.prisma.vehicle.findOne({ where: { renavam: vehicle.renavam } });
 
@@ -33,7 +51,7 @@ export class PrismaVehiclesRepository implements IVehiclesRepository {
     return dbVehiclePlate;
   }
 
-  async list(page = 1, limit = 10, filters?: RepoVehicleListFilters): Promise<IPagination<Vehicle>> {
+  async list(page = 1, limit = 10, filters?: RepoVehiclesListFilters): Promise<IPagination<Vehicle>> {
     const data = await this.prisma.vehicle.findMany({
       where: {
         AND: {
@@ -49,13 +67,13 @@ export class PrismaVehiclesRepository implements IVehiclesRepository {
     return withPagination(data, page, limit);
   }
 
-  async save(vehicle: Vehicle): Promise<Vehicle> {
+  async save(vehicle: RepoVehiclesSave): Promise<Vehicle> {
     const data = await this.prisma.vehicle.create({ data: vehicle });
 
     return data;
   }
 
-  async update(id: string, vehicle: Omit<Vehicle, 'id'>): Promise<Vehicle> {
+  async update(id: string, vehicle: RepoVehiclesUpdate): Promise<Vehicle> {
     const data = await this.prisma.vehicle.update({ where: { id }, data: vehicle });
 
     return data;

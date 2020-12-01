@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 model User {
@@ -26,7 +26,7 @@ model Client {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
   
-  Receipt   Receipt[] @relation("receipt-client")
+  Receipt   Receipt[] @relation("receipt-client-old")
 
   @@map("clients")
 }
@@ -40,7 +40,7 @@ model Vehicle {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now()) @updatedAt
 
-  Receipt    Receipt[] @relation("receipt-vehicle")
+  Receipt    Receipt[] @relation("receipt-vehicle-old")
 
   @@map("vehicles")
 }
@@ -54,11 +54,26 @@ model Receipt {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
 
+  client    Client    @relation("receipt-client-old", fields: [clientId], references: [id])
+  vehicle   Vehicle   @relation("receipt-vehicle-old", fields: [vehicleId], references: [id])
+
+  @@id([clientId, vehicleId])
+  @@map("receipts")
+}
+
+model newReceipt {
+  clientId  String
+  vehicleId String
+  details   String?
+  status    Int       @default(1)
+  issuedOn  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+
   client    Client    @relation("receipt-client", fields: [clientId], references: [id])
   vehicle   Vehicle   @relation("receipt-vehicle", fields: [vehicleId], references: [id])
 
   @@id([clientId, vehicleId])
-  @@map("receipts")
 }
 
 model Work {

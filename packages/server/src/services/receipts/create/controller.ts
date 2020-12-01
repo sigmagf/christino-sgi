@@ -10,7 +10,7 @@ export class ReceiptsCreateController {
     const { client, vehicle, details, status, issuedOn } = await req.body as IReceiptsCreateRequestDTO;
 
     if(!status || !issuedOn) {
-      return res.status(400).json({ message: 'Invalid sended data. [status or issuedOn]' });
+      return res.status(400).json({ message: 'Invalid sended data. [status, issuedOn]' });
     }
 
     if(!client || !client.name || !client.document) {

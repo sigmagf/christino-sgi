@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { User } from '~/entities/User';
 import { IPagination } from '~/interface';
-import { RepoUsersListFilters } from '~/types';
+import { RepoUsersListFilters, RepoUsersSave, RepoUsersUpdate } from '~/types';
 import { withPagination } from '~/utils/withPagination';
 
 import { IUsersRepository } from '../IUsersRepository';
@@ -30,13 +30,13 @@ export class PrismaUsersRepository implements IUsersRepository {
     return withPagination(data, page, limit);
   }
 
-  async save(user: User): Promise<User> {
+  async save(user: RepoUsersSave): Promise<User> {
     const data = await this.prisma.user.create({ data: user });
 
     return data;
   }
 
-  async update(id: string, user: Omit<User, 'id'>): Promise<User> {
+  async update(id: string, user: RepoUsersUpdate): Promise<User> {
     const data = await this.prisma.user.update({ where: { id }, data: user });
 
     return data;

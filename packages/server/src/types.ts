@@ -1,19 +1,32 @@
 import { Client } from './entities/Client';
+import { Receipt } from './entities/Receipts';
 import { User } from './entities/User';
 import { Vehicle } from './entities/Vehicle';
 
-export type ReceiptStatus = 'ORIGINAL'|'XEROX'|'OUTRO'|'BAIXADO';
-
+/* REPOSITORY CLIENTS */
 export type RepoClientFindOrCreate = Omit<Client, 'id'|'createdAt'|'updatedAt'>;
-export type RepoVehicleFindOrCreate = Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>;
+export type RepoClientsListFilters = Omit<Client, 'id'|'createdAt'|'updatedAt'>;
+export type RepoClientsSave = Omit<Client, 'id'|'createdAt'|'updatedAt'>;
+export type RepoClientsUpdate = Omit<Client, 'id'|'createdAt'|'updatedAt'>;
 
-export type RepoClientsListFilters = Pick<Client, 'name'|'document'|'group'>;
-export type RepoVehicleListFilters = Pick<Vehicle, 'plate'|'renavam'|'brandModel'|'type'>;
-export type RepoUsersListFilters = Pick<User, 'name'|'email'>
+/* REPOSITORY RECEIPTS */
 export type RepoReceiptsListFilters = {
-  client: RepoClientFindOrCreate;
-  vehicle: RepoVehicleFindOrCreate;
+  client: Omit<Client, 'id'|'createdAt'|'updatedAt'>;
+  vehicle: Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>;
   details: string;
   issuedOn: Date;
-  status: ReceiptStatus;
+  status: number;
 }
+export type RepoReceiptsSave = Omit<Receipt, 'client'|'vehicle'>;
+export type RepoReceiptsUpdate = Omit<Receipt, 'client'|'vehicle'>;
+
+/* REPOSITORY USERS */
+export type RepoUsersListFilters = Pick<User, 'name'|'email'>;
+export type RepoUsersSave = Omit<User, 'id'|'createdAt'|'updatedAt'>;
+export type RepoUsersUpdate = Omit<User, 'id'|'createdAt'|'updatedAt'>;
+
+/* REPOSITORY VEHICLES */
+export type RepoVehiclesFindOrCreate = Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>;
+export type RepoVehiclesListFilters = Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>;
+export type RepoVehiclesSave = Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>;
+export type RepoVehiclesUpdate = Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>;

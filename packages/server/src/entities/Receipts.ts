@@ -1,5 +1,3 @@
-import { ReceiptStatus } from '~/types';
-
 import { Client } from './Client';
 import { Vehicle } from './Vehicle';
 
@@ -9,7 +7,7 @@ export class Receipt {
   public vehicleId: string;
   public readonly vehicle: Vehicle;
   public details: string;
-  public status: ReceiptStatus;
+  public status: number;
   public issuedOn: Date;
 
   public readonly createdAt?: Date;

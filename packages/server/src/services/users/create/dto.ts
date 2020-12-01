@@ -1,5 +1,3 @@
-export interface IUsersCreateRequestDTO {
-  name: string;
-  email: string;
-  password: string;
-}
+import { RepoUsersSave } from '~/types';
+
+export type IUsersCreateRequestDTO = RepoUsersSave;
