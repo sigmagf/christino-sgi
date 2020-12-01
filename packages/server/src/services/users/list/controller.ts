@@ -15,18 +15,8 @@ export class UsersListController {
       const response = await this.service.execute({ page, limit, filters: { name, email } });
 
       const responseWithoutPassword: typeof response = {
-        page: {
-          ...response.page,
-        },
-        data: response.data.map((e) => ({
-          ...e,
-          password: undefined,
-          newEmail: undefined,
-          newEmailExpires: undefined,
-          newEmailToken: undefined,
-          pwdRstExpires: undefined,
-          pwdRstToken: undefined,
-        })),
+        page: response.page,
+        data: response.data.map((e) => ({ ...e, password: undefined })),
       };
 
       return res.json(responseWithoutPassword);

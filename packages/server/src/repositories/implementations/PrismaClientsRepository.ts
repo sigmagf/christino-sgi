@@ -15,6 +15,16 @@ export class PrismaClientsRepository implements IClientsRepository {
     return data;
   }
 
+  async findOrCreate(client: Client): Promise<Client> {
+    let dbClient = await this.prisma.client.findOne({ where: { document: client.document } });
+
+    if(!dbClient) {
+      dbClient = await this.prisma.client.create({ data: client });
+    }
+
+    return dbClient;
+  }
+
   async list(page = 1, limit = 10, filters?: Pick<Client, 'name'|'document'|'group'>): Promise<IPagination<Client>> {
     const data = await this.prisma.client.findMany({
       where: {

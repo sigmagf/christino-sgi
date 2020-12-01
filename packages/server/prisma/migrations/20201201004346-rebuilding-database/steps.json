@@ -1,0 +1,16 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "DeleteField",
+      "model": "Receipt",
+      "field": "id"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "Receipt",
+      "field": "issuedOn",
+      "arity": "Required"
+    }
+  ]
+}

@@ -2,6 +2,8 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
+import { usersFindSerivce } from '~/services/users/find';
+
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
@@ -21,12 +23,16 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     return res.status(401).json({ message: 'Token malformated' });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decode: { id: string }) => {
+  jwt.verify(token, process.env.JWT_SECRET, async (err, decode: { id: string }) => {
     if(err) {
       return res.status(401).json({ message: 'Token invalid' });
     }
 
-    req.userId = decode.id;
-    next();
+    if(await usersFindSerivce.execute({ id: decode.id })) {
+      req.userId = decode.id;
+      return next();
+    }
+
+    return res.status(401).json({ message: 'Token user not found.' });
   });
 };

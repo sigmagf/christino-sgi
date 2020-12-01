@@ -4,23 +4,21 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-enum ReceiptType {
-  ORIGINAL
-  XEROX
-  OUTRO
-  BAIXADO
+  url = "***"
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  id              String    @id @default(uuid())
+  name            String
+  email           String    @unique
+  password        String
+  newEmail        String?
+  newEmailToken   String?
+  newEmailExpires DateTime?
+  pwdRstToken     String?
+  pwdRstExpires   DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @default(now()) @updatedAt
 
   @@map("users")
 }
@@ -53,17 +51,18 @@ model Vehicle {
 }
 
 model Receipt {
+  id        String    @unique @default(uuid())
   clientId  String
   vehicleId String
   details   String?
-  status    ReceiptType
+  status    String
   issuedOn  DateTime?
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @default(now()) @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
 
-  client    Client      @relation("receipt-client", fields: [clientId], references: [id])
-  vehicle   Vehicle     @relation("receipt-vehicle", fields: [vehicleId], references: [id])
+  client    Client    @relation("receipt-client", fields: [clientId], references: [id])
+  vehicle   Vehicle   @relation("receipt-vehicle", fields: [vehicleId], references: [id])
 
-  @@id([clientId, vehicleId])
   @@map("receipts")
+  @@id([clientId, vehicleId])
 }

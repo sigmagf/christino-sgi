@@ -12,15 +12,7 @@ export class UsersUpdateController {
 
     try {
       const response = await this.service.execute({ id, name, email, password });
-      const responseWithoutPassword: typeof response = {
-        ...response,
-        password: undefined,
-        newEmail: undefined,
-        newEmailExpires: undefined,
-        newEmailToken: undefined,
-        pwdRstExpires: undefined,
-        pwdRstToken: undefined,
-      };
+      const responseWithoutPassword: typeof response = { ...response, password: undefined };
 
       return res.json(responseWithoutPassword);
     } catch(err) {

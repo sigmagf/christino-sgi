@@ -15,6 +15,16 @@ export class PrismaVehiclesRepository implements IVehiclesRepository {
     return data;
   }
 
+  async findOrCreate(vehicle: Vehicle): Promise<Vehicle> {
+    let dbVehicle = await this.prisma.vehicle.findOne({ where: { plate: vehicle.plate, renavam: vehicle.renavam } });
+
+    if(!dbVehicle) {
+      dbVehicle = await this.prisma.vehicle.create({ data: vehicle });
+    }
+
+    return dbVehicle;
+  }
+
   async list(page = 1, limit = 10, filters?: VehiclesRepositoryListFilters): Promise<IPagination<Vehicle>> {
     const data = await this.prisma.vehicle.findMany({
       where: {
