@@ -6,10 +6,10 @@ export class UsersFindService {
   constructor(private repository: IUsersRepository) { }
 
   async execute(data: IUsersFindRequestDTO) {
-    const user = await this.repository.find(data.id, undefined);
+    const user = await this.repository.find(data.id);
 
     if(!user) {
-      throw new Error('User not founded.');
+      throw new Error('No user founded.');
     }
 
     return user;

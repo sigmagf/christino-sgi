@@ -7,7 +7,7 @@ export class ClientCreateService {
   constructor(private repository: IClientsRepository) { }
 
   async execute(data: IClientsCreateRequestDTO) {
-    if(await this.repository.find(undefined, data.document)) {
+    if(await this.repository.findByDocument(data.document)) {
       throw new Error('Client already exists.');
     }
 

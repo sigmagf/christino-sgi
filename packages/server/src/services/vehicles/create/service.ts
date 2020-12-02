@@ -7,11 +7,11 @@ export class ClientCreateService {
   constructor(private repository: IVehiclesRepository) { }
 
   async execute(data: IVehiclesCreateRequestDTO) {
-    if(await this.repository.find(undefined, data.plate, undefined)) {
+    if(await this.repository.findByPlate(data.plate)) {
       throw new Error('Vehicle already exists with plate.');
     }
 
-    if(await this.repository.find(undefined, undefined, data.renavam)) {
+    if(await this.repository.findByRenavam(data.renavam)) {
       throw new Error('Vehicle already exists with renavam.');
     }
 

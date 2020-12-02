@@ -10,20 +10,26 @@ import { IClientsRepository } from '../IClientsRepository';
 export class PrismaClientsRepository implements IClientsRepository {
   private prisma = new PrismaClient();
 
-  async find(id: string, document: string): Promise<Client> {
-    const data = await this.prisma.client.findOne({ where: { id, document } });
+  async find(id: string): Promise<Client> {
+    const data = await this.prisma.client.findUnique({ where: { id } });
+
+    return data;
+  }
+
+  async findByDocument(document: string): Promise<Client> {
+    const data = await this.prisma.client.findUnique({ where: { document } });
 
     return data;
   }
 
   async findOrCreate(client: RepoClientFindOrCreate): Promise<Client> {
-    let dbClient = await this.prisma.client.findOne({ where: { document: client.document } });
+    let data = await this.prisma.client.findUnique({ where: { document: client.document } });
 
-    if(!dbClient) {
-      dbClient = await this.prisma.client.create({ data: client });
+    if(!data) {
+      data = await this.prisma.client.create({ data: client });
     }
 
-    return dbClient;
+    return data;
   }
 
   async list(page = 1, limit = 10, filters?: RepoClientsListFilters): Promise<IPagination<Client>> {

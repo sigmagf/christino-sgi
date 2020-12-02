@@ -7,6 +7,7 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '~/styles/global';
 import { theme } from '~/styles/theme';
 
+import { StyledToastContainer } from './components/Layout/styles';
 import { NotFoundError } from './pages/404';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
@@ -31,6 +32,14 @@ const App: React.FC = () => {
         </Routes>
       </BrowserRouter>
 
+      <StyledToastContainer
+        pauseOnHover
+        pauseOnFocusLoss
+        newestOnTop
+        position="top-center"
+        limit={5}
+        autoClose={10000}
+      />
       <GlobalStyle />
     </ThemeProvider>
   );

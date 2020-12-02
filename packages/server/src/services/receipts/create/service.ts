@@ -1,7 +1,4 @@
-import bcrypt from 'bcryptjs';
-
 import { Receipt } from '~/entities/Receipts';
-import { User } from '~/entities/User';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IReceiptsRepository } from '~/repositories/IReceiptsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
@@ -21,6 +18,10 @@ export class ReceiptsCreateService {
 
     if(!client || !vehicle) {
       throw new Error('Database error.');
+    }
+
+    if(await this.receipts.find(client.id, vehicle.id)) {
+      throw new Error('Receipt already exists.');
     }
 
     const receipt = await this.receipts.save(new Receipt(data, client.id, vehicle.id));

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 
 import { Card } from '~/components/Card';
 import { Layout } from '~/components/Layout';
@@ -6,6 +7,7 @@ import { Pagination } from '~/components/Pagination';
 import { useLocalStorage } from '~/hooks';
 import { IPagination, IReceipt } from '~/interfaces';
 import { api } from '~/services/api';
+import { translateTranslateMessages } from '~/utils/translateBackendMessages';
 
 import { ReceiptsFilters } from './Filters';
 import { EditModal } from './Modal';
@@ -21,20 +23,24 @@ export const Receipts: React.FC = () => {
   const [receipt, setReceipt] = useState<IReceipt>();
 
   const getData = async (page = 1, limit = 10, filters?: Pick<IReceipt, 'client'|'vehicle'>) => {
-    let filtersStr = filters?.client.name ? `&clientName=${filters?.client.name.toUpperCase()}` : '';
-    filtersStr += filters?.client.group ? `&clientGroup=${filters?.client.group.toUpperCase()}` : '';
+    let filtersStr = filters?.client.name ? `&name=${filters?.client.name.toUpperCase()}` : '';
+    filtersStr += filters?.client.group ? `&group=${filters?.client.group.toUpperCase()}` : '';
 
-    filtersStr += filters?.vehicle.plate ? `&vehiclePlate=${filters.vehicle.plate.toUpperCase()}` : '';
-    filtersStr += filters?.vehicle.renavam ? `&vehicleRenavam=${filters.vehicle.renavam.toUpperCase()}` : '';
-    filtersStr += filters?.vehicle.brandModel ? `&vehicleBrandModel=${filters.vehicle.brandModel.toUpperCase()}` : '';
+    filtersStr += filters?.vehicle.plate ? `&plate=${filters.vehicle.plate.toUpperCase()}` : '';
+    filtersStr += filters?.vehicle.renavam ? `&renavam=${filters.vehicle.renavam.toUpperCase()}` : '';
+    filtersStr += filters?.vehicle.brandModel ? `&brandModel=${filters.vehicle.brandModel.toUpperCase()}` : '';
 
-    const { data } = await api.get(`/receipts?page=${page}&limit=${limit}${filtersStr}`, {
-      headers: {
-        authorization: `Bearer ${storage.getItem('token')}`,
-      },
-    });
+    try {
+      const request = await api.get(`/receipts?page=${page}&limit=${limit}${filtersStr}`, {
+        headers: {
+          authorization: `Bearer ${storage.getItem('token')}`,
+        },
+      });
 
-    setReceipts(data);
+      setReceipts(request.data);
+    } catch(err) {
+      toast.error(translateTranslateMessages(err.response.data.message));
+    }
   };
 
   const onModalOpen = (dt: IReceipt) => {
@@ -52,7 +58,7 @@ export const Receipts: React.FC = () => {
   };
 
   const onPaginationMaxResultsClick = (maxResults: number) => {
-    if(maxResults !== receipts?.limit) {
+    if(maxResults !== receipts?.page.limit) {
       getData(1, maxResults);
     }
   };
@@ -71,13 +77,13 @@ export const Receipts: React.FC = () => {
           <ReceiptsFilters onFilterSubmit={onApplyFilters} />
         </Card>
 
-        {receipts && receipts.result && receipts.result.length > 0 && (
+        {receipts && receipts.data && receipts.data.length > 0 && (
           <>
-            <ReceiptsTable receipts={receipts.result} onReceiptDetailButton={onModalOpen} />
+            <ReceiptsTable receipts={receipts.data} onReceiptDetailButton={onModalOpen} />
             <Card style={{ margin: '15px 0' }}>
               <Pagination
-                currentPage={receipts.current}
-                totalPages={receipts.total}
+                currentPage={receipts.page.current}
+                totalPages={receipts.page.total}
                 onNumberClick={onPaginationClick}
                 onMaxResultsChange={onPaginationMaxResultsClick}
               />

@@ -6,12 +6,12 @@ export class ReceiptsListService {
   constructor(private repository: IReceiptsRepository) { }
 
   async execute(data: IReceiptsListRequestDTO) {
-    const vehicles = await this.repository.list(data.page, data.limit, data.filters);
+    const receipts = await this.repository.list(data.page, data.limit, data.filters);
 
-    if(vehicles.data.length <= 0) {
-      throw new Error('No vehicles founded.');
+    if(receipts.data.length <= 0) {
+      throw new Error('No receipts founded.');
     }
 
-    return vehicles;
+    return receipts;
   }
 }

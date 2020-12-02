@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/camelcase */
 import { PrismaClient } from '@prisma/client';
 
 import { Receipt } from '~/entities/Receipts';
@@ -11,9 +10,9 @@ import { IReceiptsRepository } from '../IReceiptsRepository';
 export class PrismaReceiptsRepository implements IReceiptsRepository {
   private prisma = new PrismaClient();
 
-  async find(vehicleId: string, clientId: string): Promise<Receipt> {
-    const data = await this.prisma.receipt.findOne({
-      where: { clientId_vehicleId: { vehicleId, clientId } },
+  async find(clientId: string, vehicleId: string): Promise<Receipt> {
+    const data = await this.prisma.receipt.findUnique({
+      where: { clientId_vehicleId: { clientId, vehicleId } },
       include: {
         client: true,
         vehicle: true,
@@ -70,16 +69,10 @@ export class PrismaReceiptsRepository implements IReceiptsRepository {
     return data;
   }
 
-  async update(id: string, { clientId, vehicleId, details, status, issuedOn }: RepoReceiptsUpdate): Promise<Receipt> {
+  async update(clientId: string, vehicleId: string, receipt: RepoReceiptsUpdate): Promise<Receipt> {
     const data = await this.prisma.receipt.update({
       where: { clientId_vehicleId: { clientId, vehicleId } },
-      data: {
-        client: { connect: { id: clientId } },
-        vehicle: { connect: { id: vehicleId } },
-        details,
-        status,
-        issuedOn,
-      },
+      data: receipt,
       include: {
         client: true,
         vehicle: true,

@@ -9,7 +9,7 @@ export class UsersAuthService {
   constructor(private repository: IUsersRepository) { }
 
   async execute(data: IUsersAuthRequestDTO) {
-    const user = await this.repository.find(undefined, data.email);
+    const user = await this.repository.findByEmail(data.email);
 
     if(!user) {
       throw new Error('No user founded.');

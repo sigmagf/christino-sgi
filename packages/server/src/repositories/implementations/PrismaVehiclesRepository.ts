@@ -10,33 +10,27 @@ import { IVehiclesRepository } from '../IVehiclesRepository';
 export class PrismaVehiclesRepository implements IVehiclesRepository {
   private prisma = new PrismaClient();
 
-  async find(id: string, plate: string, renavam: string): Promise<Vehicle> {
-    const dbVehicleId = await this.prisma.vehicle.findOne({ where: { id } });
-    const dbVehiclePlate = await this.prisma.vehicle.findOne({ where: { plate } });
-    const dbVehicleRenavam = await this.prisma.vehicle.findOne({ where: { renavam } });
+  async find(id: string): Promise<Vehicle> {
+    const data = await this.prisma.vehicle.findUnique({ where: { id } });
 
-    if(!dbVehicleId && !dbVehiclePlate && !dbVehicleRenavam) {
-      return null;
-    }
+    return data;
+  }
 
-    if(dbVehicleId && dbVehiclePlate && dbVehicleId.id !== dbVehiclePlate.id) {
-      throw new Error('Two diferent entries founded in database.');
-    }
+  async findByPlate(plate: string): Promise<Vehicle> {
+    const data = await this.prisma.vehicle.findUnique({ where: { plate } });
 
-    if(dbVehicleId && dbVehicleRenavam && dbVehicleId.id !== dbVehicleRenavam.id) {
-      throw new Error('Two diferent entries founded in database.');
-    }
+    return data;
+  }
 
-    if(dbVehiclePlate && dbVehicleRenavam && dbVehicleRenavam.id !== dbVehiclePlate.id) {
-      throw new Error('Two diferent entries founded in database.');
-    }
+  async findByRenavam(renavam: string): Promise<Vehicle> {
+    const data = await this.prisma.vehicle.findUnique({ where: { renavam } });
 
-    return dbVehicleId || dbVehiclePlate || dbVehicleRenavam;
+    return data;
   }
 
   async findOrCreate(vehicle: RepoVehiclesFindOrCreate): Promise<Vehicle> {
-    const dbVehiclePlate = await this.prisma.vehicle.findOne({ where: { plate: vehicle.plate } });
-    const dbVehicleRenavam = await this.prisma.vehicle.findOne({ where: { renavam: vehicle.renavam } });
+    const dbVehiclePlate = await this.prisma.vehicle.findUnique({ where: { plate: vehicle.plate } });
+    const dbVehicleRenavam = await this.prisma.vehicle.findUnique({ where: { renavam: vehicle.renavam } });
 
     if(!dbVehiclePlate && !dbVehicleRenavam) {
       const newVehicle = await this.prisma.vehicle.create({ data: vehicle });

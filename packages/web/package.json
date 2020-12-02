@@ -38,6 +38,7 @@
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "3.4.1",
     "react-select": "^3.1.1",
+    "react-toastify": "^6.1.0",
     "sigma-cli": "^0.5.4-r3",
     "styled-components": "^5.1.1",
     "swr": "^0.3.2",

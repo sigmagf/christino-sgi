@@ -8,10 +8,13 @@ export class ClientsUpdateController {
 
   async handle(req: Request, res: Response) {
     const { id } = req.params;
-    const { name, document, group } = req.body as IClientsUpdateRequestDTO;
+    const { name, document, group } = req.body as IClientsUpdateRequestDTO['client'];
 
     try {
-      const response = await this.service.execute({ id, name, document, group });
+      const response = await this.service.execute({
+        id,
+        client: { name, document, group },
+      });
 
       return res.json(response);
     } catch(err) {

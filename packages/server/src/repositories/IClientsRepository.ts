@@ -3,7 +3,8 @@ import { IPagination } from '~/interface';
 import { RepoClientFindOrCreate, RepoClientsListFilters, RepoClientsSave, RepoClientsUpdate } from '~/types';
 
 export interface IClientsRepository {
-  find(id: string, document: string): Promise<Client>;
+  find(id: string): Promise<Client>;
+  findByDocument(document: string): Promise<Client>;
   findOrCreate(client: RepoClientFindOrCreate): Promise<Client>;
   list(page: number, limit: number, filters?: RepoClientsListFilters): Promise<IPagination<Client>>;
   save(client: RepoClientsSave): Promise<Client>;

@@ -7,4 +7,4 @@ const repository = new PrismaVehiclesRepository();
 const service = new VehiclesUpdateService(repository);
 const controller = new VehiclesUpdateController(service);
 
-export { controller as clientsUpdateController, service as clientsUpdateSerivce };
+export { controller as vehiclesUpdateController, service as vehiclesUpdateSerivce };

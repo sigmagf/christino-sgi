@@ -18,7 +18,7 @@ export type RepoReceiptsListFilters = {
   status: number;
 }
 export type RepoReceiptsSave = Omit<Receipt, 'client'|'vehicle'>;
-export type RepoReceiptsUpdate = Omit<Receipt, 'client'|'vehicle'>;
+export type RepoReceiptsUpdate = Omit<Receipt, 'clientId'|'client'|'vehicleId'|'vehicle'>;
 
 /* REPOSITORY USERS */
 export type RepoUsersListFilters = Pick<User, 'name'|'email'>;

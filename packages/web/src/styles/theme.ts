@@ -20,6 +20,10 @@ const theme = {
     main: '#EF3340',
     contrastText: '#FFFFFF',
   },
+  info: {
+    main: '#4d6dff',
+    contrastText: '#FFFFFF',
+  },
 
   background: '#212429',
   text: '#FFFFFF',

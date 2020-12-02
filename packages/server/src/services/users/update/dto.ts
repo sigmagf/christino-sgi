@@ -1,6 +1,6 @@
+import { RepoUsersUpdate } from '~/types';
+
 export interface IUsersUpdateRequestDTO {
   id: string;
-  name: string;
-  email: string;
-  password: string;
+  user: RepoUsersUpdate;
 }

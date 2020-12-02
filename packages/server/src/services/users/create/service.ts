@@ -9,7 +9,7 @@ export class UsersCreateService {
   constructor(private repository: IUsersRepository) { }
 
   async execute(data: IUsersCreateRequestDTO) {
-    if(await this.repository.find(undefined, data.email)) {
+    if(await this.repository.findByEmail(data.email)) {
       throw new Error('User already exists.');
     }
 

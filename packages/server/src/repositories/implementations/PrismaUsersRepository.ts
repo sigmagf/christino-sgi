@@ -10,8 +10,14 @@ import { IUsersRepository } from '../IUsersRepository';
 export class PrismaUsersRepository implements IUsersRepository {
   private prisma = new PrismaClient();
 
-  async find(id: string, email: string): Promise<User> {
-    const data = await this.prisma.user.findOne({ where: { id, email } });
+  async find(id: string): Promise<User> {
+    const data = await this.prisma.user.findUnique({ where: { id } });
+
+    return data;
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    const data = await this.prisma.user.findUnique({ where: { email } });
 
     return data;
   }
