@@ -1,10 +1,10 @@
 import { PrismaCRVsRepository } from '~/repositories/implementations/PrismaCRVsRepository';
 
-import { ReceiptsFindController } from './controller';
-import { ReceiptsFindService } from './service';
+import { CRVsFindController } from './controller';
+import { CRVsFindService } from './service';
 
 const repository = new PrismaCRVsRepository();
-const service = new ReceiptsFindService(repository);
-const controller = new ReceiptsFindController(service);
+const service = new CRVsFindService(repository);
+const controller = new CRVsFindController(service);
 
-export { controller as receiptsFindController, service as receiptsFindSerivce };
+export { controller as crvsFindController, service as crvsFindSerivce };

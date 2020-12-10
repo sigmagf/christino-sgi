@@ -1,4 +1,4 @@
-export interface IReceiptsFindRequestDTO {
+export interface ICRVsFindRequestDTO {
   clientId: string;
   vehicleId: string;
 }

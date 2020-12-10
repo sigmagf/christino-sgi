@@ -10,15 +10,15 @@ export type RepoClientsSave = Omit<Client, 'id'|'createdAt'|'updatedAt'>;
 export type RepoClientsUpdate = Omit<Client, 'id'|'createdAt'|'updatedAt'>;
 
 /* REPOSITORY RECEIPTS */
-export type RepoReceiptsListFilters = {
+export type RepoCRVsListFilters = {
   client: Omit<Client, 'id'|'createdAt'|'updatedAt'>;
   vehicle: Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>;
   details: string;
   issuedOn: Date;
   status: number;
 }
-export type RepoReceiptsSave = Omit<Crv, 'client'|'vehicle'>;
-export type RepoReceiptsUpdate = Omit<Crv, 'clientId'|'client'|'vehicleId'|'vehicle'>;
+export type RepoCRVsSave = Omit<Crv, 'client'|'vehicle'>;
+export type RepoCRVsUpdate = Omit<Crv, 'clientId'|'client'|'vehicleId'|'vehicle'>;
 
 /* REPOSITORY USERS */
 export type RepoUsersListFilters = Pick<User, 'name'|'email'>;

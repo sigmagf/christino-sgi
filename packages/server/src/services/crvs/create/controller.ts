@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 
-import { IReceiptsCreateRequestDTO } from './dto';
-import { ReceiptsCreateService } from './service';
+import { ICRVsCreateRequestDTO } from './dto';
+import { CRVsCreateService } from './service';
 
-export class ReceiptsCreateController {
-  constructor(private service: ReceiptsCreateService) { }
+export class CRVsCreateController {
+  constructor(private service: CRVsCreateService) { }
 
   async handle(req: Request, res: Response) {
-    const { client, vehicle, details, status, issuedOn } = await req.body as IReceiptsCreateRequestDTO;
+    const { client, vehicle, details, status, issuedOn } = await req.body as ICRVsCreateRequestDTO;
 
     if(!status || !issuedOn) {
       return res.status(400).json({ message: 'Invalid sended data. [status, issuedOn]' });

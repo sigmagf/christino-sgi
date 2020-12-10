@@ -1,14 +1,14 @@
 import { Request, Response } from 'express';
 
-import { IReceiptsUpdateRequestDTO } from './dto';
-import { ReceiptsUpdateService } from './service';
+import { ICRVsUpdateRequestDTO } from './dto';
+import { CRVsUpdateService } from './service';
 
-export class ReceiptsUpdateController {
-  constructor(private service: ReceiptsUpdateService) { }
+export class CRVsUpdateController {
+  constructor(private service: CRVsUpdateService) { }
 
   async handle(req: Request, res: Response) {
     const { clientId, vehicleId } = req.params;
-    const { details, status, issuedOn } = await req.body as IReceiptsUpdateRequestDTO['receipt'];
+    const { details, status, issuedOn } = await req.body as ICRVsUpdateRequestDTO['receipt'];
 
     if(!clientId || !vehicleId) {
       return res.status(400).json({ message: 'Invalid sended data' });

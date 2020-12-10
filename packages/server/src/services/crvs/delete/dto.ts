@@ -1,4 +1,4 @@
-export interface IReceiptsDeleteRequestDTO {
+export interface ICRVsDeleteRequestDTO {
   clientId: string;
   vehicleId: string;
 }

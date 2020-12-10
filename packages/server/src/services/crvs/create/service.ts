@@ -3,16 +3,16 @@ import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { ICRVsRepository } from '~/repositories/ICRVsRepositoryRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
-import { IReceiptsCreateRequestDTO } from './dto';
+import { ICRVsCreateRequestDTO } from './dto';
 
-export class ReceiptsCreateService {
+export class CRVsCreateService {
   constructor(
-    private receipts: ICRVsRepository,
+    private crvs: ICRVsRepository,
     private clients: IClientsRepository,
     private vehicles: IVehiclesRepository,
   ) { }
 
-  async execute(data: IReceiptsCreateRequestDTO) {
+  async execute(data: ICRVsCreateRequestDTO) {
     const client = await this.clients.findOrCreate(data.client);
     const vehicle = await this.vehicles.findOrCreate(data.vehicle);
 
@@ -20,11 +20,11 @@ export class ReceiptsCreateService {
       throw new Error('Database error.');
     }
 
-    if(await this.receipts.find(client.id, vehicle.id)) {
+    if(await this.crvs.find(client.id, vehicle.id)) {
       throw new Error('Receipt already exists.');
     }
 
-    const receipt = await this.receipts.save(new Crv({
+    const receipt = await this.crvs.save(new Crv({
       ...data,
       clientId: client.id,
       vehicleId: vehicle.id,

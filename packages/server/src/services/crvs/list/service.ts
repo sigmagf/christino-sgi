@@ -1,17 +1,17 @@
-import { ICRVsRepositoryRepository } from '~/repositories/IReceiptsRepository';
+import { ICRVsRepositoryRepository } from '~/repositories/ICRVsRepository';
 
-import { IReceiptsListRequestDTO } from './dto';
+import { ICRVsListRequestDTO } from './dto';
 
-export class ReceiptsListService {
+export class CRVsListService {
   constructor(private repository: ICRVsRepositoryRepository) { }
 
-  async execute(data: IReceiptsListRequestDTO) {
-    const receipts = await this.repository.list(data.page, data.limit, data.filters);
+  async execute(data: ICRVsListRequestDTO) {
+    const crvs = await this.repository.list(data.page, data.limit, data.filters);
 
-    if(receipts.data.length <= 0) {
-      throw new Error('No receipts founded.');
+    if(crvs.data.length <= 0) {
+      throw new Error('No crvs founded.');
     }
 
-    return receipts;
+    return crvs;
   }
 }

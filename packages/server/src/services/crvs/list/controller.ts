@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 
 import { ReceiptStatus } from '~/types';
 
-import { ReceiptsListService } from './service';
+import { CRVsListService } from './service';
 
-export class ReceiptsListController {
-  constructor(private service: ReceiptsListService) { }
+export class CRVsListController {
+  constructor(private service: CRVsListService) { }
 
   async handle(req: Request, res: Response) {
     const page = parseInt(req.query.page as string || '1', 10);

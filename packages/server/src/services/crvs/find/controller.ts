@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 
-import { ReceiptsFindService } from './service';
+import { CRVsFindService } from './service';
 
-export class ReceiptsFindController {
-  constructor(private service: ReceiptsFindService) { }
+export class CRVsFindController {
+  constructor(private service: CRVsFindService) { }
 
   async handle(req: Request, res: Response) {
     const { clientId, vehicleId } = req.params;

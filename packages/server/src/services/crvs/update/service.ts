@@ -1,11 +1,11 @@
-import { ICRVsRepositoryRepository } from '~/repositories/IReceiptsRepository';
+import { ICRVsRepositoryRepository } from '~/repositories/ICRVsRepository';
 
-import { IReceiptsUpdateRequestDTO } from './dto';
+import { ICRVsUpdateRequestDTO } from './dto';
 
-export class ReceiptsUpdateService {
+export class CRVsUpdateService {
   constructor(private repository: ICRVsRepositoryRepository) { }
 
-  async execute(data: IReceiptsUpdateRequestDTO) {
+  async execute(data: ICRVsUpdateRequestDTO) {
     if(!await this.repository.find(data.clientId, data.vehicleId)) {
       throw new Error('No vehicle founded.');
     }

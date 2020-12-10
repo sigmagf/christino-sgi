@@ -1,7 +1,7 @@
-import { RepoReceiptsListFilters } from '~/types';
+import { RepoCRVsListFilters } from '~/types';
 
-export interface IReceiptsListRequestDTO {
+export interface ICRVsListRequestDTO {
   page: number;
   limit: number;
-  filters: RepoReceiptsListFilters;
+  filters: RepoCRVsListFilters;
 }

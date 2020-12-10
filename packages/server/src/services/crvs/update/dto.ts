@@ -1,7 +1,7 @@
-import { RepoReceiptsUpdate } from '~/types';
+import { RepoCRVsUpdate } from '~/types';
 
-export interface IReceiptsUpdateRequestDTO {
+export interface ICRVsUpdateRequestDTO {
   clientId: string;
   vehicleId: string;
-  receipt: RepoReceiptsUpdate;
+  receipt: RepoCRVsUpdate;
 }

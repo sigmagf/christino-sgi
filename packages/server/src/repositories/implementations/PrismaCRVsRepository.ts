@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { Crv } from '~/entities/CRV';
 import { IPagination } from '~/interface';
-import { RepoReceiptsListFilters, RepoReceiptsSave, RepoReceiptsUpdate } from '~/types';
+import { RepoCRVsListFilters, RepoCRVsSave, RepoCRVsUpdate } from '~/types';
 import { withPagination } from '~/utils/withPagination';
 
 import { ICRVsRepository } from '../ICRVsRepository';
@@ -22,7 +22,7 @@ export class PrismaCRVsRepository implements ICRVsRepository {
     return data;
   }
 
-  async list(page = 1, limit = 10, filters?: RepoReceiptsListFilters): Promise<IPagination<Crv>> {
+  async list(page = 1, limit = 10, filters?: RepoCRVsListFilters): Promise<IPagination<Crv>> {
     const data = await this.prisma.crv.findMany({
       where: {
         AND: {
@@ -51,7 +51,7 @@ export class PrismaCRVsRepository implements ICRVsRepository {
     return withPagination(data, page, limit);
   }
 
-  async save(receipt: RepoReceiptsSave): Promise<Crv> {
+  async save(receipt: RepoCRVsSave): Promise<Crv> {
     const data = await this.prisma.crv.create({
       data: {
         client: { connect: { id: receipt.clientId } },
@@ -69,7 +69,7 @@ export class PrismaCRVsRepository implements ICRVsRepository {
     return data;
   }
 
-  async update(clientId: string, vehicleId: string, receipt: RepoReceiptsUpdate): Promise<Crv> {
+  async update(clientId: string, vehicleId: string, receipt: RepoCRVsUpdate): Promise<Crv> {
     const data = await this.prisma.crv.update({
       where: { clientId_vehicleId: { clientId, vehicleId } },
       data: receipt,

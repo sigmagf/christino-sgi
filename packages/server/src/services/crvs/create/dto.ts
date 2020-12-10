@@ -1,3 +1,3 @@
-import { RepoReceiptsListFilters } from '~/types';
+import { RepoCRVsListFilters } from '~/types';
 
-export type IReceiptsCreateRequestDTO = RepoReceiptsListFilters;
+export type ICRVsCreateRequestDTO = RepoCRVsListFilters;

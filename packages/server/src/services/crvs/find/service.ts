@@ -1,11 +1,11 @@
-import { ICRVsRepositoryRepository } from '~/repositories/IReceiptsRepository';
+import { ICRVsRepositoryRepository } from '~/repositories/ICRVsRepository';
 
-import { IReceiptsFindRequestDTO } from './dto';
+import { ICRVsFindRequestDTO } from './dto';
 
-export class ReceiptsFindService {
+export class CRVsFindService {
   constructor(private repository: ICRVsRepositoryRepository) { }
 
-  async execute(data: IReceiptsFindRequestDTO) {
+  async execute(data: ICRVsFindRequestDTO) {
     const receipt = await this.repository.find(data.clientId, data.vehicleId);
 
     if(!receipt) {

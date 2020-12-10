@@ -1,11 +1,11 @@
-import { ICRVsRepositoryRepository } from '~/repositories/IReceiptsRepository';
+import { ICRVsRepositoryRepository } from '~/repositories/ICRVsRepository';
 
-import { IReceiptsDeleteRequestDTO } from './dto';
+import { ICRVsDeleteRequestDTO } from './dto';
 
-export class ReceiptsDeleteService {
+export class CRVsDeleteService {
   constructor(private repository: ICRVsRepositoryRepository) { }
 
-  async execute(data: IReceiptsDeleteRequestDTO) {
+  async execute(data: ICRVsDeleteRequestDTO) {
     await this.repository.delete(data.clientId, data.vehicleId);
   }
 }

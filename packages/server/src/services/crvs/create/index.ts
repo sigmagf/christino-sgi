@@ -2,13 +2,13 @@ import { PrismaClientsRepository } from '~/repositories/implementations/PrismaCl
 import { PrismaCRVsRepository } from '~/repositories/implementations/PrismaCRVsRepository';
 import { PrismaVehiclesRepository } from '~/repositories/implementations/PrismaVehiclesRepository';
 
-import { ReceiptsCreateController } from './controller';
-import { ReceiptsCreateService } from './service';
+import { CRVsCreateController } from './controller';
+import { CRVsCreateService } from './service';
 
-const receipts = new PrismaCRVsRepository();
+const crvs = new PrismaCRVsRepository();
 const clients = new PrismaClientsRepository();
 const vehicles = new PrismaVehiclesRepository();
-const service = new ReceiptsCreateService(receipts, clients, vehicles);
-const controller = new ReceiptsCreateController(service);
+const service = new CRVsCreateService(crvs, clients, vehicles);
+const controller = new CRVsCreateController(service);
 
-export { controller as receiptsCreateController, service as receiptsCreateSerivce };
+export { controller as crvsCreateController, service as crvsCreateSerivce };
