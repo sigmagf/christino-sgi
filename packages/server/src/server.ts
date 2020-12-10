@@ -1,7 +1,7 @@
 import { app } from './app';
 import { authMiddleware } from './middlewares/auth.middleware';
 import { clientsRouter } from './services/clients';
-import { crvsRepositoryRouter as crvsRouter } from './services/crvs';
+import { crvsRouter } from './services/crvs';
 import { usersRouter } from './services/users';
 import { vehiclesRouter } from './services/vehicles';
 
