@@ -1,7 +1,9 @@
-export const isAuthenticated = () => {
-  const token = localStorage.getItem('@christino-sgi/token');
+import { IUseLocalStorage } from '~/interfaces';
 
-  if(!token || token === '') {
+export const isAuthenticated = (storage: IUseLocalStorage) => {
+  const token = storage.getItem('token');
+
+  if(!token) {
     return false;
   }
 

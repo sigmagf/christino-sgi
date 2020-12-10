@@ -2,11 +2,11 @@ import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useRef } from 'react';
 import {
-  RiArrowLeftSLine as IconArrowLeft,
-  RiArrowLeftSFill as IconArrowLeftFill,
-  RiArrowRightSLine as IconArrowRight,
-  RiArrowRightSFill as IconArrowRightFill,
-} from 'react-icons/ri';
+  FaAngleLeft as IconNext,
+  FaAngleDoubleLeft as IconLast,
+  FaAngleRight as IconPrevious,
+  FaAngleDoubleRight as IconFirst,
+} from 'react-icons/fa';
 
 import { Select } from '../Form';
 import { Paginator, PaginatorNumbers } from './styles';
@@ -75,10 +75,10 @@ export const Pagination: React.FC<IPaginationProps> = ({
     <Paginator>
       <PaginatorNumbers>
         <button type="button" onClick={() => onNumberClick(1)} disabled={currentPage < 2}>
-          <IconArrowLeftFill size={20} />
+          <IconLast size={20} />
         </button>
         <button type="button" onClick={() => onNumberClick(currentPage - 1)} disabled={currentPage < 2}>
-          <IconArrowLeft size={20} />
+          <IconNext size={20} />
         </button>
 
         {pagesToShow.map((e) => (
@@ -94,10 +94,10 @@ export const Pagination: React.FC<IPaginationProps> = ({
         ))}
 
         <button type="button" onClick={() => onNumberClick(currentPage + 1)} disabled={currentPage >= totalPages}>
-          <IconArrowRight size={20} />
+          <IconPrevious size={20} />
         </button>
         <button type="button" onClick={() => onNumberClick(totalPages)} disabled={currentPage >= totalPages}>
-          <IconArrowRightFill size={20} />
+          <IconFirst size={20} />
         </button>
       </PaginatorNumbers>
 

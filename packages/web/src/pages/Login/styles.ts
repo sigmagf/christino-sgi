@@ -27,7 +27,7 @@ export const LoginContainer = styled.div`
       grid-template-columns: 1fr 40px;
       grid-template-areas: 'EM EM'
                            'PW PW'
-                           'SB RT';
+                           'SB SB';
 
       gap: 10px;
 

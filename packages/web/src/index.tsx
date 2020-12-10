@@ -7,7 +7,8 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '~/styles/global';
 import { theme } from '~/styles/theme';
 
-import { StyledToastContainer } from './components/Layout/styles';
+import { StyledToastContainer } from './components/StyledToastContainer';
+import { useLocalStorage } from './hooks';
 import { NotFoundError } from './pages/404';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
@@ -15,7 +16,9 @@ import { Receipts } from './pages/Receipts';
 import { isAuthenticated } from './services/isAuthenticated';
 
 const PrivateRoute: React.FC<RouteProps> = ({ element, ...rest }) => {
-  return <Route {...rest} element={isAuthenticated() ? element : <Navigate to="/login" replace />} />;
+  const storage = useLocalStorage();
+
+  return <Route {...rest} element={isAuthenticated(storage) ? element : <Navigate to="/login" replace />} />;
 };
 
 const App: React.FC = () => {

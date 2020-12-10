@@ -3,8 +3,8 @@ import { Form } from '@unform/web';
 import { transparentize } from 'polished';
 import React, { useRef, useState } from 'react';
 import {
-  RiCloseLine as IconClose,
-} from 'react-icons/ri';
+  FaTimes as IconClose,
+} from 'react-icons/fa';
 import Modal from 'react-modal';
 
 import { Button } from '~/components/Button';
@@ -70,7 +70,6 @@ export const EditModal: React.FC<IEditModalProps> = ({ receipt, isOpen, onClose 
 
   const onSubmit: SubmitHandler<IReceipt> = (data) => {
     setIsEditing(false);
-    console.log(data);
   };
 
   return (
@@ -155,7 +154,7 @@ export const EditModal: React.FC<IEditModalProps> = ({ receipt, isOpen, onClose 
               style={{ gridArea: 'ST' }}
               name="status"
               label="STATUS"
-              value={receipt.status || ''}
+              value={receipt.status || '1'}
               disabled={!isEditing}
             />
             <Input
@@ -167,7 +166,6 @@ export const EditModal: React.FC<IEditModalProps> = ({ receipt, isOpen, onClose 
             />
 
             <div className="buttons">
-
               {isEditing ? (
                 <Button type="submit" apparence="success">
                   SALVAR

@@ -34,7 +34,21 @@ export const translateTranslateMessages = (message: string) => {
     case 'No users founded.':
       return 'Nenhum usuario encontrado.';
 
+    /* Token validation */
+    case 'No token provided.':
+      return 'Nenhum token detectado.';
+    case 'Token error.':
+      return 'Erro no token.';
+    case 'Token malformated.':
+      return 'Token malformatado.';
+    case 'Token invalid.':
+      return 'Token invalido.';
+    case 'Token user not found.':
+      return 'Usuario do token nao encontrado.';
+
     /* Outros */
+    case 'Invalid sended data.':
+      return 'Dados enviados invalidos.';
     case 'Database error.':
       return 'Erro no banco de dados.';
     case 'Unexpected error.':

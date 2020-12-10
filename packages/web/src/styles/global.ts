@@ -29,20 +29,6 @@ export const GlobalStyle = createGlobalStyle`
         max-width: calc(100% - 70px);
       }
     }
-
-    > main {
-      height: 100vh;
-      width: 100vw;
-      transition: width 250ms ease;
-      overflow-y: auto;
-
-      > section {
-        height: calc(100vh - 70px);
-        width: 100%;
-        max-width: 1080px;
-        margin: 0 auto 30px auto;
-      }
-    }
   }
 
   *, button, input {

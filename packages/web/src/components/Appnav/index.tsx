@@ -1,43 +1,33 @@
 import React, { useCallback, useState } from 'react';
 import { IconType } from 'react-icons';
 import {
-  RiDashboardFill as IconDashboard,
-  RiCarFill as IconCar,
-  RiArrowLeftSLine as IconArrowLeft,
-  RiArrowRightSLine as IconArrowRight,
-  RiFileFill as IconFile,
-  RiUserFill as Iconuser,
-} from 'react-icons/ri';
+  FaHome as IconDashboard,
+  FaCar as IconCar,
+  FaAngleLeft as IconArrowLeft,
+  FaAngleRight as IconArrowRight,
+  FaFile as IconFile,
+  FaUsers as Iconuser,
+} from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import {
-  SidenavContainer,
-  SidenavContent,
-  SidenavControllers,
-  SidenavHeader,
-  SidenavItem,
-} from './styles';
+import { AppnavContainer, AppnavContent, AppnavControllers, AppnavHeader, AppnavItem } from './styles';
 
-interface IMenuItem {
+export interface IMenuItem {
   icon: IconType;
   label: string;
   disabled?: boolean;
   path: string;
 }
 
-export const Sidenav: React.FC = () => {
+export const Appnav: React.FC = () => {
   const [expanded, setExpanded] = useState(false);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const collapseSidenav = useCallback(() => {
-    setExpanded(false);
-  }, [setExpanded]);
-
-  const expandSidenav = useCallback(() => {
-    setExpanded(true);
-  }, [setExpanded]);
+  const toggleAppnav = useCallback(() => {
+    setExpanded((old) => !old);
+  }, []);
 
   const menuItems: IMenuItem[] = [
     {
@@ -64,32 +54,32 @@ export const Sidenav: React.FC = () => {
   ];
 
   return (
-    <SidenavContainer className={expanded ? 'expanded' : 'collapsed'} expanded={expanded}>
-      <SidenavControllers>
-        {!expanded && <button type="button" onClick={expandSidenav}><IconArrowRight size={20} /></button>}
-        {expanded && <button type="button" onClick={collapseSidenav}><IconArrowLeft size={20} /></button>}
-      </SidenavControllers>
-      <SidenavHeader>
+    <AppnavContainer className={expanded ? 'expanded' : 'collapsed'} expanded={expanded}>
+      <AppnavControllers>
+        {!expanded && <button type="button" onClick={toggleAppnav}><IconArrowRight size={20} /></button>}
+        {expanded && <button type="button" onClick={toggleAppnav}><IconArrowLeft size={20} /></button>}
+      </AppnavControllers>
+      <AppnavHeader>
         <img src={expanded ? 'assets/logo-texto.png' : 'assets/logo.png'} alt="CHRISTINO-SGI" />
-      </SidenavHeader>
-      <SidenavContent>
+      </AppnavHeader>
+      <AppnavContent>
         {menuItems.map(({ icon: Icon, label, disabled = false, path }) => (
-          <SidenavItem
+          <AppnavItem
             key={label}
             selected={pathname === path}
             type="button"
             disabled={disabled || pathname === path}
             onClick={() => navigate(path)}
           >
-            <div className="sidenav-item-icon">
+            <div className="appnav-item-icon">
               <Icon size={20} />
             </div>
-            <div className="sidenav-item-label">
+            <div className="appnav-item-label">
               { label }
             </div>
-          </SidenavItem>
+          </AppnavItem>
         ))}
-      </SidenavContent>
-    </SidenavContainer>
+      </AppnavContent>
+    </AppnavContainer>
   );
 };

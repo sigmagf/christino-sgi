@@ -6,8 +6,8 @@ interface IButtonContainerStyledProps {
 }
 
 export const ButtonContainer = styled.button<IButtonContainerStyledProps>`
-  min-height: 40px;
-  min-width: 40px;
+  min-height: 30px;
+  min-width: 30px;
   padding: 0 5px;
   display: flex;
   justify-content: center;

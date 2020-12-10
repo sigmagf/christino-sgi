@@ -21,7 +21,7 @@ export const Login: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(token !== '') {
+    if(token && token.length > 1) {
       navigate('/');
     }
   }, [navigate, token]);
@@ -38,7 +38,7 @@ export const Login: React.FC = () => {
         navigate('/');
       }
     } catch(err) {
-      toast.error(translateTranslateMessages(err.response.data.message));
+      toast.error(translateTranslateMessages(err.response.data.message || 'Erro inesperado.'));
     }
   };
 
@@ -54,9 +54,6 @@ export const Login: React.FC = () => {
             <Input style={{ gridArea: 'PW' }} type="password" name="password" label="SENHA" />
             <Button style={{ gridArea: 'SB' }} type="submit" apparence="success">
               Entrar
-            </Button>
-            <Button style={{ gridArea: 'RT' }} type="reset" apparence="error">
-              X
             </Button>
           </Form>
         </Card>

@@ -8,9 +8,11 @@ import { usersDeleteController } from './delete';
 import { usersFindController } from './find';
 import { usersListController } from './list';
 import { usersUpdateController } from './update';
+import { usersValidController } from './valid';
 
 const usersRouter = Router();
 
+usersRouter.get('/valid', authMiddleware, (req, res) => usersValidController.handle(req, res));
 usersRouter.post('/auth', (req, res) => usersAuthController.handle(req, res));
 usersRouter.post('/', (req, res) => usersCreateController.handle(req, res));
 

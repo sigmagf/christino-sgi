@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  RiSearchEyeLine as IconSearch,
-} from 'react-icons/ri';
+  FaSearch as IconSearch,
+} from 'react-icons/fa';
 
 import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
@@ -9,7 +9,7 @@ import { Table } from '~/components/Table';
 import { IReceipt } from '~/interfaces';
 
 interface IReceiptsTableProps {
-  receipts?: IReceipt[];
+  receipts: IReceipt[];
   onReceiptDetailButton: (receipt: IReceipt) => void;
 }
 
@@ -26,7 +26,7 @@ export const ReceiptsTable: React.FC<IReceiptsTableProps> = ({ receipts, onRecei
           </tr>
         </thead>
         <tbody>
-          {!receipts ? (
+          {receipts.length <= 0 ? (
             <tr>
               <td style={{ fontFamily: 'monospace', textAlign: 'center' }} colSpan={5}>CARREGANDO...</td>
             </tr>

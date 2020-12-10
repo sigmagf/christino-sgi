@@ -2,34 +2,41 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import { usersFindSerivce } from '~/services/users/find';
+import { PrismaUsersRepository } from '~/repositories/implementations/PrismaUsersRepository';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if(!authHeader) {
-    return res.status(401).json({ message: 'No token provided' });
+    return res.status(401).json({ message: 'No token provided.' });
   }
 
   const tokenSplit = authHeader.split(' ');
 
   if(tokenSplit.length !== 2) {
-    return res.status(401).json({ message: 'Token error' });
+    return res.status(401).json({ message: 'Token error.' });
   }
 
   const [bearer, token] = tokenSplit;
 
   if(!/^Bearer$/i.test(bearer)) {
-    return res.status(401).json({ message: 'Token malformated' });
+    return res.status(401).json({ message: 'Token malformated.' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decode: { id: string }) => {
     if(err) {
-      return res.status(401).json({ message: 'Token invalid' });
+      return res.status(401).json({ message: 'Token invalid.' });
     }
 
     if(decode.id) {
-      req.userId = decode.id;
+      const userRepo = new PrismaUsersRepository();
+      const user = await userRepo.find(decode.id);
+
+      if(user === null || user === undefined) {
+        return res.status(401).json({ message: 'No user founded.' });
+      }
+
+      req.user = user;
       return next();
     }
 

@@ -1,18 +1,17 @@
 import React from 'react';
 
-import { Sidenav } from '../Sidenav';
-import { UserBar } from '../UserBar';
+import { Appnav } from '../Appnav';
+import { AppContent, AppMain } from './styles';
 
 export const Layout: React.FC = ({ children }) => {
   return (
     <>
-      <Sidenav />
-      <main>
-        <UserBar />
-        <section>
+      <Appnav />
+      <AppMain>
+        <AppContent>
           { children }
-        </section>
-      </main>
+        </AppContent>
+      </AppMain>
     </>
   );
 };

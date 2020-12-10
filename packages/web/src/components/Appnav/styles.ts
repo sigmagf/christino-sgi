@@ -1,25 +1,26 @@
+/* eslint-disable max-len */
 import { lighten, shade } from 'polished';
 import styled, { css } from 'styled-components';
 
 /* INTERFACES */
 
-interface ISidenavCommonStyledProps {
+interface IAppnavCommonStyledProps {
   expanded: boolean;
 }
 
-interface ISidenavItemStyledProps {
+interface IAppnavItemStyledProps {
   selected: boolean;
 }
 
 /* CSS ONLY */
 
-const sidenavExpandedItemLabel = css`
+const appnavExpandedItemLabel = css`
   display: flex;
   justify-content: flex-start;
   align-items: center;
 `;
 
-const sidenavCollapseItemLabel = css`
+const appnavCollapseItemLabel = css`
   display: none;
   position: fixed;
   left: 80px;
@@ -30,7 +31,7 @@ const sidenavCollapseItemLabel = css`
 
 /* STYLED COMPONENTS */
 
-export const SidenavControllers = styled.div`
+export const AppnavControllers = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -57,7 +58,7 @@ export const SidenavControllers = styled.div`
   }
 `;
 
-export const SidenavHeader = styled.div`
+export const AppnavHeader = styled.div`
   margin: 10px;
   overflow: hidden;
   width: calc(100% - 20px);
@@ -67,11 +68,11 @@ export const SidenavHeader = styled.div`
   }
 `;
 
-export const SidenavContent = styled.div`
+export const AppnavContent = styled.div`
   overflow: hidden;
 `;
 
-export const SidenavItem = styled.button<ISidenavItemStyledProps>`
+export const AppnavItem = styled.button<IAppnavItemStyledProps>`
   background: ${({ theme, selected }) => (selected ? theme.secondary.main : 'none')};
   width: 100%;
   border: none;
@@ -84,42 +85,33 @@ export const SidenavItem = styled.button<ISidenavItemStyledProps>`
 
   :not(:disabled) {
     cursor: pointer;
-
-    :hover {
-      ${({ theme, selected }) => (selected ? css`
-        background: ${shade(0.1, theme.secondary.main)};
-      ` : css`
-        background: ${lighten(0.05, theme.primary.main)};
-      `)}
-    }
+  }
+  :not(:disabled):hover {
+    background: ${({ theme, selected }) => (selected ? shade(0.1, theme.secondary.main) : lighten(0.05, theme.primary.main))};
   }
 
   :disabled {
-    ${({ theme, selected }) => (selected ? css`
-      background: ${shade(0.1, theme.secondary.main)};
-    ` : css`
-      background: ${shade(0.1, theme.primary.main)};
-    `)}
+    background: ${({ theme, selected }) => (selected ? shade(0.1, theme.secondary.main) : shade(0.1, theme.primary.main))};
   }
 
-  .sidenav-item-icon {
+  .appnav-item-icon {
     margin-right: 10px;
   }
 `;
 
-export const SidenavContainer = styled.nav<ISidenavCommonStyledProps>`
+export const AppnavContainer = styled.nav<IAppnavCommonStyledProps>`
   height: 100%;
   width: ${({ expanded }) => (expanded ? 232 : 70)}px;
   background: ${({ theme }) => theme.primary.main};
   transition: width 250ms ease;
 
-  .sidenav-item-label {
-    ${({ expanded }) => (expanded ? sidenavExpandedItemLabel : sidenavCollapseItemLabel)}
+  .appnav-item-label {
+    ${({ expanded }) => (expanded ? appnavExpandedItemLabel : appnavCollapseItemLabel)}
   }
 
   ${({ expanded }) => !expanded && css`
-    ${SidenavItem}:hover:not(:disabled) {
-      .sidenav-item-label {
+    ${AppnavItem}:hover:not(:disabled) {
+      .appnav-item-label {
         display: block;
       }
     }

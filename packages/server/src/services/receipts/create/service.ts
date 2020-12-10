@@ -24,7 +24,7 @@ export class ReceiptsCreateService {
       throw new Error('Receipt already exists.');
     }
 
-    const receipt = await this.receipts.save(new Receipt(data, client.id, vehicle.id));
+    const receipt = await this.receipts.save(new Receipt({ ...data, clientId: client.id, vehicleId: vehicle.id }));
 
     return receipt;
   }
