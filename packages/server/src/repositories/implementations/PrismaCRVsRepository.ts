@@ -1,17 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 
-import { Receipt } from '~/entities/Receipts';
+import { Crv } from '~/entities/CRV';
 import { IPagination } from '~/interface';
 import { RepoReceiptsListFilters, RepoReceiptsSave, RepoReceiptsUpdate } from '~/types';
 import { withPagination } from '~/utils/withPagination';
 
-import { IReceiptsRepository } from '../IReceiptsRepository';
+import { ICRVsRepository } from '../ICRVsRepository';
 
-export class PrismaReceiptsRepository implements IReceiptsRepository {
+export class PrismaCRVsRepository implements ICRVsRepository {
   private prisma = new PrismaClient();
 
-  async find(clientId: string, vehicleId: string): Promise<Receipt> {
-    const data = await this.prisma.receipt.findUnique({
+  async find(clientId: string, vehicleId: string): Promise<Crv> {
+    const data = await this.prisma.crv.findUnique({
       where: { clientId_vehicleId: { clientId, vehicleId } },
       include: {
         client: true,
@@ -22,8 +22,8 @@ export class PrismaReceiptsRepository implements IReceiptsRepository {
     return data;
   }
 
-  async list(page = 1, limit = 10, filters?: RepoReceiptsListFilters): Promise<IPagination<Receipt>> {
-    const data = await this.prisma.receipt.findMany({
+  async list(page = 1, limit = 10, filters?: RepoReceiptsListFilters): Promise<IPagination<Crv>> {
+    const data = await this.prisma.crv.findMany({
       where: {
         AND: {
           client: {
@@ -51,8 +51,8 @@ export class PrismaReceiptsRepository implements IReceiptsRepository {
     return withPagination(data, page, limit);
   }
 
-  async save(receipt: RepoReceiptsSave): Promise<Receipt> {
-    const data = await this.prisma.receipt.create({
+  async save(receipt: RepoReceiptsSave): Promise<Crv> {
+    const data = await this.prisma.crv.create({
       data: {
         client: { connect: { id: receipt.clientId } },
         vehicle: { connect: { id: receipt.vehicleId } },
@@ -69,8 +69,8 @@ export class PrismaReceiptsRepository implements IReceiptsRepository {
     return data;
   }
 
-  async update(clientId: string, vehicleId: string, receipt: RepoReceiptsUpdate): Promise<Receipt> {
-    const data = await this.prisma.receipt.update({
+  async update(clientId: string, vehicleId: string, receipt: RepoReceiptsUpdate): Promise<Crv> {
+    const data = await this.prisma.crv.update({
       where: { clientId_vehicleId: { clientId, vehicleId } },
       data: receipt,
       include: {
@@ -83,6 +83,6 @@ export class PrismaReceiptsRepository implements IReceiptsRepository {
   }
 
   async delete(clientId: string, vehicleId: string): Promise<void> {
-    await this.prisma.receipt.delete({ where: { clientId_vehicleId: { clientId, vehicleId } } });
+    await this.prisma.crv.delete({ where: { clientId_vehicleId: { clientId, vehicleId } } });
   }
 }

@@ -1,9 +1,9 @@
-import { PrismaReceiptsRepository } from '~/repositories/implementations/PrismaReceiptsRepository';
+import { PrismaCRVsRepository } from '~/repositories/implementations/PrismaCRVsRepository';
 
 import { ReceiptsUpdateController } from './controller';
 import { ReceiptsUpdateService } from './service';
 
-const receipts = new PrismaReceiptsRepository();
+const receipts = new PrismaCRVsRepository();
 const service = new ReceiptsUpdateService(receipts);
 const controller = new ReceiptsUpdateController(service);
 

@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 model User {
@@ -26,7 +26,7 @@ model Client {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @default(now()) @updatedAt
   
-  Receipt   Crv[] @relation("receipt-client")
+  Receipt   CRV[] @relation("receipt-client")
 
   @@map("clients")
 }
@@ -40,12 +40,12 @@ model Vehicle {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @default(now()) @updatedAt
 
-  Receipt    Crv[] @relation("receipt-vehicle")
+  Receipt    CRV[] @relation("receipt-vehicle")
 
   @@map("vehicles")
 }
 
-model Crv {
+model CRV {
   clientId  String
   vehicleId String
   details   String?

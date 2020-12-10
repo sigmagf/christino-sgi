@@ -1,13 +1,13 @@
-import { Receipt } from '~/entities/Receipts';
+import { Crv } from '~/entities/CRV';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
-import { IReceiptsRepository } from '~/repositories/IReceiptsRepository';
+import { ICRVsRepository } from '~/repositories/ICRVsRepositoryRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
 import { IReceiptsCreateRequestDTO } from './dto';
 
 export class ReceiptsCreateService {
   constructor(
-    private receipts: IReceiptsRepository,
+    private receipts: ICRVsRepository,
     private clients: IClientsRepository,
     private vehicles: IVehiclesRepository,
   ) { }
@@ -24,7 +24,11 @@ export class ReceiptsCreateService {
       throw new Error('Receipt already exists.');
     }
 
-    const receipt = await this.receipts.save(new Receipt({ ...data, clientId: client.id, vehicleId: vehicle.id }));
+    const receipt = await this.receipts.save(new Crv({
+      ...data,
+      clientId: client.id,
+      vehicleId: vehicle.id,
+    }));
 
     return receipt;
   }

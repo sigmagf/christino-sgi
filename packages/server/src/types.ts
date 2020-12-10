@@ -1,5 +1,5 @@
 import { Client } from './entities/Client';
-import { Receipt } from './entities/Receipts';
+import { Crv } from './entities/CRV';
 import { User } from './entities/User';
 import { Vehicle } from './entities/Vehicle';
 
@@ -17,8 +17,8 @@ export type RepoReceiptsListFilters = {
   issuedOn: Date;
   status: number;
 }
-export type RepoReceiptsSave = Omit<Receipt, 'client'|'vehicle'>;
-export type RepoReceiptsUpdate = Omit<Receipt, 'clientId'|'client'|'vehicleId'|'vehicle'>;
+export type RepoReceiptsSave = Omit<Crv, 'client'|'vehicle'>;
+export type RepoReceiptsUpdate = Omit<Crv, 'clientId'|'client'|'vehicleId'|'vehicle'>;
 
 /* REPOSITORY USERS */
 export type RepoUsersListFilters = Pick<User, 'name'|'email'>;

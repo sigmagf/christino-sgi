@@ -1,11 +1,11 @@
 import { PrismaClientsRepository } from '~/repositories/implementations/PrismaClientsRepository';
-import { PrismaReceiptsRepository } from '~/repositories/implementations/PrismaReceiptsRepository';
+import { PrismaCRVsRepository } from '~/repositories/implementations/PrismaCRVsRepository';
 import { PrismaVehiclesRepository } from '~/repositories/implementations/PrismaVehiclesRepository';
 
 import { ReceiptsCreateController } from './controller';
 import { ReceiptsCreateService } from './service';
 
-const receipts = new PrismaReceiptsRepository();
+const receipts = new PrismaCRVsRepository();
 const clients = new PrismaClientsRepository();
 const vehicles = new PrismaVehiclesRepository();
 const service = new ReceiptsCreateService(receipts, clients, vehicles);

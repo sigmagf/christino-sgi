@@ -1,7 +1,7 @@
 import { Client } from './Client';
 import { Vehicle } from './Vehicle';
 
-export class Receipt {
+export class Crv {
   public clientId: string;
   public vehicleId: string;
   public details: string;
@@ -14,7 +14,7 @@ export class Receipt {
   public readonly createdAt?: Date;
   public updatedAt?: Date;
 
-  constructor(props: Omit<Receipt, 'client'|'vehicle'>) {
+  constructor(props: Omit<Crv, 'client'|'vehicle'>) {
     Object.assign(this, props);
   }
 }

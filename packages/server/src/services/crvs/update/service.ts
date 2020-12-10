@@ -1,9 +1,9 @@
-import { IReceiptsRepository } from '~/repositories/IReceiptsRepository';
+import { ICRVsRepositoryRepository } from '~/repositories/IReceiptsRepository';
 
 import { IReceiptsUpdateRequestDTO } from './dto';
 
 export class ReceiptsUpdateService {
-  constructor(private repository: IReceiptsRepository) { }
+  constructor(private repository: ICRVsRepositoryRepository) { }
 
   async execute(data: IReceiptsUpdateRequestDTO) {
     if(!await this.repository.find(data.clientId, data.vehicleId)) {
