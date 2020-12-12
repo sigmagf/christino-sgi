@@ -9,10 +9,10 @@ import { theme } from '~/styles/theme';
 
 import { StyledToastContainer } from './components/StyledToastContainer';
 import { useLocalStorage } from './hooks';
-import { NotFoundError } from './pages/404';
-import { Home } from './pages/Home';
+import { NotFoundErrorPage } from './pages/404';
+import { CRVsPage } from './pages/CRVs';
+import { HomePage } from './pages/Home';
 import { Login } from './pages/Login';
-import { Receipts } from './pages/Receipts';
 import { isAuthenticated } from './services/isAuthenticated';
 
 const PrivateRoute: React.FC<RouteProps> = ({ element, ...rest }) => {
@@ -28,10 +28,10 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/login" element={<Login />} />
 
-          <PrivateRoute path="/" element={<Home />} />
-          <PrivateRoute path="/recibos" element={<Receipts />} />
+          <PrivateRoute path="/" element={<HomePage />} />
+          <PrivateRoute path="/crvs" element={<CRVsPage />} />
 
-          <Route path="*" element={<NotFoundError />} />
+          <Route path="*" element={<NotFoundErrorPage />} />
         </Routes>
       </BrowserRouter>
 

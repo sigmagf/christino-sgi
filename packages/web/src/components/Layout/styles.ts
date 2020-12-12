@@ -16,3 +16,11 @@ export const AppContent = styled.section`
   margin: 30px auto;
   padding: 0 30px;
 `;
+
+export const AlertContent = styled.section`
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

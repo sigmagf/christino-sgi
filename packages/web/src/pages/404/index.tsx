@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { NotFoundContainer } from './style';
 
-export const NotFoundError: React.FC = () => {
+export const NotFoundErrorPage: React.FC = () => {
   const navigate = useNavigate();
   document.title = '404 | Christino';
 

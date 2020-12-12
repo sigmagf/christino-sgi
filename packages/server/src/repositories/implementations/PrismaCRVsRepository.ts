@@ -48,6 +48,26 @@ export class PrismaCRVsRepository implements ICRVsRepository {
       },
     });
 
+    data.sort((a, b) => {
+      // eslint-disable-next-line no-nested-ternary
+      return a.vehicle.plate < b.vehicle.plate ? -1 : a.vehicle.plate > b.vehicle.plate ? 1 : 0;
+    });
+
+    data.sort((a, b) => {
+      // eslint-disable-next-line no-nested-ternary
+      return a.client.name < b.client.name ? -1 : a.client.name > b.client.name ? 1 : 0;
+    });
+
+    data.sort((a, b) => {
+      // eslint-disable-next-line no-nested-ternary
+      return a.vehicle.plate.substr(6) < b.vehicle.plate.substr(6) ? -1 : a.vehicle.plate.substr(6) > b.vehicle.plate.substr(6) ? 1 : 0;
+    });
+
+    data.sort((a, b) => {
+      // eslint-disable-next-line no-nested-ternary
+      return a.client.group < b.client.group ? -1 : a.client.group > b.client.group ? 1 : 0;
+    });
+
     return withPagination(data, page, limit);
   }
 

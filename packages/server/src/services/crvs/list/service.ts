@@ -1,9 +1,9 @@
-import { ICRVsRepositoryRepository } from '~/repositories/ICRVsRepository';
+import { ICRVsRepository } from '~/repositories/ICRVsRepository';
 
 import { ICRVsListRequestDTO } from './dto';
 
 export class CRVsListService {
-  constructor(private repository: ICRVsRepositoryRepository) { }
+  constructor(private repository: ICRVsRepository) { }
 
   async execute(data: ICRVsListRequestDTO) {
     const crvs = await this.repository.list(data.page, data.limit, data.filters);

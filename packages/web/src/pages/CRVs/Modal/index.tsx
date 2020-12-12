@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { FormHandles, Scope, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
 import { transparentize } from 'polished';
@@ -9,19 +10,19 @@ import Modal from 'react-modal';
 
 import { Button } from '~/components/Button';
 import { Input } from '~/components/Form';
-import { IReceipt } from '~/interfaces';
+import { ICRV } from '~/interfaces';
 import { theme } from '~/styles/theme';
 
 import { ReceiptsModal } from './styles';
 
 interface IEditModalProps {
   isOpen: boolean;
-  receipt?: IReceipt;
+  receipt?: ICRV;
   onClose: () => void;
 }
 
 Modal.setAppElement('#root');
-export const EditModal: React.FC<IEditModalProps> = ({ receipt, isOpen, onClose }) => {
+export const CRVModal: React.FC<IEditModalProps> = ({ receipt, isOpen, onClose }) => {
   const formRef = useRef<FormHandles>(null);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -68,7 +69,8 @@ export const EditModal: React.FC<IEditModalProps> = ({ receipt, isOpen, onClose 
     setIsEditing(true);
   };
 
-  const onSubmit: SubmitHandler<IReceipt> = (data) => {
+  const onSubmit: SubmitHandler<ICRV> = (data) => {
+    console.log(data);
     setIsEditing(false);
   };
 
@@ -88,82 +90,24 @@ export const EditModal: React.FC<IEditModalProps> = ({ receipt, isOpen, onClose 
         </div>
         {receipt && (
           <Form ref={formRef} onSubmit={onSubmit}>
+            <Input type="hidden" name="id" value={receipt.id || ''} disabled={!isEditing} />
+
             <Scope path="client">
-              <Input
-                style={{ gridArea: 'CL' }}
-                name="name"
-                label="NOME"
-                value={receipt.client.name || ''}
-                disabled={!isEditing}
-              />
-              <Input
-                style={{ gridArea: 'CD' }}
-                name="document"
-                label="DOCUMENTO"
-                value={receipt.client.document || ''}
-                disabled={!isEditing}
-              />
-              <Input
-                style={{ gridArea: 'GP' }}
-                name="group"
-                label="GRUPO"
-                value={receipt.client.group || ''}
-                disabled={!isEditing}
-              />
+              <Input style={{ gridArea: 'CL' }} name="name" label="NOME" value={receipt.client.name || ''} disabled={!isEditing} />
+              <Input style={{ gridArea: 'CD' }} name="document" label="DOCUMENTO" value={receipt.client.document || ''} disabled={!isEditing} />
+              <Input style={{ gridArea: 'GP' }} name="group" label="GRUPO" value={receipt.client.group || ''} disabled={!isEditing} />
             </Scope>
 
             <Scope path="vehicle">
-              <Input
-                style={{ gridArea: 'PL' }}
-                name="plate"
-                label="PLACA"
-                value={receipt.vehicle.plate || ''}
-                disabled={!isEditing}
-              />
-              <Input
-                style={{ gridArea: 'RN' }}
-                name="renavam"
-                label="RENAVAM"
-                value={receipt.vehicle.renavam || ''}
-                disabled={!isEditing}
-              />
-              <Input
-                style={{ gridArea: 'MM' }}
-                name="brandModel"
-                label="MARCA/MODELO"
-                value={receipt.vehicle.brandModel || ''}
-                disabled={!isEditing}
-              />
-              <Input
-                style={{ gridArea: 'TP' }}
-                name="type"
-                label="TIPO"
-                value={receipt.vehicle.type || ''}
-                disabled={!isEditing}
-              />
+              <Input style={{ gridArea: 'PL' }} name="plate" label="PLACA" value={receipt.vehicle.plate || ''} disabled={!isEditing} />
+              <Input style={{ gridArea: 'RN' }} name="renavam" label="RENAVAM" value={receipt.vehicle.renavam || ''} disabled={!isEditing} />
+              <Input style={{ gridArea: 'MM' }} name="brandModel" label="MARCA/MODELO" value={receipt.vehicle.brandModel || ''} disabled={!isEditing} />
+              <Input style={{ gridArea: 'TP' }} name="type" label="TIPO" value={receipt.vehicle.type || ''} disabled={!isEditing} />
             </Scope>
 
-            <Input
-              style={{ gridArea: 'EM' }}
-              name="issuedOn"
-              label="EMITIDO EM"
-              value={formatDate(receipt.issuedOn)}
-              disabled={!isEditing}
-            />
-            <Input
-              style={{ gridArea: 'ST' }}
-              name="status"
-              label="STATUS"
-              value={receipt.status || '1'}
-              disabled={!isEditing}
-            />
-            <Input
-              style={{ gridArea: 'DT' }}
-              name="details"
-              label="OBSERVAÇÕES"
-              value={receipt.details || ''}
-              disabled={!isEditing}
-            />
+            <Input style={{ gridArea: 'EM' }} name="issuedOn" label="EMITIDO EM" value={formatDate(receipt.issuedOn)} disabled={!isEditing} />
+            <Input style={{ gridArea: 'ST' }} name="status" label="STATUS" value={receipt.status || '1'} disabled={!isEditing} />
+            <Input style={{ gridArea: 'DT' }} name="details" label="OBSERVAÇÕES" value={receipt.details || ''} disabled={!isEditing} />
 
             <div className="buttons">
               {isEditing ? (

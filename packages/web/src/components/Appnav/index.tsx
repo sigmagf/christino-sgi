@@ -44,7 +44,7 @@ export const Appnav: React.FC = () => {
     {
       icon: IconFile,
       label: 'Recibos',
-      path: '/recibos',
+      path: '/crvs',
     },
     {
       icon: Iconuser,

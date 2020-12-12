@@ -19,11 +19,11 @@ export const translateTranslateMessages = (message: string) => {
       return 'Nenhum cliente encontrado.';
 
     /* Receipts */
-    case 'Receipt already exists.':
-      return 'Recibo ja cadastrado.';
-    case 'No receipt founded.':
-    case 'No receipts founded.':
-      return 'Nenhum recibo encontrado.';
+    case 'Crv already exists.':
+      return 'Crv ja cadastrado.';
+    case 'No crv founded.':
+    case 'No crvs founded.':
+      return 'Nenhum crv encontrado.';
 
     /* Users and Auth */
     case 'Invalid password.':

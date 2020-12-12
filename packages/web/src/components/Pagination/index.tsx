@@ -14,6 +14,7 @@ import { Paginator, PaginatorNumbers } from './styles';
 interface IPaginationProps {
   currentPage: number;
   totalPages: number;
+  inLoading: boolean;
   onNumberClick: (n: number) => void;
   onMaxResultsChange: (n: number) => void;
 }
@@ -21,6 +22,7 @@ interface IPaginationProps {
 export const Pagination: React.FC<IPaginationProps> = ({
   currentPage,
   totalPages,
+  inLoading,
   onNumberClick,
   onMaxResultsChange,
 }) => {
@@ -74,10 +76,18 @@ export const Pagination: React.FC<IPaginationProps> = ({
   return (
     <Paginator>
       <PaginatorNumbers>
-        <button type="button" onClick={() => onNumberClick(1)} disabled={currentPage < 2}>
+        <button
+          type="button"
+          onClick={() => onNumberClick(1)}
+          disabled={currentPage < 2 || inLoading}
+        >
           <IconLast size={20} />
         </button>
-        <button type="button" onClick={() => onNumberClick(currentPage - 1)} disabled={currentPage < 2}>
+        <button
+          type="button"
+          onClick={() => onNumberClick(currentPage - 1)}
+          disabled={currentPage < 2 || inLoading}
+        >
           <IconNext size={20} />
         </button>
 
@@ -86,17 +96,25 @@ export const Pagination: React.FC<IPaginationProps> = ({
             key={e}
             type="button"
             className={e === currentPage ? 'current' : ''}
-            disabled={e === currentPage}
+            disabled={e === currentPage || inLoading}
             onClick={() => onNumberClick(e)}
           >
             { e }
           </button>
         ))}
 
-        <button type="button" onClick={() => onNumberClick(currentPage + 1)} disabled={currentPage >= totalPages}>
+        <button
+          type="button"
+          onClick={() => onNumberClick(currentPage + 1)}
+          disabled={currentPage >= totalPages || inLoading}
+        >
           <IconPrevious size={20} />
         </button>
-        <button type="button" onClick={() => onNumberClick(totalPages)} disabled={currentPage >= totalPages}>
+        <button
+          type="button"
+          onClick={() => onNumberClick(totalPages)}
+          disabled={currentPage >= totalPages || inLoading}
+        >
           <IconFirst size={20} />
         </button>
       </PaginatorNumbers>

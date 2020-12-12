@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 
-import { ReceiptStatus } from '~/types';
-
 import { CRVsListService } from './service';
 
 export class CRVsListController {
@@ -22,7 +20,7 @@ export class CRVsListController {
 
     const details = req.query.details as string || undefined;
     const issuedOn = req.query.issuedOn as string || undefined;
-    const status = req.query.status as ReceiptStatus || undefined;
+    const status = parseInt(req.query.status as string || '0', 10);
 
     try {
       const response = await this.service.execute({

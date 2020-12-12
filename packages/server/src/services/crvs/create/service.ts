@@ -1,6 +1,6 @@
 import { Crv } from '~/entities/CRV';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
-import { ICRVsRepository } from '~/repositories/ICRVsRepositoryRepository';
+import { ICRVsRepository } from '~/repositories/ICRVsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
 import { ICRVsCreateRequestDTO } from './dto';
@@ -21,7 +21,7 @@ export class CRVsCreateService {
     }
 
     if(await this.crvs.find(client.id, vehicle.id)) {
-      throw new Error('Receipt already exists.');
+      throw new Error(`Receipt already exists. ${client.name} e ${vehicle.plate}`);
     }
 
     const receipt = await this.crvs.save(new Crv({

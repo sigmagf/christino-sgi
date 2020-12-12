@@ -30,6 +30,7 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
+    '@typescript-eslint/camelcase': 'off',
     'no-plusplus': 'off',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',

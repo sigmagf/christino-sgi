@@ -11,6 +11,12 @@ export class UsersAuthService {
   async execute(data: IUsersAuthRequestDTO) {
     const user = await this.repository.findByEmail(data.email);
 
+    console.log({
+      email: data.email,
+      password: data.password,
+      user,
+    });
+
     if(!user) {
       throw new Error('No user founded.');
     }
@@ -21,7 +27,7 @@ export class UsersAuthService {
 
     return {
       user,
-      token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 86400 }),
+      token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 3600 }),
     };
   }
 }

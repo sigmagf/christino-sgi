@@ -1,5 +1,3 @@
-import { IconType } from 'react-icons';
-
 export interface IUseLocalStorage {
   getItem: <T extends keyof IStorage>(path: T) => IStorage[T]|null;
   setItem: <T extends keyof IStorage>(path: T, value: IStorage[T]) => void;
@@ -21,7 +19,7 @@ export interface IStorage {
 }
 
 export interface IAPIPaths {
-  '/receipts': IPagination<IReceipt>;
+  '/crvs': IPagination<ICRV>;
   '/clients': IPagination<IClient>;
   '/vehicles': IPagination<IVehicle>;
   '/users': IPagination<IUser>;
@@ -55,7 +53,7 @@ export interface IVehicle {
   updatedAt: Date;
 }
 
-export interface IReceipt {
+export interface ICRV {
   id: string;
   client: IClient;
   vehicle: IVehicle;
