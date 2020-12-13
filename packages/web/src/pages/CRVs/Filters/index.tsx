@@ -4,19 +4,18 @@ import React, { useRef } from 'react';
 
 import { Button } from '~/components/Button';
 import { Input, Select } from '~/components/Form';
-import { ICRV } from '~/interfaces';
+import { ICRVFilter } from '~/interfaces';
 
 import { FiltersContainer } from './styles';
 
 interface ICRVsFilter {
-  onFilterSubmit: (data: Pick<ICRV, 'client'|'vehicle'>) => void;
+  onFilterSubmit: (data: ICRVFilter) => void;
 }
 
 export const CRVsFilters: React.FC<ICRVsFilter> = ({ onFilterSubmit }) => {
   const formRef = useRef<FormHandles>(null);
 
-  const onSubmit: SubmitHandler<Pick<ICRV, 'client'|'vehicle'>> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<ICRVFilter> = (data) => {
     onFilterSubmit(data);
   };
 

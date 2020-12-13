@@ -12,7 +12,7 @@ import { Layout } from '~/components/Layout';
 import { Pagination } from '~/components/Pagination';
 import { Table } from '~/components/Table';
 import { useLocalStorage } from '~/hooks';
-import { IPagination, ICRV } from '~/interfaces';
+import { IPagination, ICRV, ICRVFilter } from '~/interfaces';
 import { api } from '~/services/api';
 import { toQueryString } from '~/utils/toQueryString';
 import { translateTranslateMessages } from '~/utils/translateBackendMessages';
@@ -27,23 +27,23 @@ export const CRVsPage: React.FC = () => {
   const navigate = useNavigate();
 
   const [inLoading, setInLoading] = useState(false);
+  const [qsFilter, setQSFilter] = useState<ICRVFilter>();
 
   const [crvs, setCrvs] = useState<IPagination<ICRV>>();
   const [crvModalOpen, setCrvModalOpen] = useState(false);
   const [crvToModal, setCrvToModal] = useState<ICRV>();
 
-  const getData = useCallback(async (page = 1, limit: number, filters?: Pick<ICRV, 'client'|'vehicle'>) => {
+  const getData = useCallback(async (page = 1, limit: number) => {
     const qs: string[] = [];
 
-    if(filters) {
-      (toQueryString(filters.client, false, 1) as string[]).forEach((e) => { qs.push(e); });
-      (toQueryString(filters.vehicle, false, 1) as string[]).forEach((e) => { qs.push(e); });
+    if(qsFilter) {
+      (toQueryString(qsFilter.client, false, 1) as string[]).forEach((e) => { qs.push(e); });
+      (toQueryString(qsFilter.vehicle, false, 1) as string[]).forEach((e) => { qs.push(e); });
     }
 
     setInLoading(true);
-
     try {
-      const request = await api.get(`/crvs?page=${page}&limit=${limit}${qs.length > 0 ? `&${qs.join('&')}` : ''}`, {
+      const request = await api.get(`/crvs?page=${page}&limit=${limit}&${qs.join('&')}`, {
         headers: {
           authorization: `Bearer ${storage.getItem('token')}`,
         },
@@ -58,9 +58,8 @@ export const CRVsPage: React.FC = () => {
 
       toast.error(translateTranslateMessages(err.response.data.message));
     }
-
     setInLoading(false);
-  }, [navigate, storage]);
+  }, [navigate, qsFilter, storage]);
 
   const onModalOpen = (data: ICRV) => {
     setCrvModalOpen(true);
@@ -82,12 +81,15 @@ export const CRVsPage: React.FC = () => {
     }
   };
 
-  const onApplyFilters = (data: Pick<ICRV, 'client'|'vehicle'>) => {
-    getData(1, crvs?.page.limit || 10, data);
+  const onApplyFilters = (data: ICRVFilter) => {
+    setQSFilter(data);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { getData(1, crvs?.page.limit || 10); }, []);
+  useEffect(() => { getData(1, 10); }, []);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { getData(1, 10); }, [qsFilter]);
 
   return (
     <>

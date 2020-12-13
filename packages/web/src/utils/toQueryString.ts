@@ -14,7 +14,7 @@ export const toQueryString = <T>(obj: T, autojoin = true, caseChange: -1|0|1 = 0
 
   const qs = Object.keys(obj)
     .filter((k) => obj[k] !== '' && obj[k] !== null)
-    .map((k) => `${k}=${caseFix(obj[k].toString())}`);
+    .map((k) => `${k}=${encodeURIComponent(caseFix(obj[k].toString()))}`);
 
   return autojoin ? qs.join('&') : qs;
 };

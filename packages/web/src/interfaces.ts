@@ -61,6 +61,13 @@ export interface ICRV {
   updatedAt: Date;
 }
 
+export interface ICRVFilter {
+  client: IClient;
+  vehicle: IVehicle & {
+    licensingMonth: string;
+  }
+}
+
 export interface IUserAuth {
   user: IUser;
   token: string;
