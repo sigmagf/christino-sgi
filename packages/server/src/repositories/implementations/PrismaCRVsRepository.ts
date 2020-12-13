@@ -23,7 +23,7 @@ export class PrismaCRVsRepository implements ICRVsRepository {
   }
 
   async list(filters?: RepoCRVsListFilters): Promise<Crv[]> {
-    this.prisma.$connect();
+    console.log(filters);
     const data = await this.prisma.crv.findMany({
       where: {
         AND: {
