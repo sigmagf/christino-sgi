@@ -25,24 +25,6 @@ export class PrismaCRVsRepository implements ICRVsRepository {
   async list(filters?: RepoCRVsListFilters): Promise<Crv[]> {
     console.log(filters);
     const data = await this.prisma.crv.findMany({
-      where: {
-        AND: {
-          client: {
-            name: { contains: filters.client.name },
-            document: { contains: filters.client.document },
-            group: { contains: filters.client.group },
-          },
-          vehicle: {
-            plate: { contains: filters.vehicle.plate },
-            renavam: { contains: filters.vehicle.renavam },
-            brandModel: { contains: filters.vehicle.brandModel },
-            type: { contains: filters.vehicle.type },
-          },
-          details: { contains: filters.details },
-          status: filters.status,
-          issuedOn: filters.issuedOn,
-        },
-      },
       include: {
         client: true,
         vehicle: true,
