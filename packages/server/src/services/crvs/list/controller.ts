@@ -41,8 +41,8 @@ export class CRVsListController {
 
       return res.json(response);
     } catch(err) {
-      return res.status(400).json({ message: err.message || 'Unexpected error.' });
       console.log(err);
+      return res.status(400).json({ message: err.message || 'Unexpected error.' });
     }
   }
 }
