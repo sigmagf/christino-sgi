@@ -21,7 +21,7 @@ export class CRVsListController {
 
     const details = req.query.details as string || undefined;
     const issuedOn = req.query.issuedOn as string || undefined;
-    const status = req.query.status as string || undefined;
+    const status = req.query.status as string || '0';
     const licensingMonth = req.query.licensingMonth as string || undefined;
 
     try {
@@ -34,7 +34,7 @@ export class CRVsListController {
           vehicle: { plate, renavam, brandModel, type },
           details,
           issuedOn: issuedOn ? new Date(issuedOn) : undefined,
-          status: status ? parseInt(status, 10) : undefined,
+          status: parseInt(status, 10),
           licensingMonth: licensingMonth ? parseInt(licensingMonth, 10) : undefined,
         },
       });
@@ -42,6 +42,7 @@ export class CRVsListController {
       return res.json(response);
     } catch(err) {
       return res.status(400).json({ message: err.message || 'Unexpected error.' });
+      console.log(err);
     }
   }
 }
