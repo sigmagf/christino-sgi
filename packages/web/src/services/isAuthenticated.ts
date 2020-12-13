@@ -9,15 +9,18 @@ export const isAuthenticated = async (storage: IUseLocalStorage) => {
     return false;
   }
 
-  const request = await api.get<IUser>('/users/valid', {
-    headers: {
-      authorization: `Bearer ${storage.getItem('token')}`,
-    },
-  });
+  try {
+    const request = await api.get<IUser>('/users/valid', {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
 
-  if(request && request.data) {
+    storage.setItem('userName', request.data.name);
+
     return true;
+  } catch(err) {
+    storage.setItem('token', null);
+    return false;
   }
-
-  return false;
 };

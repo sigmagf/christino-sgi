@@ -1,8 +1,10 @@
-import { lighten } from 'polished';
 import styled from 'styled-components';
 
 export const UserBarContainer = styled.div`
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+
   height: 70px;
   width: 100%;
   max-width: 1080px;
@@ -12,50 +14,36 @@ export const UserBarContainer = styled.div`
   border-radius: 10px;
   padding: 10px;
 
-  .search {
+  .actions {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
+
     margin: 5px 0;
     height: calc(100% - 10px);
-    width: calc(100% - 100px);
 
-    > * {
+    font-weight: 800;
+  }
+
+  .user-actions {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+
+    margin: 5px 0;
+    height: calc(100% - 10px);
+
+    > button {
       height: 100%;
       min-width: 40px;
     }
-  }
-
-  .settings {
-    margin: 5px 10px;
-
-    button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: none;
-      padding: none;
-      background: ${({ theme }) => lighten(0.05, theme.primary.main)};
-      border-radius: 10px;
-      height: 40px;
-      width: 40px;
-      box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
-      cursor: pointer;
-
-      :hover {
-        background: ${({ theme }) => lighten(0.09, theme.primary.main)};
-      }
-    }
-  }
-
-  .user {
-    border-radius: 10px;
-    height: 50px;
-    width: 50px;
-    overflow: hidden;
 
     img {
+      border-radius: 10px;
+      height: 50px;
+      width: 50px;
       height: 50px;
     }
   }

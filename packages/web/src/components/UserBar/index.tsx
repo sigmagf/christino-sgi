@@ -1,28 +1,33 @@
 import React from 'react';
 import {
   FaCog as IconSettings,
-  FaReceipt as IconReceipt,
-  FaUser as IconClient,
-  FaCar as IconVehicle,
-  FaPencilRuler as IconWork,
+  FaSignOutAlt as IconLogout,
 } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+
+import { useLocalStorage } from '~/hooks';
 
 import { Button } from '../Button';
 import { UserBarContainer } from './styles';
 
 export const UserBar: React.FC = () => {
+  const storage = useLocalStorage();
+  const navigate = useNavigate();
+
+  const onLogout = () => {
+    navigate('/login');
+    storage.setItem('token', null);
+  };
+
   return (
     <UserBarContainer>
-      <div className="search">
-        <Button apparence="secondary"><IconReceipt /></Button>
-        <Button apparence="secondary"><IconClient /></Button>
-        <Button apparence="secondary"><IconVehicle /></Button>
-        <Button apparence="secondary"><IconWork /></Button>
+      <div className="actions">
+        <strong>Olá,</strong> { storage.getItem('userName') }
       </div>
-      <div className="settings">
-        <button type="button"><IconSettings size={20} /></button>
-      </div>
-      <div className="user">
+
+      <div className="user-actions">
+        <Button apparence="error" onClick={onLogout}><IconLogout size={17} /></Button>
+        <Button apparence="secondary"><IconSettings size={17} /></Button>
         <img src="https://www.codeapi.io/initials/Joao%20Gabriel" alt="" />
       </div>
     </UserBarContainer>

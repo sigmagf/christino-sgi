@@ -1,9 +1,17 @@
+/* STORAGE */
 export interface IUseLocalStorage {
   getItem: <T extends keyof IStorage>(path: T) => IStorage[T]|null;
   setItem: <T extends keyof IStorage>(path: T, value: IStorage[T]) => void;
   clear: () => void;
 }
 
+export interface IStorage {
+  token: string|null;
+  userName: string|null;
+}
+/* END STIRAGE */
+
+/* BACKEND */
 export interface IPagination<T> {
   page: {
     total: number;
@@ -11,18 +19,6 @@ export interface IPagination<T> {
     limit: number;
   };
   data: Array<T>;
-}
-
-export interface IStorage {
-  token: string|null;
-  sidebarExpanded: boolean|null;
-}
-
-export interface IAPIPaths {
-  '/crvs': IPagination<ICRV>;
-  '/clients': IPagination<IClient>;
-  '/vehicles': IPagination<IVehicle>;
-  '/users': IPagination<IUser>;
 }
 
 export interface IClient {
@@ -54,8 +50,9 @@ export interface IVehicle {
 }
 
 export interface ICRV {
-  id: string;
+  clientId: string;
   client: IClient;
+  vehicleId: string;
   vehicle: IVehicle;
   details: string;
   status: string;
@@ -68,3 +65,4 @@ export interface IUserAuth {
   user: IUser;
   token: string;
 }
+/* END BACKEND */

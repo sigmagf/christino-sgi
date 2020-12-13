@@ -14,6 +14,7 @@ import { Table } from '~/components/Table';
 import { useLocalStorage } from '~/hooks';
 import { IPagination, ICRV } from '~/interfaces';
 import { api } from '~/services/api';
+import { toQueryString } from '~/utils/toQueryString';
 import { translateTranslateMessages } from '~/utils/translateBackendMessages';
 
 import { CRVsFilters } from './Filters';
@@ -28,25 +29,22 @@ export const CRVsPage: React.FC = () => {
   const [inLoading, setInLoading] = useState(false);
 
   const [crvs, setCrvs] = useState<IPagination<ICRV>>();
-  const [modasIsOpen, setModalIsOpen] = useState(false);
+  const [crvModalOpen, setCrvModalOpen] = useState(false);
   const [crvToModal, setCrvToModal] = useState<ICRV>();
 
-  const getData = useCallback(async (page = 1, limit = 10, filters?: Pick<ICRV, 'client'|'vehicle'>) => {
-    let filtersStr = '';
+  const getData = useCallback(async (page = 1, limit: number, filters?: Pick<ICRV, 'client'|'vehicle'>) => {
+    const qs: string[] = [];
+
     if(filters) {
-      const { client, vehicle } = filters;
-
-      filtersStr = client.name ? `&name=${encodeURIComponent(client.name.toUpperCase())}` : '';
-      filtersStr += client.group ? `&group=${encodeURIComponent(client.group.toUpperCase())}` : '';
-
-      filtersStr += vehicle.plate ? `&plate=${encodeURIComponent(vehicle.plate.toUpperCase())}` : '';
-      filtersStr += vehicle.renavam ? `&renavam=${encodeURIComponent(vehicle.renavam.toUpperCase())}` : '';
-      filtersStr += vehicle.brandModel ? `&brandModel=${encodeURIComponent(vehicle.brandModel.toUpperCase())}` : '';
+      (toQueryString(filters.client, false, 1) as string[]).forEach((e) => { qs.push(e); });
+      (toQueryString(filters.vehicle, false, 1) as string[]).forEach((e) => { qs.push(e); });
     }
+
+    console.log(qs);
 
     try {
       setInLoading(true);
-      const request = await api.get(`/crvs?page=${page}&limit=${limit}${filtersStr}`, {
+      const request = await api.get(`/crvs?page=${page}&limit=${limit}${qs.length > 0 ? `&${qs.join('&')}` : ''}`, {
         headers: {
           authorization: `Bearer ${storage.getItem('token')}`,
         },
@@ -64,32 +62,32 @@ export const CRVsPage: React.FC = () => {
     }
   }, [navigate, storage]);
 
-  const onModalOpen = (dt: ICRV) => {
-    setModalIsOpen(true);
-    setCrvToModal(dt);
+  const onModalOpen = (data: ICRV) => {
+    setCrvModalOpen(true);
+    setCrvToModal(data);
   };
 
   const onModalClose = () => {
-    setModalIsOpen(false);
+    setCrvModalOpen(false);
     setCrvToModal(undefined);
   };
 
-  const onPaginationClick = (n: number) => {
-    getData(n);
+  const onChangePage = (n: number) => {
+    getData(n, crvs?.page.limit || 10);
   };
 
-  const onPaginationMaxResultsClick = (maxResults: number) => {
-    if(maxResults !== crvs?.page.limit) {
+  const onMaxResultsChange = (maxResults: number) => {
+    if(maxResults !== (crvs?.page.limit || 10)) {
       getData(1, maxResults);
     }
   };
 
   const onApplyFilters = (data: Pick<ICRV, 'client'|'vehicle'>) => {
-    getData(1, 10, data);
+    getData(1, crvs?.page.limit || 10, data);
   };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { getData(); }, []);
+  useEffect(() => { getData(1, crvs?.page.limit || 10); }, []);
 
   return (
     <>
@@ -98,8 +96,20 @@ export const CRVsPage: React.FC = () => {
           <CRVsFilters onFilterSubmit={onApplyFilters} />
         </Card>
 
-        <Card>
-          <Table style={{ position: 'relative' }}>
+        <Card style={{ position: 'relative' }}>
+          {inLoading && (
+            <div style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              marginTop: 25,
+            }}
+            >
+              <ReactLoading type="bars" />
+            </div>
+          )}
+          <Table>
             <thead>
               <tr>
                 <th style={{ fontFamily: 'monospace', width: 500, textAlign: 'left' }}>CLIENTE</th>
@@ -121,17 +131,6 @@ export const CRVsPage: React.FC = () => {
                   <tr><td colSpan={4} /></tr>
                   <tr><td colSpan={4} /></tr>
                   <tr><td colSpan={4} /></tr>
-
-                  <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    marginTop: 25,
-                  }}
-                  >
-                    <ReactLoading type="bars" />
-                  </div>
                 </>
               )}
 
@@ -144,7 +143,7 @@ export const CRVsPage: React.FC = () => {
               )}
 
               {(!inLoading && crvs) && crvs.data.map((crv) => (
-                <tr key={crv.id}>
+                <tr key={crv.vehicle.id + crv.client.id}>
                   <td style={{ fontFamily: 'monospace', maxWidth: 500 }}>{ crv.client.name }</td>
                   <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ crv.vehicle.plate }</td>
                   <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ crv.vehicle.brandModel }</td>
@@ -164,13 +163,13 @@ export const CRVsPage: React.FC = () => {
             currentPage={crvs ? crvs.page.current : 1}
             totalPages={crvs ? crvs.page.total : 1}
             inLoading={inLoading}
-            onNumberClick={onPaginationClick}
-            onMaxResultsChange={onPaginationMaxResultsClick}
+            onNumberClick={onChangePage}
+            onMaxResultsChange={onMaxResultsChange}
           />
         </Card>
       </Layout>
 
-      <CRVModal isOpen={modasIsOpen} receipt={crvToModal} onClose={onModalClose} />
+      <CRVModal isOpen={crvModalOpen} crv={crvToModal} onClose={onModalClose} />
     </>
   );
 };

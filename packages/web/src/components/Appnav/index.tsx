@@ -12,7 +12,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import { AppnavContainer, AppnavContent, AppnavControllers, AppnavHeader, AppnavItem } from './styles';
 
-export interface IMenuItem {
+interface IMenuItem {
   icon: IconType;
   label: string;
   disabled?: boolean;

@@ -19,13 +19,8 @@ interface IPaginationProps {
   onMaxResultsChange: (n: number) => void;
 }
 
-export const Pagination: React.FC<IPaginationProps> = ({
-  currentPage,
-  totalPages,
-  inLoading,
-  onNumberClick,
-  onMaxResultsChange,
-}) => {
+export const Pagination: React.FC<IPaginationProps> = (props) => {
+  const { currentPage, totalPages, inLoading, onNumberClick, onMaxResultsChange } = props;
   const formRef = useRef<FormHandles>(null);
 
   const pages: number[] = [];
@@ -69,7 +64,6 @@ export const Pagination: React.FC<IPaginationProps> = ({
   const pagesToShow = calcPagesToShow();
 
   const onSubmit: SubmitHandler<{resultsPerPage: string}> = (data) => {
-    console.log('changed');
     onMaxResultsChange(parseInt(data.resultsPerPage, 10));
   };
 
@@ -132,7 +126,7 @@ export const Pagination: React.FC<IPaginationProps> = ({
             { label: '50', value: '50' },
           ]}
           isDisabled
-          onMenuClose={() => formRef.current?.submitForm()}
+          onBlur={() => formRef.current?.submitForm()}
         />
       </Form>
     </Paginator>
