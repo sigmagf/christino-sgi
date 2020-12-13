@@ -11,18 +11,21 @@ export class PrismaVehiclesRepository implements IVehiclesRepository {
   async find(id: string): Promise<Vehicle> {
     const data = await this.prisma.vehicle.findUnique({ where: { id } });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async findByPlate(plate: string): Promise<Vehicle> {
     const data = await this.prisma.vehicle.findUnique({ where: { plate } });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async findByRenavam(renavam: string): Promise<Vehicle> {
     const data = await this.prisma.vehicle.findUnique({ where: { renavam } });
 
+    this.prisma.$disconnect();
     return data;
   }
 
@@ -40,6 +43,7 @@ export class PrismaVehiclesRepository implements IVehiclesRepository {
       throw new Error('Two diferent entries founded in database.');
     }
 
+    this.prisma.$disconnect();
     return dbVehiclePlate;
   }
 
@@ -56,22 +60,26 @@ export class PrismaVehiclesRepository implements IVehiclesRepository {
       orderBy: { plate: 'asc' },
     });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async save(vehicle: RepoVehiclesSave): Promise<Vehicle> {
     const data = await this.prisma.vehicle.create({ data: vehicle });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async update(id: string, vehicle: RepoVehiclesUpdate): Promise<Vehicle> {
     const data = await this.prisma.vehicle.update({ where: { id }, data: vehicle });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async delete(id: string): Promise<void> {
     await this.prisma.vehicle.delete({ where: { id } });
+    this.prisma.$disconnect();
   }
 }

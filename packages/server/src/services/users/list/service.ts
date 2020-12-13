@@ -13,6 +13,7 @@ export class UsersListService {
       throw new Error('No users founded.');
     }
 
-    return withPagination(users, data.page, data.limit);
+    const usersWithoutPassword = users.map((u) => ({ ...u, password: undefined }));
+    return data.noPagination ? usersWithoutPassword : withPagination(usersWithoutPassword, data.page, data.limit);
   }
 }

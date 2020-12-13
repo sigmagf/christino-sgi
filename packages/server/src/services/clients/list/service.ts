@@ -13,6 +13,6 @@ export class ClientsListService {
       throw new Error('No clients founded.');
     }
 
-    return withPagination(clients, data.page, data.limit);
+    return data.noPagination === 'true' ? clients : withPagination(clients, data.page, data.limit);
   }
 }

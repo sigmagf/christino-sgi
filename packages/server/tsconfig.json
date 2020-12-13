@@ -14,7 +14,7 @@
     "removeComments": true,
     "typeRoots": [
       "./node_modules/@types",
-      "./src/@types"
+      "./src/**/*.d.ts"
     ],
     "resolveJsonModule": true,
     "baseUrl": ".",

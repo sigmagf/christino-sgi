@@ -11,12 +11,14 @@ export class PrismaClientsRepository implements IClientsRepository {
   async find(id: string): Promise<Client> {
     const data = await this.prisma.client.findUnique({ where: { id } });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async findByDocument(document: string): Promise<Client> {
     const data = await this.prisma.client.findUnique({ where: { document } });
 
+    this.prisma.$disconnect();
     return data;
   }
 
@@ -27,6 +29,7 @@ export class PrismaClientsRepository implements IClientsRepository {
       data = await this.prisma.client.create({ data: client });
     }
 
+    this.prisma.$disconnect();
     return data;
   }
 
@@ -42,22 +45,26 @@ export class PrismaClientsRepository implements IClientsRepository {
       orderBy: { name: 'asc' },
     });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async save(client: RepoClientsSave): Promise<Client> {
     const data = await this.prisma.client.create({ data: client });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async update(id: string, client: RepoClientsUpdate): Promise<Client> {
     const data = await this.prisma.client.update({ where: { id }, data: client });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async delete(id: string): Promise<void> {
     await this.prisma.client.delete({ where: { id } });
+    this.prisma.$disconnect();
   }
 }

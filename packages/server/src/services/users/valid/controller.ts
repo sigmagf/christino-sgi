@@ -6,9 +6,9 @@ export class UsersValidController {
 
   async handle(req: Request, res: Response) {
     try {
-      const responseWithoutPassword: typeof req.user = { ...req.user, password: undefined };
+      const response: typeof req.user = { ...req.user, password: undefined };
 
-      return res.json(responseWithoutPassword);
+      return res.json(response);
     } catch(err) {
       return res.status(400).json({ message: err.message || 'Unexpected error.' });
     }

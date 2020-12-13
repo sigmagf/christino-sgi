@@ -16,6 +16,7 @@ export class UsersCreateService {
     const hash = await bcrypt.hash(data.password, 10);
     const user = await this.repository.save(new User({ ...data, password: hash }));
 
-    return user;
+    const userWithoutPassword: typeof user = { ...user, password: undefined };
+    return userWithoutPassword;
   }
 }

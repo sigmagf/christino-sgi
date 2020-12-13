@@ -13,6 +13,6 @@ export class VehiclesListService {
       throw new Error('No vehicles founded.');
     }
 
-    return withPagination(vehicles, data.page, data.limit);
+    return data.noPagination === 'true' ? vehicles : withPagination(vehicles, data.page, data.limit);
   }
 }

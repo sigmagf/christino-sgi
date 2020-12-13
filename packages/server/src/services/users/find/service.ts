@@ -12,6 +12,7 @@ export class UsersFindService {
       throw new Error('No user founded.');
     }
 
-    return user;
+    const userWithoutPassword: typeof user = { ...user, password: undefined };
+    return userWithoutPassword;
   }
 }

@@ -18,6 +18,7 @@ export class PrismaCRVsRepository implements ICRVsRepository {
       },
     });
 
+    this.prisma.$disconnect();
     return data;
   }
 
@@ -47,6 +48,7 @@ export class PrismaCRVsRepository implements ICRVsRepository {
       },
     });
 
+    this.prisma.$disconnect();
     return sortCRVs(data);
   }
 
@@ -65,6 +67,7 @@ export class PrismaCRVsRepository implements ICRVsRepository {
       },
     });
 
+    this.prisma.$disconnect();
     return data;
   }
 
@@ -78,10 +81,12 @@ export class PrismaCRVsRepository implements ICRVsRepository {
       },
     });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async delete(clientId: string, vehicleId: string): Promise<void> {
     await this.prisma.crv.delete({ where: { clientId_vehicleId: { clientId, vehicleId } } });
+    this.prisma.$disconnect();
   }
 }

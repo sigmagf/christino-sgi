@@ -11,12 +11,14 @@ export class PrismaUsersRepository implements IUsersRepository {
   async find(id: string): Promise<User> {
     const data = await this.prisma.user.findUnique({ where: { id } });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async findByEmail(email: string): Promise<User> {
     const data = await this.prisma.user.findUnique({ where: { email } });
 
+    this.prisma.$disconnect();
     return data;
   }
 
@@ -31,22 +33,26 @@ export class PrismaUsersRepository implements IUsersRepository {
       orderBy: { name: 'asc' },
     });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async save(user: RepoUsersSave): Promise<User> {
     const data = await this.prisma.user.create({ data: user });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async update(id: string, user: RepoUsersUpdate): Promise<User> {
     const data = await this.prisma.user.update({ where: { id }, data: user });
 
+    this.prisma.$disconnect();
     return data;
   }
 
   async delete(id: string): Promise<void> {
     await this.prisma.user.delete({ where: { id } });
+    this.prisma.$disconnect();
   }
 }

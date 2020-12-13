@@ -15,12 +15,8 @@ export class UsersAuthController {
 
     try {
       const response = await this.service.execute({ email, password });
-      const responseWithoutPassword: typeof response = {
-        user: { ...response.user, password: undefined },
-        token: response.token,
-      };
 
-      return res.json(responseWithoutPassword);
+      return res.json(response);
     } catch(err) {
       return res.status(400).json({ message: err.message || 'Unexpected error.' });
     }

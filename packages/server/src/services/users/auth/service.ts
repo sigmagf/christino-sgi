@@ -11,12 +11,6 @@ export class UsersAuthService {
   async execute(data: IUsersAuthRequestDTO) {
     const user = await this.repository.findByEmail(data.email);
 
-    console.log({
-      email: data.email,
-      password: data.password,
-      user,
-    });
-
     if(!user) {
       throw new Error('No user founded.');
     }
@@ -25,8 +19,9 @@ export class UsersAuthService {
       throw new Error('Invalid password.');
     }
 
+    const userWithoutPassword: typeof user = { ...user, password: undefined };
     return {
-      user,
+      user: userWithoutPassword,
       token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 3600 }),
     };
   }

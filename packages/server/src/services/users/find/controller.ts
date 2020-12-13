@@ -14,9 +14,8 @@ export class UsersFindController {
 
     try {
       const response = await this.service.execute({ id });
-      const responseWithoutPassword: typeof response = { ...response, password: undefined };
 
-      return res.json(responseWithoutPassword);
+      return res.json(response);
     } catch(err) {
       return res.status(400).json({ message: err.message || 'Unexpected error.' });
     }

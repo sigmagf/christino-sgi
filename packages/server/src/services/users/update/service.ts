@@ -23,6 +23,7 @@ export class UsersUpdateService {
       password: hash,
     });
 
-    return user;
+    const userWithoutPassword: typeof user = { ...user, password: undefined };
+    return userWithoutPassword;
   }
 }

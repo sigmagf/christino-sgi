@@ -8,6 +8,7 @@ export class CRVsListController {
   async handle(req: Request, res: Response) {
     const page = parseInt(req.query.page as string || '1', 10);
     const limit = parseInt(req.query.limit as string || '10', 10);
+    const noPagination = req.query.noPagination as string || undefined;
 
     const name = req.query.name as string || undefined;
     const document = req.query.document as string || undefined;
@@ -27,6 +28,7 @@ export class CRVsListController {
       const response = await this.service.execute({
         page,
         limit,
+        noPagination,
         filters: {
           client: { name, document, group },
           vehicle: { plate, renavam, brandModel, type },

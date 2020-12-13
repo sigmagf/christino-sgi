@@ -13,12 +13,14 @@ export class UsersUpdateController {
     try {
       const response = await this.service.execute({
         id,
-        user: { name, email, password },
+        user: {
+          name,
+          email,
+          password,
+        },
       });
 
-      const responseWithoutPassword: typeof response = { ...response, password: undefined };
-
-      return res.json(responseWithoutPassword);
+      return res.json(response);
     } catch(err) {
       return res.status(400).json({ message: err.message || 'Unexpected error.' });
     }
