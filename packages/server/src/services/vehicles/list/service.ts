@@ -1,4 +1,5 @@
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
+import { withPagination } from '~/utils/withPagination';
 
 import { IVehiclesListRequestDTO } from './dto';
 
@@ -6,12 +7,12 @@ export class VehiclesListService {
   constructor(private repository: IVehiclesRepository) { }
 
   async execute(data: IVehiclesListRequestDTO) {
-    const vehicles = await this.repository.list(data.page, data.limit, data.filters);
+    const vehicles = await this.repository.list(data.filters);
 
-    if(vehicles.data.length <= 0) {
+    if(vehicles.length <= 0) {
       throw new Error('No vehicles founded.');
     }
 
-    return vehicles;
+    return withPagination(vehicles, data.page, data.limit);
   }
 }

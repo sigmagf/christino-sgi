@@ -40,10 +40,9 @@ export const CRVsPage: React.FC = () => {
       (toQueryString(filters.vehicle, false, 1) as string[]).forEach((e) => { qs.push(e); });
     }
 
-    console.log(qs);
+    setInLoading(true);
 
     try {
-      setInLoading(true);
       const request = await api.get(`/crvs?page=${page}&limit=${limit}${qs.length > 0 ? `&${qs.join('&')}` : ''}`, {
         headers: {
           authorization: `Bearer ${storage.getItem('token')}`,
@@ -51,7 +50,6 @@ export const CRVsPage: React.FC = () => {
       });
 
       setCrvs(request.data);
-      setInLoading(false);
     } catch(err) {
       if(err.response.status === 401) {
         storage.setItem('token', null);
@@ -60,6 +58,8 @@ export const CRVsPage: React.FC = () => {
 
       toast.error(translateTranslateMessages(err.response.data.message));
     }
+
+    setInLoading(false);
   }, [navigate, storage]);
 
   const onModalOpen = (data: ICRV) => {

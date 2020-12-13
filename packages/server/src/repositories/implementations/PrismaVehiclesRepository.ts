@@ -1,9 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
 import { Vehicle } from '~/entities/Vehicle';
-import { IPagination } from '~/interface';
 import { RepoVehiclesFindOrCreate, RepoVehiclesListFilters, RepoVehiclesSave, RepoVehiclesUpdate } from '~/types';
-import { withPagination } from '~/utils/withPagination';
 
 import { IVehiclesRepository } from '../IVehiclesRepository';
 
@@ -45,7 +43,7 @@ export class PrismaVehiclesRepository implements IVehiclesRepository {
     return dbVehiclePlate;
   }
 
-  async list(page = 1, limit = 10, filters?: RepoVehiclesListFilters): Promise<IPagination<Vehicle>> {
+  async list(filters?: RepoVehiclesListFilters): Promise<Vehicle[]> {
     const data = await this.prisma.vehicle.findMany({
       where: {
         AND: {
@@ -58,7 +56,7 @@ export class PrismaVehiclesRepository implements IVehiclesRepository {
       orderBy: { plate: 'asc' },
     });
 
-    return withPagination(data, page, limit);
+    return data;
   }
 
   async save(vehicle: RepoVehiclesSave): Promise<Vehicle> {

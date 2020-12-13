@@ -70,7 +70,6 @@ export const CRVModal: React.FC<IEditModalProps> = ({ crv, isOpen, onClose }) =>
   };
 
   const onSubmit: SubmitHandler<ICRV> = (data) => {
-    console.log(data);
     setIsEditing(false);
   };
 

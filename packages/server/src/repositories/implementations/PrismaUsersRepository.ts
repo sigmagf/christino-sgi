@@ -1,9 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
 import { User } from '~/entities/User';
-import { IPagination } from '~/interface';
 import { RepoUsersListFilters, RepoUsersSave, RepoUsersUpdate } from '~/types';
-import { withPagination } from '~/utils/withPagination';
 
 import { IUsersRepository } from '../IUsersRepository';
 
@@ -22,7 +20,7 @@ export class PrismaUsersRepository implements IUsersRepository {
     return data;
   }
 
-  async list(page = 1, limit = 10, filters?: RepoUsersListFilters): Promise<IPagination<User>> {
+  async list(filters?: RepoUsersListFilters): Promise<User[]> {
     const data = await this.prisma.user.findMany({
       where: {
         AND: {
@@ -33,7 +31,7 @@ export class PrismaUsersRepository implements IUsersRepository {
       orderBy: { name: 'asc' },
     });
 
-    return withPagination(data, page, limit);
+    return data;
   }
 
   async save(user: RepoUsersSave): Promise<User> {

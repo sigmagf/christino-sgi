@@ -1,10 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
 import { Crv } from '~/entities/CRV';
-import { IPagination } from '~/interface';
 import { RepoCRVsListFilters, RepoCRVsSave, RepoCRVsUpdate } from '~/types';
 import { sortCRVs } from '~/utils/sortCRVs';
-import { withPagination } from '~/utils/withPagination';
 
 import { ICRVsRepository } from '../ICRVsRepository';
 
@@ -23,7 +21,7 @@ export class PrismaCRVsRepository implements ICRVsRepository {
     return data;
   }
 
-  async list(page = 1, limit = 10, filters?: RepoCRVsListFilters): Promise<IPagination<Crv>> {
+  async list(filters?: RepoCRVsListFilters): Promise<Crv[]> {
     const data = await this.prisma.crv.findMany({
       where: {
         AND: {
@@ -49,9 +47,7 @@ export class PrismaCRVsRepository implements ICRVsRepository {
       },
     });
 
-    const dataSorted = sortCRVs(data);
-
-    return withPagination(dataSorted, page, limit);
+    return sortCRVs(data);
   }
 
   async save(receipt: RepoCRVsSave): Promise<Crv> {
