@@ -43,7 +43,7 @@ export const CRVsFilters: React.FC<ICRVsFilter> = ({ onFilterSubmit }) => {
           <Input style={{ gridArea: 'VP' }} name="plate" label="PLACA" />
           <Input style={{ gridArea: 'VR' }} name="renavam" label="RENAVAM" />
           <Input style={{ gridArea: 'VB' }} name="brandModel" label="MARCA/MODELO" />
-          <Select style={{ gridArea: 'VV' }} options={options} name="licensingMonth" label="VENCIMENTO" />
+          <Select style={{ gridArea: 'VV' }} options={options} defaultValue={{ value: '', label: 'TODOS' }} name="licensingMonth" label="VENCIMENTO" />
         </Scope>
 
         <Button style={{ gridArea: 'BT' }} type="submit" apparence="success">
