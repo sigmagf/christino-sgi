@@ -68,7 +68,7 @@ export const CRVsFilters: React.FC<ICRVsFilter> = ({ onFilterSubmit }) => {
       <FiltersContainer>
         <Scope path="client">
           <Input style={{ gridArea: 'CN' }} name="name" label="NOME" />
-          <Select style={{ gridArea: 'CG' }} options={groupOptions} defaultValue={{value='', label='TODOS'}} name="group" label="GRUPO" />
+          <Select style={{ gridArea: 'CG' }} options={groupOptions} defaultValue={{ value: '', label: 'TODOS' }} name="group" label="GRUPO" />
         </Scope>
         <Scope path="vehicle">
           <Input style={{ gridArea: 'VP' }} name="plate" label="PLACA" />
