@@ -1493,6 +1493,19 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
+"@prisma/bar@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@prisma/bar/-/bar-0.0.1.tgz#088c4fbbb79c588391437ade9fd3a85527e753b3"
+  integrity sha512-FVLhwVkbfhXlBhroWfIXMLi+3Jh9IEzYp+9z+MUUiw3ZsbcoAil7CN9/QIjHc4/TcCRyRfuSmT7qCnn4O+TjJw==
+
+"@prisma/cli@2.12.0":
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/@prisma/cli/-/cli-2.12.0.tgz#1c607e53b23632e01bf0b1ee86b5ab5a8864dfef"
+  integrity sha512-6olsgYNo1WePykEjKD3I49OCu9QKASoLLYV04y5UZxBqwkfxPoD8ppE+kc1nvRF8u+TU0oTLMphNTj2/l6tNsg==
+  dependencies:
+    "@prisma/bar" "^0.0.1"
+    "@prisma/engines" "2.12.0-18.cf0680a1bfe8d5e743dc659cc7f08009f9587d58"
+
 "@prisma/client@^2.13.0":
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/@prisma/client/-/client-2.13.0.tgz#2c9bddfced133fbcb35c6bb2ca1b3b172cdc9bc3"
@@ -1504,6 +1517,11 @@
   version "2.13.0-32.833ab05d2a20e822f6736a39a27de4fc8f6b3e49"
   resolved "https://registry.yarnpkg.com/@prisma/engines-version/-/engines-version-2.13.0-32.833ab05d2a20e822f6736a39a27de4fc8f6b3e49.tgz#e2c25298269a0a89fe0931720695a0fd979fd6f6"
   integrity sha512-OsToEhPo8OKOW2RmfjrQs1WRWX6omTsrBVMQLYKR7p3ijNBXFjCw9fk4x5xcnLZvADYR/rUIxjEK2YR+r/RK3w==
+
+"@prisma/engines@2.12.0-18.cf0680a1bfe8d5e743dc659cc7f08009f9587d58":
+  version "2.12.0-18.cf0680a1bfe8d5e743dc659cc7f08009f9587d58"
+  resolved "https://registry.yarnpkg.com/@prisma/engines/-/engines-2.12.0-18.cf0680a1bfe8d5e743dc659cc7f08009f9587d58.tgz#0e23c811cfa2f58650bb3c04394b1ac0d9dac78a"
+  integrity sha512-F6RmUZ5JpPWxmGvVDji8c4gepHIGkvYbtuFi0IoDDJVaCVo8yS656stciKFyswI6/BLWXa0X47/MIMbz6nzw7g==
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
@@ -6095,9 +6113,9 @@ html-encoding-sniffer@^1.0.2:
     whatwg-encoding "^1.0.1"
 
 html-entities@^1.2.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.3.1.tgz#fb9a1a4b5b14c5daba82d3e34c6ae4fe701a0e44"
-  integrity sha512-rhE/4Z3hIhzHAUKbW8jVcCyuT5oJCXXqhN/6mXXVCpzTmvJnoH2HL/bt3EZ6p55jbFJBeAe1ZNpL5BugLujxNA==
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-1.3.3.tgz#3dca638a43ee7de316fc23067398491152ad4736"
+  integrity sha512-/VulV3SYni1taM7a4RMdceqzJWR39gpZHjBwUnsCFKWV/GJkD14CJ5F7eWcZozmHJK0/f/H5U3b3SiPkuvxMgg==
 
 html-escaper@^2.0.0:
   version "2.0.2"

@@ -29,7 +29,7 @@ export class PrismaCRVsRepository implements ICRVsRepository {
           client: {
             name: { contains: filters.client.name },
             document: { contains: filters.client.document },
-            group: { contains: filters.client.group },
+            group: filters.client.group === '-1' ? '' : { contains: filters.client.group },
           },
           vehicle: {
             plate: { contains: filters.vehicle.plate },
