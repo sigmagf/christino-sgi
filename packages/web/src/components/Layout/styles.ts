@@ -15,5 +15,4 @@ export const AppContent = styled.section`
   width: 100%;
   max-width: 1140px;
   margin: 15px auto 0 auto;
-  padding: 0 30px;
 `;
