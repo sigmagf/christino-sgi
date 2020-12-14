@@ -20,6 +20,7 @@ export const CRVsFilters: React.FC<ICRVsFilter> = ({ onFilterSubmit }) => {
   };
 
   const options = [
+    { value: '', label: 'TODOS' },
     { value: '4', label: '4 - ABRIL' },
     { value: '5', label: '5 - MAIO' },
     { value: '6', label: '6 - JUNHO' },
