@@ -11,15 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v1
+      - uses: amondnet/vercel-action@v20
         with:
-          node-version: "12.x"
-      - name: Install dependencies
-        run: yarn
-      - uses: actions/vercel-deployment@0.5.1
-        with:
-          vercelToken: eWW1cWSARBHhawHUdAVlBwJL
-          vercelOrgId: FF3tb6K1NmNEom3nzChQ25JF
-          vercelProjectId: prj_aCIGh97osnbyxAJ8eWBZCmUzoGdU
-          githubToken: 2cbdd1c171f334f4b430caccc88de9d0ec958d1e
+          vercel-token: eWW1cWSARBHhawHUdAVlBwJL # Required
+          vercel-org-id: FF3tb6K1NmNEom3nzChQ25JF
+          vercel-project-id: prj_aCIGh97osnbyxAJ8eWBZCmUzoGdU
