@@ -4,7 +4,7 @@
   "main": "src/server.ts",
   "scripts": {
     "start": "node dist/server.js",
-    "prebuild": "yarn prisma generate",
+    "prebuild": "npx prisma generate",
     "dev": "cross-env NODE_ENV=\"development\" ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --exit-child src/server.ts",
     "build": "rimraf ./dist && babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored"
   },
