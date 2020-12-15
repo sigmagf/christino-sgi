@@ -13,6 +13,6 @@ jobs:
       - uses: actions/checkout@v2
       - uses: amondnet/vercel-action@v20.0.0
         with:
-          vercel-token: eWW1cWSARBHhawHUdAVlBwJL # Required
-          vercel-org-id: FF3tb6K1NmNEom3nzChQ25JF
-          vercel-project-id: prj_aCIGh97osnbyxAJ8eWBZCmUzoGdU
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
