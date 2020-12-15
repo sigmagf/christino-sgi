@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: amondnet/vercel-action@v20
+      - uses: amondnet/vercel-action@v20.0.0
         with:
           vercel-token: eWW1cWSARBHhawHUdAVlBwJL # Required
           vercel-org-id: FF3tb6K1NmNEom3nzChQ25JF
