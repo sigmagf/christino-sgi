@@ -1,0 +1,19 @@
+name: Heroku Deploy
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'packages/server/*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: CDNievas/heroku-action@v1.0
+        with:
+          heroku_api_key: 21bb6de9-5328-4b09-a878-2518deeab966
+          heroku_email: jgfurlan2@gmail.com
+          heroku_app_name: sgi-server
+          branch: master
