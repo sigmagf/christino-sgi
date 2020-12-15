@@ -1506,7 +1506,7 @@
     "@prisma/bar" "^0.0.1"
     "@prisma/engines" "2.12.0-18.cf0680a1bfe8d5e743dc659cc7f08009f9587d58"
 
-"@prisma/client@^2.13.0":
+"@prisma/client@^2.12.0":
   version "2.13.0"
   resolved "https://registry.yarnpkg.com/@prisma/client/-/client-2.13.0.tgz#2c9bddfced133fbcb35c6bb2ca1b3b172cdc9bc3"
   integrity sha512-osu9oRFWYNU3s+khj7D0xn28yGbk9nUWPG6VYDGIisBf0OTDB3STisCa0O0k5rzk1GpdxLiGJaHpqIo40RkMLw==
