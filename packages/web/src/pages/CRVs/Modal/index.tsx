@@ -9,7 +9,7 @@ import {
 import Modal from 'react-modal';
 
 import { Button } from '~/components/Button';
-import { Input } from '~/components/Form';
+import { Input, Select } from '~/components/Form';
 import { ICRV } from '~/interfaces';
 import { theme } from '~/styles/theme';
 
@@ -69,9 +69,22 @@ export const CRVModal: React.FC<IEditModalProps> = ({ crv, isOpen, onClose }) =>
     setIsEditing(true);
   };
 
+  const onCloseHandle = () => {
+    setIsEditing(false);
+    onClose();
+  };
+
   const onSubmit: SubmitHandler<ICRV> = (data) => {
     setIsEditing(false);
+    console.log(data);
   };
+
+  const statusOptions = [
+    { value: '0', label: 'BAIXADO' },
+    { value: '1', label: 'ORIGINAL' },
+    { value: '2', label: 'XEROX' },
+    { value: '3', label: 'OUTRO' },
+  ];
 
   return (
     <Modal
@@ -83,7 +96,7 @@ export const CRVModal: React.FC<IEditModalProps> = ({ crv, isOpen, onClose }) =>
       <ReceiptsModal>
         <div className="modal-header">
           RECIBO
-          <Button apparence="error" onClick={onClose}>
+          <Button apparence="error" onClick={onCloseHandle}>
             <IconClose />
           </Button>
         </div>
@@ -103,7 +116,14 @@ export const CRVModal: React.FC<IEditModalProps> = ({ crv, isOpen, onClose }) =>
             </Scope>
 
             <Input style={{ gridArea: 'EM' }} name="issuedOn" label="EMITIDO EM" value={formatDate(crv.issuedOn)} disabled={!isEditing} />
-            <Input style={{ gridArea: 'ST' }} name="status" label="STATUS" value={crv.status || '1'} disabled={!isEditing} />
+            <Select
+              style={{ gridArea: 'ST' }}
+              options={statusOptions}
+              name="status"
+              label="STATUS"
+              value={statusOptions[crv.status || '1']}
+              isDisabled={!isEditing}
+            />
             <Input style={{ gridArea: 'DT' }} name="details" label="OBSERVAÇÕES" value={crv.details || ''} disabled={!isEditing} />
 
             <div className="buttons">

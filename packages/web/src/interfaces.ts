@@ -65,7 +65,8 @@ export interface ICRVFilter {
   client: IClient;
   vehicle: IVehicle & {
     licensingMonth: string;
-  }
+  },
+  status: string;
 }
 
 export interface IUserAuth {

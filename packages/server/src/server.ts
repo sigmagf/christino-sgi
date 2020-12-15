@@ -15,7 +15,5 @@ app.use('/crvs', authMiddleware, crvsRouter);
 
 app.listen(process.env.PORT || 3000, () => {
   console.clear();
-  console.log(`Christino SGI server start on port ${process.env.PORT || 3000}...`);
-  console.log(__dirname);
-  console.log(process.env.HOME);
+  console.log(`Christino SGI server start on port ${process.env.PORT || 3000} in ${process.env.NODE_ENV}...`);
 });

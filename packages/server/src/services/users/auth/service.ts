@@ -22,7 +22,7 @@ export class UsersAuthService {
     const userWithoutPassword: typeof user = { ...user, password: undefined };
     return {
       user: userWithoutPassword,
-      token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 3600 }),
+      token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 86400 }),
     };
   }
 }

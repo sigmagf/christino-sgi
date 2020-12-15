@@ -4,7 +4,9 @@
   "main": "src/server.ts",
   "scripts": {
     "start": "node dist/server.js",
-    "dev": "NODE_ENV=\"development\" ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --exit-child src/server.ts",
+    "prestart": "yarn build",
+    "prebuild": "yarn prisma generate",
+    "dev": "cross-env NODE_ENV=\"development\" ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --exit-child src/server.ts",
     "build": "rimraf ./dist && babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored"
   },
   "dependencies": {
@@ -18,7 +20,6 @@
     "babel-plugin-root-import": "^6.5.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
-    "delay": "^4.4.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.9.1",
@@ -31,6 +32,8 @@
     "@types/express": "^4.17.7",
     "@types/morgan": "^1.9.1",
     "@types/uuid": "^8.3.0",
+    "cross-env": "^7.0.3",
+    "delay": "^4.4.0",
     "dotenv": "^8.2.0",
     "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",

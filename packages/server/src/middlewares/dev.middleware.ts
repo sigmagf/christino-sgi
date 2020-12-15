@@ -6,7 +6,7 @@ export const devMiddleware = async (req: Request, res: Response, next: NextFunct
   await delay(1000);
 
   // console.clear();
-  // console.log(`============================ [REQUEST TYPE ${req.method.toUpperCase()}] ============================`);
+  // console.log(`=========================== [REQUEST TYPE ${req.method.toUpperCase()}] ===========================`);
 
   next();
 };

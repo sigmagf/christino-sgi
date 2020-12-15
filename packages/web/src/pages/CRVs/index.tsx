@@ -39,6 +39,7 @@ export const CRVsPage: React.FC = () => {
     if(qsFilter) {
       (toQueryString(qsFilter.client, false, 1) as string[]).forEach((e) => { qs.push(e); });
       (toQueryString(qsFilter.vehicle, false, 1) as string[]).forEach((e) => { qs.push(e); });
+      (toQueryString({ status: qsFilter.status }, false, 1) as string[]).forEach((e) => { qs.push(e); });
     }
 
     setInLoading(true);

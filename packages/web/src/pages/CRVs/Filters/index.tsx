@@ -63,19 +63,47 @@ export const CRVsFilters: React.FC<ICRVsFilter> = ({ onFilterSubmit }) => {
     { value: '12', label: '12 - DEZEMBRO' },
   ];
 
+  const statusOptions = [
+    { value: '', label: 'TODOS' },
+    { value: '0', label: 'BAIXADO' },
+    { value: '1', label: 'ORIGINAL' },
+    { value: '2', label: 'XEROX' },
+    { value: '3', label: 'OUTRO' },
+  ];
+
   return (
     <Form ref={formRef} onSubmit={onSubmit}>
       <FiltersContainer>
         <Scope path="client">
           <Input style={{ gridArea: 'CN' }} name="name" label="NOME" />
-          <Select style={{ gridArea: 'CG' }} options={groupOptions} defaultValue={{ value: '', label: 'TODOS' }} name="group" label="GRUPO" />
+          <Select
+            style={{ gridArea: 'CG' }}
+            options={groupOptions}
+            defaultValue={{ value: '', label: 'TODOS' }}
+            name="group"
+            label="GRUPO"
+          />
         </Scope>
         <Scope path="vehicle">
           <Input style={{ gridArea: 'VP' }} name="plate" label="PLACA" />
           <Input style={{ gridArea: 'VR' }} name="renavam" label="RENAVAM" />
           <Input style={{ gridArea: 'VB' }} name="brandModel" label="MARCA/MODELO" />
-          <Select style={{ gridArea: 'VV' }} options={licensingMonthOptions} defaultValue={{ value: '', label: 'TODOS' }} name="licensingMonth" label="VENCIMENTO" />
+          <Select
+            style={{ gridArea: 'VV' }}
+            options={licensingMonthOptions}
+            defaultValue={{ value: '', label: 'TODOS' }}
+            name="licensingMonth"
+            label="VENCIMENTO"
+          />
         </Scope>
+
+        <Select
+          style={{ gridArea: 'RS' }}
+          options={statusOptions}
+          defaultValue={{ value: '', label: 'TODOS' }}
+          name="status"
+          label="STATUS"
+        />
 
         <Button style={{ gridArea: 'BT' }} type="submit" apparence="success">
           FILTRAR

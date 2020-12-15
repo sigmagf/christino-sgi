@@ -6,7 +6,7 @@ export const FiltersContainer = styled.div`
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-gap: 10px;
   grid-template-areas: "CN CN CN CN CN CN CN CG CG"
-                       "VP VR VR VB VB VB VB VV VV"
+                       "VP VR VR VB VB VB VV VV RS"
                        "NI NI NI NI NI NI NI NI BT";
 
   input {
