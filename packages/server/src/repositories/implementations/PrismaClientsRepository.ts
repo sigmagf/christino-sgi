@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
 import { Client } from '~/entities/Client';
-import { RepoClientFindOrCreate, RepoClientsListFilters, RepoClientsSave, RepoClientsUpdate } from '~/types';
+import { RepoClientsFindOrCreate, RepoClientsListFilters, RepoClientsSave, RepoClientsUpdate } from '~/types';
 
 import { IClientsRepository } from '../IClientsRepository';
 
@@ -22,7 +22,7 @@ export class PrismaClientsRepository implements IClientsRepository {
     return data;
   }
 
-  async findOrCreate(client: RepoClientFindOrCreate): Promise<Client> {
+  async findOrCreate(client: RepoClientsFindOrCreate): Promise<Client> {
     let data = await this.prisma.client.findUnique({ where: { document: client.document } });
 
     if(!data) {
