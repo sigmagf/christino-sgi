@@ -9,7 +9,7 @@ const theme = {
   },
 
   success: {
-    main: '#28a745',
+    main: '#28A745',
     contrastText: '#222222',
   },
   warning: {
@@ -21,7 +21,7 @@ const theme = {
     contrastText: '#FFFFFF',
   },
   info: {
-    main: '#4d6dff',
+    main: '#4D6Dff',
     contrastText: '#FFFFFF',
   },
 
