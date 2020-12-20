@@ -1,6 +1,7 @@
 import { SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -10,7 +11,7 @@ import { Input } from '~/components/Form';
 import { usePersistedState } from '~/hooks';
 import { IUser, IUserAuth } from '~/interfaces';
 import { api } from '~/services/api';
-import { translateTranslateMessages } from '~/utils/translateBackendMessages';
+import { translateMessages } from '~/utils/translateBackendMessages';
 
 import { LoginContainer } from './styles';
 
@@ -18,6 +19,7 @@ export const Login: React.FC = () => {
   document.title = 'Login | Christino';
 
   const [token, setToken] = usePersistedState('token', '');
+  const [inLoading, setInLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +29,7 @@ export const Login: React.FC = () => {
   }, [navigate, token]);
 
   const onSubmit: SubmitHandler<IUser> = async (data) => {
+    setInLoading(true);
     try {
       const request = await api.post<IUserAuth>('/users/auth', {
         email: data.email,
@@ -38,24 +41,35 @@ export const Login: React.FC = () => {
         navigate('/');
       }
     } catch(err) {
-      toast.error(translateTranslateMessages(err.response.data.message || 'Erro inesperado.'));
+      if(err.message === 'Network Error') {
+        toast.error(translateMessages('Verifique sua conexão com a internet.'));
+      } else {
+        toast.error(translateMessages(err.response.data.message || 'Unexpected error.'));
+      }
     }
+    setInLoading(false);
   };
 
   return (
     <>
       <LoginContainer>
         <Card>
-          <img src="assets/logo-texto.png" alt="" />
-          <div className="divider" />
+          {!inLoading ? (
+            <>
+              <img src="assets/logo-texto.png" alt="" />
+              <div className="divider" />
 
-          <Form onSubmit={onSubmit}>
-            <Input style={{ gridArea: 'EM' }} name="email" label="E-MAIL" />
-            <Input style={{ gridArea: 'PW' }} type="password" name="password" label="SENHA" />
-            <Button style={{ gridArea: 'SB' }} type="submit" apparence="success">
-              Entrar
-            </Button>
-          </Form>
+              <Form onSubmit={onSubmit}>
+                <Input style={{ gridArea: 'EM' }} name="email" label="E-MAIL" />
+                <Input style={{ gridArea: 'PW' }} type="password" name="password" label="SENHA" />
+                <Button style={{ gridArea: 'SB' }} type="submit" apparence="success">
+                  Entrar
+                </Button>
+              </Form>
+            </>
+          ) : (
+            <ReactLoading type="bars" />
+          )}
         </Card>
       </LoginContainer>
     </>

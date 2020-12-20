@@ -6,7 +6,7 @@ export const AppMain = styled.main`
   height: calc(100%);
   width: 100%;
   transition: width 250ms ease;
-  padding: 30px;  
+  padding: 30px;
   overflow-y: auto;
 `;
 

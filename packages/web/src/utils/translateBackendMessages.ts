@@ -1,4 +1,4 @@
-export const translateTranslateMessages = (message: string) => {
+export const translateMessages = (message: string) => {
   switch(message) {
     /* Vehicles */
     case 'Two diferent entries founded in database.':

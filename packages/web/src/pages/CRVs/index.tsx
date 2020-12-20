@@ -15,7 +15,7 @@ import { useLocalStorage } from '~/hooks';
 import { IPagination, ICRV, ICRVFilter } from '~/interfaces';
 import { api } from '~/services/api';
 import { toQueryString } from '~/utils/toQueryString';
-import { translateTranslateMessages } from '~/utils/translateBackendMessages';
+import { translateMessages } from '~/utils/translateBackendMessages';
 
 import { CRVsFilters } from './Filters';
 import { CRVModal } from './Modal';
@@ -57,7 +57,7 @@ export const CRVsPage: React.FC = () => {
         navigate('/login');
       }
 
-      toast.error(translateTranslateMessages(err.response.data.message));
+      toast.error(translateMessages(err.response.data.message || 'Unexpected error.'));
     }
     setInLoading(false);
   }, [navigate, qsFilter, storage]);
