@@ -11,7 +11,7 @@ import { Input } from '~/components/Form';
 import { usePersistedState } from '~/hooks';
 import { IUser, IUserAuth } from '~/interfaces';
 import { api } from '~/services/api';
-import { translateMessages } from '~/utils/translateBackendMessages';
+import { translateMessages } from '~/utils/translateMessages';
 
 import { LoginContainer } from './styles';
 

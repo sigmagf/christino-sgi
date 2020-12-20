@@ -15,7 +15,7 @@ import { useLocalStorage } from '~/hooks';
 import { IPagination, ICRV, ICRVFilter } from '~/interfaces';
 import { api } from '~/services/api';
 import { toQueryString } from '~/utils/toQueryString';
-import { translateMessages } from '~/utils/translateBackendMessages';
+import { translateMessages } from '~/utils/translateMessages';
 
 import { CRVsFilters } from './Filters';
 import { CRVModal } from './Modal';
