@@ -3,10 +3,8 @@ import { render } from 'react-dom';
 import ReactLoading from 'react-loading';
 import { Navigate, RouteProps } from 'react-router';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { ThemeProvider } from 'styled-components';
 
 import { GlobalStyle } from '~/styles/global';
-import { theme } from '~/styles/theme';
 
 import { useLocalStorage } from './hooks';
 import { HomePage } from './pages/Home';

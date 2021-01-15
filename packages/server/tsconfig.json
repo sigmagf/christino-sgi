@@ -12,6 +12,9 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "removeComments": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "typeRoots": [
       "./node_modules/@types",
       "./src/**/*.d.ts"
