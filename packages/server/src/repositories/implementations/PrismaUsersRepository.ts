@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
 import { User } from '~/entities/User';
-import { RepoUsersListFilters, RepoUsersSave, RepoUsersUpdate } from '~/types';
 
 import { IUsersRepository } from '../IUsersRepository';
 
@@ -22,7 +21,7 @@ export class PrismaUsersRepository implements IUsersRepository {
     return data;
   }
 
-  async list(filters?: RepoUsersListFilters): Promise<User[]> {
+  async list(filters?: Pick<User, 'name'|'email'>): Promise<User[]> {
     const data = await this.prisma.user.findMany({
       where: {
         AND: {
@@ -37,14 +36,14 @@ export class PrismaUsersRepository implements IUsersRepository {
     return data;
   }
 
-  async save(user: RepoUsersSave): Promise<User> {
+  async save(user: Omit<User, 'id'|'createdAt'|'updatedAt'>): Promise<User> {
     const data = await this.prisma.user.create({ data: user });
 
     this.prisma.$disconnect();
     return data;
   }
 
-  async update(id: string, user: RepoUsersUpdate): Promise<User> {
+  async update(id: string, user: Omit<User, 'id'|'createdAt'|'updatedAt'>): Promise<User> {
     const data = await this.prisma.user.update({ where: { id }, data: user });
 
     this.prisma.$disconnect();

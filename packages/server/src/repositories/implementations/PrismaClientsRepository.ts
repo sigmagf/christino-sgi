@@ -1,7 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
 import { Client } from '~/entities/Client';
-import { RepoClientsFindOrCreate, RepoClientsListFilters, RepoClientsSave, RepoClientsUpdate } from '~/types';
 
 import { IClientsRepository } from '../IClientsRepository';
 
@@ -22,7 +21,7 @@ export class PrismaClientsRepository implements IClientsRepository {
     return data;
   }
 
-  async findOrCreate(client: RepoClientsFindOrCreate): Promise<Client> {
+  async findOrCreate(client: Omit<Client, 'id'|'createdAt'|'updatedAt'>): Promise<Client> {
     let data = await this.prisma.client.findUnique({ where: { document: client.document } });
 
     if(!data) {
@@ -33,7 +32,7 @@ export class PrismaClientsRepository implements IClientsRepository {
     return data;
   }
 
-  async list(filters?: RepoClientsListFilters): Promise<Client[]> {
+  async list(filters?: Omit<Client, 'id'|'createdAt'|'updatedAt'>): Promise<Client[]> {
     const data = await this.prisma.client.findMany({
       where: {
         AND: {
@@ -49,14 +48,14 @@ export class PrismaClientsRepository implements IClientsRepository {
     return data;
   }
 
-  async save(client: RepoClientsSave): Promise<Client> {
+  async save(client: Omit<Client, 'id'|'createdAt'|'updatedAt'>): Promise<Client> {
     const data = await this.prisma.client.create({ data: client });
 
     this.prisma.$disconnect();
     return data;
   }
 
-  async update(id: string, client: RepoClientsUpdate): Promise<Client> {
+  async update(id: string, client: Omit<Client, 'id'|'createdAt'|'updatedAt'>): Promise<Client> {
     const data = await this.prisma.client.update({ where: { id }, data: client });
 
     this.prisma.$disconnect();

@@ -15,6 +15,8 @@ export class User {
 
     if(!id) {
       this.id = v4();
+    } else {
+      this.id = id;
     }
   }
 }

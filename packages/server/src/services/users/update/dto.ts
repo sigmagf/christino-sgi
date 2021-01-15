@@ -1,6 +1,6 @@
-import { RepoUsersUpdate } from '~/types';
+import { User } from '@prisma/client';
 
 export interface IUsersUpdateRequestDTO {
   id: string;
-  user: RepoUsersUpdate;
+  user: Omit<User, 'id'|'createdAt'|'updatedAt'>;
 }

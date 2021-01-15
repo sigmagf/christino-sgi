@@ -1,13 +1,13 @@
-import { Crv } from '~/entities/CRV';
+import { Vehicle } from '~/entities/Vehicle';
 
-export const sortCRVs = (data: Crv[]) => {
+export const sortCRVs = (data: Vehicle[]) => {
   /* SORT BY VEHICLE PLATE */
   data.sort((a, b) => {
-    if(a.vehicle.plate < b.vehicle.plate) {
+    if(a.plate < b.plate) {
       return -1;
     }
 
-    if(a.vehicle.plate > b.vehicle.plate) {
+    if(a.plate > b.plate) {
       return 1;
     }
 
@@ -31,11 +31,11 @@ export const sortCRVs = (data: Crv[]) => {
 
   /* SORT BY END OF VEHICLE PLATE */
   data.sort((a, b) => {
-    if(a.vehicle.plate.substr(6) < b.vehicle.plate.substr(6)) {
+    if(a.plate.substr(6) < b.plate.substr(6)) {
       return -1;
     }
 
-    if(a.vehicle.plate.substr(6) > b.vehicle.plate.substr(6)) {
+    if(a.plate.substr(6) > b.plate.substr(6)) {
       return 1;
     }
 

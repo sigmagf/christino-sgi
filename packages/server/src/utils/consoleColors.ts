@@ -1,4 +1,4 @@
-const cColors = {
+const consoleColors = {
   reset: '\x1b[0m',
   bold: '\x1b[1m',
   dim: '\x1b[2m',
@@ -29,4 +29,4 @@ const cColors = {
   },
 };
 
-export { cColors };
+export { consoleColors };

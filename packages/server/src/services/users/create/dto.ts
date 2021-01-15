@@ -1,3 +1,3 @@
-import { RepoUsersSave } from '~/types';
+import { User } from '~/entities/User';
 
-export type IUsersCreateRequestDTO = RepoUsersSave;
+export type IUsersCreateRequestDTO = Omit<User, 'id'|'createdAt'|'updatedAt'>;

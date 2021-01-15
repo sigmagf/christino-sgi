@@ -1,12 +1,11 @@
 import { Client } from '~/entities/Client';
-import { RepoClientsFindOrCreate, RepoClientsListFilters, RepoClientsSave, RepoClientsUpdate } from '~/types';
 
 export interface IClientsRepository {
   find(id: string): Promise<Client>;
   findByDocument(document: string): Promise<Client>;
-  findOrCreate(client: RepoClientsFindOrCreate): Promise<Client>;
-  list(filters?: RepoClientsListFilters): Promise<Client[]>;
-  save(client: RepoClientsSave): Promise<Client>;
-  update(id: string, client: RepoClientsUpdate): Promise<Client>;
+  findOrCreate(client: Omit<Client, 'id'|'createdAt'|'updatedAt'>): Promise<Client>;
+  list(filters?: Omit<Client, 'id'|'createdAt'|'updatedAt'>): Promise<Client[]>;
+  save(client: Omit<Client, 'id'|'createdAt'|'updatedAt'>): Promise<Client>;
+  update(id: string, client: Omit<Client, 'id'|'createdAt'|'updatedAt'>): Promise<Client>;
   delete(id: string): Promise<void>;
 }

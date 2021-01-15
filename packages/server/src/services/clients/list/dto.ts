@@ -1,8 +1,8 @@
-import { RepoClientsListFilters } from '~/types';
+import { Client } from '~/entities/Client';
 
 export interface IClientsListRequestDTO {
   page: number;
   limit: number;
   noPagination: string;
-  filters: RepoClientsListFilters;
+  filters: Omit<Client, 'id'|'createdAt'|'updatedAt'>;
 }

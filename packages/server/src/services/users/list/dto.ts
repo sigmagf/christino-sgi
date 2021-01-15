@@ -1,8 +1,8 @@
-import { RepoUsersListFilters } from '~/types';
+import { User } from '~/entities/User';
 
 export interface IUsersListRequestDTO {
   page: number;
   limit: number;
   noPagination: string;
-  filters: RepoUsersListFilters;
+  filters: Omit<User, 'id'|'createdAt'|'updatedAt'>;
 }
