@@ -11,11 +11,11 @@ export class VehiclesCreateController {
 
     try {
       if(!client_id && !name && !document) {
-        throw new Error('Cliente nao informado!');
+        throw new Error('Client not informed');
       }
 
       if(!plate || !renavam || !brand_model || !type || !status) {
-        throw new Error('Um ou mais itens obrigatorios nao foram informados!');
+        throw new Error('Obrigatory items not informed');
       }
 
       const vehicle = await this.service.execute({ client_id, name, document, group, plate, renavam, cla, crv, brand_model, type, details, issued_on, status });

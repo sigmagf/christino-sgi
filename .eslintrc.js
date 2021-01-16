@@ -6,7 +6,7 @@ module.exports = {
   },
   extends: [
     'plugin:react/recommended',
-    'airbnb',
+    'airbnb-base',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
   ],
@@ -30,6 +30,9 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
+    /* Disable rule that remove 'I' from interfaces */
+    '@typescript-eslint/interface-name-prefix': 'off',
+
     /* Disable object new life forced */
     'object-curly-newline': 'off',
 
@@ -41,6 +44,7 @@ module.exports = {
 
     /* Disable forced camelcase */
     camelcase: 'off',
+    '@typescript-eslint/camelcase': 'off',
 
     /* Fix unused vars */
     'no-unused-vars': 'off',

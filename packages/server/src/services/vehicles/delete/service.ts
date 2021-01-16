@@ -7,7 +7,7 @@ export class VehiclesDeleteService {
 
   async execute(data: IVehiclesDeleteRequestDTO): Promise<void> {
     if(!await this.repository.findById(data.id)) {
-      throw new Error('Veiculo nao encontrado');
+      throw new Error('Vehicle not founded');
     }
 
     await this.repository.delete(data.id);

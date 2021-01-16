@@ -10,6 +10,11 @@ export class UsersAuthController {
     const { email, password } = req.body as IUsersAuthRequestDTO;
 
     try {
+      if(!email || !password) {
+        throw new Error('Um ou mais itens obrigatorios nao foram informados!');
+        
+      }
+
       const user = await this.service.execute({ email, password });
 
       return res.status(201).json(user);

@@ -8,7 +8,7 @@ export class UsersDeleteService {
 
   async execute(data: IUsersDeleteRequestDTO): Promise<void> {
     if(!await this.repository.findById(data.id)) {
-      throw new Error('Usuario nao encontrado');
+      throw new Error('User not founded');
     }
 
     await this.repository.delete(data.id);

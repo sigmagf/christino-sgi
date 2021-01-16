@@ -10,6 +10,10 @@
     ["babel-plugin-root-import", {
       "rootPathSuffix": "./dist/",
       "rootPathPrefix": "~/"
-    }]
+    }],
+    ["@babel/plugin-proposal-decorators", {
+      "legacy": true
+    }],
+    ["@babel/plugin-proposal-class-properties"]
   ]
 }

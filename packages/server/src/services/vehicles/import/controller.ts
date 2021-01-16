@@ -21,10 +21,10 @@ export class VehiclesImportController {
       return res.status(201).send();
     } catch(err) {
       if(err.message !== null && err.message.includes('IMPORTERROR-')) {
-        const error:errorType[] = JSON.parse(err.message.replace('IMPORTERROR-', ''));
+        const error: errorType[] = JSON.parse(err.message.replace('IMPORTERROR-', ''));
 
         return res.status(400).json({
-          message: 'Nem todas as entradas foram salvas!',
+          message: 'One or more entries not saved',
           detail: error,
         });
       }

@@ -9,10 +9,6 @@ export class VehiclesDeleteController {
     const { id } = req.params;
 
     try {
-      if(!id) {
-        throw new Error('Nenhum Veiculo informado');
-      }
-
       await this.service.execute({ id });
 
       return res.status(200).send();

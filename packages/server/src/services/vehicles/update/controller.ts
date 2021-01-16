@@ -12,7 +12,7 @@ export class VehiclesUpdateController {
 
     try {
       if(!id) {
-        throw new Error('Nenhum veiculo informado!');
+        throw new Error('Vehicle not found');
       }
 
       const user = await this.service.execute({ id, client_id, name, document, group, plate, renavam, cla, crv, brand_model, type, details, issued_on, status });

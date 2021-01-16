@@ -41,7 +41,7 @@ export class VehiclesImportService {
       if(await this.vehiclesRepo.findByClientPlate(vehicle.client_id, vehicle.plate)) {
         errors.push({
           ...vehicle,
-          error: 'Placa ja cadastrada para este cliente!',
+          error: 'Plate already exists for this client',
         });
 
         return;
@@ -50,7 +50,7 @@ export class VehiclesImportService {
       if(await this.vehiclesRepo.findByClientRenavam(vehicle.client_id, vehicle.renavam)) {
         errors.push({
           ...vehicle,
-          error: 'Renavam ja cadastrada para este cliente!',
+          error: 'Renavam already exists for this client',
         });
 
         return;

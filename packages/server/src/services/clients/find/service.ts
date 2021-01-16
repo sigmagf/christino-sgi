@@ -9,6 +9,10 @@ export class ClientsFindService {
   async execute(data: IClientsFindRequestDTO): Promise<Client> {
     const client = await this.repository.findById(data.id);
 
+    if(!client) {
+      throw new Error('Client not founded');
+    }
+
     return client;
   }
 }

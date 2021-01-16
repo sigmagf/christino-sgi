@@ -10,6 +10,10 @@ export class UsersCreateController {
     const { name, email, password } = req.body as IUsersCreateRequestDTO;
 
     try {
+      if(!name || !email || !password) {
+        throw new Error('Obrigatory items not informed');
+      }
+
       const user = await this.service.execute({ name, email, password });
 
       return res.status(201).json(user);

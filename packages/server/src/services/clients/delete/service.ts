@@ -7,7 +7,7 @@ export class ClientsDeleteService {
 
   async execute(data: IClientsDeleteRequestDTO): Promise<void> {
     if(!await this.repository.findById(data.id)) {
-      throw new Error('Cliente nao encontrado');
+      throw new Error('Client not founded');
     }
 
     await this.repository.delete(data.id);

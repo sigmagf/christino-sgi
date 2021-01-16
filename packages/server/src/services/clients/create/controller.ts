@@ -10,6 +10,10 @@ export class ClientsCreateController {
     const { name, document, group } = req.body as IClientsCreateRequestDTO;
 
     try {
+      if(!name || !document || !group) {
+        throw new Error('Obrigatory items not informed');
+      }
+
       const client = await this.service.execute({ name, document, group });
 
       return res.status(201).json(client);

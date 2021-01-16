@@ -8,7 +8,7 @@ export class ClientsCreateService {
 
   async execute(data: IClientsCreateRequestDTO): Promise<Client> {
     if(await this.repository.findByDocument(data.document)) {
-      throw new Error('Cliente ja cadastrado!');
+      throw new Error('Client already exists');
     }
 
     const client = await this.repository.create(data);

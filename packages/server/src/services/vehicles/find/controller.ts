@@ -9,10 +9,6 @@ export class VehiclesFindController {
     const { id } = req.params;
 
     try {
-      if(!id) {
-        throw new Error('Nenhum Veiculo informado');
-      }
-
       const vehicle = await this.service.execute({ id });
 
       return res.status(200).json(vehicle);

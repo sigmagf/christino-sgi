@@ -15,6 +15,6 @@ usersRouter.post('/users', (req, res) => usersCreateController.handle(req, res))
 usersRouter.put('/users/:id', (req, res) => usersUpdateController.handle(req, res));
 usersRouter.delete('/users/:id', (req, res) => usersDeleteController.handle(req, res));
 
-usersRouter.delete('/users/auth', (req, res) => usersAuthController.handle(req, res));
+usersRouter.post('/users/auth', (req, res) => usersAuthController.handle(req, res));
 
 export { usersRouter };

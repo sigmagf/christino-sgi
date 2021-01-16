@@ -8,10 +8,16 @@ export class UsersUpdateService {
 
   async execute(data: IUsersUpdateRequestDTO): Promise<User> {
     if(!await this.repository.findById(data.id)) {
-      throw new Error('Usuario nao encontrado');
+      throw new Error('user not founded');
     }
 
     const user = await this.repository.update(data.id, data);
+
+    user.email_change_expires = undefined;
+    user.email_change_token = undefined;
+    user.pwd_reset_expires = undefined;
+    user.pwd_reset_token = undefined;
+    user.password = undefined;
 
     return user;
   }
