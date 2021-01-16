@@ -4,6 +4,17 @@ export function withPagination<T>(data: Array<T>, page: number, limit: number): 
   const startIndex = ((page - 1) * limit);
   const endIndex = page * limit;
 
+  if(data.length < limit) {
+    return {
+      page: {
+        total: 1,
+        current: 1,
+        limit,
+      },
+      data,
+    };
+  }
+
   return {
     page: {
       total: Math.ceil(data.length / limit),

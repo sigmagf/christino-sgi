@@ -1,11 +1,13 @@
 import { User } from '~/entities/User';
-import { RepoUsersListFilters, RepoUsersSave, RepoUsersUpdate } from '~/types';
+import { IPagination } from '~/interface';
 
 export interface IUsersRepository {
-  find(id: string): Promise<User>;
+  list(page: number, limit: number): Promise<IPagination<User>>;
+  findById(id: string): Promise<User>;
   findByEmail(email: string): Promise<User>;
-  list(filters?: Pick<User, 'name'|'email'>): Promise<User[]>;
-  save(user: Omit<User, 'id'|'createdAt'|'updatedAt'>): Promise<User>;
-  update(id: string, user: Omit<User, 'id'|'createdAt'|'updatedAt'>): Promise<User>;
+
+  create(data: Pick<User, 'name'|'email'|'password'>): Promise<User>;
+  update(id: string, data: Pick<User, 'name'|'email'|'password'>): Promise<User>;
+
   delete(id: string): Promise<void>;
 }

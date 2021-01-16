@@ -1,5 +1,4 @@
-import bcrypt from 'bcryptjs';
-
+import { User } from '~/entities/User';
 import { IUsersRepository } from '~/repositories/IUsersRepository';
 
 import { IUsersUpdateRequestDTO } from './dto';
@@ -7,23 +6,13 @@ import { IUsersUpdateRequestDTO } from './dto';
 export class UsersUpdateService {
   constructor(private repository: IUsersRepository) { }
 
-  async execute(data: IUsersUpdateRequestDTO) {
-    if(!await this.repository.find(data.id)) {
-      throw new Error('No user founded.');
+  async execute(data: IUsersUpdateRequestDTO): Promise<User> {
+    if(!await this.repository.findById(data.id)) {
+      throw new Error('Usuario nao encontrado');
     }
 
-    let hash: string;
+    const user = await this.repository.update(data.id, data);
 
-    if(data.user.password) {
-      hash = await bcrypt.hash(data.user.password, 10);
-    }
-
-    const user = await this.repository.update(data.id, {
-      ...data.user,
-      password: hash,
-    });
-
-    const userWithoutPassword: typeof user = { ...user, password: undefined };
-    return userWithoutPassword;
+    return user;
   }
 }

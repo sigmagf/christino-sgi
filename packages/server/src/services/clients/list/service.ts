@@ -1,18 +1,15 @@
+import { Client } from '~/entities/Client';
+import { IPagination } from '~/interface';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
-import { withPagination } from '~/utils/withPagination';
 
 import { IClientsListRequestDTO } from './dto';
 
 export class ClientsListService {
   constructor(private repository: IClientsRepository) { }
 
-  async execute(data: IClientsListRequestDTO) {
-    const clients = await this.repository.list(data.filters);
+  async execute(data: IClientsListRequestDTO): Promise<IPagination<Client>> {
+    const clients = await this.repository.list(data.page, data.limit);
 
-    if(clients.length <= 0) {
-      throw new Error('No clients founded.');
-    }
-
-    return data.noPagination === 'true' ? clients : withPagination(clients, data.page, data.limit);
+    return clients;
   }
 }

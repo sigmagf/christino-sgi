@@ -30,43 +30,17 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
-    '@typescript-eslint/camelcase': 'off',
-    'no-plusplus': 'off',
-    'react-hooks/rules-of-hooks': 'error',
-    'react-hooks/exhaustive-deps': 'warn',
+    /* Disable object new life forced */
+    'object-curly-newline': 'off',
+
+    /* Disable error on class methods without this */
+    'class-methods-use-this': 'off',
+
+    /* Enable devDependencies import */
     'import/no-extraneous-dependencies': 'off',
-    'jsx-a11y/label-has-associated-control': 'off',
-    '@typescript-eslint/no-var-requires': 'off',
-    'jsx-a11y/control-has-associated-label': 'off',
 
-    /* Enable use text and tag in same line */
-    'react/jsx-one-expression-per-line': 'off',
-
-    /* Enable jsx syntax in tsx */
-    'react/jsx-filename-extension': [
-      'error',
-      { extensions: ['.js', '.jsx', '.tsx'] },
-    ],
-
-    /* Disable need to add type for props */
-    'react/prop-types': 'off',
-
-    'react/jsx-props-no-spreading': 'off',
-
-    /* Disable no need for "I" in interfaces */
-    '@typescript-eslint/interface-name-prefix': 'off',
-
-    /* Disable retun type */
-    '@typescript-eslint/explicit-function-return-type': 'off',
-
-    /* Enable any type */
-    '@typescript-eslint/no-explicit-any': 'off',
-
-    /* Enable empty functions */
-    '@typescript-eslint/no-empty-function': 'off',
-
-    /* ??? */
-    '@typescript-eslint/explicit-module-boundary-types': 'off',
+    /* Disable forced camelcase */
+    camelcase: 'off',
 
     /* Fix unused vars */
     'no-unused-vars': 'off',
@@ -85,12 +59,6 @@ module.exports = {
     /* Remove need for empty line in classes */
     'lines-between-class-members': 'off',
 
-    /* Disabele force compact arrow functions */
-    'arrow-body-style': 'off',
-
-    /* Disable object new line */
-    'object-curly-newline': 'off',
-
     /* Enable console and alert */
     'no-console': 'off',
     'no-alert': 'off',
@@ -98,11 +66,8 @@ module.exports = {
     /* Defines max row length */
     'max-len': [
       'warn',
-      { code: 120 },
+      { code: 170 },
     ],
-
-    /* Enable nameless functions */
-    'func-names': 'off',
 
     /* Enable and add import order helpers */
     'import-helpers/order-imports': [

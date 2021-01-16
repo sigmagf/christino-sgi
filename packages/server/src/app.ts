@@ -1,34 +1,24 @@
 import cors from 'cors';
-import express, { Request } from 'express';
+import express from 'express';
 import morgan from 'morgan';
 
-import { devMiddleware } from '~/middlewares/dev.middleware';
-
-import { consoleColors as cc } from './utils/consoleColors';
+import { devMiddleware } from './middlewares/dev.middleware';
+import { clientsRouter } from './services/clients';
+import { usersRouter } from './services/users';
+import { vehiclesRouter } from './services/vehicles';
 
 const app = express();
 
-morgan.token('method', (req: Request) => { return req.method; });
-morgan.token('url', (req: Request) => { return req.originalUrl; });
-morgan.token('timestamp', () => { return (new Date()).toLocaleString(); });
-morgan.token('ip', (req: Request) => { return req.headers['x-forwarded-for'].toString(); });
-
-app.use(
-  morgan(`
-    ------------------------------------------------------\n
-    Time:   :timestamp\n
-    Method: ${cc.text.green}${cc.bold}[:method]${cc.reset}\n
-    Path:   ${cc.bold}${cc.text.blue}:url${cc.reset}\n
-    From:   :ip
-  `),
-);
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors({
-  methods: ['GET', 'SET', 'POST', 'PUT', 'DELETE'],
-  origin: '*',
-}));
+app.use(morgan('dev'));
+app.use(cors());
+
+app.use(usersRouter);
+app.use(clientsRouter);
+app.use(vehiclesRouter);
+
+app.use('*', (req, res) => res.json({ message: 'Hello World!' }));
 
 if(process.env.NODE_ENV === 'development') {
   app.use(devMiddleware);

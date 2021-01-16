@@ -6,19 +6,15 @@ import { UsersCreateService } from './service';
 export class UsersCreateController {
   constructor(private service: UsersCreateService) { }
 
-  async handle(req: Request, res: Response) {
-    const { name, email, password } = await req.body as IUsersCreateRequestDTO;
-
-    if(!name || !email || !password) {
-      return res.status(400).json({ message: 'Invalid sended data.' });
-    }
+  async handle(req: Request, res: Response): Promise<Response> {
+    const { name, email, password } = req.body as IUsersCreateRequestDTO;
 
     try {
-      const response = await this.service.execute({ name, email, password });
+      const user = await this.service.execute({ name, email, password });
 
-      return res.json(response);
+      return res.status(201).json(user);
     } catch(err) {
-      return res.status(400).json({ message: err.message || 'Unexpected error.' });
+      return res.status(400).json({ message: err.message || 'Erro inesperado!' });
     }
   }
 }

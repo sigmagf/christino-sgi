@@ -1,3 +1,4 @@
+import { User } from '~/entities/User';
 import { IUsersRepository } from '~/repositories/IUsersRepository';
 
 import { IUsersDeleteRequestDTO } from './dto';
@@ -5,7 +6,11 @@ import { IUsersDeleteRequestDTO } from './dto';
 export class UsersDeleteService {
   constructor(private repository: IUsersRepository) { }
 
-  async execute(data: IUsersDeleteRequestDTO) {
+  async execute(data: IUsersDeleteRequestDTO): Promise<void> {
+    if(!await this.repository.findById(data.id)) {
+      throw new Error('Usuario nao encontrado');
+    }
+
     await this.repository.delete(data.id);
   }
 }

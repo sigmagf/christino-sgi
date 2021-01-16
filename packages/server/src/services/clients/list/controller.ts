@@ -5,30 +5,16 @@ import { ClientsListService } from './service';
 export class ClientsListController {
   constructor(private service: ClientsListService) { }
 
-  async handle(req: Request, res: Response) {
-    const page = parseInt(req.query.page as string || '1', 10);
-    const limit = parseInt(req.query.limit as string || '10', 10);
-    const noPagination = req.query.noPagination as string || undefined;
-
-    const name = req.query.name as string || undefined;
-    const document = req.query.document as string || undefined;
-    const group = req.query.group as string || undefined;
+  async handle(req: Request, res: Response): Promise<Response> {
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
 
     try {
-      const response = await this.service.execute({
-        page,
-        limit,
-        noPagination,
-        filters: {
-          name,
-          document,
-          group,
-        },
-      });
+      const clients = await this.service.execute({ page, limit });
 
-      return res.json(response);
+      return res.status(200).json(clients);
     } catch(err) {
-      return res.status(400).json({ message: err.message || 'Unexpected error.' });
+      return res.status(400).json({ message: err.message || 'Erro inesperado!' });
     }
   }
 }

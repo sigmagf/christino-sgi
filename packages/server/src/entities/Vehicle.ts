@@ -1,32 +1,43 @@
-import { v4 } from 'uuid';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
-import { Client } from './Client';
-
+@Entity('vehicles')
 export class Vehicle {
-  public readonly id: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-  public clientId: string;
-  public plate: string;
-  public renavam: string;
-  public cla: string;
-  public crv: string;
-  public brand_model: string;
-  public type: string;
-  public status: number;
-  public issued_on: Date;
+    @Column('uuid')
+    client_id: string;
 
-  public readonly client: Client;
+    @Column('character varying', { length: 7, unique: true })
+    plate: string;
 
-  public readonly createdAt?: Date;
-  public updatedAt?: Date;
+    @Column('character varying', { length: 11, unique: true })
+    renavam: string;
 
-  constructor(props: Omit<Vehicle, 'id'>, id?: string) {
-    Object.assign(this, props);
+    @Column('character varying', { length: 16, nullable: true, unique: true })
+    cla: string;
 
-    if(!id) {
-      this.id = v4();
-    } else {
-      this.id = id;
-    }
-  }
+    @Column('character varying', { length: 16, nullable: true, unique: true })
+    crv: string;
+
+    @Column('character varying', { length: 32, nullable: true })
+    brand_model: string;
+
+    @Column('character varying', { length: 16, nullable: true })
+    type: string;
+
+    @Column('character varying', { length: 64, nullable: true })
+    details: string;
+
+    @Column('smallint', { default: 1 })
+    status: number;
+
+    @Column('timestamp without time zone', { default: Date.now(), nullable: true })
+    issued_on: Date;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 }

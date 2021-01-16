@@ -3,23 +3,26 @@
   "version": "0.5.2",
   "main": "src/server.ts",
   "scripts": {
-    "start": "node dist/server.js",
-    "prebuild": "npx prisma generate",
-    "dev": "cross-env NODE_ENV=\"development\" ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --exit-child src/server.ts",
-    "build": "rimraf ./dist && babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored"
+    "start": "node dist/index.js",
+    "dev": "cross-env NODE_ENV=\"development\" ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --ignore-watch node_modules --exit-child src/index.ts",
+    "build": "rimraf ./dist && babel src --extensions \".js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
+    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
     "@babel/core": "^7.10.4",
     "@babel/preset-env": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
-    "@mikro-orm/core": "^4.3.4",
-    "@mikro-orm/postgresql": "^4.3.4",
     "babel-plugin-root-import": "^6.5.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "csvtojson": "^2.0.10",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.9.1",
+    "multer": "^1.4.2",
+    "pg": "^8.5.1",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.30",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
@@ -29,6 +32,7 @@
     "@types/express": "^4.17.7",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/morgan": "^1.9.1",
+    "@types/multer": "^1.4.5",
     "@types/uuid": "^8.3.0",
     "cross-env": "^7.0.3",
     "delay": "^4.4.0",

@@ -1,24 +1,20 @@
 import { Request, Response } from 'express';
 
 import { IClientsCreateRequestDTO } from './dto';
-import { ClientCreateService } from './service';
+import { ClientsCreateService } from './service';
 
 export class ClientsCreateController {
-  constructor(private service: ClientCreateService) { }
+  constructor(private service: ClientsCreateService) { }
 
-  async handle(req: Request, res: Response) {
-    const { name, document, group } = await req.body as IClientsCreateRequestDTO;
-
-    if(!name || !document) {
-      return res.status(400).json({ message: 'Invalid sended data.' });
-    }
+  async handle(req: Request, res: Response): Promise<Response> {
+    const { name, document, group } = req.body as IClientsCreateRequestDTO;
 
     try {
-      const response = await this.service.execute({ name, document, group });
+      const client = await this.service.execute({ name, document, group });
 
-      return res.json(response);
+      return res.status(201).json(client);
     } catch(err) {
-      return res.status(400).json({ message: err.message || 'Unexpected error.' });
+      return res.status(400).json({ message: err.message || 'Erro inesperado!' });
     }
   }
 }

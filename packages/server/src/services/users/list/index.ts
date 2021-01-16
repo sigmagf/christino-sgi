@@ -1,10 +1,11 @@
-import { PrismaUsersRepository } from '~/repositories/implementations/PrismaUsersRepository';
+import { TypeORMUsersRepository } from '~/repositories/implementations/TypeORMUsersRepository';
 
 import { UsersListController } from './controller';
 import { UsersListService } from './service';
 
-const repository = new PrismaUsersRepository();
+const repository = new TypeORMUsersRepository();
+
 const service = new UsersListService(repository);
 const controller = new UsersListController(service);
 
-export { controller as usersListController, service as usersListSerivce };
+export { service as usersListService, controller as usersListController };

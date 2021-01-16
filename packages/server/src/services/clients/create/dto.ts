@@ -1,3 +1,5 @@
-import { Client } from '~/entities/Client';
-
-export type IClientsCreateRequestDTO = Omit<Client, 'id'|'createdAt'|'updatedAt'>;
+export interface IClientsCreateRequestDTO {
+  name: string;
+  document: string;
+  group: string;
+}

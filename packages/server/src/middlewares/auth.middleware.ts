@@ -2,8 +2,6 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-import { PrismaUsersRepository } from '~/repositories/implementations/PrismaUsersRepository';
-
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
@@ -29,14 +27,6 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
     }
 
     if(decode.id) {
-      const userRepo = new PrismaUsersRepository();
-      const user = await userRepo.find(decode.id);
-
-      if(user === null || user === undefined) {
-        return res.status(401).json({ message: 'No user founded.' });
-      }
-
-      req.user = user;
       return next();
     }
 

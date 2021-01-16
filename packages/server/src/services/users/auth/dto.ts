@@ -1,3 +1,4 @@
-import { User } from '~/entities/User';
-
-export type IUsersAuthRequestDTO = Pick<User, 'email'|'password'>;
+export interface IUsersAuthRequestDTO {
+  email: string;
+  password: string;
+}

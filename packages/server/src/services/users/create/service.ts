@@ -1,5 +1,3 @@
-import bcrypt from 'bcryptjs';
-
 import { User } from '~/entities/User';
 import { IUsersRepository } from '~/repositories/IUsersRepository';
 
@@ -8,15 +6,13 @@ import { IUsersCreateRequestDTO } from './dto';
 export class UsersCreateService {
   constructor(private repository: IUsersRepository) { }
 
-  async execute(data: IUsersCreateRequestDTO) {
+  async execute(data: IUsersCreateRequestDTO): Promise<User> {
     if(await this.repository.findByEmail(data.email)) {
-      throw new Error('User already exists.');
+      throw new Error('E-mail ja cadastrado!');
     }
 
-    const hash = await bcrypt.hash(data.password, 10);
-    const user = await this.repository.save(new User({ ...data, password: hash }));
+    const user = await this.repository.create(data);
 
-    const userWithoutPassword: typeof user = { ...user, password: undefined };
-    return userWithoutPassword;
+    return user;
   }
 }

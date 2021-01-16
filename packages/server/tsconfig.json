@@ -6,7 +6,6 @@
     "lib": ["ES6", "ESNext"],
     "allowJs": true,
     "noEmit": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "outDir": "./dist",
@@ -20,9 +19,9 @@
       "./src/**/*.d.ts"
     ],
     "resolveJsonModule": true,
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "paths": {
-      "~/*": ["./src/*"],
+      "~/*": ["./*"],
     }
   },
   "include": [

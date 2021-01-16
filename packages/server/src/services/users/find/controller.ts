@@ -5,19 +5,15 @@ import { UsersFindService } from './service';
 export class UsersFindController {
   constructor(private service: UsersFindService) { }
 
-  async handle(req: Request, res: Response) {
+  async handle(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
 
-    if(!id) {
-      return res.status(400).json({ message: 'Invalid sended data.' });
-    }
-
     try {
-      const response = await this.service.execute({ id });
+      const user = await this.service.execute({ id });
 
-      return res.json(response);
+      return res.status(200).json(user);
     } catch(err) {
-      return res.status(400).json({ message: err.message || 'Unexpected error.' });
+      return res.status(400).json({ message: err.message || 'Erro inesperado!' });
     }
   }
 }

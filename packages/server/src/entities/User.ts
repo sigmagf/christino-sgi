@@ -1,22 +1,42 @@
-import { v4 } from 'uuid';
+import {
+  Column,
+  Entity,
+  CreateDateColumn,
+  UpdateDateColumn,
+  PrimaryGeneratedColumn,
+  BeforeInsert,
+  BeforeUpdate,
+} from 'typeorm';
 
+@Entity('users')
 export class User {
-  public readonly id: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-  public name: string;
-  public email: string;
-  public password: string;
+    @Column('character varying', { length: 128 })
+    name: string;
 
-  public readonly createdAt?: Date;
-  public updatedAt?: Date;
+    @Column('character varying', { length: 128 })
+    email: string;
 
-  constructor(props: Omit<User, 'id'>, id?: string) {
-    Object.assign(this, props);
+    @Column('character varying', { length: 128 })
+    password: string;
 
-    if(!id) {
-      this.id = v4();
-    } else {
-      this.id = id;
-    }
-  }
+    @Column('character varying', { length: 128, nullable: true, unique: true })
+    pwd_reset_token: string;
+
+    @Column('timestamp without time zone', { nullable: true })
+    pwd_reset_expires: Date;
+
+    @Column('character varying', { length: 128, nullable: true, unique: true })
+    email_change_token: string;
+
+    @Column('timestamp without time zone', { nullable: true })
+    email_change_expires: Date;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 }

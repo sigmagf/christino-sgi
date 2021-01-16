@@ -1,3 +1,5 @@
-import { User } from '~/entities/User';
-
-export type IUsersCreateRequestDTO = Omit<User, 'id'|'createdAt'|'updatedAt'>;
+export interface IUsersCreateRequestDTO {
+  name: string;
+  email: string;
+  password: string;
+}

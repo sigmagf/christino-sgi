@@ -1,22 +1,22 @@
-import { v4 } from 'uuid';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
+@Entity('clients')
 export class Client {
-  public readonly id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  public name: string;
-  public document: string;
-  public group: string;
+  @Column('character varying', { length: 128 })
+  name: string;
 
-  public readonly createdAt?: Date;
-  public updatedAt?: Date;
+  @Column('character varying', { length: 14 })
+  document: string;
 
-  constructor(props: Omit<Client, 'id'>, id?: string) {
-    Object.assign(this, props);
+  @Column('character varying', { length: 32 })
+  group: string;
 
-    if(!id) {
-      this.id = v4();
-    } else {
-      this.id = id;
-    }
-  }
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 }

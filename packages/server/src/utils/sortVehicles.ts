@@ -1,6 +1,6 @@
 import { Vehicle } from '~/entities/Vehicle';
 
-export const sortCRVs = (data: Vehicle[]) => {
+export const sortVehicles = (data: Vehicle[]): Vehicle[] => {
   /* SORT BY VEHICLE PLATE */
   data.sort((a, b) => {
     if(a.plate < b.plate) {
