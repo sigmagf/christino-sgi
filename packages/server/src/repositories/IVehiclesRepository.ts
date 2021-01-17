@@ -9,8 +9,8 @@ export interface IVehiclesRepository {
   findByClientPlate(client_id: string, plate: string): Promise<Vehicle>;
   findByClientRenavam(client_id: string, plate: string): Promise<Vehicle>;
 
-  create(data: Omit<Vehicle, 'id'|'created_at'|'updated_at'>): Promise<Vehicle>;
-  update(id: string, data: Omit<Vehicle, 'id'|'created_at'|'updated_at'>): Promise<Vehicle>;
+  create(data: Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'>): Promise<Vehicle>;
+  update(id: string, data: Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'>): Promise<Vehicle>;
 
   delete(id: string): Promise<void>;
 }

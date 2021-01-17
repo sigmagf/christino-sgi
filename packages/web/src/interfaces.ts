@@ -41,7 +41,7 @@ export interface IUser {
 
 export interface IVehicle {
   id: string;
-  client_id: string;
+  client: IClient;
   plate: string;
   renavam: string;
   cla: string;
@@ -49,8 +49,8 @@ export interface IVehicle {
   brand_model: string;
   type: string;
   details: string;
-  status: string;
-  issued_on: string;
+  status: number;
+  issued_on: Date;
   createdAt: Date;
   updatedAt: Date;
 }

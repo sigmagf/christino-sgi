@@ -1,4 +1,6 @@
-module.exports = {
+import { ConnectionOptions } from 'typeorm';
+
+export const typeormConfig: ConnectionOptions = {
   type: 'postgres',
   host: process.env.TYPEORM_HOST,
   port: parseInt(process.env.TYPEORM_PORT, 10),
@@ -8,15 +10,11 @@ module.exports = {
   synchronize: false,
   logging: false,
   entities: [
-    'src/entities/**/*.ts',
-    'dist/entities/**/*.js',
+    `${__dirname}/../entities/**/*.ts`,
+    `${__dirname}/../entities/**/*.js`,
   ],
   migrations: [
-    'src/database/migrations/**/*.ts',
-    'dist/database/migrations/**/*.js',
+    `${__dirname}/migrations/**/*.ts`,
+    `${__dirname}/migrations/**/*.js`,
   ],
-  cli: {
-    entitiesDir: 'src/entities',
-    migrationsDir: 'src/database/migrations',
-  },
 };

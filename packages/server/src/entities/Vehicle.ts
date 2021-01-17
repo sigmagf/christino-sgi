@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+
+import { Client } from './Client';
 
 @Entity('vehicles')
 export class Vehicle {
@@ -40,4 +42,8 @@ export class Vehicle {
 
     @UpdateDateColumn()
     updated_at: Date;
+
+    @ManyToOne((type) => Client, (vehicles) => Vehicle, { eager: true })
+    @JoinColumn({ name: 'client_id' })
+    client: Client;
 }
