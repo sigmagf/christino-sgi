@@ -6,7 +6,7 @@ module.exports = {
   },
   extends: [
     'plugin:react/recommended',
-    'airbnb-base',
+    'airbnb',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
   ],
@@ -30,6 +30,8 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
+    /* Disable need to specify protypes */
+    'react/prop-types': 'off',
     /* Disable rule that remove 'I' from interfaces */
     '@typescript-eslint/interface-name-prefix': 'off',
 
@@ -66,6 +68,12 @@ module.exports = {
     /* Enable console and alert */
     'no-console': 'off',
     'no-alert': 'off',
+
+    /* Enable jsx syntax in tsx */
+    'react/jsx-filename-extension': [
+      'error',
+      { extensions: ['.js', '.jsx', '.tsx'] },
+    ],
 
     /* Defines max row length */
     'max-len': [

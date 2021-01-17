@@ -1,4 +1,4 @@
-import { IUseLocalStorage } from '~/interfaces';
+import { IUseLocalStorage, IUser } from '~/interfaces';
 
 import { api } from './api';
 
@@ -10,7 +10,7 @@ export const isAuthenticated = async (storage: IUseLocalStorage) => {
   }
 
   try {
-    const request = await api.get<any>('/users/valid', {
+    const request = await api.get<IUser>('/users/valid', {
       headers: {
         authorization: `Bearer ${token}`,
       },
