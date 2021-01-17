@@ -8,14 +8,17 @@ export const Paginator = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
 
+  .right-content,
   .page-results-count {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     flex-wrap: nowrap;
     white-space: nowrap;
-    gap: 10px;
+    gap: 15px;
+  }
 
+  .page-results-count {
     select {
       margin-left: 10px;
     }

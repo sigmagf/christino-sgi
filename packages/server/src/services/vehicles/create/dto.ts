@@ -1,7 +1,6 @@
 export interface IVehiclesCreateRequestDTO {
-  client_id?: string;
-  name?: string;
-  document?: string;
+  name: string;
+  document: string;
   group?: string;
 
   plate: string;

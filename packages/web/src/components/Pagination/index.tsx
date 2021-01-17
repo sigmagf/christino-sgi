@@ -17,10 +17,11 @@ interface IPaginationProps {
   inLoading: boolean;
   onNumberClick: (n: number) => void;
   onMaxResultsChange: (n: number) => void;
+  overrideMaxResultsBy?: JSX.Element;
 }
 
 export const Pagination: React.FC<IPaginationProps> = (props) => {
-  const { currentPage, totalPages, inLoading, onNumberClick, onMaxResultsChange } = props;
+  const { currentPage, totalPages, inLoading, onNumberClick, onMaxResultsChange, overrideMaxResultsBy } = props;
   const formRef = useRef<FormHandles>(null);
 
   const pages: number[] = [];
@@ -30,6 +31,10 @@ export const Pagination: React.FC<IPaginationProps> = (props) => {
   }
 
   const calcPagesToShow = () => {
+    if(pages.length <= 7) {
+      return pages;
+    }
+
     let minPage = currentPage - 1;
     let maxPage = currentPage + 1;
 
@@ -113,22 +118,28 @@ export const Pagination: React.FC<IPaginationProps> = (props) => {
         </button>
       </PaginatorNumbers>
 
-      <Form ref={formRef} onSubmit={onSubmit} className="page-results-count">
-        Resultados por pagina:
-        <Select
-          name="resultsPerPage"
-          defaultValue={{ label: '10', value: '10' }}
-          options={[
-            { label: '10', value: '10' },
-            { label: '20', value: '20' },
-            { label: '30', value: '30' },
-            { label: '40', value: '40' },
-            { label: '50', value: '50' },
-          ]}
-          isDisabled
-          onBlur={() => formRef.current?.submitForm()}
-        />
-      </Form>
+      {overrideMaxResultsBy ? (
+        <div className="right-content">
+          {overrideMaxResultsBy}
+        </div>
+      ) : (
+        <Form ref={formRef} onSubmit={onSubmit} className="page-results-count">
+          Resultados por pagina:
+          <Select
+            name="resultsPerPage"
+            defaultValue={{ label: '10', value: '10' }}
+            options={[
+              { label: '10', value: '10' },
+              { label: '20', value: '20' },
+              { label: '30', value: '30' },
+              { label: '40', value: '40' },
+              { label: '50', value: '50' },
+            ]}
+            isDisabled
+            onBlur={() => formRef.current?.submitForm()}
+          />
+        </Form>
+      )}
     </Paginator>
   );
 };

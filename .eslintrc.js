@@ -6,7 +6,6 @@ module.exports = {
   },
   extends: [
     'plugin:react/recommended',
-    'plugin:react-hooks/recommended',
     'airbnb',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
@@ -31,8 +30,21 @@ module.exports = {
     'react-hooks',
   ],
   rules: {
+    /* Enable empty functions */
+    '@typescript-eslint/no-empty-function': 'off',
+
+    /* Enable tags and exoressuibs in same line on JSX */
+    'react/jsx-one-expression-per-line': 'off',
+
+    /* Remove explicit return type of function */
+    '@typescript-eslint/explicit-function-return-type': 'off',
+
+    /* Enable plus plus */
+    'no-plusplus': 'off',
+
     /* Disable need to specify protypes */
     'react/prop-types': 'off',
+
     /* Disable rule that remove 'I' from interfaces */
     '@typescript-eslint/interface-name-prefix': 'off',
 

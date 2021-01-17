@@ -1,5 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { FaSearch as SearchIcon } from 'react-icons/fa';
+import {
+  FaSearch as SearchIcon,
+  FaLayerGroup as StackIcon,
+} from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { Badge } from '~/components/Badge';
@@ -11,34 +14,21 @@ import { Table } from '~/components/Table';
 import { IPagination, IVehicle } from '~/interfaces';
 import { api } from '~/services/api';
 import { qsConverter } from '~/utils/queryStringConverter';
+
+import { VehicleImportModal } from './ImportModal';
 import { StatusBadge } from './styles';
 
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
 
-  const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({
-    page: {
-      total: 1,
-      current: 1,
-      limit: 10,
-    },
-    data: [],
-  });
-  
-  const [filters, setFilters] = useState({
-    page: 1,
-    limit: 10,
-    name: '',
-    group: '',
-    document: '',
-    plate: '',
-    renavam: '',
-    brand_model: '',
-    type: '',
-    status: ''
-  });
+  const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
+  const [filters, setFilters] = useState({ page: 1, limit: 10, name: '', group: '', document: '', plate: '', renavam: '', brand_model: '', type: '', status: '' });
+  const [inLoading, setInLoading] = useState(false);
+  const [importModalState, setImportModalState] = useState(false);
 
   const getData = useCallback(async () => {
+    setInLoading(true);
+
     try {
       const response = await api.get<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
 
@@ -50,9 +40,11 @@ export const VehiclesPage: React.FC = () => {
         toast.error(err.response.data.message);
       }
     }
+
+    setInLoading(false);
   }, [filters]);
 
-  const statusConverter = (status: number) => {
+  const statusConverter = useCallback((status: number) => {
     switch(status) {
       default:
       case 0:
@@ -64,26 +56,29 @@ export const VehiclesPage: React.FC = () => {
       case 3:
         return 'OUTRO';
     }
-  }
+  }, []);
+
+  const onImportModalClose = useCallback(() => {
+    setImportModalState(false);
+    getData();
+  }, []);
 
   useEffect(() => { getData(); }, [getData, filters]);
 
   return (
     <>
       <Layout>
-        <Card>
-          {qsConverter({
-            page: 1,
-            limit: 10,
-            group: ['ABA', ''],
-            plate: 'ABC-1234'
-          })}
+        <Card style={{ marginBottom: 15 }}>
+          <Button variant="info" onClick={() => setImportModalState(true)}>
+            <StackIcon />&nbsp;&nbsp;&nbsp;ENVIAR LOTE DE VEICULOS
+          </Button>
         </Card>
+
         <Card style={{ position: 'relative' }}>
           <Table>
             <thead>
               <tr>
-                <th style={{width: 20 }}>&nbsp;</th>
+                <th style={{ width: 20 }}>&nbsp;</th>
                 <th style={{ fontFamily: 'monospace', textAlign: 'left' }}>CLIENTE</th>
                 <th style={{ fontFamily: 'monospace', width: 100 }}>PLACA</th>
                 <th style={{ fontFamily: 'monospace', width: 150 }}>RENAVAM</th>
@@ -92,21 +87,45 @@ export const VehiclesPage: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {vehicles?.data.length > 0 && (
-                vehicles?.data.map((vehicle) => (
+              {(!inLoading && vehicles && vehicles.data.length === 0) && (
+                <>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6} style={{ fontFamily: 'monospace', textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
+                  <tr><td colSpan={6} style={{ fontFamily: 'monospace', textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                </>
+              )}
+              {(inLoading || !vehicles) ? (
+                <>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                  <tr><td colSpan={6}>&nbsp;</td></tr>
+                </>
+              ) : (
+                vehicles.data.map((vehicle) => (
                   <tr>
                     <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <StatusBadge status={vehicle.status} title={statusConverter(vehicle.status)} />
                     </td>
-                    <td style={{ fontFamily: 'monospace' }}>
-                      { vehicle.client.name }
-                      {vehicle.client.group && <Badge>{ vehicle.client.group }</Badge>}
-                    </td>
+                    <td style={{ fontFamily: 'monospace' }}>{ vehicle.client.name }</td>
                     <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.plate }</td>
                     <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
                     <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
                     <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>
-                      <Button>
+                      <Button variant="secondary" disabled={inLoading}>
                         <SearchIcon />
                       </Button>
                     </td>
@@ -121,12 +140,13 @@ export const VehiclesPage: React.FC = () => {
           <Pagination
             currentPage={vehicles.page.current}
             totalPages={vehicles.page.total}
-            inLoading={false}
-            onNumberClick={(page) => setFilters(old => ({...old, page}))}
+            inLoading={inLoading}
+            onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
             onMaxResultsChange={() => console.log('onMaxResultsChange')}
           />
         </Card>
       </Layout>
+      <VehicleImportModal isOpen={importModalState} onClose={onImportModalClose} />
     </>
   );
 };

@@ -1,7 +1,4 @@
 import { Router } from 'express';
-import multer from 'multer';
-
-import { multerConfig } from '~/config/multer';
 
 import { vehiclesCreateController } from './create';
 import { vehiclesDeleteController } from './delete';
@@ -18,10 +15,6 @@ vehiclesRouter.post('/vehicles', (req, res) => vehiclesCreateController.handle(r
 vehiclesRouter.put('/vehicles/:id', (req, res) => vehiclesUpdateController.handle(req, res));
 vehiclesRouter.delete('/vehicles/:id', (req, res) => vehiclesDeleteController.handle(req, res));
 
-vehiclesRouter.post(
-  '/vehicles/import',
-  multer(multerConfig).single('file'),
-  (req, res) => vehiclesImportController.handle(req, res),
-);
+vehiclesRouter.post('/vehicles/import', (req, res) => vehiclesImportController.handle(req, res));
 
 export { vehiclesRouter };

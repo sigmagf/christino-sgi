@@ -1,6 +1,4 @@
-import csvToJson from 'csvtojson';
 import { Request, Response } from 'express';
-import fs from 'fs';
 
 import { errorWork } from '~/utils/errrorWork';
 
@@ -11,17 +9,17 @@ export class VehiclesImportController {
   constructor(private service: VehiclesImportService) { }
 
   async handle(req: Request, res: Response): Promise<Response> {
-    if(!req.file) {
-      return res.status(400).json({ message: 'Nenhum arquivo enviado!' });
-    }
+    const { data } = req.body as IVehiclesImportRequestDTO;
 
     try {
-      const data: IVehiclesImportRequestDTO['data'] = await csvToJson().fromFile(req.file.path);
-      fs.unlinkSync(req.file.path);
+      if(!Array.isArray(data)) {
+        throw new Error('Data is not array');
+      }
 
       await this.service.execute({ data });
       return res.status(201).send();
     } catch(err) {
+      console.log(err);
       return res.status(400).json(errorWork(err.message || null));
     }
   }

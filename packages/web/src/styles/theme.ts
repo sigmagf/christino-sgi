@@ -10,7 +10,7 @@ const theme = {
 
   success: {
     main: '#28A745',
-    contrastText: '#222222',
+    contrastText: '#FFFFFF',
   },
   warning: {
     main: '#F5BB00',

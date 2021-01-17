@@ -4,10 +4,8 @@ import { CardContainer } from './styles';
 
 type ICardProps = React.HTMLAttributes<HTMLDivElement>;
 
-export const Card: React.FC<ICardProps> = ({ children, ...props }) => {
-  return (
-    <CardContainer {...props}>
-      { children }
-    </CardContainer>
-  );
-};
+export const Card: React.FC<ICardProps> = ({ children, ...props }) => (
+  <CardContainer {...props}>
+    { children }
+  </CardContainer>
+);

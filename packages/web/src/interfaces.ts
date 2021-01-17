@@ -11,6 +11,40 @@ export interface IStorage {
 }
 /* END STIRAGE */
 
+/* IMPORT VEHICLES */
+export interface IVehiclesImportCSV {
+  name: string;
+  document: string;
+  group: string;
+  plate: string;
+  renavam: string;
+  crv: string;
+  brand_model: string;
+  type: string;
+  details: string;
+  status: number;
+  issued_on: Date;
+}
+
+interface IVehiclesImportClientJSON {
+  name: string;
+  document: string;
+  group: string;
+}
+
+export interface IVehiclesImportJSON {
+  client: IVehiclesImportClientJSON;
+  plate: string;
+  renavam: string;
+  crv: string;
+  brand_model: string;
+  type: string;
+  details: string;
+  status: number;
+  issued_on: Date;
+}
+/* END IMPORT VEHICLES */
+
 /* BACKEND */
 export interface IPagination<T> {
   page: {
@@ -44,7 +78,6 @@ export interface IVehicle {
   client: IClient;
   plate: string;
   renavam: string;
-  cla: string;
   crv: string;
   brand_model: string;
   type: string;

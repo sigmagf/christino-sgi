@@ -65,7 +65,7 @@ export const Login: React.FC = () => {
               <Form onSubmit={onSubmit}>
                 <Input style={{ gridArea: 'EM' }} name="email" label="E-MAIL" />
                 <Input style={{ gridArea: 'PW' }} type="password" name="password" label="SENHA" />
-                <Button style={{ gridArea: 'SB' }} type="submit" apparence="success">
+                <Button style={{ gridArea: 'SB' }} type="submit" variant="success">
                   Entrar
                 </Button>
               </Form>

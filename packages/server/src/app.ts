@@ -9,7 +9,7 @@ import { vehiclesRouter } from './services/vehicles';
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 app.use(cors());

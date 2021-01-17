@@ -26,11 +26,13 @@ export class TypeORMClientsRepository implements IClientsRepository {
   }
 
   async findOrCreate(data: Pick<Client, 'name'|'document'|'group'>): Promise<Client> {
-    let dbData = await getRepository(Client).findOne({ where: { document: data.document } });
+    await getRepository(Client).createQueryBuilder()
+      .insert()
+      .values(data)
+      .onConflict('("document") DO NOTHING')
+      .execute();
 
-    if(!dbData) {
-      dbData = await getRepository(Client).save(data);
-    }
+    const dbData = await getRepository(Client).findOne({ where: { document: data.document } });
 
     return dbData;
   }

@@ -26,8 +26,8 @@ export const UserBar: React.FC = () => {
       </div>
 
       <div className="user-actions">
-        <Button apparence="error" onClick={onLogout}><IconLogout size={17} /></Button>
-        <Button apparence="secondary"><IconSettings size={17} /></Button>
+        <Button variant="error" onClick={onLogout}><IconLogout size={17} /></Button>
+        <Button variant="secondary"><IconSettings size={17} /></Button>
         <img src="https://www.codeapi.io/initials/Joao%20Gabriel" alt="" />
       </div>
     </UserBarContainer>

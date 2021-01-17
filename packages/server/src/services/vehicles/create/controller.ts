@@ -9,10 +9,10 @@ export class VehiclesCreateController {
   constructor(private service: VehiclesCreateService) { }
 
   async handle(req: Request, res: Response): Promise<Response> {
-    const { client_id, name, document, group, plate, renavam, cla, crv, brand_model, type, details, issued_on, status } = req.body as IVehiclesCreateRequestDTO;
+    const { name, document, group, plate, renavam, cla, crv, brand_model, type, details, issued_on, status } = req.body as IVehiclesCreateRequestDTO;
 
     try {
-      if(!client_id && !name && !document) {
+      if(!name && !document) {
         throw new Error('Client not informed');
       }
 
@@ -20,7 +20,7 @@ export class VehiclesCreateController {
         throw new Error('Obrigatory items not informed');
       }
 
-      const vehicle = await this.service.execute({ client_id, name, document, group, plate, renavam, cla, crv, brand_model, type, details, issued_on, status });
+      const vehicle = await this.service.execute({ name, document, group, plate, renavam, cla, crv, brand_model, type, details, issued_on, status });
 
       return res.status(201).json(vehicle);
     } catch(err) {

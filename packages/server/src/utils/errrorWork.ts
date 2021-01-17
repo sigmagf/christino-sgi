@@ -1,7 +1,7 @@
 type ErrorResponseType = {
   type: string;
   message: string;
-  details: string
+  details: string;
 }
 
 export function errorWork(message: string): ErrorResponseType {
@@ -19,6 +19,7 @@ export function errorWork(message: string): ErrorResponseType {
     case 'Invalid file type':
     case 'Obrigatory items not informed':
     case 'Client not informed':
+    case 'Data is not array':
       return {
         type: 'INVALID DATA',
         message: message || 'Unexprected error',

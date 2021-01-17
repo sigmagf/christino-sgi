@@ -14,19 +14,11 @@ export class VehiclesCreateService {
   ) { }
 
   async execute(data: IVehiclesCreateRequestDTO): Promise<Vehicle> {
-    let client: Client;
-
-    if(data.client_id !== null) {
-      client = await this.clientsRepo.findById(data.client_id);
-    }
-
-    if(!data.client_id) {
-      client = await this.clientsRepo.findOrCreate({
-        name: data.name,
-        document: data.document,
-        group: data.group,
-      });
-    }
+    let client = await this.clientsRepo.findOrCreate({
+      name: data.name,
+      document: data.document,
+      group: data.group,
+    });
 
     if(await this.vehiclesRepo.findByClientPlate(client.id, data.plate)) {
       throw new Error('Plate already exists for this client');

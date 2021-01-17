@@ -17,9 +17,6 @@ export class Vehicle {
     renavam: string;
 
     @Column('character varying', { length: 16, nullable: true, unique: true })
-    cla: string;
-
-    @Column('character varying', { length: 16, nullable: true, unique: true })
     crv: string;
 
     @Column('character varying', { length: 32, nullable: true })
