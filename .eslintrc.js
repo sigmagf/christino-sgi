@@ -69,6 +69,9 @@ module.exports = {
     'no-console': 'off',
     'no-alert': 'off',
 
+    /* Enable '...props' */
+    'react/jsx-props-no-spreading': 'off',
+
     /* Enable jsx syntax in tsx */
     'react/jsx-filename-extension': [
       'error',

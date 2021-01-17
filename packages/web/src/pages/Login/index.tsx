@@ -11,7 +11,6 @@ import { Input } from '~/components/Form';
 import { usePersistedState } from '~/hooks';
 import { IUser, IUserAuth } from '~/interfaces';
 import { api } from '~/services/api';
-import { translateMessages } from '~/utils/translateMessages';
 
 import { LoginContainer } from './styles';
 
@@ -30,23 +29,27 @@ export const Login: React.FC = () => {
 
   const onSubmit: SubmitHandler<IUser> = async (data) => {
     setInLoading(true);
+    navigate('/');
+    setInLoading(false);
+
+    return;
+
     try {
       const request = await api.post<IUserAuth>('/users/auth', {
         email: data.email,
         password: data.password,
       });
 
-      if(request.status < 300 && request.status >= 200) {
-        setToken(request.data.token);
-        navigate('/');
-      }
+      setToken(request.data.token);
+      navigate('/');
     } catch(err) {
       if(err.message === 'Network Error') {
-        toast.error(translateMessages('Verifique sua conexão com a internet.'));
+        toast.error('Verifique sua conexão com a internet.');
       } else {
-        toast.error(translateMessages(err.response.data.message || 'Unexpected error.'));
+        toast.error(err.response.data.message);
       }
     }
+
     setInLoading(false);
   };
 

@@ -28,6 +28,14 @@ export class VehiclesCreateService {
       });
     }
 
+    if(await this.vehiclesRepo.findByClientPlate(client.id, data.plate)) {
+      throw new Error('Plate already exists for this client');
+    }
+
+    if(await this.vehiclesRepo.findByClientRenavam(client.id, data.renavam)) {
+      throw new Error('Renavam already exists for this client');
+    }
+
     const vehicle = await this.vehiclesRepo.create({
       client_id: client.id,
       plate: data.plate,

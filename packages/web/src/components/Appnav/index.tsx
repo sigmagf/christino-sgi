@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react';
 import { IconType } from 'react-icons';
 import {
   FaHome as IconDashboard,
-  FaCar as IconCar,
   FaAngleLeft as IconArrowLeft,
   FaAngleRight as IconArrowRight,
   FaFile as IconFile,
@@ -36,15 +35,9 @@ export const Appnav: React.FC = () => {
       path: '/',
     },
     {
-      icon: IconCar,
-      label: 'Licenciamentos',
-      disabled: true,
-      path: '/licenciamentos',
-    },
-    {
       icon: IconFile,
       label: 'Recibos',
-      path: '/crvs',
+      path: '/vehicles',
     },
     {
       icon: Iconuser,

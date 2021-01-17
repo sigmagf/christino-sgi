@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+import { errorWork } from '~/utils/errrorWork';
+
 import { IUsersAuthRequestDTO } from './dto';
 import { UsersAuthService } from './service';
 
@@ -11,15 +13,14 @@ export class UsersAuthController {
 
     try {
       if(!email || !password) {
-        throw new Error('Um ou mais itens obrigatorios nao foram informados!');
-        
+        throw new Error('Obrigatory items not informed');
       }
 
       const user = await this.service.execute({ email, password });
 
       return res.status(201).json(user);
     } catch(err) {
-      return res.status(400).json({ message: err.message || 'Erro inesperado!' });
+      return res.status(400).json(errorWork(err.message || null));
     }
   }
 }

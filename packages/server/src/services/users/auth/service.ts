@@ -6,7 +6,7 @@ import { IUsersRepository } from '~/repositories/IUsersRepository';
 
 import { IUsersAuthRequestDTO } from './dto';
 
-type UserWithToken = User & { token: string };
+type UserWithToken = { user: User, token: string };
 
 export class UsersAuthService {
   constructor(private repository: IUsersRepository) { }
@@ -32,6 +32,6 @@ export class UsersAuthService {
     user.pwd_reset_token = undefined;
     user.password = undefined;
 
-    return { ...user, token };
+    return { user, token };
   }
 }

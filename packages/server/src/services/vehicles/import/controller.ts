@@ -2,7 +2,9 @@ import csvToJson from 'csvtojson';
 import { Request, Response } from 'express';
 import fs from 'fs';
 
-import { errorType, IVehiclesImportRequestDTO } from './dto';
+import { errorWork } from '~/utils/errrorWork';
+
+import { IVehiclesImportRequestDTO } from './dto';
 import { VehiclesImportService } from './service';
 
 export class VehiclesImportController {
@@ -20,16 +22,7 @@ export class VehiclesImportController {
       await this.service.execute({ data });
       return res.status(201).send();
     } catch(err) {
-      if(err.message !== null && err.message.includes('IMPORTERROR-')) {
-        const error: errorType[] = JSON.parse(err.message.replace('IMPORTERROR-', ''));
-
-        return res.status(400).json({
-          message: 'One or more entries not saved',
-          detail: error,
-        });
-      }
-
-      return res.status(400).json({ message: err.message || 'Erro inesperado!' });
+      return res.status(400).json(errorWork(err.message || null));
     }
   }
 }

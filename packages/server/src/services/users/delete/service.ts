@@ -1,4 +1,3 @@
-import { User } from '~/entities/User';
 import { IUsersRepository } from '~/repositories/IUsersRepository';
 
 import { IUsersDeleteRequestDTO } from './dto';

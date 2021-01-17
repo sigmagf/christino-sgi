@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+import { errorWork } from '~/utils/errrorWork';
+
 import { ClientsListService } from './service';
 
 export class ClientsListController {
@@ -14,7 +16,7 @@ export class ClientsListController {
 
       return res.status(200).json(clients);
     } catch(err) {
-      return res.status(400).json({ message: err.message || 'Erro inesperado!' });
+      return res.status(400).json(errorWork(err.message || null));
     }
   }
 }

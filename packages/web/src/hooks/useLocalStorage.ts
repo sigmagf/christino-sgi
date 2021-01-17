@@ -1,6 +1,12 @@
 import { IStorage } from '~/interfaces';
 
-const useLocalStorage = () => {
+type ReturnUseLocalStorage = {
+  getItem: <T extends 'token' | 'userName'>(path: T) => IStorage[T] | null;
+  setItem: <T extends 'token' | 'userName'>(path: T, value: IStorage[T]) => void;
+  clear: () => void;
+};
+
+export default function useLocalStorage(): ReturnUseLocalStorage {
   function getItem<T extends keyof IStorage>(path: T): IStorage[T]|null {
     const value = localStorage.getItem(`${process.env.REACT_APP_LOCALSTORAGE_BASE || ''}/${path}`) || '';
 
@@ -24,6 +30,4 @@ const useLocalStorage = () => {
   }
 
   return { getItem, setItem, clear };
-};
-
-export default useLocalStorage;
+}

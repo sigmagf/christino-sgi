@@ -26,8 +26,8 @@ export interface IClient {
   name: string;
   document: string;
   group: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface IUser {
@@ -35,38 +35,24 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
 }
 
 export interface IVehicle {
   id: string;
+  client_id: string;
   plate: string;
   renavam: string;
-  brandModel: string;
+  cla: string;
+  crv: string;
+  brand_model: string;
   type: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface ICRV {
-  clientId: string;
-  client: IClient;
-  vehicleId: string;
-  vehicle: IVehicle;
   details: string;
   status: string;
-  issuedOn: Date;
+  issued_on: string;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface ICRVFilter {
-  client: IClient;
-  vehicle: IVehicle & {
-    licensingMonth: string;
-  },
-  status: string;
 }
 
 export interface IUserAuth {

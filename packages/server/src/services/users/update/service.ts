@@ -8,7 +8,7 @@ export class UsersUpdateService {
 
   async execute(data: IUsersUpdateRequestDTO): Promise<User> {
     if(!await this.repository.findById(data.id)) {
-      throw new Error('user not founded');
+      throw new Error('User not founded');
     }
 
     const user = await this.repository.update(data.id, data);
