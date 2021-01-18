@@ -4,11 +4,9 @@
   "private": "true",
   "main": "index.js",
   "scripts": {
-    "start": "yarn server start",
-    "build": "yarn server build",
     "web": "yarn workspace @christino-sgi/web",
     "server": "yarn workspace @christino-sgi/server",
-    "eslint": "yarn workspace @christino-sgi/eslint-config"
+    "eslint-config": "yarn workspace @christino-sgi/eslint-config"
   },
   "workspaces": {
     "packages": [

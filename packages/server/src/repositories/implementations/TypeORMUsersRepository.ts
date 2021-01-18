@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import { getRepository } from 'typeorm';
 
 import { User } from '~/entities/User';
-import { IPagination } from '~/interface';
+import { IPagination } from '~/interfaces';
 import { withPagination } from '~/utils/withPagination';
 
 import { IUsersRepository } from '../IUsersRepository';

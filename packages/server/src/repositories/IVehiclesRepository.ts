@@ -1,5 +1,5 @@
 import { Vehicle } from '~/entities/Vehicle';
-import { IPagination } from '~/interface';
+import { IPagination } from '~/interfaces';
 
 export interface IVehiclesRepository {
   list(page: number, limit: number): Promise<IPagination<Vehicle>>;

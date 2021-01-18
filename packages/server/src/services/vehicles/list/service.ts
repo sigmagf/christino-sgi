@@ -1,5 +1,5 @@
 import { Vehicle } from '~/entities/Vehicle';
-import { IPagination } from '~/interface';
+import { IPagination } from '~/interfaces';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
 import { IVehiclesListRequestDTO } from './dto';

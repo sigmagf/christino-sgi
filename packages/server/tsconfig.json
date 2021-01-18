@@ -1,24 +1,16 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "sourceMap": true,
-    "target": "ES2017",
-    "module": "commonjs",
-    "lib": ["ES6", "ESNext"],
-    "allowJs": true,
-    "noEmit": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
+    "lib": [ "ES6", "ESNext" ],
     "outDir": "./dist",
     "rootDir": "./src",
     "removeComments": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
     "typeRoots": [
       "./node_modules/@types",
       "./src/**/*.d.ts"
     ],
-    "resolveJsonModule": true,
     "baseUrl": "./src",
     "paths": {
       "~/*": ["./*"],
@@ -26,5 +18,8 @@
   },
   "include": [
     "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

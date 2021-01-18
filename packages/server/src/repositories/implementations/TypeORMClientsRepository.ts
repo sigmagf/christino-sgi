@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 
 import { Client } from '~/entities/Client';
-import { IPagination } from '~/interface';
+import { IPagination } from '~/interfaces';
 import { withPagination } from '~/utils/withPagination';
 
 import { IClientsRepository } from '../IClientsRepository';

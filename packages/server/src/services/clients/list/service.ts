@@ -1,5 +1,5 @@
 import { Client } from '~/entities/Client';
-import { IPagination } from '~/interface';
+import { IPagination } from '~/interfaces';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 
 import { IClientsListRequestDTO } from './dto';

@@ -1,4 +1,4 @@
-import { IPagination } from '~/interface';
+import { IPagination } from '~/interfaces';
 
 export function withPagination<T>(data: Array<T>, page: number, limit: number): IPagination<T> {
   const startIndex = ((page - 1) * limit);

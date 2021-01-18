@@ -1,5 +1,5 @@
 import { User } from '~/entities/User';
-import { IPagination } from '~/interface';
+import { IPagination } from '~/interfaces';
 
 export interface IUsersRepository {
   list(page: number, limit: number): Promise<IPagination<User>>;

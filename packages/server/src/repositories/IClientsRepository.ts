@@ -1,5 +1,5 @@
 import { Client } from '~/entities/Client';
-import { IPagination } from '~/interface';
+import { IPagination } from '~/interfaces';
 
 export interface IClientsRepository {
   list(page: number, limit: number): Promise<IPagination<Client>>;

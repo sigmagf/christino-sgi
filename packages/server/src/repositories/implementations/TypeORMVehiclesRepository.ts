@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 
 import { Vehicle } from '~/entities/Vehicle';
-import { IPagination } from '~/interface';
+import { IPagination } from '~/interfaces';
 import { sortVehicles } from '~/utils/sortVehicles';
 import { withPagination } from '~/utils/withPagination';
 
@@ -57,7 +57,6 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
       client_id: data.client_id || oldData.client_id,
       plate: data.plate || oldData.plate,
       renavam: data.renavam || oldData.renavam,
-      cla: data.cla || oldData.cla,
       crv: data.crv || oldData.crv,
       brand_model: data.brand_model || oldData.brand_model,
       type: data.type || oldData.type,
