@@ -4,7 +4,7 @@ import { IVehiclesImportJSON, IVehiclesImportCSV } from '~/interfaces';
 
 export async function readVehiclesImportFile(csv: string): Promise<IVehiclesImportJSON[]> {
   const csvConv: IVehiclesImportCSV[] = await csv2json().fromString(csv);
-  const vehicles:IVehiclesImportJSON [] = csvConv.map((vehicle) => (
+  const vehicles: IVehiclesImportJSON [] = csvConv.map((vehicle) => (
     {
       client: {
         name: vehicle.name,

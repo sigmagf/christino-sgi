@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { IconType } from 'react-icons';
 import {
   FaHome as IconDashboard,
