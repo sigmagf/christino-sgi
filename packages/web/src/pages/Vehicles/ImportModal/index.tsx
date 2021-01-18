@@ -103,7 +103,7 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
 
     setInLoading(false);
     onClearHandle();
-  }, [vehiclesToImport]);
+  }, [vehiclesToImport, onClearHandle]);
 
   const buttonsGroup = (
     <>

@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 import delay from 'delay';
 import { NextFunction, Request, Response } from 'express';
 

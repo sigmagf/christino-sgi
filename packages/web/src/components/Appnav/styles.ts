@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { lighten, shade } from 'polished';
 import styled, { css } from 'styled-components';
 

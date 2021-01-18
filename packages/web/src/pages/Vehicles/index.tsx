@@ -5,7 +5,6 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
-import { Badge } from '~/components/Badge';
 import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
 import { Layout } from '~/components/Layout';
@@ -61,7 +60,7 @@ export const VehiclesPage: React.FC = () => {
   const onImportModalClose = useCallback(() => {
     setImportModalState(false);
     getData();
-  }, []);
+  }, [getData]);
 
   useEffect(() => { getData(); }, [getData, filters]);
 

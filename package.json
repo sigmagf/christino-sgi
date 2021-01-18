@@ -4,8 +4,11 @@
   "private": "true",
   "main": "index.js",
   "scripts": {
+    "start": "yarn server start",
+    "build": "yarn server build",
     "web": "yarn workspace @christino-sgi/web",
-    "server": "yarn workspace @christino-sgi/server"
+    "server": "yarn workspace @christino-sgi/server",
+    "eslint": "yarn workspace @christino-sgi/eslint-config"
   },
   "workspaces": {
     "packages": [
@@ -15,22 +18,12 @@
   "author": {
     "name": "João Gabriel Furlan e Leonel",
     "email": "jgfurlan2@gmail.com",
-    "url": "https://furlansoftware.com.br"
+    "url": "https://furlansolutions.com.br"
   },
   "devDependencies": {
+    "@christino-sgi/eslint-config": "*",
     "@types/node": "^14.6.0",
-    "@typescript-eslint/eslint-plugin": "^3.10.1",
-    "@typescript-eslint/parser": "^3.10.1",
-    "eslint": "^7.5.0",
-    "eslint-config-airbnb": "^18.2.0",
-    "eslint-config-airbnb-base": "^14.2.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-import-helpers": "^1.0.2",
-    "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-react": "^7.20.6",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "typescript": "~3.7.2"
+    "typescript": "~4.1.3"
   },
   "license": "MIT"
 }
