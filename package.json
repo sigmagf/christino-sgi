@@ -1,5 +1,6 @@
 {
   "name": "christino-sgi",
+  "description": "Workspace para o sistema despachante do escritorio christino.",
   "version": "1.0.0",
   "private": "true",
   "main": "index.js",
