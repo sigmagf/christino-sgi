@@ -1,4 +1,4 @@
-import { transparentize } from 'polished';
+import { shade, transparentize } from 'polished';
 import { DropzoneRootProps } from 'react-dropzone';
 import styled, { css } from 'styled-components';
 
@@ -68,4 +68,55 @@ export const LoadingModal = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+export const ErrorsGroup = styled.div`
+  margin-bottom: 15px;
+  max-height: 350px;
+  overflow-y: scroll;
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.primary.main}; 
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => shade(0.2, theme.primary.main)}; 
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => shade(0.3, theme.primary.main)}; 
+  }
+
+  details {
+    border-radius: 5px;
+    overflow: hidden;
+
+    :not(:first-child) {
+      margin-top: 5px;
+    }
+
+    summary {
+      font-family: 'monospace';
+      background-color: ${({ theme }) => theme.error.main};
+      text-align: center;
+      padding: 5px;
+    }
+
+    section {
+      font-family: 'monospace';
+      border: 1px solid ${({ theme }) => theme.error.main};
+      text-align: center;
+      border-bottom-left-radius: 5px;
+      border-bottom-right-radius: 5px;
+      padding: 5px;
+    }
+  }
 `;

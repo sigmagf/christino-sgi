@@ -14,16 +14,20 @@ import { useTheme } from 'styled-components';
 import { Button } from '~/components/Button';
 import { Pagination } from '~/components/Pagination';
 import { Table } from '~/components/Table';
-import { IVehiclesImportJSON } from '~/interfaces';
+import { IVehicle, IVehiclesImportJSON } from '~/interfaces';
 import { api } from '~/services/api';
 import { readVehiclesImportFile } from '~/utils/readVehiclesImportFile';
 import { withPagination } from '~/utils/withPagination';
 
-import { DropContainer, LoadingModal, TableResult, UploadMessage } from './styles';
+import { DropContainer, ErrorsGroup, LoadingModal, TableResult, UploadMessage } from './styles';
 
 interface IImportModalProps {
   isOpen: boolean;
   onClose: () => void;
+}
+
+interface IRequestError extends Omit<IVehicle, 'id'|'updated_at'|'created_at'|'client'> {
+  error: string;
 }
 
 Modal.setAppElement('#root');
@@ -33,6 +37,8 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
   const [vehiclesToImport, setVehiclesToImport] = useState<IVehiclesImportJSON[]>([]);
   const [vehiclesToImportPage, setVehiclestoImportPage] = useState(1);
   const [inLoading, setInLoading] = useState(false);
+  const [requestErrorDetails, setRequestErrorDetails] = useState<IRequestError[]>([]);
+
   const vehiclesPagination = withPagination(vehiclesToImport, vehiclesToImportPage, 10);
 
   const customStyles: Modal.Styles = {
@@ -67,7 +73,16 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
     return <UploadMessage type="success">SOLTE O ARQUIVO AQUI</UploadMessage>;
   };
 
+  const onClearHandle = useCallback(() => {
+    setVehiclesToImport([]);
+    setInLoading(false);
+    setVehiclestoImportPage(1);
+  }, []);
+
   const onFileUploaded = useCallback((files: File[]) => {
+    setRequestErrorDetails([]);
+    onClearHandle();
+
     const reader = new FileReader();
 
     reader.onload = async (e) => {
@@ -80,15 +95,12 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
     };
 
     reader.readAsText(files[0]);
-  }, []);
-
-  const onClearHandle = useCallback(() => {
-    setVehiclesToImport([]);
-    setVehiclestoImportPage(1);
-  }, []);
+  }, [onClearHandle]);
 
   const onSendHandle = useCallback(async () => {
+    setRequestErrorDetails([]);
     setInLoading(true);
+
     try {
       await api.post('/vehicles/import', { data: vehiclesToImport });
       toast.success('Arquivo enviado com sucesso!');
@@ -97,13 +109,23 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
         toast.error('Verifique sua conexão com a internet.');
       } else {
         toast.error(err.response.data.message);
-        console.log(err.response.data.details);
+
+        if(err.response.data.type === 'PARTIAL INVALID DATA') {
+          setRequestErrorDetails(err.response.data.details);
+        }
       }
     }
 
     setInLoading(false);
     onClearHandle();
   }, [vehiclesToImport, onClearHandle]);
+
+  const onCloseHandle = () => {
+    setRequestErrorDetails([]);
+    onClearHandle();
+
+    onClose();
+  };
 
   const buttonsGroup = (
     <>
@@ -117,8 +139,19 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
   );
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onClose} style={customStyles}>
-      {vehiclesToImport.length === 0 ? (
+    <Modal isOpen={isOpen} onRequestClose={onCloseHandle} style={customStyles}>
+      {requestErrorDetails.length !== 0 && (
+        <ErrorsGroup>
+          {requestErrorDetails.map((error) => (
+            <details key={error.renavam}>
+              <summary>{ `${error.plate} - ${error.renavam}` }</summary>
+              <section>{ error.error }</section>
+            </details>
+          ))}
+        </ErrorsGroup>
+      )}
+
+      {(vehiclesToImport.length === 0) ? (
         <Dropzone accept="text/csv" maxFiles={1} onDropAccepted={onFileUploaded} disabled={inLoading}>
           {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
             <DropContainer {...getRootProps()} isDragActive={isDragActive} isDragReject={isDragReject}>
@@ -128,65 +161,70 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
           )}
         </Dropzone>
       ) : (
-        <TableResult>
-          {inLoading && (
-            <LoadingModal>
-              <ReactLoading type="bubbles" />
-            </LoadingModal>
+        <>
+          {(vehiclesToImport.length !== 0) && (
+            <TableResult>
+              {inLoading && (
+                <LoadingModal>
+                  <ReactLoading type="bubbles" />
+                </LoadingModal>
+              )}
+
+              <Table style={{ marginBottom: 15, width: 1500 }}>
+                <thead>
+                  <tr>
+                    <th style={{ textAlign: 'left', fontFamily: 'monospace' }}>NOME</th>
+                    <th style={{ fontFamily: 'monospace' }}>DOCUMENTO</th>
+                    <th style={{ fontFamily: 'monospace' }}>GRUPO</th>
+                    <th style={{ fontFamily: 'monospace' }}>PLACA</th>
+                    <th style={{ fontFamily: 'monospace' }}>RENAVAM</th>
+                    <th style={{ fontFamily: 'monospace' }}>CRV</th>
+                    <th style={{ fontFamily: 'monospace' }}>MARCA/MODELO</th>
+                    <th style={{ fontFamily: 'monospace' }}>TIPO</th>
+                    <th style={{ fontFamily: 'monospace' }}>DETALHES</th>
+                    <th style={{ fontFamily: 'monospace' }}>STATUS</th>
+                    <th style={{ fontFamily: 'monospace' }}>EMITIDO EM</th>
+                    <th>&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {vehiclesPagination.data.map((vehicle) => (
+                    <tr key={vehicle.renavam}>
+                      <td style={{ fontFamily: 'monospace' }}>{ vehicle.client.name }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.client.document }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.client.group }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.plate }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.crv }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.type }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.details }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.status }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.issued_on }</td>
+                      <td>
+                        <Button
+                          variant="error"
+                          disabled={inLoading}
+                          onClick={() => setVehiclesToImport((old) => old.filter((el) => el.renavam !== vehicle.renavam))}
+                        >
+                          <IconRemove />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+              <Pagination
+                inLoading={inLoading}
+                currentPage={vehiclesToImportPage}
+                totalPages={vehiclesPagination.page.total}
+                onNumberClick={(n) => setVehiclestoImportPage(n)}
+                onMaxResultsChange={() => {}}
+                overrideMaxResultsBy={buttonsGroup}
+              />
+            </TableResult>
           )}
-          <Table style={{ marginBottom: 15, width: 1500 }}>
-            <thead>
-              <tr>
-                <th style={{ textAlign: 'left', fontFamily: 'monospace' }}>NOME</th>
-                <th style={{ fontFamily: 'monospace' }}>DOCUMENTO</th>
-                <th style={{ fontFamily: 'monospace' }}>GRUPO</th>
-                <th style={{ fontFamily: 'monospace' }}>PLACA</th>
-                <th style={{ fontFamily: 'monospace' }}>RENAVAM</th>
-                <th style={{ fontFamily: 'monospace' }}>CRV</th>
-                <th style={{ fontFamily: 'monospace' }}>MARCA/MODELO</th>
-                <th style={{ fontFamily: 'monospace' }}>TIPO</th>
-                <th style={{ fontFamily: 'monospace' }}>DETALHES</th>
-                <th style={{ fontFamily: 'monospace' }}>STATUS</th>
-                <th style={{ fontFamily: 'monospace' }}>EMITIDO EM</th>
-                <th>&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-              {vehiclesPagination.data.map((vehicle) => (
-                <tr key={vehicle.renavam}>
-                  <td style={{ fontFamily: 'monospace' }}>{ vehicle.client.name }</td>
-                  <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.client.document }</td>
-                  <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.client.group }</td>
-                  <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.plate }</td>
-                  <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
-                  <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.crv }</td>
-                  <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
-                  <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.type }</td>
-                  <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.details }</td>
-                  <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.status }</td>
-                  <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.issued_on }</td>
-                  <td>
-                    <Button
-                      variant="error"
-                      disabled={inLoading}
-                      onClick={() => setVehiclesToImport((old) => old.filter((el) => el.renavam !== vehicle.renavam))}
-                    >
-                      <IconRemove />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          <Pagination
-            inLoading={inLoading}
-            currentPage={vehiclesToImportPage}
-            totalPages={vehiclesPagination.page.total}
-            onNumberClick={(n) => setVehiclestoImportPage(n)}
-            onMaxResultsChange={() => {}}
-            overrideMaxResultsBy={buttonsGroup}
-          />
-        </TableResult>
+        </>
       )}
     </Modal>
   );

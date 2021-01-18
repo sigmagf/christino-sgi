@@ -9,7 +9,7 @@ export function errorWork(message: string): ErrorResponseType {
     const data = JSON.parse(message.replace('IMPORTERROR-', ''));
 
     return {
-      type: 'INVALID DATA',
+      type: 'PARTIAL INVALID DATA',
       message: 'One or more entries not saved',
       details: data,
     };

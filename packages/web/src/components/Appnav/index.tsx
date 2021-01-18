@@ -9,6 +9,8 @@ import {
 } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { usePersistedState } from '~/hooks';
+
 import { AppnavContainer, AppnavContent, AppnavControllers, AppnavHeader, AppnavItem } from './styles';
 
 interface IMenuItem {
@@ -19,14 +21,14 @@ interface IMenuItem {
 }
 
 export const Appnav: React.FC = () => {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = usePersistedState('appBarExpanded', false);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
   const toggleAppnav = useCallback(() => {
     setExpanded((old) => !old);
-  }, []);
+  }, [setExpanded]);
 
   const menuItems: IMenuItem[] = [
     {
@@ -49,8 +51,8 @@ export const Appnav: React.FC = () => {
   return (
     <AppnavContainer className={expanded ? 'expanded' : 'collapsed'} expanded={expanded}>
       <AppnavControllers>
-        {!expanded && <button type="button" onClick={toggleAppnav}><IconArrowRight size={20} /></button>}
-        {expanded && <button type="button" onClick={toggleAppnav}><IconArrowLeft size={20} /></button>}
+        {!expanded && <button type="button" onClick={toggleAppnav} aria-label="Expand"><IconArrowRight size={20} /></button>}
+        {expanded && <button type="button" onClick={toggleAppnav} aria-label="Collapse"><IconArrowLeft size={20} /></button>}
       </AppnavControllers>
       <AppnavHeader>
         <img src={expanded ? 'assets/logo-texto.png' : 'assets/logo.png'} alt="CHRISTINO-SGI" />

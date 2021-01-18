@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import { errorWork } from '~/utils/errrorWork';
+import { errorWork } from '~/utils/errorWork';
 
 import { IUsersCreateRequestDTO } from './dto';
 import { UsersCreateService } from './service';

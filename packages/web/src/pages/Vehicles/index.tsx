@@ -115,7 +115,7 @@ export const VehiclesPage: React.FC = () => {
                 </>
               ) : (
                 vehicles.data.map((vehicle) => (
-                  <tr>
+                  <tr key={vehicle.id}>
                     <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <StatusBadge status={vehicle.status} title={statusConverter(vehicle.status)} />
                     </td>

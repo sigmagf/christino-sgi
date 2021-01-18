@@ -50,23 +50,40 @@ export class VehiclesImportService {
         return null;
       }
 
-      const client = await this.clientsRepo.findOrCreate({
-        name: vehicle.client.name,
-        document: vehicle.client.document,
-        group: vehicle.client.group,
-      });
+      try {
+        const client = await this.clientsRepo.findOrCreate({
+          name: vehicle.client.name,
+          document: vehicle.client.document,
+          group: vehicle.client.group,
+        });
 
-      return {
-        client_id: client.id,
-        plate: vehicle.plate,
-        renavam: vehicle.renavam,
-        crv: vehicle.crv === '-' ? null : vehicle.crv,
-        brand_model: vehicle.brand_model,
-        type: vehicle.type,
-        details: vehicle.details || null,
-        issued_on: convertDate(vehicle.issued_on),
-        status: convertStatus(vehicle.status.toLowerCase()),
-      };
+        return {
+          client_id: client.id,
+          plate: vehicle.plate,
+          renavam: vehicle.renavam,
+          crv: vehicle.crv === '-' ? null : vehicle.crv,
+          brand_model: vehicle.brand_model,
+          type: vehicle.type,
+          details: vehicle.details || null,
+          issued_on: convertDate(vehicle.issued_on),
+          status: convertStatus(vehicle.status.toLowerCase()),
+        };
+      } catch(err) {
+        errors.push({
+          client_id: null,
+          plate: vehicle.plate,
+          renavam: vehicle.renavam,
+          crv: vehicle.crv === '-' ? null : vehicle.crv,
+          brand_model: vehicle.brand_model,
+          type: vehicle.type,
+          details: vehicle.details || null,
+          issued_on: convertDate(vehicle.issued_on),
+          status: convertStatus(vehicle.status.toLowerCase()),
+          error: err.message || 'Unexprected error',
+        });
+
+        return null;
+      }
     }));
 
     await Promise.all(vehicles.filter((el) => el !== null).map(async (vehicle) => {
@@ -92,7 +109,14 @@ export class VehiclesImportService {
         return;
       }
 
-      await this.vehiclesRepo.create(vehicle);
+      try {
+        await this.vehiclesRepo.create(vehicle);
+      } catch(err) {
+        errors.push({
+          ...vehicle,
+          error: err.message || 'Unexpected error',
+        });
+      }
     }));
 
     if(errors.length > 0) {
