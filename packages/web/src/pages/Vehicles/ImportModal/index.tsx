@@ -14,8 +14,9 @@ import { useTheme } from 'styled-components';
 import { Button } from '~/components/Button';
 import { Pagination } from '~/components/Pagination';
 import { Table } from '~/components/Table';
+import { useLocalStorage } from '~/hooks';
 import { IVehicle, IVehiclesImportJSON } from '~/interfaces';
-import { api } from '~/services/api';
+import { api } from '~/utils/api';
 import { readVehiclesImportFile } from '~/utils/readVehiclesImportFile';
 import { withPagination } from '~/utils/withPagination';
 
@@ -33,6 +34,7 @@ interface IRequestError extends Omit<IVehicle, 'id'|'updated_at'|'created_at'|'c
 Modal.setAppElement('#root');
 export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClose }) => {
   const theme = useTheme();
+  const storage = useLocalStorage();
 
   const [vehiclesToImport, setVehiclesToImport] = useState<IVehiclesImportJSON[]>([]);
   const [vehiclesToImportPage, setVehiclestoImportPage] = useState(1);
@@ -102,7 +104,14 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
     setInLoading(true);
 
     try {
-      await api.post('/vehicles/import', { data: vehiclesToImport });
+      await api.post('/vehicles/import', {
+        data: vehiclesToImport,
+      }, {
+        headers: {
+          authorization: `Bearer ${storage.getItem('token')}`,
+        },
+      });
+
       toast.success('Arquivo enviado com sucesso!');
     } catch(err) {
       if(err.message === 'Network Error' || !err.response) {
@@ -118,7 +127,7 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
 
     setInLoading(false);
     onClearHandle();
-  }, [vehiclesToImport, onClearHandle]);
+  }, [onClearHandle, vehiclesToImport, storage]);
 
   const onCloseHandle = () => {
     setRequestErrorDetails([]);

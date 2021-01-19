@@ -8,9 +8,9 @@ import { toast } from 'react-toastify';
 import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
 import { Input } from '~/components/Form';
-import { usePersistedState } from '~/hooks';
+import { useLocalStorage, usePersistedState } from '~/hooks';
 import { IUser, IUserAuth } from '~/interfaces';
-import { api } from '~/services/api';
+import { api } from '~/utils/api';
 
 import { LoginContainer } from './styles';
 
@@ -20,6 +20,7 @@ export const Login: React.FC = () => {
   const { value: token, setValue: setToken } = usePersistedState('token', '');
   const [inLoading, setInLoading] = useState(false);
   const navigate = useNavigate();
+  const storage = useLocalStorage();
 
   useEffect(() => {
     if(token && token.length > 1) {
@@ -34,6 +35,10 @@ export const Login: React.FC = () => {
       const request = await api.post<IUserAuth>('/users/auth', {
         email: data.email,
         password: data.password,
+      }, {
+        headers: {
+          authorization: `Bearer ${storage.getItem('token')}`,
+        },
       });
 
       setToken(request.data.token);

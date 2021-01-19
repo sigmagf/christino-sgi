@@ -10,8 +10,9 @@ import { Card } from '~/components/Card';
 import { Layout } from '~/components/Layout';
 import { Pagination } from '~/components/Pagination';
 import { Table } from '~/components/Table';
+import { useLocalStorage } from '~/hooks';
 import { IPagination, IVehicle } from '~/interfaces';
-import { api } from '~/services/api';
+import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 
 import { VehicleImportModal } from './ImportModal';
@@ -19,6 +20,7 @@ import { StatusBadge } from './styles';
 
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
+  const storage = useLocalStorage();
 
   const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
   const [filters, setFilters] = useState({ page: 1, limit: 10, name: '', group: '', document: '', plate: '', renavam: '', brand_model: '', type: '', status: '' });
@@ -29,7 +31,7 @@ export const VehiclesPage: React.FC = () => {
     setInLoading(true);
 
     try {
-      const response = await api.get<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
+      const response = await api.get<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
       setVehicles(response.data);
     } catch(err) {
@@ -41,7 +43,7 @@ export const VehiclesPage: React.FC = () => {
     }
 
     setInLoading(false);
-  }, [filters]);
+  }, [filters, storage]);
 
   const statusConverter = useCallback((status: number) => {
     switch(status) {
@@ -62,7 +64,9 @@ export const VehiclesPage: React.FC = () => {
     getData();
   }, [getData]);
 
-  useEffect(() => { getData(); }, [getData, filters]);
+  // eslint-disable-next-line
+  useEffect(() => { getData(); }), [];
+  // useEffect(() => { getData(); }, [getData]);
 
   return (
     <>

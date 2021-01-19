@@ -4,7 +4,8 @@ import { Navigate, RouteProps } from 'react-router';
 import { Route } from 'react-router-dom';
 
 import { useLocalStorage } from '~/hooks';
-import { isAuthenticated } from '~/services/isAuthenticated';
+
+import { isAuthenticated } from './isAuthenticated';
 
 export const SecureRoute: React.FC<RouteProps> = ({ element, ...rest }) => {
   const storage = useLocalStorage();
