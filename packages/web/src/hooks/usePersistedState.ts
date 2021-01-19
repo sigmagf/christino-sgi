@@ -6,7 +6,7 @@ import useLocalSotorage from './useLocalStorage';
 
 type Response<T extends keyof IStorage> = [IStorage[T], Dispatch<SetStateAction<IStorage[T]>>];
 
-function usePersistedState<T extends keyof IStorage>(key: T, initialState: IStorage[T]): Response<T> {
+export default function usePersistedState<T extends keyof IStorage>(key: T, initialState: IStorage[T]): Response<T> {
   const storage = useLocalSotorage();
 
   const [state, setState] = useState<IStorage[T]>(() => {
@@ -21,5 +21,3 @@ function usePersistedState<T extends keyof IStorage>(key: T, initialState: IStor
 
   return [state, setState];
 }
-
-export default usePersistedState;
