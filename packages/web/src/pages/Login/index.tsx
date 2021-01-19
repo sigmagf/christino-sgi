@@ -17,7 +17,7 @@ import { LoginContainer } from './styles';
 export const Login: React.FC = () => {
   document.title = 'Login | Christino';
 
-  const [token, setToken] = usePersistedState('token', '');
+  const { value: token, setValue: setToken } = usePersistedState('token', '');
   const [inLoading, setInLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -29,10 +29,6 @@ export const Login: React.FC = () => {
 
   const onSubmit: SubmitHandler<IUser> = async (data) => {
     setInLoading(true);
-    navigate('/');
-    setInLoading(false);
-
-    return;
 
     try {
       const request = await api.post<IUserAuth>('/users/auth', {

@@ -21,7 +21,7 @@ interface IMenuItem {
 }
 
 export const Appnav: React.FC = () => {
-  const [expanded, setExpanded] = usePersistedState('appBarExpanded', false);
+  const { value: expanded, setValue: setExpanded } = usePersistedState('appBarExpanded', false);
 
   const { pathname } = useLocation();
   const navigate = useNavigate();

@@ -1,6 +1,7 @@
-import { IUseLocalStorage, IUser } from '~/interfaces';
+// import { IUseLocalStorage, IUser } from '~/interfaces';
+import { IUseLocalStorage } from '~/interfaces';
 
-import { api } from './api';
+// import { api } from './api';
 
 export async function isAuthenticated(storage: IUseLocalStorage): Promise<boolean> {
   return true;
