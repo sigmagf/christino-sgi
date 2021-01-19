@@ -1,5 +1,7 @@
 import { Router } from 'express';
 
+import { authMiddleware } from '~/middlewares/auth.middleware';
+
 import { vehiclesCreateController } from './create';
 import { vehiclesDeleteController } from './delete';
 import { vehiclesFindController } from './find';
@@ -8,6 +10,8 @@ import { vehiclesListController } from './list';
 import { vehiclesUpdateController } from './update';
 
 const vehiclesRouter = Router();
+
+vehiclesRouter.use(authMiddleware);
 
 vehiclesRouter.get('/vehicles', (req, res) => vehiclesListController.handle(req, res));
 vehiclesRouter.get('/vehicles/:id', (req, res) => vehiclesFindController.handle(req, res));

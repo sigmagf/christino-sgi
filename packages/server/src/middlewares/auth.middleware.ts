@@ -1,34 +1,41 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
-export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+import { errorWork } from '~/utils/errorWork';
+
+export function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
 
   if(!authHeader) {
-    return res.status(401).json({ message: 'No token provided.' });
+    res.status(401).json(errorWork('No token provided'));
+    return;
   }
 
   const tokenSplit = authHeader.split(' ');
 
   if(tokenSplit.length !== 2) {
-    return res.status(401).json({ message: 'Token error.' });
+    res.status(401).json(errorWork('Token error'));
+    return;
   }
 
   const [bearer, token] = tokenSplit;
 
   if(!/^Bearer$/i.test(bearer)) {
-    return res.status(401).json({ message: 'Token malformated.' });
+    res.status(401).json(errorWork('Token malformated'));
+    return;
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, async (err, decode: { id: string }) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decode: { id: string }) => {
     if(err) {
-      return res.status(401).json({ message: 'Token invalid.' });
+      res.status(401).json(errorWork('Token invalid'));
+      return;
     }
 
     if(decode.id) {
-      return next();
+      next();
+      return;
     }
 
-    return res.status(401).json({ message: 'Token user not found.' });
+    res.status(401).json(errorWork('Token user not found.'));
   });
-};
+}

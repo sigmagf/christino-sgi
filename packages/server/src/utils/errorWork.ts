@@ -45,6 +45,11 @@ export function errorWork(message: string): ErrorResponseType {
         details: '',
       };
 
+    case 'No token provided':
+    case 'Token error':
+    case 'Token malformated':
+    case 'Token invalid':
+    case 'Token user not found':
     case 'Invalid password':
       return {
         type: 'UNAUTHORIZED',
