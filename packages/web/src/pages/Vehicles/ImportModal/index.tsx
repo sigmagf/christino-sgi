@@ -12,7 +12,6 @@ import { Table } from '~/components/Table';
 import { useLocalStorage } from '~/hooks';
 import { IVehicle, IVehiclesImportCSV } from '~/interfaces';
 import { api } from '~/utils/api';
-import { formatDate } from '~/utils/formatDate';
 import { statusConverter } from '~/utils/statusConverter';
 import { withPagination } from '~/utils/withPagination';
 
