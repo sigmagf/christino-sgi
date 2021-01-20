@@ -4,7 +4,7 @@ import ReactModal from 'react-modal';
 import { useTheme } from 'styled-components';
 
 ReactModal.setAppElement('#root');
-export const Modal: React.FC<ReactModal.Props> = ({ children, ...props }) => {
+export const Modal: React.FC< ReactModal.Props> = ({ children, ...props }) => {
   const theme = useTheme();
 
   const customStyles: ReactModal.Styles = {

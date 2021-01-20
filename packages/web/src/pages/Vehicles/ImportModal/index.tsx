@@ -121,7 +121,7 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
   );
 
   return (
-    <Modal isOpen={isOpen} shouldCloseOnOverlayClick={false} onRequestClose={onCloseHandle}>
+    <Modal isOpen={isOpen} onRequestClose={onCloseHandle}>
       {requestErrorDetails.length !== 0 && (
         <ErrorsGroup>
           {requestErrorDetails.map((error) => (

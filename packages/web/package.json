@@ -1,6 +1,6 @@
 {
   "name": "@christino-sgi/web",
-  "version": "0.5.6r1",
+  "version": "0.5.6r2",
   "private": true,
   "scripts": {
     "start": "craco start",
