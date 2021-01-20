@@ -14,8 +14,8 @@ export const StatusBadge = styled.div<IStatusBadgeStyledProps>`
   border-radius: 20px;
   box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
 
-  ${({theme, status}) => {
-    switch (status) {
+  ${({ theme, status }) => {
+    switch(status) {
       default:
       case 0:
         return css`background: ${theme.error.main};`;

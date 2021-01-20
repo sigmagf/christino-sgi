@@ -1,23 +1,19 @@
-import { transparentize } from 'polished';
+import csv2json from 'csvtojson';
 import React, { useCallback, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import {
-  FaTimes as IconRemove,
-  FaTrash as IconClear,
-  FaUpload as IconUpload,
-} from 'react-icons/fa';
+import { FaTimes as IconRemove, FaTrash as IconClear, FaUpload as IconUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
-import Modal from 'react-modal';
 import { toast } from 'react-toastify';
-import { useTheme } from 'styled-components';
 
 import { Button } from '~/components/Button';
+import { Modal } from '~/components/Modal';
 import { Pagination } from '~/components/Pagination';
 import { Table } from '~/components/Table';
 import { useLocalStorage } from '~/hooks';
-import { IVehicle, IVehiclesImportJSON } from '~/interfaces';
+import { IVehicle, IVehiclesImportCSV } from '~/interfaces';
 import { api } from '~/utils/api';
-import { readVehiclesImportFile } from '~/utils/readVehiclesImportFile';
+import { formatDate } from '~/utils/formatDate';
+import { statusConverter } from '~/utils/statusConverter';
 import { withPagination } from '~/utils/withPagination';
 
 import { DropContainer, ErrorsGroup, LoadingModal, TableResult, UploadMessage } from './styles';
@@ -31,37 +27,15 @@ interface IRequestError extends Omit<IVehicle, 'id'|'updated_at'|'created_at'|'c
   error: string;
 }
 
-Modal.setAppElement('#root');
 export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClose }) => {
-  const theme = useTheme();
   const storage = useLocalStorage();
 
-  const [vehiclesToImport, setVehiclesToImport] = useState<IVehiclesImportJSON[]>([]);
+  const [vehiclesToImport, setVehiclesToImport] = useState<IVehiclesImportCSV[]>([]);
   const [vehiclesToImportPage, setVehiclestoImportPage] = useState(1);
   const [inLoading, setInLoading] = useState(false);
   const [requestErrorDetails, setRequestErrorDetails] = useState<IRequestError[]>([]);
 
   const vehiclesPagination = withPagination(vehiclesToImport, vehiclesToImportPage, 10);
-
-  const customStyles: Modal.Styles = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-
-      borderColor: theme.primary.main,
-      borderRadius: 10,
-      background: theme.primary.main,
-      boxShadow: '0 0 4px 4px rgba(29, 31, 35, .25)',
-    },
-    overlay: {
-      background: transparentize(0.25, theme.background),
-      backdropFilter: 'blur(2px)',
-    },
-  };
 
   const renderDragMessage = (isDragActive: boolean, isDragReject: boolean) => {
     if(!isDragActive) {
@@ -92,7 +66,7 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
         return;
       }
 
-      const finalResult = await readVehiclesImportFile(e.target.result as string);
+      const finalResult = await csv2json().fromString(e.target.result as string);
       setVehiclesToImport(finalResult);
     };
 
@@ -127,7 +101,7 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
 
     setInLoading(false);
     onClearHandle();
-  }, [onClearHandle, vehiclesToImport, storage]);
+  }, [onClearHandle, storage, vehiclesToImport]);
 
   const onCloseHandle = () => {
     setRequestErrorDetails([]);
@@ -148,7 +122,7 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
   );
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onCloseHandle} style={customStyles}>
+    <Modal isOpen={isOpen} shouldCloseOnOverlayClick={false} onRequestClose={onCloseHandle}>
       {requestErrorDetails.length !== 0 && (
         <ErrorsGroup>
           {requestErrorDetails.map((error) => (
@@ -175,11 +149,11 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
             <TableResult>
               {inLoading && (
                 <LoadingModal>
-                  <ReactLoading type="bubbles" />
+                  <ReactLoading type="bars" />
                 </LoadingModal>
               )}
 
-              <Table style={{ marginBottom: 15, width: 1500 }}>
+              <Table style={{ marginBottom: 15, minWidth: 1500 }}>
                 <thead>
                   <tr>
                     <th style={{ textAlign: 'left', fontFamily: 'monospace' }}>NOME</th>
@@ -199,16 +173,16 @@ export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClos
                 <tbody>
                   {vehiclesPagination.data.map((vehicle) => (
                     <tr key={vehicle.renavam}>
-                      <td style={{ fontFamily: 'monospace' }}>{ vehicle.client.name }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.client.document }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.client.group }</td>
+                      <td style={{ fontFamily: 'monospace' }}>{ vehicle.name }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.document }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.group }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.plate }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.crv }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.type }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.details }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.status }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ statusConverter(vehicle.status) }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.issued_on }</td>
                       <td>
                         <Button

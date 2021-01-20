@@ -23,30 +23,13 @@ export interface IVehiclesImportCSV {
   brand_model: string;
   type: string;
   details: string;
-  status: number;
-  issued_on: Date;
-}
-
-interface IVehiclesImportClientJSON {
-  name: string;
-  document: string;
-  group: string;
-}
-
-export interface IVehiclesImportJSON {
-  client: IVehiclesImportClientJSON;
-  plate: string;
-  renavam: string;
-  crv: string;
-  brand_model: string;
-  type: string;
-  details: string;
-  status: number;
-  issued_on: Date;
+  status: string;
+  issued_on: string;
 }
 /* END IMPORT VEHICLES */
 
 /* BACKEND */
+
 export interface IPagination<T> {
   page: {
     total: number;

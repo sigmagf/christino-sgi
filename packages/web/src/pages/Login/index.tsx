@@ -17,10 +17,11 @@ import { LoginContainer } from './styles';
 export const Login: React.FC = () => {
   document.title = 'Login | Christino';
 
+  const storage = useLocalStorage();
+
   const { value: token, setValue: setToken } = usePersistedState('token', '');
   const [inLoading, setInLoading] = useState(false);
   const navigate = useNavigate();
-  const storage = useLocalStorage();
 
   useEffect(() => {
     if(token && token.length > 1) {

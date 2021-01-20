@@ -16,7 +16,7 @@ export class VehiclesImportService {
     const errors: errorType[] = [];
 
     const vehicles: Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'>[] = await Promise.all(data.map(async (vehicle) => {
-      if(!vehicle.client || vehicle.client.document === null || vehicle.client.document.trim() === '') {
+      if(!vehicle.name || !vehicle.document) {
         errors.push({
           client_id: null,
           plate: vehicle.plate,
@@ -27,13 +27,13 @@ export class VehiclesImportService {
           details: vehicle.details || null,
           issued_on: convertDate(vehicle.issued_on),
           status: convertStatus(vehicle.status.toLowerCase()),
-          error: 'Invalid client',
+          error: 'Client name or document are null or invalid',
         });
 
         return null;
       }
 
-      if(vehicle.plate === null || vehicle.plate.trim() === '' || vehicle.renavam === null || vehicle.renavam.trim() === '') {
+      if(!vehicle.plate || !vehicle.renavam || !vehicle.brand_model || !vehicle.type) {
         errors.push({
           client_id: null,
           plate: vehicle.plate,
@@ -44,7 +44,7 @@ export class VehiclesImportService {
           details: vehicle.details || null,
           issued_on: convertDate(vehicle.issued_on),
           status: convertStatus(vehicle.status.toLowerCase()),
-          error: 'Invalid vehicle plate or renavam',
+          error: 'Vehicle plate, renavam, brand_model or type are null or invalid',
         });
 
         return null;
@@ -52,18 +52,18 @@ export class VehiclesImportService {
 
       try {
         const client = await this.clientsRepo.findOrCreate({
-          name: vehicle.client.name,
-          document: vehicle.client.document,
-          group: vehicle.client.group,
+          name: vehicle.name,
+          document: vehicle.document,
+          group: vehicle.group,
         });
 
         return {
           client_id: client.id,
-          plate: vehicle.plate,
-          renavam: vehicle.renavam,
-          crv: vehicle.crv === '-' ? null : vehicle.crv,
-          brand_model: vehicle.brand_model,
-          type: vehicle.type,
+          plate: vehicle.plate.trim(),
+          renavam: vehicle.renavam.trim(),
+          crv: !vehicle.crv || vehicle.crv.trim() === '-' ? null : vehicle.crv.trim(),
+          brand_model: vehicle.brand_model.trim(),
+          type: vehicle.type.trim(),
           details: vehicle.details || null,
           issued_on: convertDate(vehicle.issued_on),
           status: convertStatus(vehicle.status.toLowerCase()),
@@ -87,7 +87,7 @@ export class VehiclesImportService {
     }));
 
     await Promise.all(vehicles.filter((el) => el !== null).map(async (vehicle) => {
-      if(vehicle.client_id === null || vehicle.client_id.trim() === '') {
+      if(!vehicle.client_id) {
         return;
       }
 

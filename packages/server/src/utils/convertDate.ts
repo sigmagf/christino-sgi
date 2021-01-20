@@ -1,4 +1,4 @@
-export function convertDate(date: string): Date {
+export function convertDate(date: string) {
   let dateArr = date.split('-');
 
   if(dateArr.length === 3 && dateArr[0].length === 4 && dateArr[1].length === 2 && dateArr[2].length === 2) {
@@ -10,5 +10,5 @@ export function convertDate(date: string): Date {
     return new Date(parseInt(dateArr[0], 10), parseInt(dateArr[1], 10), parseInt(dateArr[2], 10));
   }
 
-  return null;
+  return new Date();
 }

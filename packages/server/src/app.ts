@@ -14,14 +14,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 app.use(cors());
 
+if(process.env.NODE_ENV === 'development') {
+  app.use(devMiddleware);
+}
+
 app.use(usersRouter);
 app.use(clientsRouter);
 app.use(vehiclesRouter);
 
 app.use('*', (req, res) => res.json({ message: 'Hello World!' }));
-
-if(process.env.NODE_ENV === 'development') {
-  app.use(devMiddleware);
-}
 
 export { app };
