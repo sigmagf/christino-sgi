@@ -46,7 +46,3 @@ export const FiltersCardActionButtons = styled.div`
 
   justify-content: flex-end;
 `;
-
-export const Spacer = styled.div`
-  width: 100%;
-`;

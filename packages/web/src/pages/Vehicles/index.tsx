@@ -1,5 +1,6 @@
+import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   FaLayerGroup as StackIcon,
   FaPlus as AddIcon,
@@ -19,11 +20,13 @@ import { qsConverter } from '~/utils/queryStringConverter';
 
 import { VehiclesDataTable } from './DataTable';
 import { VehiclesImportModal } from './ImportModal';
-import { FiltersCard, FiltersCardActionButtons, Spacer } from './styles';
+import { FiltersCard, FiltersCardActionButtons } from './styles';
 
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
   const storage = useLocalStorage();
+
+  const formRef = useRef<FormHandles>(null);
 
   const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
   const [filters, setFilters] = useState({ page: 1, limit: 10 });
@@ -77,7 +80,7 @@ export const VehiclesPage: React.FC = () => {
         <FiltersCard>
           <details open>
             <summary>Filtros</summary>
-            <Form onSubmit={(data) => console.log(data)}>
+            <Form ref={formRef} onSubmit={(data) => console.log(data)}>
               <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} />
               <Input label="GRUPO" name="client.group" style={{ gridArea: 'CG' }} />
 
@@ -95,8 +98,7 @@ export const VehiclesPage: React.FC = () => {
             <Button variant="info" style={{ width: 217.19 }} onClick={() => setImportMOdalOpen(true)}>
               <StackIcon />&nbsp;&nbsp;&nbsp;ENVIAR LOTE DE VEICULOS
             </Button>
-            {/* <Spacer /> */}
-            <Button variant="secondary" style={{ width: 96.33 }} onClick={() => setImportMOdalOpen(true)}>
+            <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>
               <StackIcon />&nbsp;&nbsp;&nbsp;FILTRAR
             </Button>
           </FiltersCardActionButtons>
