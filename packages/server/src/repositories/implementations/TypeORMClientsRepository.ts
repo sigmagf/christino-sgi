@@ -2,15 +2,29 @@ import { getRepository } from 'typeorm';
 
 import { Client } from '~/entities/Client';
 import { IPagination } from '~/interfaces';
-import { withPagination } from '~/utils/withPagination';
 
 import { IClientsRepository } from '../IClientsRepository';
 
 export class TypeORMClientsRepository implements IClientsRepository {
-  async list(page: number, limit: number): Promise<IPagination<Client>> {
-    const dbData = await getRepository(Client).find();
+  async list(page: number, limit: number, pagination = true): Promise<IPagination<Client> | Client[]> {
+    if(pagination) {
+      const pages = Math.ceil((await getRepository(Client).count()) / limit);
+      const startIndex = (page - 1) * limit;
 
-    return withPagination(dbData, page || 1, limit || 10);
+      const dbPageData = await getRepository(Client).find({ order: { name: 'ASC' }, skip: startIndex, take: limit });
+
+      return {
+        page: {
+          total: pages,
+          limit,
+          current: page,
+        },
+        data: dbPageData,
+      };
+    }
+
+    const dbData = await getRepository(Client).find({ order: { name: 'ASC' }, take: 100 });
+    return dbData;
   }
 
   async findById(id: string): Promise<Client> {

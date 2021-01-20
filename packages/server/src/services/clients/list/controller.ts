@@ -10,9 +10,10 @@ export class ClientsListController {
   async handle(req: Request, res: Response): Promise<Response> {
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
+    const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
 
     try {
-      const clients = await this.service.execute({ page, limit });
+      const clients = await this.service.execute({ page, limit, pagination });
 
       return res.status(200).json(clients);
     } catch(err) {

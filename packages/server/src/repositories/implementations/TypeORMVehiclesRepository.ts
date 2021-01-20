@@ -3,15 +3,29 @@ import { getRepository } from 'typeorm';
 import { Vehicle } from '~/entities/Vehicle';
 import { IPagination } from '~/interfaces';
 import { sortVehicles } from '~/utils/sortVehicles';
-import { withPagination } from '~/utils/withPagination';
 
 import { IVehiclesRepository } from '../IVehiclesRepository';
 
 export class TypeORMVehiclesRepository implements IVehiclesRepository {
-  async list(page: number, limit: number): Promise<IPagination<Vehicle>> {
-    const data = await getRepository(Vehicle).find();
+  async list(page: number, limit: number, pagination = true): Promise<IPagination<Vehicle> | Vehicle[]> {
+    if(pagination) {
+      const pages = Math.ceil((await getRepository(Vehicle).count()) / limit);
+      const startIndex = (page - 1) * limit;
 
-    return withPagination(sortVehicles(data), page || 1, limit || 10);
+      const dbPageData = await getRepository(Vehicle).find({ skip: startIndex, take: limit });
+
+      return {
+        page: {
+          total: pages,
+          limit,
+          current: page,
+        },
+        data: sortVehicles(dbPageData),
+      };
+    }
+
+    const dbData = await getRepository(Vehicle).find({ take: 100 });
+    return sortVehicles(dbData);
   }
 
   async findById(id: string): Promise<Vehicle> {

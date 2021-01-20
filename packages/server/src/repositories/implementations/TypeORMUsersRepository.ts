@@ -3,7 +3,6 @@ import { getRepository } from 'typeorm';
 
 import { User } from '~/entities/User';
 import { IPagination } from '~/interfaces';
-import { withPagination } from '~/utils/withPagination';
 
 import { IUsersRepository } from '../IUsersRepository';
 
@@ -18,10 +17,25 @@ export class TypeORMUsersRepository implements IUsersRepository {
     return hash;
   }
 
-  async list(page: number, limit: number): Promise<IPagination<User>> {
-    const dbData = await getRepository(User).find();
+  async list(page: number, limit: number, pagination = true): Promise<IPagination<User> | User[]> {
+    if(pagination) {
+      const pages = Math.ceil((await getRepository(User).count()) / limit);
+      const startIndex = (page - 1) * limit;
 
-    return withPagination(dbData, page || 1, limit || 10);
+      const dbPageData = await getRepository(User).find({ order: { name: 'ASC' }, skip: startIndex, take: limit });
+
+      return {
+        page: {
+          total: pages,
+          limit,
+          current: page,
+        },
+        data: dbPageData,
+      };
+    }
+
+    const dbData = await getRepository(User).find({ order: { name: 'ASC' }, take: 100 });
+    return dbData;
   }
 
   async findById(id: string): Promise<User> {
