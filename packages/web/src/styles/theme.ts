@@ -5,7 +5,7 @@ const theme = {
   },
   secondary: {
     main: '#FF8C00',
-    contrastText: '#222222',
+    contrastText: '#FFFFFF',
   },
 
   success: {

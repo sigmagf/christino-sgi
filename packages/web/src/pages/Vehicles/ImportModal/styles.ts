@@ -25,7 +25,7 @@ export const DropContainer = styled.div<IDropContainerStyledProps>`
   min-width: 500px;
   border: 2px dashed ${({ theme }) => theme.secondary.main};
   background: ${({ theme }) => transparentize(0.95, theme.secondary.main)};
-  border-radius: 10px;
+  border-radius: 5px;
   cursor: pointer;
 
   height: 100px;

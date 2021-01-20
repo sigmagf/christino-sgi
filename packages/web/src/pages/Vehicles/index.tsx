@@ -1,4 +1,3 @@
-import { Scope } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useState, useCallback, useEffect } from 'react';
 import {
@@ -20,7 +19,7 @@ import { qsConverter } from '~/utils/queryStringConverter';
 
 import { VehiclesDataTable } from './DataTable';
 import { VehiclesImportModal } from './ImportModal';
-import { FiltersCard, FiltersCardActionButtons } from './styles';
+import { FiltersCard, FiltersCardActionButtons, Spacer } from './styles';
 
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
@@ -90,11 +89,15 @@ export const VehiclesPage: React.FC = () => {
           </details>
 
           <FiltersCardActionButtons>
-            <Button variant="success" onClick={() => setImportMOdalOpen(true)}>
+            <Button variant="success" style={{ width: 175.97 }} onClick={() => setImportMOdalOpen(true)}>
               <AddIcon />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
             </Button>
-            <Button variant="info" onClick={() => setImportMOdalOpen(true)}>
+            <Button variant="info" style={{ width: 217.19 }} onClick={() => setImportMOdalOpen(true)}>
               <StackIcon />&nbsp;&nbsp;&nbsp;ENVIAR LOTE DE VEICULOS
+            </Button>
+            {/* <Spacer /> */}
+            <Button variant="secondary" style={{ width: 96.33 }} onClick={() => setImportMOdalOpen(true)}>
+              <StackIcon />&nbsp;&nbsp;&nbsp;FILTRAR
             </Button>
           </FiltersCardActionButtons>
         </FiltersCard>

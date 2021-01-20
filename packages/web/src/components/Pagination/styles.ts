@@ -37,7 +37,7 @@ export const PaginatorNumbers = styled.div`
     justify-content: center;
     align-items: center;
     padding: 0;
-    border-radius: 10px;
+    border-radius: 5px;
     width: 35px;
     height: 35px;
     background: ${({ theme }) => theme.secondary.main};

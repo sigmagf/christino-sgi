@@ -11,7 +11,7 @@ export const UserBarContainer = styled.div`
   margin: 0 auto 0 auto;
   background: ${({ theme }) => theme.primary.main};
   box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 10px;
 
   .actions {
@@ -41,7 +41,7 @@ export const UserBarContainer = styled.div`
     }
 
     img {
-      border-radius: 10px;
+      border-radius: 5px;
       height: 50px;
       width: 50px;
       height: 50px;

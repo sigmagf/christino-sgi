@@ -70,7 +70,7 @@ const Input: React.FC<Input> = ({ name, label, style, id, ...rest }) => {
             minWidth: 125,
             width: '100%',
             padding: 5,
-            borderRadius: 10,
+            borderRadius: 5,
             boxShadow: '0 0 4px 4px rgba(29, 31, 35, .25)',
             background: lighten(0.1, theme.primary.main),
             border: `2px solid ${isFocused ? theme.secondary.main : lighten(0.1, theme.primary.main)}`,

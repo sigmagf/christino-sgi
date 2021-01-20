@@ -1,4 +1,3 @@
-import { lighten, shade } from 'polished';
 import styled from 'styled-components';
 
 import { Card } from '~/components/Card';
@@ -7,7 +6,7 @@ export const FiltersCard = styled(Card)`
   display: grid;
   
   grid-template-areas: 'FI' 'AC';
-  grid-gap: 10px;
+  grid-gap: 15px;
 
   margin-bottom: 15px;
 
@@ -25,7 +24,7 @@ export const FiltersCard = styled(Card)`
     summary {
       background: ${({ theme }) => theme.secondary.main};
       box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
-      border-radius: 10px;
+      border-radius: 5px;
       padding: 5px;
     }
 
@@ -44,4 +43,10 @@ export const FiltersCard = styled(Card)`
 export const FiltersCardActionButtons = styled.div`
   display: flex;
   gap: 10px;
+
+  justify-content: flex-end;
+`;
+
+export const Spacer = styled.div`
+  width: 100%;
 `;
