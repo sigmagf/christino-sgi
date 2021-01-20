@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const AppMain = styled.main`
-  height: calc(100%);
+  height: 100%;
   width: 100%;
   transition: width 250ms ease;
   padding: 30px;
@@ -11,7 +11,7 @@ export const AppMain = styled.main`
 `;
 
 export const AppContent = styled.section`
-  height: 100%;
+  height: calc(100% - 85px);
   width: 100%;
   max-width: 1080px;
   margin: 15px auto 0 auto;

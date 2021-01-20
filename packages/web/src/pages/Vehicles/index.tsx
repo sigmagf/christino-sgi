@@ -1,12 +1,16 @@
+import { Scope } from '@unform/core';
+import { Form } from '@unform/web';
 import React, { useState, useCallback, useEffect } from 'react';
 import {
   FaLayerGroup as StackIcon,
   FaPlus as AddIcon,
 } from 'react-icons/fa';
+import { NamedProps } from 'react-select';
 import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
+import { Input, Select } from '~/components/Form';
 import { Layout } from '~/components/Layout';
 import { Pagination } from '~/components/Pagination';
 import { useLocalStorage } from '~/hooks';
@@ -16,6 +20,7 @@ import { qsConverter } from '~/utils/queryStringConverter';
 
 import { VehiclesDataTable } from './DataTable';
 import { VehiclesImportModal } from './ImportModal';
+import { FiltersCard, FiltersCardActionButtons } from './styles';
 
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
@@ -60,17 +65,39 @@ export const VehiclesPage: React.FC = () => {
   // eslint-disable-next-line
   useEffect(() => { getData(); }, [filters]);
 
+  const clients: NamedProps['options'] = [
+    {
+      value: '1ead27bc-0ec8-4a6a-89f6-ceaab9fd2373',
+      label: '03108429809 - VANIL RODRIGUES',
+    },
+  ];
+
   return (
     <>
       <Layout>
-        <Card style={{ marginBottom: 15, display: 'flex', gap: '10px' }}>
-          <Button variant="success" onClick={() => setImportMOdalOpen(true)}>
-            <AddIcon />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
-          </Button>
-          <Button variant="info" onClick={() => setImportMOdalOpen(true)}>
-            <StackIcon />&nbsp;&nbsp;&nbsp;ENVIAR LOTE DE VEICULOS
-          </Button>
-        </Card>
+        <FiltersCard>
+          <details open>
+            <summary>Filtros</summary>
+            <Form onSubmit={(data) => console.log(data)}>
+              <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} />
+              <Input label="GRUPO" name="client.group" style={{ gridArea: 'CG' }} />
+
+              <Input label="PLACA" name="plate" style={{ gridArea: 'VP' }} />
+              <Input label="RENAVAM" name="renavam" style={{ gridArea: 'VR' }} />
+              <Input label="CRV" name="crv" style={{ gridArea: 'VC' }} />
+              <Input label="MARCA/MODELO" name="renavam" style={{ gridArea: 'VM' }} />
+            </Form>
+          </details>
+
+          <FiltersCardActionButtons>
+            <Button variant="success" onClick={() => setImportMOdalOpen(true)}>
+              <AddIcon />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
+            </Button>
+            <Button variant="info" onClick={() => setImportMOdalOpen(true)}>
+              <StackIcon />&nbsp;&nbsp;&nbsp;ENVIAR LOTE DE VEICULOS
+            </Button>
+          </FiltersCardActionButtons>
+        </FiltersCard>
 
         <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} />
 
