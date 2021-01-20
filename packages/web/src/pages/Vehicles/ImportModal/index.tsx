@@ -26,7 +26,7 @@ interface IRequestError extends Omit<IVehicle, 'id'|'updated_at'|'created_at'|'c
   error: string;
 }
 
-export const VehicleImportModal: React.FC<IImportModalProps> = ({ isOpen, onClose }) => {
+export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClose }) => {
   const storage = useLocalStorage();
 
   const [vehiclesToImport, setVehiclesToImport] = useState<IVehiclesImportCSV[]>([]);
