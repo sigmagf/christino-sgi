@@ -14,7 +14,7 @@ export class VehiclesCreateService {
   ) { }
 
   async execute(data: IVehiclesCreateRequestDTO): Promise<Vehicle> {
-    let client = await this.clientsRepo.findOrCreate({
+    const client = await this.clientsRepo.findOrCreate({
       name: data.name,
       document: data.document,
       group: data.group,
@@ -32,7 +32,6 @@ export class VehiclesCreateService {
       client_id: client.id,
       plate: data.plate,
       renavam: data.renavam,
-      cla: data.cla === '-' ? null : data.cla,
       crv: data.crv === '-' ? null : data.crv,
       brand_model: data.brand_model,
       type: data.type,

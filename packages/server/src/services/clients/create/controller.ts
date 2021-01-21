@@ -12,7 +12,7 @@ export class ClientsCreateController {
     const { name, document, group } = req.body as IClientsCreateRequestDTO;
 
     try {
-      if(!name || !document || !group) {
+      if(!name || !document) {
         throw new Error('Obrigatory items not informed');
       }
 
