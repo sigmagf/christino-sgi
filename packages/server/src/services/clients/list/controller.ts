@@ -12,8 +12,11 @@ export class ClientsListController {
     const limit = parseInt(req.query.limit as string, 10) || 10;
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
 
+    const name = req.query.name as string || '';
+    const group = req.query.group as string || '';
+
     try {
-      const clients = await this.service.execute({ page, limit, pagination });
+      const clients = await this.service.execute({ page, limit, pagination, name, group });
 
       return res.status(200).json(clients);
     } catch(err) {

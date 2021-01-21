@@ -1,6 +1,6 @@
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
   FaLayerGroup as StackIcon,
   FaPlus as AddIcon,
@@ -9,22 +9,57 @@ import {
   FaAngleUp as ArrowUpIcon,
 } from 'react-icons/fa';
 import { NamedProps } from 'react-select';
+import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
 import { Select, Input } from '~/components/Form';
+import { useLocalStorage } from '~/hooks';
+import { IClient } from '~/interfaces';
+import { api } from '~/utils/api';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders } from './styles';
 
 interface IVehiclesFiltersCardProps {
-  clients: NamedProps['options'];
   onOpenImportModalClick: () => void;
   onOpenCreateModalClick: () => void;
 }
 
-const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ clients, onOpenCreateModalClick, onOpenImportModalClick }) => {
+const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick }) => {
   const formRef = useRef<FormHandles>(null);
+  const storage = useLocalStorage();
 
   const [open, setOpen] = useState(true);
+  const [clients, setClient] = useState<NamedProps['options']>([]);
+
+  const getClients = useCallback(async () => {
+    try {
+      const response = await api.get<IClient[]>('/clients?noPagination=true', {
+        headers: {
+          authorization: `Bearer ${storage.getItem('token')}`,
+        },
+      });
+
+      setClient([
+        {
+          value: '',
+          label: '',
+        },
+        ...response.data.map((client) => ({
+          value: client.id,
+          label: client.name,
+        })),
+      ]);
+    } catch(err) {
+      if(err.message === 'Network Error' || !err.response) {
+        toast.error('Verifique sua conexão com a internet.');
+      } else {
+        toast.error(err.response.data.message);
+      }
+    }
+  }, [storage]);
+
+  // eslint-disable-next-line
+  useEffect(() => { getClients(); }, []);
 
   return (
     <FiltersCard>

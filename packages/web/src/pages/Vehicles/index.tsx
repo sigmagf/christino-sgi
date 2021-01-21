@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { NamedProps } from 'react-select';
 import { toast } from 'react-toastify';
 
 import { Card } from '~/components/Card';
@@ -57,18 +56,10 @@ export const VehiclesPage: React.FC = () => {
   // eslint-disable-next-line
   useEffect(() => { getData(); }, [filters]);
 
-  const clients: NamedProps['options'] = [
-    {
-      value: '1ead27bc-0ec8-4a6a-89f6-ceaab9fd2373',
-      label: '03108429809 - VANIL RODRIGUES',
-    },
-  ];
-
   return (
     <>
       <Layout>
         <VehiclesFiltersCard
-          clients={clients}
           onOpenImportModalClick={() => setImportModalOpen(true)}
           onOpenCreateModalClick={() => console.log('WIP')}
         />

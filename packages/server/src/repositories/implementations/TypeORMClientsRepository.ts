@@ -6,7 +6,7 @@ import { IPagination } from '~/interfaces';
 import { IClientsRepository } from '../IClientsRepository';
 
 export class TypeORMClientsRepository implements IClientsRepository {
-  async list(page: number, limit: number, pagination = true): Promise<IPagination<Client> | Client[]> {
+  async list(page = 1, limit = 10, pagination = true): Promise<IPagination<Client> | Client[]> {
     if(pagination) {
       const pages = Math.ceil((await getRepository(Client).count()) / limit);
       const startIndex = (page - 1) * limit;

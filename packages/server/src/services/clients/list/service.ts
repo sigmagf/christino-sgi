@@ -8,7 +8,6 @@ export class ClientsListService {
   constructor(private repository: IClientsRepository) { }
 
   async execute(data: IClientsListRequestDTO): Promise<IPagination<Client> | Client[]> {
-    console.log(data);
     const clients = await this.repository.list(data.page, data.limit, data.pagination);
 
     return clients;
