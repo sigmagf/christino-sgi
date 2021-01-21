@@ -12,8 +12,8 @@ export class ClientsListController {
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
-    const name = req.query.name as string || '';
-    const folder = req.query.folder as string || '';
+    const name = req.query.name as string || undefined;
+    const folder = req.query.folder as string || undefined;
 
     try {
       const clients = await this.service.execute({ page, limit, filters: { pagination, name, folder } });

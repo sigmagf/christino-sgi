@@ -63,13 +63,11 @@ export class TypeORMUsersRepository implements IUsersRepository {
   }
 
   async update(id: string, data: Pick<User, 'name' | 'email' | 'password'>): Promise<User> {
-    const hashPAssword = await this.hashPassword(data.password);
-    const oldData = await getRepository(User).findOne({ where: { id } });
+    const hashPAssword = data.password ? await this.hashPassword(data.password) : undefined;
 
     await getRepository(User).update(id, {
-      name: data.name || oldData.name,
-      email: data.email || oldData.email,
-      password: hashPAssword || oldData.password,
+      ...data,
+      password: hashPAssword,
     });
 
     const dbData = await getRepository(User).findOne({ where: { id } });

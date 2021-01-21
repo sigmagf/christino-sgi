@@ -1,8 +1,8 @@
 import { Vehicle } from '~/entities/Vehicle';
-import { IPagination } from '~/interfaces';
+import { IPagination, IVehiclesListFilters } from '~/interfaces';
 
 export interface IVehiclesRepository {
-  list(page: number, limit: number, pagination?: boolean): Promise<IPagination<Vehicle> | Vehicle[]>;
+  list(page: number, limit: number, filters: IVehiclesListFilters): Promise<IPagination<Vehicle> | Vehicle[]>;
   findById(id: string): Promise<Vehicle>;
   findByPlate(plate: string): Promise<Vehicle>;
   findByRenavam(renavam: string): Promise<Vehicle>;

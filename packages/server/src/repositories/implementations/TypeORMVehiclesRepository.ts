@@ -1,18 +1,44 @@
-import { getRepository } from 'typeorm';
+import { getRepository, Like } from 'typeorm';
 
 import { Vehicle } from '~/entities/Vehicle';
-import { IPagination } from '~/interfaces';
+import { IPagination, IVehiclesListFilters } from '~/interfaces';
 import { sortVehicles } from '~/utils/sortVehicles';
 
 import { IVehiclesRepository } from '../IVehiclesRepository';
 
 export class TypeORMVehiclesRepository implements IVehiclesRepository {
-  async list(page: number, limit: number, pagination = true): Promise<IPagination<Vehicle> | Vehicle[]> {
-    if(pagination) {
-      const pages = Math.ceil((await getRepository(Vehicle).count()) / limit);
+  async list(page: number, limit: number, filters: IVehiclesListFilters): Promise<IPagination<Vehicle> | Vehicle[]> {
+    if(filters.pagination) {
+      const maxVehicles = await getRepository(Vehicle).count({
+        where: {
+          client_id: filters.client_id,
+          plate: Like(`%${filters.plate}%`),
+          renavam: Like(`%${filters.renavam}%`),
+          crv: Like(`%${filters.crv}%`),
+          brand_model: Like(`%${filters.brand_model}%`),
+          client: {
+            folder: Like(`%${filters.folder}%`),
+          },
+        },
+      });
+
+      const pages = Math.ceil((maxVehicles) / limit);
       const startIndex = (page - 1) * limit;
 
-      const dbPageData = await getRepository(Vehicle).find({ skip: startIndex, take: limit });
+      const dbPageData = await getRepository(Vehicle).find({
+        where: {
+          client_id: filters.client_id,
+          plate: Like(`%${filters.plate}%`),
+          renavam: Like(`%${filters.renavam}%`),
+          crv: Like(`%${filters.crv}%`),
+          brand_model: Like(`%${filters.brand_model}%`),
+          client: {
+            folder: Like(`%${filters.folder}%`),
+          },
+        },
+        skip: startIndex,
+        take: limit,
+      });
 
       return {
         page: {
@@ -24,7 +50,19 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
       };
     }
 
-    const dbData = await getRepository(Vehicle).find({ take: 100 });
+    const dbData = await getRepository(Vehicle).find({
+      where: {
+        client_id: filters.client_id,
+        plate: Like(`%${filters.plate}%`),
+        renavam: Like(`%${filters.renavam}%`),
+        crv: Like(`%${filters.crv}%`),
+        brand_model: Like(`%${filters.brand_model}%`),
+        client: {
+          folder: Like(`%${filters.folder}%`),
+        },
+      },
+      take: 100,
+    });
     return sortVehicles(dbData);
   }
 
@@ -65,7 +103,7 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
   }
 
   async update(id: string, data: Omit<Vehicle, 'id'|'created_at'|'updated_at'>): Promise<Vehicle> {
-    await getRepository(Vehicle).createQueryBuilder().update(data).execute();
+    await getRepository(Vehicle).update(id, data);
 
     const newData = await getRepository(Vehicle).findOne({ where: { id } });
     return newData;

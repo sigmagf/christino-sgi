@@ -70,13 +70,7 @@ export class TypeORMClientsRepository implements IClientsRepository {
   }
 
   async update(id: string, data: Pick<Client, 'name'|'document'|'folder'>): Promise<Client> {
-    const oldData = await getRepository(Client).findOne({ where: { id } });
-
-    await getRepository(Client).update(id, {
-      name: data.name || oldData.name,
-      document: data.document || oldData.document,
-      folder: data.folder || oldData.folder,
-    });
+    await getRepository(Client).update(id, data);
 
     const dbData = await getRepository(Client).findOne({ where: { id } });
     return dbData;
