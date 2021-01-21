@@ -17,18 +17,17 @@ export class VehiclesUpdateService {
     let client: Client;
 
     if(!data.document) {
-      client = await this.clientsRepo.findOrCreate({
+      client = await this.clientsRepo.create({
         name: data.name,
         document: data.document,
-        group: data.group,
+        folder: data.folder,
       });
     }
 
     const vehicle = await this.vehiclesRepo.update(data.id, {
-      client_id: client.id || data.client_id || null,
+      client_id: client.id || null,
       plate: data.plate,
       renavam: data.renavam,
-      cla: data.cla === '-' ? null : data.cla,
       crv: data.crv === '-' ? null : data.crv,
       brand_model: data.brand_model,
       type: data.type,

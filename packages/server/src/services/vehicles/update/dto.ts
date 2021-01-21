@@ -1,10 +1,9 @@
 export interface IVehiclesUpdateRequestDTO {
   id: string;
 
-  client_id?: string;
   name?: string;
   document?: string;
-  group?: string;
+  folder?: string;
 
   plate: string;
   renavam: string;

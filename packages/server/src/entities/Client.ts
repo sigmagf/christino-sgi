@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { Vehicle } from './Vehicle';
 
@@ -14,7 +14,7 @@ export class Client {
   document: string;
 
   @Column('character varying', { length: 32 })
-  group: string;
+  folder: string;
 
   @CreateDateColumn()
   created_at: Date;

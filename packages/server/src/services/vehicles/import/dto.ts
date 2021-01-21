@@ -6,7 +6,7 @@ export interface IVehiclesImportRequestDTO {
   data: {
     name: string;
     document: string;
-    group: string;
+    folder: string;
     plate: string;
     renavam: string;
     cla: string;

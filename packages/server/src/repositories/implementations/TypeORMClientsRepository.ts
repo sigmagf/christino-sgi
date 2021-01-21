@@ -1,17 +1,31 @@
-import { getRepository } from 'typeorm';
+import { getRepository, Like } from 'typeorm';
 
 import { Client } from '~/entities/Client';
-import { IPagination } from '~/interfaces';
+import { IClientsListFilters, IPagination } from '~/interfaces';
 
 import { IClientsRepository } from '../IClientsRepository';
 
 export class TypeORMClientsRepository implements IClientsRepository {
-  async list(page = 1, limit = 10, pagination = true): Promise<IPagination<Client> | Client[]> {
-    if(pagination) {
-      const pages = Math.ceil((await getRepository(Client).count()) / limit);
+  async list(page = 1, limit = 10, filters: IClientsListFilters): Promise<IPagination<Client> | Client[]> {
+    if(filters.pagination) {
+      const maxClients = await getRepository(Client).count({
+        where: {
+          name: Like(`%${filters.name}%`),
+          folder: Like(`%${filters.folder}%`),
+        },
+      });
+
+      const pages = Math.ceil(maxClients / limit);
       const startIndex = (page - 1) * limit;
 
-      const dbPageData = await getRepository(Client).find({ order: { name: 'ASC' }, skip: startIndex, take: limit });
+      const dbPageData = await getRepository(Client).find({
+        where: {
+          name: Like(`%${filters.name}%`),
+          folder: Like(`%${filters.folder}%`),
+        },
+        skip: startIndex,
+        take: limit,
+      });
 
       return {
         page: {
@@ -23,47 +37,45 @@ export class TypeORMClientsRepository implements IClientsRepository {
       };
     }
 
-    const dbData = await getRepository(Client).find({ order: { name: 'ASC' }, take: 100 });
+    const dbData = await getRepository(Client).find({
+      where: {
+        name: Like(`%${filters.name}%`),
+        folder: Like(`%${filters.folder}%`),
+      },
+      take: 100,
+    });
+
     return dbData;
   }
 
   async findById(id: string): Promise<Client> {
-    const dbData = await getRepository(Client).findOne({ where: { id } });
-
+    const dbData = await getRepository(Client).findOne({ where: { id }, order: { name: 'ASC' } });
     return dbData;
   }
 
   async findByDocument(document: string): Promise<Client> {
-    const dbData = await getRepository(Client).findOne({ where: { document } });
-
+    const dbData = await getRepository(Client).findOne({ where: { document }, order: { name: 'ASC' } });
     return dbData;
   }
 
-  async findOrCreate(data: Pick<Client, 'name'|'document'|'group'>): Promise<Client> {
+  async create(data: Pick<Client, 'name'|'document'|'folder'>): Promise<Client> {
     await getRepository(Client).createQueryBuilder()
       .insert()
       .values(data)
       .onConflict('("document") DO NOTHING')
       .execute();
 
-    const dbData = await getRepository(Client).findOne({ where: { document: data.document } });
-
+    const dbData = await getRepository(Client).findOne({ where: { document: data.document }, order: { name: 'ASC' } });
     return dbData;
   }
 
-  async create(data: Pick<Client, 'name'|'document'|'group'>): Promise<Client> {
-    const dbData = await getRepository(Client).save(data);
-
-    return dbData;
-  }
-
-  async update(id: string, data: Pick<Client, 'name'|'document'|'group'>): Promise<Client> {
+  async update(id: string, data: Pick<Client, 'name'|'document'|'folder'>): Promise<Client> {
     const oldData = await getRepository(Client).findOne({ where: { id } });
 
     await getRepository(Client).update(id, {
       name: data.name || oldData.name,
       document: data.document || oldData.document,
-      group: data.group || oldData.group,
+      folder: data.folder || oldData.folder,
     });
 
     const dbData = await getRepository(Client).findOne({ where: { id } });

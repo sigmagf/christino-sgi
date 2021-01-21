@@ -14,7 +14,7 @@ export const FiltersContainer = styled.div<IFiltersContainerStyledProps>`
   position: relative;
 
   height: ${({ open }) => (open ? '171px' : '26px')};
-  overflow: hidden;
+  overflow: ${({ open }) => (open ? 'unset' : 'hidden')};
 
   transition: height 250ms ease;
 
@@ -25,8 +25,9 @@ export const FiltersContainer = styled.div<IFiltersContainerStyledProps>`
     display: grid;
     grid-gap: 10px;
 
-    grid-template-areas: 'CN CN CN CN CG'
-                         'VP VR VC VM VM';
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: 'CN CN CN CN CG CG'
+                         'VP VR VC VM VM VF';
   }
 `;
 

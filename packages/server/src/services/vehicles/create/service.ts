@@ -1,4 +1,3 @@
-import { Client } from '~/entities/Client';
 import { Vehicle } from '~/entities/Vehicle';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
@@ -14,10 +13,10 @@ export class VehiclesCreateService {
   ) { }
 
   async execute(data: IVehiclesCreateRequestDTO): Promise<Vehicle> {
-    const client = await this.clientsRepo.findOrCreate({
+    const client = await this.clientsRepo.create({
       name: data.name,
       document: data.document,
-      group: data.group,
+      folder: data.folder,
     });
 
     if(await this.vehiclesRepo.findByClientPlate(client.id, data.plate)) {

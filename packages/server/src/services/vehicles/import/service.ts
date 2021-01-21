@@ -51,10 +51,10 @@ export class VehiclesImportService {
       }
 
       try {
-        const client = await this.clientsRepo.findOrCreate({
+        const client = await this.clientsRepo.create({
           name: vehicle.name,
           document: vehicle.document,
-          group: vehicle.group,
+          folder: vehicle.folder,
         });
 
         return {

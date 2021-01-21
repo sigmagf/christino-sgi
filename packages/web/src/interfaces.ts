@@ -16,7 +16,7 @@ export interface IStorage {
 export interface IVehiclesImportCSV {
   name: string;
   document: string;
-  group: string;
+  folder: string;
   plate: string;
   renavam: string;
   crv: string;
@@ -43,7 +43,7 @@ export interface IClient {
   id: string;
   name: string;
   document: string;
-  group: string;
+  folder: string;
   created_at: Date;
   updated_at: Date;
 }

@@ -30,6 +30,30 @@ const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreate
 
   const [open, setOpen] = useState(true);
   const [clients, setClient] = useState<NamedProps['options']>([]);
+  const [groups, setGroups] = useState<NamedProps['options']>([
+    {
+      value: '',
+      label: 'TODOS',
+    },
+    {
+      value: '-1',
+      label: 'SEM GRUPO',
+    },
+  ]);
+
+  const plateEnd: NamedProps['options'] = [
+    { value: '-1', label: 'TODOS' },
+    { value: '0', label: 'FINAL 0' },
+    { value: '1', label: 'FINAL 1' },
+    { value: '2', label: 'FINAL 2' },
+    { value: '3', label: 'FINAL 3' },
+    { value: '4', label: 'FINAL 4' },
+    { value: '5', label: 'FINAL 5' },
+    { value: '6', label: 'FINAL 6' },
+    { value: '7', label: 'FINAL 7' },
+    { value: '8', label: 'FINAL 8' },
+    { value: '9', label: 'FINAL 9' },
+  ];
 
   const getClients = useCallback(async () => {
     try {
@@ -66,12 +90,13 @@ const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreate
       <FiltersContainer open={open}>
         <Form ref={formRef} onSubmit={(data) => console.log(data)}>
           <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} />
-          <Input label="GRUPO" name="client.group" style={{ gridArea: 'CG' }} />
+          <Select label="GRUPO" name="client.group" style={{ gridArea: 'CG' }} options={groups} />
 
           <Input label="PLACA" name="plate" style={{ gridArea: 'VP' }} />
           <Input label="RENAVAM" name="renavam" style={{ gridArea: 'VR' }} />
           <Input label="CRV" name="crv" style={{ gridArea: 'VC' }} />
           <Input label="MARCA/MODELO" name="renavam" style={{ gridArea: 'VM' }} />
+          <Select label="FINAL DE PLACA" name="plante_end" style={{ gridArea: 'VF' }} options={plateEnd} />
         </Form>
 
         <FiltersHeaders onClick={() => setOpen((old) => !old)}>
