@@ -178,11 +178,11 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.plate }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.crv }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brandModel }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.type }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.details }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ statusConverter(vehicle.status) }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.issuedOn }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.issued_on }</td>
                       <td>
                         <Button
                           variant="error"
