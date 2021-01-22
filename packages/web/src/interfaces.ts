@@ -24,7 +24,7 @@ export interface IVehiclesImportCSV {
   type: string;
   details: string;
   status: string;
-  issuedOn: string;
+  issued_on: string;
 }
 /* END IMPORT VEHICLES */
 
@@ -67,7 +67,7 @@ export interface IVehicle {
   type: string;
   details: string;
   status: number;
-  issuedOn: Date;
+  issued_on: Date;
   created_at: Date;
   updated_at: Date;
 }
