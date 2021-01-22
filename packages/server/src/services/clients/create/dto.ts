@@ -1,5 +1,3 @@
-export interface IClientsCreateRequestDTO {
-  name: string;
-  document: string;
-  folder: string;
-}
+import { Client } from '~/entities/Client';
+
+export type IClientsCreateRequestDTO = Pick<Client, 'name'|'document'|'group'>;

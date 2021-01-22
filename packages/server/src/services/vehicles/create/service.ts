@@ -16,7 +16,7 @@ export class VehiclesCreateService {
     const client = await this.clientsRepo.create({
       name: data.name,
       document: data.document,
-      folder: data.folder,
+      group: data.group,
     });
 
     if(await this.vehiclesRepo.findByClientPlate(client.id, data.plate)) {

@@ -2,7 +2,7 @@ import { User } from '~/entities/User';
 import { IPagination } from '~/interfaces';
 
 export interface IUsersRepository {
-  list(page: number, limit: number, pagination?: boolean): Promise<IPagination<User> | User[]>;
+  list(page: number, limit: number): Promise<IPagination<User>>;
   findById(id: string): Promise<User>;
   findByEmail(email: string): Promise<User>;
 

@@ -1,6 +1,3 @@
-export interface IClientsUpdateRequestDTO {
-  id: string;
-  name: string;
-  document: string;
-  folder: string;
-}
+import { Client } from '~/entities/Client';
+
+export type IClientsUpdateRequestDTO = Pick<Client, 'id'|'name'|'document'|'group'>;

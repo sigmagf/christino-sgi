@@ -35,12 +35,12 @@ export class Vehicle {
     issued_on: Date;
 
     @CreateDateColumn()
-    created_at: Date;
+    created_at?: Date;
 
     @UpdateDateColumn()
-    updated_at: Date;
+    updated_at?: Date;
 
-    @ManyToOne((type) => Client, (vehicles) => Vehicle, { eager: true })
+    @ManyToOne((type) => Client, { eager: true })
     @JoinColumn({ name: 'client_id' })
     client: Client;
 }

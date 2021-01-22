@@ -15,7 +15,11 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
       const pages = Math.ceil(await getRepository(Vehicle).count({ where: filtersString }) / limit);
       const startIndex = (page - 1) * limit;
 
-      const dbPageData = await getRepository(Vehicle).find({ where: filtersString, skip: startIndex, take: limit });
+      const dbPageData = await getRepository(Vehicle).find({
+        where: filtersString,
+        skip: startIndex,
+        take: limit,
+      });
 
       return {
         page: {
@@ -50,25 +54,25 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
     return dbData;
   }
 
-  async findByClientPlate(client_id: string, plate: string): Promise<Vehicle> {
-    const dbData = await getRepository(Vehicle).findOne({ where: { client_id, plate } });
+  async findByClientPlate(clientId: string, plate: string): Promise<Vehicle> {
+    const dbData = await getRepository(Vehicle).findOne({ where: { clientId, plate } });
 
     return dbData;
   }
 
-  async findByClientRenavam(client_id: string, renavam: string): Promise<Vehicle> {
-    const dbData = await getRepository(Vehicle).findOne({ where: { client_id, renavam } });
+  async findByClientRenavam(clientId: string, renavam: string): Promise<Vehicle> {
+    const dbData = await getRepository(Vehicle).findOne({ where: { clientId, renavam } });
 
     return dbData;
   }
 
-  async create(data: Omit<Vehicle, 'id'|'created_at'|'updated_at'>): Promise<Vehicle> {
+  async create(data: Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>): Promise<Vehicle> {
     const dbData = await getRepository(Vehicle).save(data);
 
     return dbData;
   }
 
-  async update(id: string, data: Omit<Vehicle, 'id'|'created_at'|'updated_at'>): Promise<Vehicle> {
+  async update(id: string, data: Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>): Promise<Vehicle> {
     await getRepository(Vehicle).update(id, data);
 
     const newData = await getRepository(Vehicle).findOne({ where: { id } });

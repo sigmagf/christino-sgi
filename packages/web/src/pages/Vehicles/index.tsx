@@ -24,7 +24,6 @@ export const VehiclesPage: React.FC = () => {
 
   const getData = useCallback(async () => {
     setInLoading(true);
-    setVehicles({ page: { total: 1, current: 1, limit: 10 }, data: [] });
 
     try {
       const response = await api.get<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`, {
@@ -40,6 +39,8 @@ export const VehiclesPage: React.FC = () => {
       } else {
         toast.error(err.response.data.message);
       }
+
+      setVehicles({ page: { total: 1, current: 1, limit: 10 }, data: [] });
     }
 
     setInLoading(false);

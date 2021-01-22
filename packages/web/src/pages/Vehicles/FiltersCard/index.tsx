@@ -66,7 +66,7 @@ const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreate
       setClient([
         {
           value: '',
-          label: '',
+          label: 'TODOS',
         },
         ...response.data.map((client) => ({
           value: client.id,

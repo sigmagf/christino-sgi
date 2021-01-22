@@ -17,25 +17,20 @@ export class TypeORMUsersRepository implements IUsersRepository {
     return hash;
   }
 
-  async list(page: number, limit: number, pagination = true): Promise<IPagination<User> | User[]> {
-    if(pagination) {
-      const pages = Math.ceil((await getRepository(User).count()) / limit);
-      const startIndex = (page - 1) * limit;
+  async list(page: number, limit: number): Promise<IPagination<User>> {
+    const pages = Math.ceil((await getRepository(User).count()) / limit);
+    const startIndex = (page - 1) * limit;
 
-      const dbPageData = await getRepository(User).find({ order: { name: 'ASC' }, skip: startIndex, take: limit });
+    const dbPageData = await getRepository(User).find({ order: { name: 'ASC' }, skip: startIndex, take: limit });
 
-      return {
-        page: {
-          total: pages,
-          limit,
-          current: page,
-        },
-        data: dbPageData,
-      };
-    }
-
-    const dbData = await getRepository(User).find({ order: { name: 'ASC' }, take: 100 });
-    return dbData;
+    return {
+      page: {
+        total: pages,
+        limit,
+        current: page,
+      },
+      data: dbPageData,
+    };
   }
 
   async findById(id: string): Promise<User> {

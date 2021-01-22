@@ -43,19 +43,19 @@ export const sortVehicles = (data: Vehicle[]): Vehicle[] => {
   });
   /* END SORT BY END OF VEHICLE PLATE */
 
-  /* SORT BY CLIENT FOLDER */
+  /* SORT BY CLIENT group */
   data.sort((a, b) => {
-    if(a.client.folder < b.client.folder) {
+    if(a.client.group < b.client.group) {
       return -1;
     }
 
-    if(a.client.folder > b.client.folder) {
+    if(a.client.group > b.client.group) {
       return 1;
     }
 
     return 0;
   });
-  /* END SORT BY CLIENT FOLDER */
+  /* END SORT BY CLIENT group */
 
   return data;
 };

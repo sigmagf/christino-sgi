@@ -1,7 +1,7 @@
 export interface IVehiclesCreateRequestDTO {
   name: string;
   document: string;
-  folder?: string;
+  group: string;
 
   plate: string;
   renavam: string;

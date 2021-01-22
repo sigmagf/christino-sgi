@@ -22,7 +22,7 @@ interface IImportModalProps {
   onClose: () => void;
 }
 
-interface IRequestError extends Omit<IVehicle, 'id'|'updated_at'|'created_at'|'client'> {
+interface IRequestError extends Omit<IVehicle, 'id'|'updatedAt'|'createdAt'|'client'> {
   error: string;
 }
 
@@ -157,7 +157,7 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                   <tr>
                     <th style={{ textAlign: 'left', fontFamily: 'monospace' }}>NOME</th>
                     <th style={{ fontFamily: 'monospace' }}>DOCUMENTO</th>
-                    <th style={{ fontFamily: 'monospace' }}>GRUPO</th>
+                    <th style={{ fontFamily: 'monospace' }}>PASTA</th>
                     <th style={{ fontFamily: 'monospace' }}>PLACA</th>
                     <th style={{ fontFamily: 'monospace' }}>RENAVAM</th>
                     <th style={{ fontFamily: 'monospace' }}>CRV</th>
@@ -178,11 +178,11 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.plate }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.crv }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brandModel }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.type }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.details }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ statusConverter(vehicle.status) }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.issued_on }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.issuedOn }</td>
                       <td>
                         <Button
                           variant="error"

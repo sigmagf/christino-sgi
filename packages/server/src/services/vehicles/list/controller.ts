@@ -17,10 +17,11 @@ export class VehiclesListController {
     const renavam = req.query.renavam as string || undefined;
     const crv = req.query.crv as string || undefined;
     const brand_model = req.query.brand_model as string || undefined;
-    const folder = req.query.folder as string || undefined;
+    const status = parseInt(req.query.status as string, 10) || undefined;
+    const group = req.query.group as string || undefined;
 
     try {
-      const vehicles = await this.service.execute({ page, limit, filters: { pagination, client_id, client: { folder }, plate, renavam, crv, brand_model } });
+      const vehicles = await this.service.execute({ page, limit, filters: { pagination, client_id, status, group, plate, renavam, crv, brand_model } });
 
       return res.status(200).json(vehicles);
     } catch(err) {

@@ -6,8 +6,8 @@ export interface IClientsRepository {
   findById(id: string): Promise<Client>;
   findByDocument(document: string): Promise<Client>;
 
-  create(data: Pick<Client, 'name'|'document'|'folder'>): Promise<Client>;
-  update(id: string, data: Pick<Client, 'name'|'document'|'folder'>): Promise<Client>;
+  create(data: Pick<Client, 'name'|'document'|'group'>): Promise<Client>;
+  update(id: string, data: Pick<Client, 'name'|'document'|'group'>): Promise<Client>;
 
   delete(id: string): Promise<void>;
 }

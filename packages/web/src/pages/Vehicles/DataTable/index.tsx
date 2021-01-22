@@ -66,7 +66,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
               <td style={{ fontFamily: 'monospace' }}>{ vehicle.client.name }</td>
               <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.plate }</td>
               <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
-              <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
+              <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brandModel }</td>
               <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>
                 <Button variant="secondary" disabled={inLoading}>
                   <SearchIcon />

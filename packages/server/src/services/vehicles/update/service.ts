@@ -20,7 +20,7 @@ export class VehiclesUpdateService {
       client = await this.clientsRepo.create({
         name: data.name,
         document: data.document,
-        folder: data.folder,
+        group: data.group,
       });
     }
 
@@ -33,7 +33,7 @@ export class VehiclesUpdateService {
       type: data.type,
       details: data.details || null,
       issued_on: convertDate(data.issued_on),
-      status: convertStatus(data.status.toLowerCase()),
+      status: convertStatus(data.status),
     });
 
     return vehicle;

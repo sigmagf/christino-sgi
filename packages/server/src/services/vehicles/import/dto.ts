@@ -1,12 +1,12 @@
 import { Vehicle } from '~/entities/Vehicle';
 
-export type errorType = Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'> & {error: string};
+export type errorType = Partial<Omit<Vehicle, 'id'|'client'|'createdAt'|'updatedAt'>> & {error: string};
 
 export interface IVehiclesImportRequestDTO {
   data: {
     name: string;
     document: string;
-    folder: string;
+    group: string;
     plate: string;
     renavam: string;
     cla: string;

@@ -1,6 +1,4 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-
-import { Vehicle } from './Vehicle';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('clients')
 export class Client {
@@ -14,14 +12,11 @@ export class Client {
   document: string;
 
   @Column('character varying', { length: 32 })
-  folder: string;
+  group: string;
 
   @CreateDateColumn()
-  created_at: Date;
+  created_at?: Date;
 
   @UpdateDateColumn()
-  updated_at: Date;
-
-  @OneToMany((type) => Vehicle, (client) => Client)
-  vehicles: Vehicle[]
+  updated_at?: Date;
 }

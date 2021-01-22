@@ -15,10 +15,9 @@ export class VehiclesImportService {
   async execute({ data }: IVehiclesImportRequestDTO): Promise<void> {
     const errors: errorType[] = [];
 
-    const vehicles: Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'>[] = await Promise.all(data.map(async (vehicle) => {
+    const vehicles = await Promise.all(data.map(async (vehicle): Promise<Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'> | null> => {
       if(!vehicle.name || !vehicle.document) {
         errors.push({
-          client_id: null,
           plate: vehicle.plate,
           renavam: vehicle.renavam,
           crv: vehicle.crv === '-' ? null : vehicle.crv,
@@ -35,7 +34,6 @@ export class VehiclesImportService {
 
       if(!vehicle.plate || !vehicle.renavam || !vehicle.brand_model || !vehicle.type) {
         errors.push({
-          client_id: null,
           plate: vehicle.plate,
           renavam: vehicle.renavam,
           crv: vehicle.crv === '-' ? null : vehicle.crv,
@@ -44,7 +42,7 @@ export class VehiclesImportService {
           details: vehicle.details || null,
           issued_on: convertDate(vehicle.issued_on),
           status: convertStatus(vehicle.status.toLowerCase()),
-          error: 'Vehicle plate, renavam, brand_model or type are null or invalid',
+          error: 'Vehicle plate, renavam, brandModel or type are null or invalid',
         });
 
         return null;
@@ -54,7 +52,7 @@ export class VehiclesImportService {
         const client = await this.clientsRepo.create({
           name: vehicle.name,
           document: vehicle.document,
-          folder: vehicle.folder,
+          group: vehicle.group,
         });
 
         return {
@@ -70,7 +68,6 @@ export class VehiclesImportService {
         };
       } catch(err) {
         errors.push({
-          client_id: null,
           plate: vehicle.plate,
           renavam: vehicle.renavam,
           crv: vehicle.crv === '-' ? null : vehicle.crv,

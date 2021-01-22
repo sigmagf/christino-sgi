@@ -10,11 +10,11 @@ export interface IPagination<T> {
   data: Array<T>;
 }
 
-export interface IClientsListFilters extends Pick<Client, 'name'|'folder'> {
+export interface IClientsListFilters extends Pick<Client, 'name'|'group'> {
   pagination: boolean;
 }
 
 export interface IVehiclesListFilters extends Omit<Vehicle, 'id'|'client'|'type'|'details'|'issued_on'|'created_at'|'updated_at'> {
   pagination: boolean;
-  client: Pick<Client, 'folder'>;
+  group: string;
 }

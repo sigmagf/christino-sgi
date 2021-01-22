@@ -9,10 +9,10 @@ export class ClientsUpdateController {
 
   async handle(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const { name, document, folder } = req.body;
+    const { name, document, group } = req.body;
 
     try {
-      const user = await this.service.execute({ id, name, document, folder });
+      const user = await this.service.execute({ id, name, document, group });
 
       return res.status(200).json(user);
     } catch(err) {

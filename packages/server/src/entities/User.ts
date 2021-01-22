@@ -4,8 +4,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
-  BeforeInsert,
-  BeforeUpdate,
 } from 'typeorm';
 
 @Entity('users')
@@ -35,8 +33,8 @@ export class User {
     email_change_expires: Date;
 
     @CreateDateColumn()
-    created_at: Date;
+    created_at?: Date;
 
     @UpdateDateColumn()
-    updated_at: Date;
+    updated_at?: Date;
 }

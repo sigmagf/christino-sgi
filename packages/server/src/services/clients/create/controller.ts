@@ -8,14 +8,14 @@ export class ClientsCreateController {
   constructor(private service: ClientsCreateService) { }
 
   async handle(req: Request, res: Response): Promise<Response> {
-    const { name, document, folder } = req.body;
+    const { name, document, group } = req.body;
 
     try {
       if(!name || !document) {
         throw new Error('Obrigatory items not informed');
       }
 
-      const client = await this.service.execute({ name, document, folder });
+      const client = await this.service.execute({ name, document, group });
 
       return res.status(201).json(client);
     } catch(err) {
