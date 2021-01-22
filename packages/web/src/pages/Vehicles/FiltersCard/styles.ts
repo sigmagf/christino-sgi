@@ -43,7 +43,6 @@ export const FiltersHeaders = styled.div`
   padding: 5px;
 
   text-align: center;
-  font-weight: 800;
 
   cursor: pointer;
 `;
