@@ -20,7 +20,7 @@ export interface IVehiclesImportCSV {
   plate: string;
   renavam: string;
   crv: string;
-  brandModel: string;
+  brand_model: string;
   type: string;
   details: string;
   status: string;
@@ -45,7 +45,7 @@ export interface IClient {
   document: string;
   folder: string;
   created_at Date;
-  updatedAt: Date;
+  updated_at: Date;
 }
 
 export interface IUser {
@@ -54,7 +54,7 @@ export interface IUser {
   email: string;
   password: string;
   created_at Date;
-  updatedAt: Date;
+  updated_at: Date;
 }
 
 export interface IVehicle {
@@ -63,13 +63,13 @@ export interface IVehicle {
   plate: string;
   renavam: string;
   crv: string;
-  brandModel: string;
+  brand_model: string;
   type: string;
   details: string;
   status: number;
   issuedOn: Date;
   created_at Date;
-  updatedAt: Date;
+  updated_at: Date;
 }
 
 export interface IUserAuth {
