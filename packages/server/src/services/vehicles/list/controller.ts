@@ -13,14 +13,14 @@ export class VehiclesListController {
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
 
     const client_id = req.query.client_id as string || undefined;
-    const folder = req.query.folder as string || undefined;
     const plate = req.query.plate as string || undefined;
     const renavam = req.query.renavam as string || undefined;
     const crv = req.query.crv as string || undefined;
     const brand_model = req.query.brand_model as string || undefined;
+    const folder = req.query.folder as string || undefined;
 
     try {
-      const vehicles = await this.service.execute({ page, limit, filters: { pagination, client_id, folder, plate, renavam, crv, brand_model } });
+      const vehicles = await this.service.execute({ page, limit, filters: { pagination, client_id, client: { folder }, plate, renavam, crv, brand_model } });
 
       return res.status(200).json(vehicles);
     } catch(err) {

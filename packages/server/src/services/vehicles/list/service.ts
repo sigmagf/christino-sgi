@@ -7,8 +7,8 @@ import { IVehiclesListRequestDTO } from './dto';
 export class VehiclesListService {
   constructor(private repository: IVehiclesRepository) { }
 
-  async execute(data: IVehiclesListRequestDTO): Promise<IPagination<Vehicle>> {
-    const vehicles = await this.repository.list(data.page, data.limit);
+  async execute(data: IVehiclesListRequestDTO): Promise<IPagination<Vehicle> | Vehicle[]> {
+    const vehicles = await this.repository.list(data.page, data.limit, data.filters);
 
     return vehicles;
   }

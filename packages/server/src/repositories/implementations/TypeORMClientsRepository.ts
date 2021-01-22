@@ -1,35 +1,24 @@
-import { getRepository, Like } from 'typeorm';
+import { getRepository } from 'typeorm';
 
 import { Client } from '~/entities/Client';
 import { IClientsListFilters, IPagination } from '~/interfaces';
+import { createWhere } from '~/utils/createWhere';
 
 import { IClientsRepository } from '../IClientsRepository';
 
 export class TypeORMClientsRepository implements IClientsRepository {
   async list(page = 1, limit = 10, filters: IClientsListFilters): Promise<IPagination<Client> | Client[]> {
-    if(filters.pagination) {
-      const maxClients = await getRepository(Client).count({
-        where: {
-          name: Like(`%${filters.name}%`),
-          folder: Like(`%${filters.folder}%`),
-        },
-      });
+    const filtersString = createWhere({ ...filters, pagination: undefined });
 
-      const pages = Math.ceil(maxClients / limit);
+    if(filters.pagination) {
+      const pages = Math.ceil(await getRepository(Client).count({ where: filtersString }) / limit);
       const startIndex = (page - 1) * limit;
 
-      const dbPageData = await getRepository(Client).find({
-        where: {
-          name: Like(`%${filters.name}%`),
-          folder: Like(`%${filters.folder}%`),
-        },
-        skip: startIndex,
-        take: limit,
-      });
+      const dbPageData = await getRepository(Client).find({ where: filtersString, skip: startIndex, take: limit });
 
       return {
         page: {
-          total: pages,
+          total: pages < 1 ? 1 : pages,
           limit,
           current: page,
         },
@@ -37,14 +26,7 @@ export class TypeORMClientsRepository implements IClientsRepository {
       };
     }
 
-    const dbData = await getRepository(Client).find({
-      where: {
-        name: Like(`%${filters.name}%`),
-        folder: Like(`%${filters.folder}%`),
-      },
-      take: 100,
-    });
-
+    const dbData = await getRepository(Client).find({ where: filtersString });
     return dbData;
   }
 

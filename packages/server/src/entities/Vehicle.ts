@@ -40,7 +40,7 @@ export class Vehicle {
     @UpdateDateColumn()
     updated_at: Date;
 
-    @ManyToOne((type) => Client, { eager: true })
+    @ManyToOne((type) => Client, (vehicles) => Vehicle, { eager: true })
     @JoinColumn({ name: 'client_id' })
     client: Client;
 }

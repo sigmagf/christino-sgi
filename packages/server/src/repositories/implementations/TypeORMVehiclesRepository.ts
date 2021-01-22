@@ -1,48 +1,25 @@
-import { getRepository, Like } from 'typeorm';
+import { getRepository } from 'typeorm';
 
 import { Vehicle } from '~/entities/Vehicle';
 import { IPagination, IVehiclesListFilters } from '~/interfaces';
+import { createWhere } from '~/utils/createWhere';
 import { sortVehicles } from '~/utils/sortVehicles';
 
 import { IVehiclesRepository } from '../IVehiclesRepository';
 
 export class TypeORMVehiclesRepository implements IVehiclesRepository {
   async list(page: number, limit: number, filters: IVehiclesListFilters): Promise<IPagination<Vehicle> | Vehicle[]> {
-    if(filters.pagination) {
-      const maxVehicles = await getRepository(Vehicle).count({
-        where: {
-          client_id: filters.client_id,
-          plate: Like(`%${filters.plate}%`),
-          renavam: Like(`%${filters.renavam}%`),
-          crv: Like(`%${filters.crv}%`),
-          brand_model: Like(`%${filters.brand_model}%`),
-          client: {
-            folder: Like(`%${filters.folder}%`),
-          },
-        },
-      });
+    const filtersString = createWhere({ ...filters, client: undefined, pagination: undefined });
 
-      const pages = Math.ceil((maxVehicles) / limit);
+    if(filters.pagination) {
+      const pages = Math.ceil(await getRepository(Vehicle).count({ where: filtersString }) / limit);
       const startIndex = (page - 1) * limit;
 
-      const dbPageData = await getRepository(Vehicle).find({
-        where: {
-          client_id: filters.client_id,
-          plate: Like(`%${filters.plate}%`),
-          renavam: Like(`%${filters.renavam}%`),
-          crv: Like(`%${filters.crv}%`),
-          brand_model: Like(`%${filters.brand_model}%`),
-          client: {
-            folder: Like(`%${filters.folder}%`),
-          },
-        },
-        skip: startIndex,
-        take: limit,
-      });
+      const dbPageData = await getRepository(Vehicle).find({ where: filtersString, skip: startIndex, take: limit });
 
       return {
         page: {
-          total: pages,
+          total: pages < 1 ? 1 : pages,
           limit,
           current: page,
         },
@@ -50,19 +27,8 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
       };
     }
 
-    const dbData = await getRepository(Vehicle).find({
-      where: {
-        client_id: filters.client_id,
-        plate: Like(`%${filters.plate}%`),
-        renavam: Like(`%${filters.renavam}%`),
-        crv: Like(`%${filters.crv}%`),
-        brand_model: Like(`%${filters.brand_model}%`),
-        client: {
-          folder: Like(`%${filters.folder}%`),
-        },
-      },
-      take: 100,
-    });
+    const dbData = await getRepository(Vehicle).find({ where: filtersString });
+
     return sortVehicles(dbData);
   }
 

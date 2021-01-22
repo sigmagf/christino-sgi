@@ -30,7 +30,7 @@ const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreate
 
   const [open, setOpen] = useState(true);
   const [clients, setClient] = useState<NamedProps['options']>([]);
-  const [groups, setGroups] = useState<NamedProps['options']>([
+  const [groups] = useState<NamedProps['options']>([
     {
       value: '',
       label: 'TODOS',

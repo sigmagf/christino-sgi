@@ -36,28 +36,26 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
           </tr>
         </thead>
         <tbody>
-          {(vehicles.length === 0) && (
-          <>
-            <tr><td colSpan={6} /></tr>
-            <tr><td colSpan={6} /></tr>
-            <tr><td colSpan={6} /></tr>
-            <tr><td colSpan={6} /></tr>
-            {inLoading ? (
-              <>
-                <tr><td colSpan={6} /></tr>
-                <tr><td colSpan={6} /></tr>
-              </>
-            ) : (
-              <>
-                <tr><td colSpan={6} style={{ fontFamily: 'monospace', textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
-                <tr><td colSpan={6} style={{ fontFamily: 'monospace', textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
-              </>
-            )}
-            <tr><td colSpan={6} /></tr>
-            <tr><td colSpan={6} /></tr>
-            <tr><td colSpan={6} /></tr>
-            <tr><td colSpan={6} /></tr>
-          </>
+          {inLoading && (
+            <>
+              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={6} /></tr>
+            </>
+          )}
+
+          {(!inLoading && vehicles.length === 0) && (
+            <>
+              <tr><td colSpan={6} style={{ fontFamily: 'monospace', textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
+              <tr><td colSpan={6} style={{ fontFamily: 'monospace', textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
+            </>
           )}
 
           {!inLoading && vehicles.map((vehicle) => (

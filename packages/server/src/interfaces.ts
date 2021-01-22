@@ -1,3 +1,6 @@
+import { Client } from './entities/Client';
+import { Vehicle } from './entities/Vehicle';
+
 export interface IPagination<T> {
   page: {
     total: number;
@@ -7,18 +10,11 @@ export interface IPagination<T> {
   data: Array<T>;
 }
 
-export interface IClientsListFilters {
+export interface IClientsListFilters extends Pick<Client, 'name'|'folder'> {
   pagination: boolean;
-  name: string;
-  folder: string;
 }
 
-export interface IVehiclesListFilters {
+export interface IVehiclesListFilters extends Omit<Vehicle, 'id'|'client'|'type'|'details'|'issued_on'|'created_at'|'updated_at'> {
   pagination: boolean;
-  client_id: string;
-  folder: string;
-  plate: string;
-  renavam: string;
-  crv: string;
-  brand_model: string;
+  client: Pick<Client, 'folder'>;
 }
