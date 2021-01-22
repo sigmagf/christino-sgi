@@ -1,9 +1,11 @@
-export function makeWhereString(obj: Record<string, any>, like = true): string {
+export function makeWhereString(obj: Record<string, any>, like = true, prefix?: string): string {
   const whereArr: string[] = [];
 
   Object.keys(obj).forEach((key) => {
     if(obj[key] && obj[key].toString().trim() !== '') {
-      whereArr.push(like ? `${key} LIKE '%${obj[key]}%'` : `${key} = '${obj[key]}'`);
+      const keyName = prefix && !key.includes('.') ? `${prefix}.${key}` : key;
+
+      whereArr.push(like ? `${keyName} LIKE '%${obj[key]}%'` : `${keyName} = '${obj[key]}'`);
     }
   });
 

@@ -17,6 +17,10 @@ export const sortVehicles = (data: Vehicle[]): Vehicle[] => {
 
   /* SORT BY CLIENT NAME */
   data.sort((a, b) => {
+    if(!a.client || b.client) {
+      return 0;
+    }
+
     if(a.client.name < b.client.name) {
       return -1;
     }
@@ -45,6 +49,10 @@ export const sortVehicles = (data: Vehicle[]): Vehicle[] => {
 
   /* SORT BY CLIENT group */
   data.sort((a, b) => {
+    if(!a.client || b.client) {
+      return 0;
+    }
+
     if(a.client.group < b.client.group) {
       return -1;
     }

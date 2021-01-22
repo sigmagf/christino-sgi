@@ -1,25 +1,38 @@
 import { getRepository } from 'typeorm';
 
+import { Client } from '~/entities/Client';
 import { Vehicle } from '~/entities/Vehicle';
 import { IPagination, IVehiclesListFilters } from '~/interfaces';
-import { createWhere } from '~/utils/createWhere';
+import { makeWhereString } from '~/utils/makeWhereString';
 import { sortVehicles } from '~/utils/sortVehicles';
 
 import { IVehiclesRepository } from '../IVehiclesRepository';
 
 export class TypeORMVehiclesRepository implements IVehiclesRepository {
   async list(page: number, limit: number, filters: IVehiclesListFilters): Promise<IPagination<Vehicle> | Vehicle[]> {
-    const filtersString = createWhere({ ...filters, client: undefined, pagination: undefined });
+    const filtersString = makeWhereString({ ...filters, group: undefined, pagination: undefined });
 
     if(filters.pagination) {
-      const pages = Math.ceil(await getRepository(Vehicle).count({ where: filtersString }) / limit);
+      const maxRows = await getRepository(Vehicle)
+        .createQueryBuilder('v')
+        .leftJoinAndMapOne('v.client', Client, 'c', 'v.client_id = c.id')
+        .where(filtersString)
+        .andWhere(filters.group ? `c.group LIKE '%${filters.group}%'` : '')
+        .getCount();
+
+      const pages = Math.ceil(maxRows / limit);
       const startIndex = (page - 1) * limit;
 
-      const dbPageData = await getRepository(Vehicle).find({
-        where: filtersString,
-        skip: startIndex,
-        take: limit,
-      });
+      const dbPageData = await getRepository(Vehicle)
+        .createQueryBuilder('v')
+        .leftJoinAndMapOne('v.client', Client, 'c', 'v.client_id = c.id')
+        .where(filtersString)
+        .andWhere(filters.group ? `c.group LIKE '%${filters.group}%'` : '')
+        .skip(startIndex)
+        .take(limit)
+        .orderBy('SUBSTRING(v.plate)', 'ASC')
+        .orderBy('c.name', 'ASC')
+        .getMany();
 
       return {
         page: {
@@ -31,7 +44,15 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
       };
     }
 
-    const dbData = await getRepository(Vehicle).find({ where: filtersString });
+    const dbData = await getRepository(Vehicle)
+      .createQueryBuilder('v')
+      .leftJoinAndMapOne('v.client', Client, 'c', 'v.client_id = c.id')
+      .where(filtersString)
+      .andWhere(filters.group ? `c.group LIKE '%${filters.group}%'` : '')
+      .take(100)
+      .orderBy('SUBSTRING(v.plate)', 'ASC')
+      .orderBy('c.name', 'ASC')
+      .getMany();
 
     return sortVehicles(dbData);
   }
