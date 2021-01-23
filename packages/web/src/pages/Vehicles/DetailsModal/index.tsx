@@ -3,17 +3,19 @@ import React from 'react';
 import { Button } from '~/components/Button';
 import { Input } from '~/components/Form';
 import { Modal } from '~/components/Modal';
+import { IVehicle } from '~/interfaces';
 
 import { DetailsModalContainer } from './styles';
 
 interface IDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  vehicle?: IVehicle;
 }
 
-export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose }) => {
+export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle }) => {
   return (
-    <Modal isOpen={isOpen} onRequestClose={onClose} header="CADASTRO/ALTERACAO DE VEICULOS">
+    <Modal isOpen={isOpen} onRequestClose={onClose} header={`${vehicle ? 'ALTERACAO' : 'CADASTRO'} DE VEICULOS`}>
       <DetailsModalContainer onSubmit={(data) => console.log(data)}>
         <Input style={{ gridArea: 'CN' }} name="name" label="NOME" />
         <Input style={{ gridArea: 'CD' }} name="document" label="DOCUMENTO" defaultValue="12.123.456/0001-01" />

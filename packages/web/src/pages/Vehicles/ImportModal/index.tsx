@@ -1,21 +1,20 @@
 import csv2json from 'csvtojson';
 import React, { useCallback, useState } from 'react';
-import Dropzone from 'react-dropzone';
 import { FaTimes, FaTrash, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
+import { Dropzone } from '~/components/Dropzone';
 import { Modal } from '~/components/Modal';
 import { Pagination } from '~/components/Pagination';
 import { Table } from '~/components/Table';
 import { useLocalStorage } from '~/hooks';
 import { IVehicle, IVehiclesImportCSV } from '~/interfaces';
 import { api } from '~/utils/api';
-import { statusConverter } from '~/utils/statusConverter';
 import { withPagination } from '~/utils/withPagination';
 
-import { DropContainer, ErrorsGroup, LoadingModal, TableResult, UploadMessage } from './styles';
+import { ErrorsGroup, LoadingModal, TableResult } from './styles';
 
 interface IImportModalProps {
   isOpen: boolean;
@@ -30,28 +29,20 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
   const storage = useLocalStorage();
 
   const [vehiclesToImport, setVehiclesToImport] = useState<IVehiclesImportCSV[]>([]);
-  const [vehiclesToImportPage, setVehiclestoImportPage] = useState(1);
+  const [vehiclesTablePage, setVehiclesTablePage] = useState(1);
   const [inLoading, setInLoading] = useState(false);
   const [requestErrorDetails, setRequestErrorDetails] = useState<IRequestError[]>([]);
 
-  const vehiclesPagination = withPagination(vehiclesToImport, vehiclesToImportPage, 10);
-
-  const renderDragMessage = (isDragActive: boolean, isDragReject: boolean) => {
-    if(!isDragActive) {
-      return <UploadMessage>ARRASTE OU CLIQUE AQUI PARA ENVIAR O ARQUIVO</UploadMessage>;
-    }
-
-    if(isDragReject) {
-      return <UploadMessage type="error">ARQUIVO NAO SUPORTADO</UploadMessage>;
-    }
-
-    return <UploadMessage type="success">SOLTE O ARQUIVO AQUI</UploadMessage>;
-  };
+  const vehiclesPagination = withPagination(vehiclesToImport, vehiclesTablePage, 10);
 
   const onClearHandle = useCallback(() => {
     setVehiclesToImport([]);
     setInLoading(false);
-    setVehiclestoImportPage(1);
+    setVehiclesTablePage(1);
+  }, []);
+
+  const onVehicleRemove = useCallback((renavam: string) => {
+    setVehiclesToImport((old) => old.filter((el) => el.renavam !== renavam));
   }, []);
 
   const onFileUploaded = useCallback((files: File[]) => {
@@ -61,25 +52,23 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
     const reader = new FileReader();
 
     reader.onload = async (e) => {
-      if(!e.target) {
-        return;
+      if(e.target) {
+        const finalResult: IVehiclesImportCSV[] = await csv2json().fromString(e.target.result as string);
+        setVehiclesToImport(finalResult.map((el) => ({
+          name: el.name,
+          document: el.document,
+          group: el.group || null,
+
+          plate: el.plate,
+          renavam: el.renavam,
+          crv: el.crv || null,
+          brand_model: el.brand_model,
+          type: el.type,
+          details: el.details,
+          status: el.status,
+          issued_on: el.issued_on,
+        })));
       }
-
-      const finalResult: IVehiclesImportCSV[] = await csv2json().fromString(e.target.result as string);
-      setVehiclesToImport(finalResult.map((el) => ({
-        name: el.name,
-        document: el.document,
-        group: el.group || null,
-
-        plate: el.plate,
-        renavam: el.renavam,
-        crv: el.crv || null,
-        brand_model: el.brand_model,
-        type: el.type,
-        details: el.details,
-        status: el.status,
-        issued_on: el.issued_on,
-      })));
     };
 
     reader.readAsText(files[0]);
@@ -134,7 +123,12 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
   );
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onCloseHandle} haveHeader={false}>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onCloseHandle}
+      haveHeader={vehiclesToImport.length > 0}
+      header={vehiclesToImport.length > 0 ? 'IMPORTACAO DE VEICULOS' : ''}
+    >
       {requestErrorDetails.length !== 0 && (
         <ErrorsGroup>
           {requestErrorDetails.map((error) => (
@@ -147,14 +141,11 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
       )}
 
       {(vehiclesToImport.length === 0) ? (
-        <Dropzone accept="text/csv" maxFiles={1} onDropAccepted={onFileUploaded} disabled={inLoading}>
-          {({ getRootProps, getInputProps, isDragActive, isDragReject }) => (
-            <DropContainer {...getRootProps()} isDragActive={isDragActive} isDragReject={isDragReject}>
-              <input {...getInputProps()} />
-              {renderDragMessage(isDragActive, isDragReject)}
-            </DropContainer>
-          )}
-        </Dropzone>
+        <Dropzone
+          accept="text/csv"
+          maxFiles={1}
+          onDropAccepted={onFileUploaded}
+        />
       ) : (
         <>
           {(vehiclesToImport.length !== 0) && (
@@ -178,7 +169,6 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                     <th style={{ fontFamily: 'monospace' }}>TIPO</th>
                     <th style={{ fontFamily: 'monospace' }}>DETALHES</th>
                     <th style={{ fontFamily: 'monospace' }}>STATUS</th>
-                    <th style={{ fontFamily: 'monospace' }}>EMITIDO EM</th>
                     <th>&nbsp;</th>
                   </tr>
                 </thead>
@@ -194,13 +184,12 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.type }</td>
                       <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.details }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ statusConverter(vehicle.status) }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.issued_on }</td>
+                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.status }</td>
                       <td>
                         <Button
                           variant="error"
                           disabled={inLoading}
-                          onClick={() => setVehiclesToImport((old) => old.filter((el) => el.renavam !== vehicle.renavam))}
+                          onClick={() => onVehicleRemove(vehicle.renavam)}
                         >
                           <FaTimes />
                         </Button>
@@ -211,9 +200,9 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
               </Table>
               <Pagination
                 inLoading={inLoading}
-                currentPage={vehiclesToImportPage}
+                currentPage={vehiclesTablePage}
                 totalPages={vehiclesPagination.page.total}
-                onNumberClick={(n) => setVehiclestoImportPage(n)}
+                onNumberClick={(n) => setVehiclesTablePage(n)}
                 onMaxResultsChange={() => {}}
                 overrideMaxResultsBy={buttonsGroup}
               />

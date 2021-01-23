@@ -1,4 +1,4 @@
-export function statusConverter(status: string|number) {
+export function statusConverter(status: number) {
   const stNum = parseInt(status.toString(), 10);
 
   switch(stNum) {
