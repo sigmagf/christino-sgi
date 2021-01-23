@@ -1,7 +1,7 @@
 import csv2json from 'csvtojson';
 import React, { useCallback, useState } from 'react';
 import Dropzone from 'react-dropzone';
-import { FaTimes as IconRemove, FaTrash as IconClear, FaUpload as IconUpload } from 'react-icons/fa';
+import { FaTimes, FaTrash, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
@@ -125,16 +125,16 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
   const buttonsGroup = (
     <>
       <Button variant="error" onClick={onClearHandle} disabled={inLoading}>
-        <IconClear />&nbsp;&nbsp;&nbsp;Limpar
+        <FaTrash />&nbsp;&nbsp;&nbsp;Limpar
       </Button>
       <Button variant="success" onClick={onSendHandle} disabled={inLoading}>
-        <IconUpload />&nbsp;&nbsp;&nbsp;Enviar lote
+        <FaUpload />&nbsp;&nbsp;&nbsp;Enviar lote
       </Button>
     </>
   );
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onCloseHandle}>
+    <Modal isOpen={isOpen} onRequestClose={onCloseHandle} haveHeader={false}>
       {requestErrorDetails.length !== 0 && (
         <ErrorsGroup>
           {requestErrorDetails.map((error) => (
@@ -202,7 +202,7 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                           disabled={inLoading}
                           onClick={() => setVehiclesToImport((old) => old.filter((el) => el.renavam !== vehicle.renavam))}
                         >
-                          <IconRemove />
+                          <FaTimes />
                         </Button>
                       </td>
                     </tr>

@@ -1,13 +1,7 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import {
-  FaLayerGroup as StackIcon,
-  FaPlus as AddIcon,
-  FaFilter as FilterIcon,
-  FaAngleDown as ArrowDownIcon,
-  FaAngleUp as ArrowUpIcon,
-} from 'react-icons/fa';
+import { FaLayerGroup, FaPlus, FaFilter, FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { NamedProps } from 'react-select';
 import { toast } from 'react-toastify';
 
@@ -25,7 +19,7 @@ interface IVehiclesFiltersCardProps {
   onFiltersApplyClick: (data: SubmitHandler<Omit<IVehiclesFilters, 'page'|'limit'>>) => void;
 }
 
-const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick, onFiltersApplyClick }) => {
+export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick, onFiltersApplyClick }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
 
@@ -101,29 +95,27 @@ const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreate
         </Form>
 
         <FiltersHeaders onClick={() => setOpen((old) => !old)}>
-          {open ? <ArrowUpIcon size={12} /> : <ArrowDownIcon size={12} />}
+          {open ? <FaAngleUp size={12} /> : <FaAngleDown size={12} />}
           &nbsp;&nbsp;
           Filtros
           &nbsp;&nbsp;
-          {open ? <ArrowUpIcon size={12} /> : <ArrowDownIcon size={12} />}
+          {open ? <FaAngleUp size={12} /> : <FaAngleDown size={12} />}
         </FiltersHeaders>
       </FiltersContainer>
 
       <FiltersCardActionButtons>
         <Button variant="success" style={{ width: 175.97 }} onClick={onOpenCreateModalClick}>
-          <AddIcon />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
+          <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
         </Button>
         <Button variant="info" style={{ width: 217.19 }} onClick={onOpenImportModalClick}>
-          <StackIcon />&nbsp;&nbsp;&nbsp;ENVIAR LOTE DE VEICULOS
+          <FaLayerGroup />&nbsp;&nbsp;&nbsp;ENVIAR LOTE DE VEICULOS
         </Button>
         {open && (
         <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>
-          <FilterIcon />&nbsp;&nbsp;&nbsp;FILTRAR
+          <FaFilter />&nbsp;&nbsp;&nbsp;FILTRAR
         </Button>
         )}
       </FiltersCardActionButtons>
     </FiltersCard>
   );
 };
-
-export default VehiclesFiltersCard;

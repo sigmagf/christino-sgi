@@ -1,10 +1,19 @@
 import { transparentize } from 'polished';
 import React from 'react';
-import ReactModal from 'react-modal';
+import { FaTimes } from 'react-icons/fa';
+import ReactModal, { Props } from 'react-modal';
 import { useTheme } from 'styled-components';
 
+import { Button } from '../Button';
+import { ModalHeader } from './styles';
+
+interface IModalProps extends Props {
+  haveHeader?: boolean;
+  header?: JSX.Element|string;
+}
+
 ReactModal.setAppElement('#root');
-export const Modal: React.FC< ReactModal.Props> = ({ children, ...props }) => {
+export const Modal: React.FC<IModalProps> = ({ children, haveHeader = true, header, onRequestClose, ...props }) => {
   const theme = useTheme();
 
   const customStyles: ReactModal.Styles = {
@@ -28,7 +37,17 @@ export const Modal: React.FC< ReactModal.Props> = ({ children, ...props }) => {
   };
 
   return (
-    <ReactModal style={customStyles} {...props}>
+    <ReactModal style={customStyles} onRequestClose={onRequestClose} {...props}>
+      {haveHeader && (
+        <ModalHeader>
+          <Button variant="error" onClick={onRequestClose}>
+            <FaTimes />
+          </Button>
+          <div className="header-item">
+            { header }
+          </div>
+        </ModalHeader>
+      )}
       { children }
     </ReactModal>
   );

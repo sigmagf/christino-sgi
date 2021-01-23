@@ -1,3 +1,4 @@
+import { lighten } from 'polished';
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
@@ -29,6 +30,11 @@ export const GlobalStyle = createGlobalStyle`
         max-width: calc(100% - 70px);
       }
     }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid ${({ theme }) => lighten(0.1, theme.primary.main)};
   }
 
   *, button, input {

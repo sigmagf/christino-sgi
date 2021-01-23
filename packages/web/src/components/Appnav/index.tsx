@@ -1,12 +1,6 @@
 import React, { useCallback } from 'react';
 import { IconType } from 'react-icons';
-import {
-  FaHome as IconDashboard,
-  FaAngleLeft as IconArrowLeft,
-  FaAngleRight as IconArrowRight,
-  FaFile as IconFile,
-  FaUsers as Iconuser,
-} from 'react-icons/fa';
+import { FaHome, FaAngleLeft, FaAngleRight, FaFile, FaUsers } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { usePersistedState } from '~/hooks';
@@ -32,17 +26,17 @@ export const Appnav: React.FC = () => {
 
   const menuItems: IMenuItem[] = [
     {
-      icon: IconDashboard,
+      icon: FaHome,
       label: 'Início',
       path: '/',
     },
     {
-      icon: IconFile,
+      icon: FaFile,
       label: 'Recibos',
       path: '/vehicles',
     },
     {
-      icon: Iconuser,
+      icon: FaUsers,
       label: 'Clientes',
       path: '/clientes',
     },
@@ -51,8 +45,8 @@ export const Appnav: React.FC = () => {
   return (
     <AppnavContainer className={expanded ? 'expanded' : 'collapsed'} expanded={expanded}>
       <AppnavControllers>
-        {!expanded && <button type="button" onClick={toggleAppnav} aria-label="Expand"><IconArrowRight size={20} /></button>}
-        {expanded && <button type="button" onClick={toggleAppnav} aria-label="Collapse"><IconArrowLeft size={20} /></button>}
+        {!expanded && <button type="button" onClick={toggleAppnav} aria-label="Expand"><FaAngleRight size={20} /></button>}
+        {expanded && <button type="button" onClick={toggleAppnav} aria-label="Collapse"><FaAngleLeft size={20} /></button>}
       </AppnavControllers>
       <AppnavHeader>
         <img src={expanded ? 'assets/logo-texto.png' : 'assets/logo.png'} alt="CHRISTINO-SGI" />

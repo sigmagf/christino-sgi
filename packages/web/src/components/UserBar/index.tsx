@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  FaCog as IconSettings,
-  FaSignOutAlt as IconLogout,
-} from 'react-icons/fa';
+import { FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 import { useLocalStorage } from '~/hooks';
@@ -26,8 +23,8 @@ export const UserBar: React.FC = () => {
       </div>
 
       <div className="user-actions">
-        <Button variant="error" onClick={onLogout}><IconLogout size={17} /></Button>
-        <Button variant="secondary"><IconSettings size={17} /></Button>
+        <Button variant="error" onClick={onLogout}><FaSignOutAlt size={17} /></Button>
+        <Button variant="secondary"><FaCog size={17} /></Button>
         <img src="https://www.codeapi.io/initials/Joao%20Gabriel" alt="" />
       </div>
     </UserBarContainer>

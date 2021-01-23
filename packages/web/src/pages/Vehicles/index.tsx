@@ -10,7 +10,8 @@ import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 
 import { VehiclesDataTable } from './DataTable';
-import VehiclesFiltersCard from './FiltersCard';
+import { VehiclesDetailsModal } from './DetailsModal';
+import { VehiclesFiltersCard } from './FiltersCard';
 import { VehiclesImportModal } from './ImportModal';
 
 export const VehiclesPage: React.FC = () => {
@@ -20,7 +21,9 @@ export const VehiclesPage: React.FC = () => {
   const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
   const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10 });
   const [inLoading, setInLoading] = useState(false);
+
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   const getData = useCallback(async () => {
     setInLoading(true);
@@ -51,6 +54,11 @@ export const VehiclesPage: React.FC = () => {
     getData();
   }, [getData]);
 
+  const onDetailsModalClose = useCallback(() => {
+    setDetailsModalOpen(false);
+    getData();
+  }, [getData]);
+
   // eslint-disable-next-line
   useEffect(() => { getData(); }, []);
 
@@ -62,7 +70,7 @@ export const VehiclesPage: React.FC = () => {
       <Layout>
         <VehiclesFiltersCard
           onOpenImportModalClick={() => setImportModalOpen(true)}
-          onOpenCreateModalClick={() => console.log('WIP')}
+          onOpenCreateModalClick={() => setDetailsModalOpen(true)}
           onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data }))}
         />
         <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} />
@@ -78,6 +86,7 @@ export const VehiclesPage: React.FC = () => {
         </Card>
       </Layout>
       <VehiclesImportModal isOpen={importModalOpen} onClose={onImportModalClose} />
+      <VehiclesDetailsModal isOpen={detailsModalOpen} onClose={onDetailsModalClose} />
     </>
   );
 };
