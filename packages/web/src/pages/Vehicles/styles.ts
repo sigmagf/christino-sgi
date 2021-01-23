@@ -19,7 +19,7 @@ export const FiltersSummary = styled.div`
   grid-area: SM;
 
   background: ${({ theme }) => theme.secondary.main};
-  box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
+  box-shadow: ${({ theme }) => theme.shadow};
   border-radius: 5px;
   padding: 5px;
 

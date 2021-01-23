@@ -17,4 +17,5 @@ export interface IClientsListFilters extends Pick<Client, 'name'|'group'> {
 export interface IVehiclesListFilters extends Omit<Vehicle, 'id'|'client'|'type'|'details'|'issued_on'|'created_at'|'updated_at'> {
   pagination: boolean;
   group: string;
+  plate_end: string;
 }

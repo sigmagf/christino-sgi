@@ -8,7 +8,7 @@ export const StatusBadge = styled.div<IStatusBadgeStyledProps>`
   width: 15px;
   height: 15px;
   border-radius: 15px;
-  box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
+  box-shadow: ${({ theme }) => theme.shadow};
 
   ${({ theme, status }) => {
     switch(status) {

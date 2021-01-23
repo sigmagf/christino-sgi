@@ -3,35 +3,49 @@ import { getRepository } from 'typeorm';
 import { Client } from '~/entities/Client';
 import { Vehicle } from '~/entities/Vehicle';
 import { IPagination, IVehiclesListFilters } from '~/interfaces';
-import { makeWhereString } from '~/utils/makeWhereString';
-import { sortVehicles } from '~/utils/sortVehicles';
 
 import { IVehiclesRepository } from '../IVehiclesRepository';
 
 export class TypeORMVehiclesRepository implements IVehiclesRepository {
+  private makeSpecialWhereString(filters: IVehiclesListFilters) {
+    const filtersPart: string[] = [];
+
+    filtersPart.push(filters.client_id ? `c.id = ${filters.client_id}` : null);
+    if(filters.group === '-1') {
+      filtersPart.push('c.group IS NULL');
+    } else {
+      filtersPart.push(filters.group ? `c.group LIKE '%${filters.group}%'` : null);
+    }
+
+    filtersPart.push(filters.plate ? `v.plate LIKE '%${filters.plate}%'` : null);
+    filtersPart.push(filters.renavam ? `v.renavam LIKE '%${filters.renavam}%'` : null);
+    filtersPart.push(filters.crv ? `v.crv LIKE '%${filters.crv}%'` : null);
+    filtersPart.push(filters.brand_model ? `v.brand_model LIKE '%${filters.brand_model}%'` : null);
+    filtersPart.push(filters.status ? `v.status LIKE '%${filters.status}%'` : null);
+
+    filtersPart.push(filters.plate_end ? `v.plate LIKE '%${filters.plate_end}'` : null);
+
+    return filtersPart.filter((el) => el !== null).join(' AND ');
+  }
+
   async list(page: number, limit: number, filters: IVehiclesListFilters): Promise<IPagination<Vehicle> | Vehicle[]> {
-    const filtersString = makeWhereString({ ...filters, group: undefined, pagination: undefined });
+    const whereString = this.makeSpecialWhereString(filters);
 
     if(filters.pagination) {
-      const maxRows = await getRepository(Vehicle)
-        .createQueryBuilder('v')
-        .leftJoinAndMapOne('v.client', Client, 'c', 'v.client_id = c.id')
-        .where(filtersString)
-        .andWhere(filters.group ? `c.group LIKE '%${filters.group}%'` : '')
-        .getCount();
-
+      const maxRows = await getRepository(Vehicle).count();
       const pages = Math.ceil(maxRows / limit);
       const startIndex = (page - 1) * limit;
 
       const dbPageData = await getRepository(Vehicle)
         .createQueryBuilder('v')
         .leftJoinAndMapOne('v.client', Client, 'c', 'v.client_id = c.id')
-        .where(filtersString)
-        .andWhere(filters.group ? `c.group LIKE '%${filters.group}%'` : '')
-        .skip(startIndex)
-        .take(limit)
-        .orderBy('SUBSTRING(v.plate)', 'ASC')
-        .orderBy('c.name', 'ASC')
+        .where(whereString)
+        .orderBy('c.group', 'ASC')
+        .addOrderBy('SUBSTRING(v.plate, 7)', 'ASC')
+        .addOrderBy('c.name', 'ASC')
+        .addOrderBy('v.plate', 'ASC')
+        .offset(startIndex)
+        .limit(limit)
         .getMany();
 
       return {
@@ -40,21 +54,22 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
           limit,
           current: page,
         },
-        data: sortVehicles(dbPageData),
+        data: dbPageData,
       };
     }
 
     const dbData = await getRepository(Vehicle)
       .createQueryBuilder('v')
       .leftJoinAndMapOne('v.client', Client, 'c', 'v.client_id = c.id')
-      .where(filtersString)
-      .andWhere(filters.group ? `c.group LIKE '%${filters.group}%'` : '')
-      .take(100)
-      .orderBy('SUBSTRING(v.plate)', 'ASC')
-      .orderBy('c.name', 'ASC')
+      .where(whereString)
+      .orderBy('c.group')
+      .addOrderBy('SUBSTRING(v.plate, 7)')
+      .addOrderBy('c.name')
+      .addOrderBy('v.plate')
+      .limit(100)
       .getMany();
 
-    return sortVehicles(dbData);
+    return dbData;
   }
 
   async findById(id: string): Promise<Vehicle> {
@@ -75,14 +90,14 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
     return dbData;
   }
 
-  async findByClientPlate(clientId: string, plate: string): Promise<Vehicle> {
-    const dbData = await getRepository(Vehicle).findOne({ where: { clientId, plate } });
+  async findByClientPlate(client_id: string, plate: string): Promise<Vehicle> {
+    const dbData = await getRepository(Vehicle).findOne({ where: { client_id, plate } });
 
     return dbData;
   }
 
-  async findByClientRenavam(clientId: string, renavam: string): Promise<Vehicle> {
-    const dbData = await getRepository(Vehicle).findOne({ where: { clientId, renavam } });
+  async findByClientRenavam(client_id: string, renavam: string): Promise<Vehicle> {
+    const dbData = await getRepository(Vehicle).findOne({ where: { client_id, renavam } });
 
     return dbData;
   }

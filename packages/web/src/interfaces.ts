@@ -16,19 +16,32 @@ export interface IStorage {
 export interface IVehiclesImportCSV {
   name: string;
   document: string;
-  group: string;
+  group: string | null;
+
   plate: string;
   renavam: string;
-  crv: string;
+  crv: string | null;
   brand_model: string;
   type: string;
   details: string;
   status: string;
-  issued_on: string;
+  issued_on: string | null;
 }
 /* END IMPORT VEHICLES */
 
 /* BACKEND */
+export interface IVehiclesFilters {
+  page: number;
+  limit: number;
+
+  client_id?: string;
+  group?: string;
+  plate?: string;
+  renavam?: string;
+  crv?: string;
+  brand_model?: string;
+  plate_end?: string;
+}
 
 export interface IPagination<T> {
   page: {

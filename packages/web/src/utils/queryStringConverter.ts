@@ -1,7 +1,3 @@
-type AnyObject = {
-  [x: string]: string|number|string[]|number[];
-}
-
 function filterNullOrEmpty(str: string|number|null) {
   return str !== null && str.toString().trim() !== '';
 }
@@ -10,7 +6,7 @@ function strTrim(str: string|number) {
   return str.toString().trim();
 }
 
-export function qsConverter(object: AnyObject) {
+export function qsConverter<T>(object: T) {
   const keys = Object.keys(object);
 
   const qsArray = keys.map((key) => {

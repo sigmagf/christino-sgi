@@ -2,6 +2,7 @@ import React from 'react';
 import { FaSearch as SearchIcon } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 
+import { Badge } from '~/components/Badge';
 import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
 import { Table } from '~/components/Table';
@@ -63,7 +64,14 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
               <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <StatusBadge status={vehicle.status} title={statusConverter(vehicle.status)} />
               </td>
-              <td style={{ fontFamily: 'monospace' }}>{ vehicle.client.name }</td>
+              <td style={{ fontFamily: 'monospace' }}>
+                { vehicle.client.name }
+                { vehicle.client.group && (
+                  <Badge>
+                    { vehicle.client.group }
+                  </Badge>
+                )}
+              </td>
               <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.plate }</td>
               <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
               <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>

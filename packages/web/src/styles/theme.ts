@@ -27,8 +27,7 @@ const theme = {
 
   background: '#212429',
   text: '#FFFFFF',
-
-  appNavExpanded: false,
+  shadow: '0 0 4px 4px rgba(29, 31, 35, .25)',
 };
 
 export { theme };

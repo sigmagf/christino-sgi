@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 export const TableContainer = styled.table`
   width: 100%;
-  box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
+  box-shadow: ${({ theme }) => theme.shadow};
   border-radius: 5px;
   overflow: hidden;
   border-collapse: collapse;

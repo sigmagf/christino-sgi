@@ -65,8 +65,21 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
         return;
       }
 
-      const finalResult = await csv2json().fromString(e.target.result as string);
-      setVehiclesToImport(finalResult);
+      const finalResult: IVehiclesImportCSV[] = await csv2json().fromString(e.target.result as string);
+      setVehiclesToImport(finalResult.map((el) => ({
+        name: el.name,
+        document: el.document,
+        group: el.group || null,
+
+        plate: el.plate,
+        renavam: el.renavam,
+        crv: el.crv || null,
+        brand_model: el.brand_model,
+        type: el.type,
+        details: el.details,
+        status: el.status,
+        issued_on: el.issued_on,
+      })));
     };
 
     reader.readAsText(files[0]);

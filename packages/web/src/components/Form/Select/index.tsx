@@ -1,17 +1,17 @@
 import { useField } from '@unform/core';
 import { lighten } from 'polished';
 import React, { useEffect, useRef } from 'react';
-import ReactSelect, { OptionTypeBase, Props as SelectProps } from 'react-select';
+import ReactSelect, { OptionTypeBase, Props } from 'react-select';
 import { useTheme } from 'styled-components';
 
 import { InputContainer } from './styles';
 
-type Input = SelectProps & {
+type SelectProps = Props & {
   label?: string;
   name: string;
 };
 
-const Input: React.FC<Input> = ({ name, label, style, id, ...rest }) => {
+const Select: React.FC<SelectProps> = ({ name, label, style, id, ...rest }) => {
   const selectRef = useRef(null);
   const { fieldName, defaultValue, registerField } = useField(name);
 
@@ -39,13 +39,17 @@ const Input: React.FC<Input> = ({ name, label, style, id, ...rest }) => {
     });
   }, [fieldName, registerField, rest.isMulti]);
 
-  function handleOptionColor<T>(data: T, isDisabled: boolean, isFocused: boolean, isSelected: boolean) {
+  function handleOptionColor(isDisabled: boolean, isFocused: boolean, isSelected: boolean) {
     if(isSelected) {
       return lighten(0.1, theme.secondary.main);
     }
 
     if(isFocused) {
       return lighten(0.2, theme.primary.main);
+    }
+
+    if(isDisabled) {
+      return lighten(0.1, theme.error.main);
     }
 
     return lighten(0.1, theme.primary.main);
@@ -71,7 +75,7 @@ const Input: React.FC<Input> = ({ name, label, style, id, ...rest }) => {
             width: '100%',
             padding: 5,
             borderRadius: 5,
-            boxShadow: '0 0 4px 4px rgba(29, 31, 35, .25)',
+            boxShadow: theme.shadow,
             background: lighten(0.1, theme.primary.main),
             border: `2px solid ${isFocused ? theme.secondary.main : lighten(0.1, theme.primary.main)}`,
           }),
@@ -100,9 +104,9 @@ const Input: React.FC<Input> = ({ name, label, style, id, ...rest }) => {
             height: 25,
             background: lighten(0.1, theme.primary.main),
           }),
-          option: (styles, { data, isDisabled, isFocused, isSelected }) => ({
+          option: (styles, { isDisabled, isFocused, isSelected }) => ({
             ...styles,
-            background: handleOptionColor(data, isDisabled, isFocused, isSelected),
+            background: handleOptionColor(isDisabled, isFocused, isSelected),
           }),
         }}
         {...rest}
@@ -111,4 +115,4 @@ const Input: React.FC<Input> = ({ name, label, style, id, ...rest }) => {
   );
 };
 
-export default Input;
+export default Select;

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 export const StyledToastContainer = styled(ToastContainer)`
   .Toastify__toast {
     border-radius: 5px;
-    box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
+    box-shadow: ${({ theme }) => theme.shadow};
   }
 
   .Toastify__toast--info {

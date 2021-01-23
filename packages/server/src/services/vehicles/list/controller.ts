@@ -19,9 +19,10 @@ export class VehiclesListController {
     const brand_model = req.query.brand_model as string || undefined;
     const status = parseInt(req.query.status as string, 10) || undefined;
     const group = req.query.group as string || undefined;
+    const plate_end = req.query.plate_end as string || undefined;
 
     try {
-      const vehicles = await this.service.execute({ page, limit, filters: { pagination, client_id, status, group, plate, renavam, crv, brand_model } });
+      const vehicles = await this.service.execute({ page, limit, filters: { pagination, plate_end, client_id, status, group, plate, renavam, crv, brand_model } });
 
       return res.status(200).json(vehicles);
     } catch(err) {

@@ -10,6 +10,6 @@ export const BadgeContainer = styled.span<IBadgeContainerStyledPros>`
   padding: 5px;
   margin: 5px;
   font-size: 10px;
-  box-shadow: 0 0 4px 4px rgba(29, 31, 35, .25);
+  box-shadow: ${({ theme }) => theme.shadow};
   border-radius: 5px;
 `;

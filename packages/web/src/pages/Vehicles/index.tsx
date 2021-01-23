@@ -5,7 +5,7 @@ import { Card } from '~/components/Card';
 import { Layout } from '~/components/Layout';
 import { Pagination } from '~/components/Pagination';
 import { useLocalStorage } from '~/hooks';
-import { IPagination, IVehicle } from '~/interfaces';
+import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 
@@ -18,7 +18,7 @@ export const VehiclesPage: React.FC = () => {
   const storage = useLocalStorage();
 
   const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
-  const [filters, setFilters] = useState({ page: 1, limit: 10 });
+  const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10 });
   const [inLoading, setInLoading] = useState(false);
   const [importModalOpen, setImportModalOpen] = useState(false);
 
@@ -63,6 +63,7 @@ export const VehiclesPage: React.FC = () => {
         <VehiclesFiltersCard
           onOpenImportModalClick={() => setImportModalOpen(true)}
           onOpenCreateModalClick={() => console.log('WIP')}
+          onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data }))}
         />
         <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} />
 

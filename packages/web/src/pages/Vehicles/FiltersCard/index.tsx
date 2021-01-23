@@ -1,4 +1,4 @@
-import { FormHandles } from '@unform/core';
+import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import { Button } from '~/components/Button';
 import { Select, Input } from '~/components/Form';
 import { useLocalStorage } from '~/hooks';
-import { IClient } from '~/interfaces';
+import { IClient, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders } from './styles';
@@ -22,9 +22,10 @@ import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders
 interface IVehiclesFiltersCardProps {
   onOpenImportModalClick: () => void;
   onOpenCreateModalClick: () => void;
+  onFiltersApplyClick: (data: SubmitHandler<Omit<IVehiclesFilters, 'page'|'limit'>>) => void;
 }
 
-const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick }) => {
+const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick, onFiltersApplyClick }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
 
@@ -42,7 +43,7 @@ const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreate
   ]);
 
   const plateEnd: NamedProps['options'] = [
-    { value: '-1', label: 'TODOS' },
+    { value: '', label: 'TODOS' },
     { value: '0', label: 'FINAL 0' },
     { value: '1', label: 'FINAL 1' },
     { value: '2', label: 'FINAL 2' },
@@ -88,15 +89,15 @@ const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreate
   return (
     <FiltersCard>
       <FiltersContainer open={open}>
-        <Form ref={formRef} onSubmit={(data) => console.log(data)}>
+        <Form ref={formRef} onSubmit={onFiltersApplyClick}>
           <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} />
-          <Select label="GRUPO" name="client.group" style={{ gridArea: 'CG' }} options={groups} />
+          <Select label="GRUPO" name="group" style={{ gridArea: 'CG' }} options={groups} />
 
           <Input label="PLACA" name="plate" style={{ gridArea: 'VP' }} />
           <Input label="RENAVAM" name="renavam" style={{ gridArea: 'VR' }} />
           <Input label="CRV" name="crv" style={{ gridArea: 'VC' }} />
-          <Input label="MARCA/MODELO" name="renavam" style={{ gridArea: 'VM' }} />
-          <Select label="FINAL DE PLACA" name="plante_end" style={{ gridArea: 'VF' }} options={plateEnd} />
+          <Input label="MARCA/MODELO" name="brand_model" style={{ gridArea: 'VM' }} />
+          <Select label="FINAL DE PLACA" name="plate_end" style={{ gridArea: 'VF' }} options={plateEnd} />
         </Form>
 
         <FiltersHeaders onClick={() => setOpen((old) => !old)}>
