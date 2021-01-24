@@ -19,6 +19,7 @@ export const VehiclesPage: React.FC = () => {
   const storage = useLocalStorage();
 
   const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
+  const [vehicleToDetails, setVehicleToDetails] = useState<IVehicle>();
   const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10 });
   const [inLoading, setInLoading] = useState(false);
 
@@ -49,12 +50,13 @@ export const VehiclesPage: React.FC = () => {
     setInLoading(false);
   }, [filters, storage]);
 
-  const onImportModalClose = useCallback(() => {
-    setImportModalOpen(false);
-    getData();
-  }, [getData]);
+  const onDetailsClick = useCallback((vehicleId: string) => {
+    setVehicleToDetails(vehicles.data.filter((el) => el.id === vehicleId)[0]);
+    setDetailsModalOpen(true);
+  }, [vehicles.data]);
 
-  const onDetailsModalClose = useCallback(() => {
+  const onModalsClose = useCallback(() => {
+    setImportModalOpen(false);
     setDetailsModalOpen(false);
     getData();
   }, [getData]);
@@ -73,7 +75,7 @@ export const VehiclesPage: React.FC = () => {
           onOpenCreateModalClick={() => setDetailsModalOpen(true)}
           onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data }))}
         />
-        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} />
+        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} onDetailsClick={onDetailsClick} />
 
         <Card style={{ margin: '15px 0' }}>
           <Pagination
@@ -85,8 +87,8 @@ export const VehiclesPage: React.FC = () => {
           />
         </Card>
       </Layout>
-      <VehiclesImportModal isOpen={importModalOpen} onClose={onImportModalClose} />
-      <VehiclesDetailsModal isOpen={detailsModalOpen} onClose={onDetailsModalClose} />
+      <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />
+      <VehiclesDetailsModal isOpen={detailsModalOpen} onClose={onModalsClose} vehicle={vehicleToDetails} />
     </>
   );
 };

@@ -21,7 +21,7 @@ interface IImportModalProps {
   onClose: () => void;
 }
 
-interface IRequestError extends Omit<IVehicle, 'id'|'updatedAt'|'createdAt'|'client'> {
+interface IRequestError extends Omit<IVehicle, 'id'|'updated_at'|'created_at'|'client'> {
   error: string;
 }
 
@@ -29,16 +29,16 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
   const storage = useLocalStorage();
 
   const [vehiclesToImport, setVehiclesToImport] = useState<IVehiclesImportCSV[]>([]);
-  const [vehiclesTablePage, setVehiclesTablePage] = useState(1);
+  const [vehiclesToImportTablePage, setVehiclesToImportTablePage] = useState(1);
   const [inLoading, setInLoading] = useState(false);
   const [requestErrorDetails, setRequestErrorDetails] = useState<IRequestError[]>([]);
 
-  const vehiclesPagination = withPagination(vehiclesToImport, vehiclesTablePage, 10);
+  const vehiclesPagination = withPagination(vehiclesToImport, vehiclesToImportTablePage, 10);
 
   const onClearHandle = useCallback(() => {
     setVehiclesToImport([]);
     setInLoading(false);
-    setVehiclesTablePage(1);
+    setVehiclesToImportTablePage(1);
   }, []);
 
   const onVehicleRemove = useCallback((renavam: string) => {
@@ -200,9 +200,9 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
               </Table>
               <Pagination
                 inLoading={inLoading}
-                currentPage={vehiclesTablePage}
+                currentPage={vehiclesToImportTablePage}
                 totalPages={vehiclesPagination.page.total}
-                onNumberClick={(n) => setVehiclesTablePage(n)}
+                onNumberClick={(n) => setVehiclesToImportTablePage(n)}
                 onMaxResultsChange={() => {}}
                 overrideMaxResultsBy={buttonsGroup}
               />

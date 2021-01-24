@@ -9,7 +9,7 @@ type InputMask = Props & {
   name: string;
 };
 
-const InputMask: React.FC<InputMask> = ({ name, label, ...props }) => {
+const InputMask: React.FC<InputMask> = ({ name, label, style, ...props }) => {
   const inputRef = useRef(null);
   const { fieldName, defaultValue, registerField } = useField(name);
 
@@ -28,7 +28,7 @@ const InputMask: React.FC<InputMask> = ({ name, label, ...props }) => {
   }, [fieldName, registerField]);
 
   return (
-    <InputContainer hasLabel={!!label}>
+    <InputContainer hasLabel={!!label} style={style}>
       {label && (
         <label htmlFor={name}>
           { label }

@@ -14,9 +14,10 @@ import { StatusBadge } from './styles';
 interface IVehicleDataTableProps {
   vehicles: IVehicle[];
   inLoading: boolean;
+  onDetailsClick: (id: string) => void;
 }
 
-export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading }) => {
+export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick }) => {
   return (
     <Card style={{ position: 'relative' }}>
       { inLoading && (
@@ -76,7 +77,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
               <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
               <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
               <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>
-                <Button variant="secondary" disabled={inLoading}>
+                <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(vehicle.id)} disabled={inLoading}>
                   <SearchIcon />
                 </Button>
               </td>

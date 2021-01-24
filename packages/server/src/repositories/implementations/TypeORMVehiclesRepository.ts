@@ -102,13 +102,13 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
     return dbData;
   }
 
-  async create(data: Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>): Promise<Vehicle> {
+  async create(data: Omit<Vehicle, 'id'|'created_at'|'updated_at'>): Promise<Vehicle> {
     const dbData = await getRepository(Vehicle).save(data);
 
     return dbData;
   }
 
-  async update(id: string, data: Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>): Promise<Vehicle> {
+  async update(id: string, data: Omit<Vehicle, 'id'|'created_at'|'updated_at'>): Promise<Vehicle> {
     await getRepository(Vehicle).update(id, data);
 
     const newData = await getRepository(Vehicle).findOne({ where: { id } });

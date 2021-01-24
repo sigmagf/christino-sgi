@@ -18,13 +18,7 @@ export class VehiclesImportService {
     const vehicles = await Promise.all(data.map(async (vehicle): Promise<Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'> | null> => {
       if(!vehicle.name || !vehicle.document) {
         errors.push({
-          plate: vehicle.plate,
-          renavam: vehicle.renavam,
-          crv: vehicle.crv === '-' ? null : vehicle.crv,
-          brand_model: vehicle.brand_model,
-          type: vehicle.type,
-          details: vehicle.details || null,
-          issued_on: convertDate(vehicle.issued_on),
+          ...vehicle,
           status: convertStatus(vehicle.status.toLowerCase()),
           error: 'Client name or document are null or invalid',
         });
@@ -34,15 +28,9 @@ export class VehiclesImportService {
 
       if(!vehicle.plate || !vehicle.renavam || !vehicle.brand_model || !vehicle.type) {
         errors.push({
-          plate: vehicle.plate,
-          renavam: vehicle.renavam,
-          crv: vehicle.crv === '-' ? null : vehicle.crv,
-          brand_model: vehicle.brand_model,
-          type: vehicle.type,
-          details: vehicle.details || null,
-          issued_on: convertDate(vehicle.issued_on),
+          ...vehicle,
           status: convertStatus(vehicle.status.toLowerCase()),
-          error: 'Vehicle plate, renavam, brandModel or type are null or invalid',
+          error: 'Vehicle plate, renavam, brand_model or type are null or invalid',
         });
 
         return null;
@@ -63,18 +51,11 @@ export class VehiclesImportService {
           brand_model: vehicle.brand_model.trim(),
           type: vehicle.type.trim(),
           details: vehicle.details || null,
-          issued_on: convertDate(vehicle.issued_on),
           status: convertStatus(vehicle.status.toLowerCase()),
         };
       } catch(err) {
         errors.push({
-          plate: vehicle.plate,
-          renavam: vehicle.renavam,
-          crv: vehicle.crv === '-' ? null : vehicle.crv,
-          brand_model: vehicle.brand_model,
-          type: vehicle.type,
-          details: vehicle.details || null,
-          issued_on: convertDate(vehicle.issued_on),
+          ...vehicle,
           status: convertStatus(vehicle.status.toLowerCase()),
           error: err.message || 'Unexprected error',
         });

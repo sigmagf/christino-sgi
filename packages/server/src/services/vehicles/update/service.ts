@@ -1,8 +1,6 @@
-import { Client } from '~/entities/Client';
 import { Vehicle } from '~/entities/Vehicle';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
-import { convertDate } from '~/utils/convertDate';
 import { convertStatus } from '~/utils/convertStatus';
 
 import { IVehiclesUpdateRequestDTO } from './dto';
@@ -14,15 +12,13 @@ export class VehiclesUpdateService {
   ) { }
 
   async execute(data: IVehiclesUpdateRequestDTO): Promise<Vehicle> {
-    let client: Client;
+    console.log(data);
 
-    if(!data.document) {
-      client = await this.clientsRepo.create({
-        name: data.name,
-        document: data.document,
-        group: data.group,
-      });
-    }
+    const client = await this.clientsRepo.create({
+      name: data.name,
+      document: data.document,
+      group: data.group,
+    });
 
     const vehicle = await this.vehiclesRepo.update(data.id, {
       client_id: client.id || null,
@@ -32,7 +28,6 @@ export class VehiclesUpdateService {
       brand_model: data.brand_model,
       type: data.type,
       details: data.details || null,
-      issued_on: convertDate(data.issued_on),
       status: convertStatus(data.status),
     });
 

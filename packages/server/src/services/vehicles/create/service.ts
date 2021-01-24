@@ -35,7 +35,6 @@ export class VehiclesCreateService {
       brand_model: data.brand_model,
       type: data.type,
       details: data.details || null,
-      issued_on: convertDate(data.issued_on),
       status: convertStatus(data.status.toLowerCase()),
     });
 

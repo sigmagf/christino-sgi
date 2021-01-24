@@ -11,5 +11,4 @@ export interface IVehiclesCreateRequestDTO {
   type: string;
   details: string;
   status: string;
-  issued_on: string;
 }

@@ -31,9 +31,6 @@ export class Vehicle {
     @Column('smallint', { default: 1 })
     status: number;
 
-    @Column('timestamp without time zone', { default: Date.now(), nullable: true })
-    issued_on: Date;
-
     @CreateDateColumn()
     created_at?: Date;
 

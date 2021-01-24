@@ -1,8 +1,9 @@
-export function statusConverter(status: number) {
+export function statusConverter(status: number|string) {
   const stNum = parseInt(status.toString(), 10);
 
   switch(stNum) {
     default:
+      return '';
     case 0:
       return 'BAIXADO';
     case 1:
