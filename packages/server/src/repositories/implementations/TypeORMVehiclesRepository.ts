@@ -10,7 +10,8 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
   private makeSpecialWhereString(filters: IVehiclesListFilters) {
     const filtersPart: string[] = [];
 
-    filtersPart.push(filters.client_id ? `c.id = ${filters.client_id}` : null);
+    filtersPart.push(filters.client_id ? `c.id = '${filters.client_id}'` : null);
+
     if(filters.group === '-1') {
       filtersPart.push('c.group IS NULL');
     } else {
@@ -21,7 +22,7 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
     filtersPart.push(filters.renavam ? `v.renavam LIKE '%${filters.renavam}%'` : null);
     filtersPart.push(filters.crv ? `v.crv LIKE '%${filters.crv}%'` : null);
     filtersPart.push(filters.brand_model ? `v.brand_model LIKE '%${filters.brand_model}%'` : null);
-    filtersPart.push(filters.status ? `v.status LIKE '%${filters.status}%'` : null);
+    filtersPart.push(filters.status ? `v.status = ${filters.status}` : null);
 
     filtersPart.push(filters.plate_end ? `v.plate LIKE '%${filters.plate_end}'` : null);
 
@@ -32,7 +33,12 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
     const whereString = this.makeSpecialWhereString(filters);
 
     if(filters.pagination) {
-      const maxRows = await getRepository(Vehicle).count();
+      const maxRows = await getRepository(Vehicle)
+        .createQueryBuilder('v')
+        .leftJoinAndMapOne('v.client', Client, 'c', 'v.client_id = c.id')
+        .where(whereString)
+        .getCount();
+
       const pages = Math.ceil(maxRows / limit);
       const startIndex = (page - 1) * limit;
 

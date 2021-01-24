@@ -26,8 +26,14 @@ export const FiltersContainer = styled.div<IFiltersContainerStyledProps>`
     grid-gap: 10px;
 
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-areas: 'CN CN CN CN CG CG'
+    grid-template-areas: 'CN CN CN CN CG VS'
                          'VP VR VC VM VM VF';
+  }
+
+  form {
+    input, select {
+      text-transform: uppercase;
+    }
   }
 `;
 

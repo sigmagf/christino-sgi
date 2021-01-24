@@ -50,6 +50,14 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     { value: '9', label: 'FINAL 9' },
   ];
 
+  const status: NamedProps['options'] = [
+    { value: '', label: 'TODOS' },
+    { value: '0', label: 'BAIXADO' },
+    { value: '1', label: 'CRLVe' },
+    { value: '2', label: 'CRV' },
+    { value: '3', label: 'OUTRO' },
+  ];
+
   const getClients = useCallback(async () => {
     try {
       const response = await api.get<IClient[]>('/clients?noPagination=true', {
@@ -86,6 +94,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
         <Form ref={formRef} onSubmit={onFiltersApplyClick}>
           <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} />
           <Select label="GRUPO" name="group" style={{ gridArea: 'CG' }} options={groups} />
+          <Select label="GRUPO" name="status" style={{ gridArea: 'VS' }} options={status} />
 
           <Input label="PLACA" name="plate" style={{ gridArea: 'VP' }} />
           <Input label="RENAVAM" name="renavam" style={{ gridArea: 'VR' }} />

@@ -31,10 +31,7 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
 
     padding: 5px;
 
-    background: none;
-    border: none;
-    color: white;
-
+    color: ${({ theme }) => theme.primary.contrastText};
     border-radius: 5px;
     box-shadow: ${({ theme }) => theme.shadow};
     background: ${({ theme }) => lighten(0.1, theme.primary.main)};

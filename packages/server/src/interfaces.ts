@@ -10,12 +10,13 @@ export interface IPagination<T> {
   data: Array<T>;
 }
 
-export interface IClientsListFilters extends Pick<Client, 'name'|'group'> {
+export interface IClientsListFilters extends Pick<Client, 'name'|'document'|'group'> {
   pagination: boolean;
 }
 
-export interface IVehiclesListFilters extends Omit<Vehicle, 'id'|'client'|'type'|'details'|'issued_on'|'created_at'|'updated_at'> {
+export interface IVehiclesListFilters extends Omit<Vehicle, 'id'|'client'|'type'|'details'|'status'|'created_at'|'updated_at'> {
   pagination: boolean;
+  status: string;
   group: string;
   plate_end: string;
 }

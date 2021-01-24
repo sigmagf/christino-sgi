@@ -58,6 +58,7 @@ export const VehiclesPage: React.FC = () => {
   const onModalsClose = useCallback(() => {
     setImportModalOpen(false);
     setDetailsModalOpen(false);
+    setVehicleToDetails(undefined);
     getData();
   }, [getData]);
 
@@ -73,7 +74,7 @@ export const VehiclesPage: React.FC = () => {
         <VehiclesFiltersCard
           onOpenImportModalClick={() => setImportModalOpen(true)}
           onOpenCreateModalClick={() => setDetailsModalOpen(true)}
-          onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data }))}
+          onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, page: 1, ...data }))}
         />
         <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} onDetailsClick={onDetailsClick} />
 

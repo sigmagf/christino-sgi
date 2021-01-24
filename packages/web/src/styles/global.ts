@@ -41,6 +41,10 @@ export const GlobalStyle = createGlobalStyle`
     outline: 0;
     font: 14px "Roboto", -apple-system, system-ui, sans-serif;
   }
+  
+  input, select {
+    font-family: 'monospace'
+  }
 
   ::placeholder, ::-ms-input-placeholder, :-ms-input-placeholder {
     font-family: "Roboto", -apple-system, system-ui, sans-serif;

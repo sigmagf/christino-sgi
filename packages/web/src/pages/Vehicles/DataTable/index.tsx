@@ -21,7 +21,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
   return (
     <Card style={{ position: 'relative' }}>
       { inLoading && (
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+      <div style={{ position: 'absolute', marginTop: 25, top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <ReactLoading type="bars" />
       </div>
       )}
@@ -40,14 +40,6 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
         <tbody>
           {inLoading && (
             <>
-              <tr><td colSpan={6} /></tr>
-              <tr><td colSpan={6} /></tr>
-              <tr><td colSpan={6} /></tr>
-              <tr><td colSpan={6} /></tr>
-              <tr><td colSpan={6} /></tr>
-              <tr><td colSpan={6} /></tr>
-              <tr><td colSpan={6} /></tr>
-              <tr><td colSpan={6} /></tr>
               <tr><td colSpan={6} /></tr>
               <tr><td colSpan={6} /></tr>
             </>

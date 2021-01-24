@@ -1,7 +1,6 @@
 import { Vehicle } from '~/entities/Vehicle';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
-import { convertDate } from '~/utils/convertDate';
 import { convertStatus } from '~/utils/convertStatus';
 
 import { errorType, IVehiclesImportRequestDTO } from './dto';

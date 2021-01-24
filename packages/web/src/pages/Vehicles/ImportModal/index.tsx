@@ -1,6 +1,6 @@
 import csv2json from 'csvtojson';
 import React, { useCallback, useState } from 'react';
-import { FaTimes, FaTrash, FaUpload } from 'react-icons/fa';
+import { FaEraser, FaTrash, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
@@ -55,18 +55,17 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
       if(e.target) {
         const finalResult: IVehiclesImportCSV[] = await csv2json().fromString(e.target.result as string);
         setVehiclesToImport(finalResult.map((el) => ({
-          name: el.name,
-          document: el.document,
-          group: el.group || null,
+          name: (el.name || '').toUpperCase(),
+          document: (el.document || '').toUpperCase(),
+          group: el.group ? el.group.toUpperCase() : null,
 
-          plate: el.plate,
-          renavam: el.renavam,
+          plate: (el.plate || '').toUpperCase(),
+          renavam: el.renavam || '',
           crv: el.crv || null,
-          brand_model: el.brand_model,
-          type: el.type,
-          details: el.details,
-          status: el.status,
-          issued_on: el.issued_on,
+          brand_model: (el.brand_model || '').toUpperCase(),
+          type: (el.type || '').toUpperCase(),
+          details: (el.details || '').toUpperCase(),
+          status: (el.status || '').toUpperCase(),
         })));
       }
     };
@@ -88,6 +87,7 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
       });
 
       toast.success('Arquivo enviado com sucesso!');
+      onClose();
     } catch(err) {
       if(err.message === 'Network Error' || !err.response) {
         toast.error('Verifique sua conexão com a internet.');
@@ -102,7 +102,7 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
 
     setInLoading(false);
     onClearHandle();
-  }, [onClearHandle, storage, vehiclesToImport]);
+  }, [onClearHandle, onClose, storage, vehiclesToImport]);
 
   const onCloseHandle = () => {
     setRequestErrorDetails([]);
@@ -113,11 +113,11 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
 
   const buttonsGroup = (
     <>
-      <Button variant="error" onClick={onClearHandle} disabled={inLoading}>
-        <FaTrash />&nbsp;&nbsp;&nbsp;Limpar
-      </Button>
       <Button variant="success" onClick={onSendHandle} disabled={inLoading}>
         <FaUpload />&nbsp;&nbsp;&nbsp;Enviar lote
+      </Button>
+      <Button variant="error" onClick={onClearHandle} disabled={inLoading}>
+        <FaEraser />&nbsp;&nbsp;&nbsp;Limpar
       </Button>
     </>
   );
@@ -191,7 +191,7 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                           disabled={inLoading}
                           onClick={() => onVehicleRemove(vehicle.renavam)}
                         >
-                          <FaTimes />
+                          <FaTrash />
                         </Button>
                       </td>
                     </tr>

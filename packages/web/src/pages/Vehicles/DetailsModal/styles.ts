@@ -5,7 +5,7 @@ import styled from 'styled-components';
 export const DetailsModalContainer = styled(Form)`
   display: grid;
   gap: 15px;
-
+  text-transform: uppercase;
   grid-template-columns: 90px 70px 40px 40px 70px;
 
   grid-template-areas: 'CN CN CN CN CN'
@@ -15,10 +15,6 @@ export const DetailsModalContainer = styled(Form)`
                        'VM VM VM VM VM'
                        'VT VT VT VS VS'
                        'AB AB AB AB AB';
-
-  input, select {
-    font-family: 'monospace';
-  }
 
   .action-buttons {
     display: flex;

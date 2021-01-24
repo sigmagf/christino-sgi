@@ -1,4 +1,4 @@
-export function convertStatus(status: string): 0|1|2|3 {
+export function convertStatus(status: string) {
   switch(status) {
     case '0':
     case 'baixado': return 0;

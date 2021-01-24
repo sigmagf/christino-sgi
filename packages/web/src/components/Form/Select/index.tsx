@@ -1,8 +1,6 @@
 import { useField } from '@unform/core';
-import { lighten } from 'polished';
 import React, { useEffect, useRef } from 'react';
 import ReactSelect, { OptionTypeBase, Props } from 'react-select';
-import { useTheme } from 'styled-components';
 
 import { InputContainer } from './styles';
 
@@ -14,8 +12,6 @@ type SelectProps = Props & {
 const Select: React.FC<SelectProps> = ({ name, label, style, id, ...rest }) => {
   const selectRef = useRef(null);
   const { fieldName, defaultValue, registerField } = useField(name);
-
-  const theme = useTheme();
 
   useEffect(() => {
     registerField({
@@ -39,22 +35,6 @@ const Select: React.FC<SelectProps> = ({ name, label, style, id, ...rest }) => {
     });
   }, [fieldName, registerField, rest.isMulti]);
 
-  function handleOptionColor(isDisabled: boolean, isFocused: boolean, isSelected: boolean) {
-    if(isSelected) {
-      return lighten(0.1, theme.secondary.main);
-    }
-
-    if(isFocused) {
-      return lighten(0.2, theme.primary.main);
-    }
-
-    if(isDisabled) {
-      return lighten(0.1, theme.error.main);
-    }
-
-    return lighten(0.1, theme.primary.main);
-  }
-
   return (
     <InputContainer hasLabel={!!label} style={style} id={id}>
       {label && (
@@ -67,48 +47,6 @@ const Select: React.FC<SelectProps> = ({ name, label, style, id, ...rest }) => {
         ref={selectRef}
         classNamePrefix="react-select"
         id={name}
-        styles={{
-          control: (styles, { isFocused }) => ({
-            ...styles,
-            height: 40,
-            minWidth: 125,
-            width: '100%',
-            padding: 5,
-            borderRadius: 5,
-            boxShadow: theme.shadow,
-            background: lighten(0.1, theme.primary.main),
-            border: `2px solid ${isFocused ? theme.secondary.main : lighten(0.1, theme.primary.main)}`,
-          }),
-          multiValue: (styles) => ({
-            ...styles,
-            color: theme.primary.contrastText,
-          }),
-          singleValue: (styles) => ({
-            ...styles,
-            color: theme.primary.contrastText,
-          }),
-          valueContainer: (styles) => ({
-            ...styles,
-            height: 25,
-          }),
-          indicatorsContainer: (styles) => ({
-            ...styles,
-            height: 25,
-          }),
-          input: (styles) => ({
-            ...styles,
-            color: theme.primary.contrastText,
-          }),
-          menu: (styles) => ({
-            ...styles,
-            height: 25,
-            background: lighten(0.1, theme.primary.main),
-          }),
-          option: (styles, { isDisabled, isFocused, isSelected }) => ({
-            ...styles,
-            background: handleOptionColor(isDisabled, isFocused, isSelected),
-          }),
-        }}
         {...rest}
       />
     </InputContainer>

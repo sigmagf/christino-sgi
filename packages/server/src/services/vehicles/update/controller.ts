@@ -9,14 +9,14 @@ export class VehiclesUpdateController {
 
   async handle(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
-    const { name, document, group, plate, renavam, cla, crv, brand_model, type, details, issued_on, status } = req.body;
+    const { name, document, group, plate, renavam, cla, crv, brand_model, type, details, status } = req.body;
 
     try {
       if(!id) {
         throw new Error('Vehicle not found');
       }
 
-      const user = await this.service.execute({ id, name, document, group, plate, renavam, cla, crv, brand_model, type, details, issued_on, status });
+      const user = await this.service.execute({ id, name, document, group, plate, renavam, cla, crv, brand_model, type, details, status });
 
       return res.status(200).json(user);
     } catch(err) {

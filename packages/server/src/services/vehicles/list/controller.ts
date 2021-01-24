@@ -17,7 +17,8 @@ export class VehiclesListController {
     const renavam = req.query.renavam as string || undefined;
     const crv = req.query.crv as string || undefined;
     const brand_model = req.query.brand_model as string || undefined;
-    const status = parseInt(req.query.status as string, 10) || undefined;
+    const status = req.query.status as string || undefined;
+
     const group = req.query.group as string || undefined;
     const plate_end = req.query.plate_end as string || undefined;
 
