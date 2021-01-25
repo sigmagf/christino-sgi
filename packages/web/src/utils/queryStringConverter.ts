@@ -3,19 +3,19 @@ function filterNullOrEmpty(str: string|number|null) {
 }
 
 function strTrim(str: string|number) {
-  return str.toString().trim();
+  return str.toString().trim().replaceAll('&', '%26');
 }
 
 export function qsConverter<T>(object: T) {
   const keys = Object.keys(object);
 
   const qsArray = keys.map((key) => {
-    if(object[key] === null || (!Array.isArray(object[key]) && strTrim(object[key] as string|number) === '')) {
+    if(object[key] === null || (!Array.isArray(object[key]) && strTrim(object[key]) === '')) {
       return null;
     }
 
     if(!Array.isArray(object[key])) {
-      return `${key}=${strTrim(object[key] as string|number)}`;
+      return `${key}=${strTrim(object[key])}`;
     }
 
     return (object[key] as Array<string|number>).filter(filterNullOrEmpty).map((el) => `${key}=${strTrim(el)}`).join('&');

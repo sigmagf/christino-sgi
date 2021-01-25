@@ -25,9 +25,9 @@ export const FiltersContainer = styled.div<IFiltersContainerStyledProps>`
     display: grid;
     grid-gap: 10px;
 
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
-    grid-template-areas: 'CN CN CN CN CG VS'
-                         'VP VR VC VM VM VF';
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-areas: 'CN CN CN CN CN CN CN CG CG VS VS VS'
+                         'VP VR VR VC VC VM VM VM VM VM VF VF';
   }
 
   form {

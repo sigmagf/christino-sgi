@@ -22,7 +22,18 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
     filtersPart.push(filters.renavam ? `v.renavam LIKE '%${filters.renavam}%'` : null);
     filtersPart.push(filters.crv ? `v.crv LIKE '%${filters.crv}%'` : null);
     filtersPart.push(filters.brand_model ? `v.brand_model LIKE '%${filters.brand_model}%'` : null);
-    filtersPart.push(filters.status ? `v.status = ${filters.status}` : null);
+
+    if(Array.isArray(filters.status)) {
+      const statusPart: string[] = [];
+
+      filters.status.forEach((el) => {
+        statusPart.push(el ? `v.status = ${el}` : null);
+      });
+
+      filtersPart.push(statusPart.join(' OR '));
+    } else {
+      filtersPart.push(filters.status ? `v.status = ${filters.status}` : null);
+    }
 
     filtersPart.push(filters.plate_end ? `v.plate LIKE '%${filters.plate_end}'` : null);
 

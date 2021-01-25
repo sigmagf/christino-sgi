@@ -20,7 +20,7 @@ export const VehiclesPage: React.FC = () => {
 
   const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
   const [vehicleToDetails, setVehicleToDetails] = useState<IVehicle>();
-  const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10 });
+  const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
   const [inLoading, setInLoading] = useState(false);
 
   const [importModalOpen, setImportModalOpen] = useState(false);
@@ -35,6 +35,10 @@ export const VehiclesPage: React.FC = () => {
           authorization: `Bearer ${storage.getItem('token')}`,
         },
       });
+
+      if(response.data.page.total < filters.page) {
+        setFilters((old) => ({ ...old, page: response.data.page.total }));
+      }
 
       setVehicles(response.data);
     } catch(err) {
@@ -74,7 +78,7 @@ export const VehiclesPage: React.FC = () => {
         <VehiclesFiltersCard
           onOpenImportModalClick={() => setImportModalOpen(true)}
           onOpenCreateModalClick={() => setDetailsModalOpen(true)}
-          onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, page: 1, ...data }))}
+          onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data, page: 1 }))}
         />
         <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} onDetailsClick={onDetailsClick} />
 
@@ -85,6 +89,7 @@ export const VehiclesPage: React.FC = () => {
             inLoading={inLoading}
             onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
             onMaxResultsChange={() => console.log('onMaxResultsChange')}
+            overrideMaxResultsBy={<></>}
           />
         </Card>
       </Layout>

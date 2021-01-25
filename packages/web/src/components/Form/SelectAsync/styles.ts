@@ -4,7 +4,6 @@ import styled from 'styled-components';
 interface IInputContainerStyledProps {
   hasLabel: boolean;
   hideControls: boolean;
-  isMulti: boolean;
 }
 
 export const InputContainer = styled.div<IInputContainerStyledProps>`
@@ -44,11 +43,6 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
     }
 
     .react-select__value-container {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex-wrap: nowrap;
-
       .react-select__single-value {
         color: ${({ theme }) => theme.primary.contrastText};
         font-family: monospace;

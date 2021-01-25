@@ -40,6 +40,7 @@ export interface IVehiclesFilters {
   crv?: string;
   brand_model?: string;
   plate_end?: string;
+  status: number|number[];
 }
 
 export interface IPagination<T> {

@@ -1,18 +1,20 @@
 import { useField } from '@unform/core';
 import React, { useEffect, useRef } from 'react';
-import ReactSelect, { OptionTypeBase, Props } from 'react-select';
+import { OptionTypeBase } from 'react-select';
+import ReactSelect, { AsyncProps } from 'react-select/async';
 
 import { InputContainer } from './styles';
 
-type SelectProps = Omit<Props, 'isMulti'> & {
+type SelectProps = AsyncProps<OptionTypeBase> & {
   label?: string;
   name: string;
-  isMulti?: boolean;
+  style: React.CSSProperties;
+  id?: string;
   hideControls?: boolean;
   placeholder?: string;
 };
 
-const Select: React.FC<SelectProps> = ({ name, label, style, id, hideControls, placeholder, ...rest }) => {
+const SelectAsync: React.FC<SelectProps> = ({ name, label, style, id, hideControls, placeholder, ...rest }) => {
   const selectRef = useRef(null);
   const { fieldName, defaultValue, registerField } = useField(name);
 
@@ -21,14 +23,6 @@ const Select: React.FC<SelectProps> = ({ name, label, style, id, hideControls, p
       name: fieldName,
       ref: selectRef.current,
       getValue: (ref: any) => {
-        if(rest.isMulti) {
-          if(!ref.state.value) {
-            return [];
-          }
-
-          return ref.state.value.map((option: OptionTypeBase) => option.value);
-        }
-
         if(!ref.state.value) {
           return '';
         }
@@ -36,10 +30,10 @@ const Select: React.FC<SelectProps> = ({ name, label, style, id, hideControls, p
         return ref.state.value.value;
       },
     });
-  }, [fieldName, registerField, rest.isMulti]);
+  }, [fieldName, registerField]);
 
   return (
-    <InputContainer hasLabel={!!label} style={style} id={id} hideControls={hideControls || false} isMulti={rest.isMulti || false}>
+    <InputContainer hasLabel={!!label} style={style} id={id} hideControls={hideControls || false}>
       {label && (
         <label htmlFor={name}>
           { label }
@@ -50,7 +44,6 @@ const Select: React.FC<SelectProps> = ({ name, label, style, id, hideControls, p
         ref={selectRef}
         classNamePrefix="react-select"
         id={name}
-        isClearable={false}
         placeholder={placeholder || ''}
         {...rest}
       />
@@ -58,4 +51,4 @@ const Select: React.FC<SelectProps> = ({ name, label, style, id, hideControls, p
   );
 };
 
-export default Select;
+export default SelectAsync;
