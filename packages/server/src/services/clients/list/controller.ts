@@ -12,9 +12,9 @@ export class ClientsListController {
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
-    const name = req.query.name as string || undefined;
-    const document = req.query.document as string || undefined;
-    const group = req.query.group as string || undefined;
+    const name = req.query.name ? (req.query.name as string).toUpperCase() : undefined;
+    const document = req.query.document ? (req.query.document as string).toUpperCase() : undefined;
+    const group = req.query.group ? (req.query.group as string).toUpperCase() : undefined;
 
     try {
       const clients = await this.service.execute({ page, limit, filters: { pagination, name, document, group } });

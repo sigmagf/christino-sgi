@@ -3,6 +3,7 @@ import { IClientsListFilters, IPagination } from '~/interfaces';
 
 export interface IClientsRepository {
   list(page: number, limit: number, filters: IClientsListFilters): Promise<IPagination<Client> | Client[]>;
+  listGroups(): Promise<string[]>;
   findById(id: string): Promise<Client>;
   findByDocument(document: string): Promise<Client>;
 

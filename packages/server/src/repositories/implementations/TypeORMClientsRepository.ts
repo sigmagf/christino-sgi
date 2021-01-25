@@ -47,6 +47,17 @@ export class TypeORMClientsRepository implements IClientsRepository {
     return dbData;
   }
 
+  async listGroups(): Promise<string[]> {
+    const dbData = await getRepository(Client).createQueryBuilder('c')
+      .distinct(true)
+      .select('c.group')
+      .where('c.group IS NOT NULL')
+      .orderBy('c.group', 'ASC')
+      .getRawMany();
+
+    return dbData.map((client) => client.c_group);
+  }
+
   async findById(id: string): Promise<Client> {
     const dbData = await getRepository(Client).findOne({ where: { id }, order: { name: 'ASC' } });
     return dbData;

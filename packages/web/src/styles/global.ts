@@ -43,7 +43,7 @@ export const GlobalStyle = createGlobalStyle`
   }
   
   input, select {
-    font-family: 'monospace'
+    font-family: 'Roboto Mono', monospace;
   }
 
   ::placeholder, ::-ms-input-placeholder, :-ms-input-placeholder {

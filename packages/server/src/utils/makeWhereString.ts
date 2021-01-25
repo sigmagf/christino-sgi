@@ -12,7 +12,7 @@ export function makeWhereString(obj: Record<string, any>, like = true, prefix?: 
           statusPart.push(like ? `${keyName} LIKE '%${el}%'` : `${keyName} = '${el}'`);
         });
 
-        whereArr.push(statusPart.join(' OR '));
+        whereArr.push(`(${statusPart.join(' OR ')})`);
       } else if(obj[key].toString().trim()) {
         whereArr.push(like ? `${keyName} LIKE '%${obj[key]}%'` : `${keyName} = '${obj[key]}'`);
       }

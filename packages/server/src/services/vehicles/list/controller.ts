@@ -27,7 +27,6 @@ export class VehiclesListController {
 
       return res.status(200).json(vehicles);
     } catch(err) {
-      console.log(err);
       return res.status(400).json(errorWork(err.message || null));
     }
   }

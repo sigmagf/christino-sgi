@@ -30,7 +30,7 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
         statusPart.push(el ? `v.status = ${el}` : null);
       });
 
-      filtersPart.push(statusPart.join(' OR '));
+      filtersPart.push(`(${statusPart.join(' OR ')})`);
     } else {
       filtersPart.push(filters.status ? `v.status = ${filters.status}` : null);
     }

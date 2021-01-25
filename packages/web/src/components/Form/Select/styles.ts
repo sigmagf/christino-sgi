@@ -3,8 +3,6 @@ import styled from 'styled-components';
 
 interface IInputContainerStyledProps {
   hasLabel: boolean;
-  hideControls: boolean;
-  isMulti: boolean;
 }
 
 export const InputContainer = styled.div<IInputContainerStyledProps>`
@@ -39,10 +37,6 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
       box-shadow: 0 0 4px 4px ${({ theme }) => transparentize(0.95, theme.secondary.main)};
     }
 
-    .react-select__indicators {
-      display: ${({ hideControls }) => (hideControls ? 'none' : 'unset')};
-    }
-
     .react-select__value-container {
       display: flex;
       justify-content: flex-start;
@@ -51,12 +45,12 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
 
       .react-select__single-value {
         color: ${({ theme }) => theme.primary.contrastText};
-        font-family: monospace;
+        font-family: 'Roboto Mono', monospace;
       }
 
       input {
         color: ${({ theme }) => theme.primary.contrastText} !important;
-        font-family: monospace;
+        font-family: 'Roboto Mono', monospace;
 
         ::placeholder {
           color: rgba(255, 255, 255, .75);
@@ -65,15 +59,26 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
     }
   }
 
-  .react-select__menu,
+  .react-select__menu {
+    background: ${({ theme }) => lighten(0.1, theme.primary.main)};
+    border-radius: 5px;
+    overflow: hidden;
+  }
+
   .react-select__menu-list {
     background: ${({ theme }) => lighten(0.1, theme.primary.main)};
     color: ${({ theme }) => theme.primary.contrastText};
     border-radius: 5px;
-    overflow: hidden;
+    
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track { background: ${({ theme }) => lighten(0.2, theme.primary.main)}; }
+    ::-webkit-scrollbar-thumb { background: ${({ theme }) => transparentize(0.75, theme.secondary.main)}; }
+    ::-webkit-scrollbar-thumb:hover { background: ${({ theme }) => transparentize(0.50, theme.secondary.main)}; }
 
     .react-select__option {
-      font-family: monospace;
+      font-family: 'Roboto Mono', monospace;
     }
 
     .react-select__option--is-focused,

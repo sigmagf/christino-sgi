@@ -4,15 +4,13 @@ import ReactSelect, { OptionTypeBase, Props } from 'react-select';
 
 import { InputContainer } from './styles';
 
-type SelectProps = Omit<Props, 'isMulti'> & {
+interface ISelectProps extends Props<OptionTypeBase, boolean> {
   label?: string;
   name: string;
-  isMulti?: boolean;
-  hideControls?: boolean;
   placeholder?: string;
-};
+}
 
-const Select: React.FC<SelectProps> = ({ name, label, style, id, hideControls, placeholder, ...rest }) => {
+const Select: React.FC<ISelectProps> = ({ name, label, style, id, placeholder, ...rest }) => {
   const selectRef = useRef(null);
   const { fieldName, defaultValue, registerField } = useField(name);
 
@@ -39,7 +37,7 @@ const Select: React.FC<SelectProps> = ({ name, label, style, id, hideControls, p
   }, [fieldName, registerField, rest.isMulti]);
 
   return (
-    <InputContainer hasLabel={!!label} style={style} id={id} hideControls={hideControls || false} isMulti={rest.isMulti || false}>
+    <InputContainer hasLabel={!!label} style={style} id={id}>
       {label && (
         <label htmlFor={name}>
           { label }
@@ -50,7 +48,6 @@ const Select: React.FC<SelectProps> = ({ name, label, style, id, hideControls, p
         ref={selectRef}
         classNamePrefix="react-select"
         id={name}
-        isClearable={false}
         placeholder={placeholder || ''}
         {...rest}
       />
