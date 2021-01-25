@@ -8,9 +8,9 @@ export class ClientsCreateController {
   constructor(private service: ClientsCreateService) { }
 
   async handle(req: Request, res: Response): Promise<Response> {
-    const name = req.body.name ? (req.body.name as string).toUpperCase() : null;
-    const document = req.body.document ? (req.body.document as string).toUpperCase() : null;
-    const group = req.body.group ? (req.body.group as string).toUpperCase() : null;
+    const name = req.body.name ? (req.body.name as string).toUpperCase() : undefined;
+    const document = req.body.document ? (req.body.document as string).toUpperCase() : undefined;
+    const group = req.body.group ? (req.body.group as string).toUpperCase() : undefined;
 
     try {
       if(!name || !document) {

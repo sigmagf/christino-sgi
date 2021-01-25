@@ -2,14 +2,14 @@ import { Request, Response } from 'express';
 
 import { errorWork } from '~/utils/errorWork';
 
-import { IUsersAuthRequestDTO } from './dto';
 import { UsersAuthService } from './service';
 
 export class UsersAuthController {
   constructor(private service: UsersAuthService) { }
 
   async handle(req: Request, res: Response): Promise<Response> {
-    const { email, password } = req.body as IUsersAuthRequestDTO;
+    const email = req.body.email ? (req.body.email as string).toLowerCase() : undefined;
+    const password = req.body.password ? (req.body.password as string).trim() : undefined;
 
     try {
       if(!email || !password) {
