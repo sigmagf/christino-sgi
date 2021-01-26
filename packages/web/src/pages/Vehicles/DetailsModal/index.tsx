@@ -124,7 +124,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
       if(vehicle) {
         onDocumentFocus();
 
-        await api.put(`/vehicles/${vehicle.id}`, data, {
+        await api.put(`/vehicles/${vehicle.id}`, {...data, document: data.document.replace(/\D/g, '') }, {
           headers: {
             authorization: `Bearer ${storage.getItem('token')}`,
           },
