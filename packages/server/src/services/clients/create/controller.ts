@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { errorWork } from '~/utils/errorWork';
+import { stringFix } from '~/utils/stringFix';
 
 import { ClientsCreateService } from './service';
 
@@ -8,9 +9,9 @@ export class ClientsCreateController {
   constructor(private service: ClientsCreateService) { }
 
   async handle(req: Request, res: Response): Promise<Response> {
-    const name = req.body.name ? (req.body.name as string).toUpperCase() : undefined;
-    const document = req.body.document ? (req.body.document as string).toUpperCase() : undefined;
-    const group = req.body.group ? (req.body.group as string).toUpperCase() : undefined;
+    const name = stringFix(req.body.name, undefined, 'UPPERCASE');
+    const document = stringFix(req.body.document, undefined, 'UPPERCASE');
+    const group = stringFix(req.body.group, undefined, 'UPPERCASE');
 
     try {
       if(!name || !document) {

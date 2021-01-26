@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { errorWork } from '~/utils/errorWork';
+import { stringFix } from '~/utils/stringFix';
 
 import { VehiclesListService } from './service';
 
@@ -10,17 +11,16 @@ export class VehiclesListController {
   async handle(req: Request, res: Response): Promise<Response> {
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
+
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
-
-    const client_id = req.query.client_id as string || undefined;
-    const plate = req.query.plate ? (req.query.plate as string).trim().toUpperCase() : undefined;
-    const renavam = req.query.renavam as string || undefined;
-    const crv = req.query.crv as string || undefined;
-    const brand_model = req.query.brand_model ? (req.query.brand_model as string).toUpperCase() : undefined;
-    const status = req.query.status as string || undefined;
-
-    const group = req.query.group as string || undefined;
-    const plate_end = req.query.plate_end as string || undefined;
+    const client_id = stringFix(req.query.client_id, undefined);
+    const group = stringFix(req.query.group, undefined, 'UPPERCASE');
+    const plate = stringFix(req.query.plate, undefined, 'UPPERCASE');
+    const renavam = stringFix(req.query.renavam, undefined, 'UPPERCASE');
+    const crv = stringFix(req.query.crv, undefined, 'UPPERCASE');
+    const brand_model = stringFix(req.query.brand_model, undefined, 'UPPERCASE');
+    const status = stringFix(req.query.status, undefined, 'UPPERCASE');
+    const plate_end = stringFix(req.query.plate_end, undefined, 'UPPERCASE');
 
     try {
       const vehicles = await this.service.execute({ page, limit, filters: { pagination, plate_end, client_id, status, group, plate, renavam, crv, brand_model } });

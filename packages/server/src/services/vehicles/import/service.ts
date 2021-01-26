@@ -2,6 +2,7 @@ import { Vehicle } from '~/entities/Vehicle';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 import { convertStatus } from '~/utils/convertStatus';
+import { stringFix } from '~/utils/stringFix';
 
 import { IImportError, IVehiclesImportRequestDTO } from './dto';
 
@@ -27,20 +28,20 @@ export class VehiclesImportService {
 
       try {
         const client = await this.clientsRepo.create({
-          name: vehicle.name,
-          document: vehicle.document,
-          group: vehicle.group,
+          name: stringFix(vehicle.name, undefined, 'UPPERCASE'),
+          document: stringFix(vehicle.document, undefined, 'UPPERCASE'),
+          group: stringFix(vehicle.group, undefined, 'UPPERCASE'),
         });
 
         return {
           client_id: client.id,
-          plate: vehicle.plate.trim().toUpperCase(),
-          renavam: vehicle.renavam.trim(),
-          crv: (!vehicle.crv || vehicle.crv.trim() === '-') ? null : vehicle.crv.trim().toUpperCase(),
-          brand_model: vehicle.brand_model.trim().toUpperCase(),
-          type: vehicle.type.trim().toUpperCase(),
-          details: vehicle.details ? vehicle.details.toUpperCase() : undefined,
-          status: convertStatus(vehicle.status.toLowerCase()),
+          plate: stringFix(vehicle.plate, undefined, 'UPPERCASE'),
+          renavam: stringFix(vehicle.renavam, undefined, 'UPPERCASE'),
+          crv: stringFix(vehicle.crv, undefined, 'UPPERCASE'),
+          brand_model: stringFix(vehicle.brand_model, undefined, 'UPPERCASE'),
+          type: stringFix(vehicle.type, undefined, 'UPPERCASE'),
+          details: stringFix(vehicle.details, undefined, 'UPPERCASE'),
+          status: convertStatus(stringFix(vehicle.status, undefined, 'LOWERCASE')),
         };
       } catch(err) {
         errors.push({ ...vehicle, error: err.message || 'Unexprected error' });

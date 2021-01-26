@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import { errorWork } from '~/utils/errorWork';
+import { stringFix } from '~/utils/stringFix';
 
 import { UsersAuthService } from './service';
 
@@ -8,8 +9,8 @@ export class UsersAuthController {
   constructor(private service: UsersAuthService) { }
 
   async handle(req: Request, res: Response): Promise<Response> {
-    const email = req.body.email ? (req.body.email as string).toLowerCase() : undefined;
-    const password = req.body.password ? (req.body.password as string).trim() : undefined;
+    const email = stringFix(req.body.email, undefined, 'LOWERCASE');
+    const password = stringFix(req.body.password, undefined);
 
     try {
       if(!email || !password) {
