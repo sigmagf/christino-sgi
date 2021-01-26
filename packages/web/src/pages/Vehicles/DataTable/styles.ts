@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components';
 
+import { Card } from '~/components/Card';
+
 interface IStatusBadgeStyledProps {
   status: number;
 }
@@ -23,4 +25,12 @@ export const StatusBadge = styled.div<IStatusBadgeStyledProps>`
         return css`background: ${theme.info.main};`;
     }
   }}
+`;
+
+export const VehiclesDataTableCardContainer = styled(Card)`
+  position: relative;
+  
+  th, td {
+    font-family: 'Roboto Mono', monospace;
+  }
 `;

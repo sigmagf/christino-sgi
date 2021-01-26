@@ -159,32 +159,32 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
               <Table style={{ marginBottom: 15, minWidth: 1500 }}>
                 <thead>
                   <tr>
-                    <th style={{ textAlign: 'left', fontFamily: 'monospace' }}>NOME</th>
-                    <th style={{ fontFamily: 'monospace' }}>DOCUMENTO</th>
-                    <th style={{ fontFamily: 'monospace' }}>PASTA</th>
-                    <th style={{ fontFamily: 'monospace' }}>PLACA</th>
-                    <th style={{ fontFamily: 'monospace' }}>RENAVAM</th>
-                    <th style={{ fontFamily: 'monospace' }}>CRV</th>
-                    <th style={{ fontFamily: 'monospace' }}>MARCA/MODELO</th>
-                    <th style={{ fontFamily: 'monospace' }}>TIPO</th>
-                    <th style={{ fontFamily: 'monospace' }}>DETALHES</th>
-                    <th style={{ fontFamily: 'monospace' }}>STATUS</th>
+                    <th style={{ textAlign: 'left' }}>NOME</th>
+                    <th>DOCUMENTO</th>
+                    <th>PASTA</th>
+                    <th>PLACA</th>
+                    <th>RENAVAM</th>
+                    <th>CRV</th>
+                    <th>MARCA/MODELO</th>
+                    <th>TIPO</th>
+                    <th>DETALHES</th>
+                    <th>STATUS</th>
                     <th>&nbsp;</th>
                   </tr>
                 </thead>
                 <tbody>
                   {vehiclesPagination.data.map((vehicle) => (
                     <tr key={vehicle.renavam}>
-                      <td style={{ fontFamily: 'monospace' }}>{ vehicle.name }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.document }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.group }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.plate }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.crv }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.type }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.details }</td>
-                      <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.status }</td>
+                      <td>{ vehicle.name }</td>
+                      <td style={{ textAlign: 'center' }}>{ vehicle.document }</td>
+                      <td style={{ textAlign: 'center' }}>{ vehicle.group }</td>
+                      <td style={{ textAlign: 'center' }}>{ vehicle.plate }</td>
+                      <td style={{ textAlign: 'center' }}>{ vehicle.renavam }</td>
+                      <td style={{ textAlign: 'center' }}>{ vehicle.crv }</td>
+                      <td style={{ textAlign: 'center' }}>{ vehicle.brand_model }</td>
+                      <td style={{ textAlign: 'center' }}>{ vehicle.type }</td>
+                      <td style={{ textAlign: 'center' }}>{ vehicle.details }</td>
+                      <td style={{ textAlign: 'center' }}>{ vehicle.status }</td>
                       <td>
                         <Button
                           variant="error"

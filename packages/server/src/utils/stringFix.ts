@@ -3,6 +3,10 @@ export function stringFix(string: any, returnIfFalse: null|undefined, stringCase
     return returnIfFalse;
   }
 
+  if(Array.isArray(string)) {
+    return string;
+  }
+
   switch(stringCase) {
     case 'UPPERCASE': return string.toString().trim().toUpperCase();
     case 'LOWERCASE': return string.toString().trim().toLowerCase();

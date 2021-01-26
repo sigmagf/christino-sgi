@@ -4,6 +4,10 @@ import styled from 'styled-components';
 export const TableResult = styled.div`
   position: relative;
 
+  th, td {
+    font-family: 'Roboto Mono', monospace;
+  }
+
   .action-buttons {
     display: flex;
     justify-content: start;
@@ -31,25 +35,10 @@ export const ErrorsGroup = styled.div`
   max-height: 350px;
   overflow-y: scroll;
 
-  /* width */
-  ::-webkit-scrollbar {
-    width: 10px;
-  }
-
-  /* Track */
-  ::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.primary.main}; 
-  }
-  
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => shade(0.2, theme.primary.main)}; 
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: ${({ theme }) => shade(0.3, theme.primary.main)}; 
-  }
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: ${({ theme }) => theme.primary.main}; }
+  ::-webkit-scrollbar-thumb { background: ${({ theme }) => shade(0.2, theme.primary.main)}; }
+  ::-webkit-scrollbar-thumb:hover { background: ${({ theme }) => shade(0.3, theme.primary.main)}; }
 
   details {
     border-radius: 5px;
@@ -60,14 +49,14 @@ export const ErrorsGroup = styled.div`
     }
 
     summary {
-      font-family: 'monospace';
+      font-family: 'Roboto Mono', monospace;
       background-color: ${({ theme }) => theme.error.main};
       text-align: center;
       padding: 5px;
     }
 
     section {
-      font-family: 'monospace';
+      font-family: 'Roboto Mono', monospace;
       border: 1px solid ${({ theme }) => theme.error.main};
       text-align: center;
       border-bottom-left-radius: 5px;

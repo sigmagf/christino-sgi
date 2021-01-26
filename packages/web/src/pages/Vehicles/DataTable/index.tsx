@@ -4,12 +4,11 @@ import ReactLoading from 'react-loading';
 
 import { Badge } from '~/components/Badge';
 import { Button } from '~/components/Button';
-import { Card } from '~/components/Card';
 import { Table } from '~/components/Table';
 import { IVehicle } from '~/interfaces';
 import { statusConverter } from '~/utils/statusConverter';
 
-import { StatusBadge } from './styles';
+import { VehiclesDataTableCardContainer, StatusBadge } from './styles';
 
 interface IVehicleDataTableProps {
   vehicles: IVehicle[];
@@ -19,7 +18,7 @@ interface IVehicleDataTableProps {
 
 export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick }) => {
   return (
-    <Card style={{ position: 'relative' }}>
+    <VehiclesDataTableCardContainer style={{ position: 'relative' }}>
       { inLoading && (
       <div style={{ position: 'absolute', marginTop: 25, top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
         <ReactLoading type="bars" />
@@ -30,11 +29,11 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
         <thead>
           <tr>
             <th style={{ width: 20 }} aria-label="status-column" />
-            <th style={{ fontFamily: 'monospace', textAlign: 'left' }}>CLIENTE</th>
-            <th style={{ fontFamily: 'monospace', width: 100 }}>PLACA</th>
-            <th style={{ fontFamily: 'monospace', width: 150 }}>RENAVAM</th>
-            <th style={{ fontFamily: 'monospace', width: 250 }}>MARCA/MODELO</th>
-            <th style={{ fontFamily: 'monospace', width: 50 }} aria-label="action-column" />
+            <th style={{ textAlign: 'left' }}>CLIENTE</th>
+            <th style={{ width: 100 }}>PLACA</th>
+            <th style={{ width: 150 }}>RENAVAM</th>
+            <th style={{ width: 250 }}>MARCA/MODELO</th>
+            <th style={{ width: 50 }} aria-label="action-column" />
           </tr>
         </thead>
         <tbody>
@@ -47,8 +46,8 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
 
           {(!inLoading && vehicles.length === 0) && (
             <>
-              <tr><td colSpan={6} style={{ fontFamily: 'monospace', textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
-              <tr><td colSpan={6} style={{ fontFamily: 'monospace', textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
+              <tr><td colSpan={6} style={{ textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
+              <tr><td colSpan={6} style={{ textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
             </>
           )}
 
@@ -57,7 +56,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
               <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <StatusBadge status={vehicle.status} title={statusConverter(vehicle.status)} />
               </td>
-              <td style={{ fontFamily: 'monospace' }}>
+              <td>
                 { vehicle.client.name }
                 { vehicle.client.group && (
                   <Badge>
@@ -65,10 +64,10 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
                   </Badge>
                 )}
               </td>
-              <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.plate }</td>
-              <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.renavam }</td>
-              <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>{ vehicle.brand_model }</td>
-              <td style={{ fontFamily: 'monospace', textAlign: 'center' }}>
+              <td style={{ textAlign: 'center' }}>{ vehicle.plate }</td>
+              <td style={{ textAlign: 'center' }}>{ vehicle.renavam }</td>
+              <td style={{ textAlign: 'center' }}>{ vehicle.brand_model }</td>
+              <td style={{ textAlign: 'center' }}>
                 <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(vehicle.id)} disabled={inLoading}>
                   <SearchIcon />
                 </Button>
@@ -77,7 +76,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
           ))}
         </tbody>
       </Table>
-    </Card>
+    </VehiclesDataTableCardContainer>
 
   );
 };
