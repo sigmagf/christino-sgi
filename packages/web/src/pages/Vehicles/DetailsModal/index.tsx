@@ -48,16 +48,16 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
   /* - DEFINE INITIAL DATA - */
   const initialData: IFormData = {
-    name: vehicle?.client.name.toUpperCase() || '',
-    document: formatCPForCNPJ(vehicle?.client.document.toUpperCase() || ''),
-    group: vehicle?.client.group.toUpperCase() || '',
+    name: vehicle.client.name ? vehicle.client.name.toUpperCase() : '',
+    document: formatCPForCNPJ(vehicle.client.document ? vehicle.client.document.toUpperCase() : ''),
+    group: vehicle.client.group ? vehicle.client.group.toUpperCase() : '',
 
-    plate: vehicle?.plate.toUpperCase() || '',
-    renavam: vehicle?.renavam || '',
-    crv: vehicle?.crv || '',
-    brand_model: vehicle?.brand_model.toUpperCase() || '',
-    type: vehicle?.type || '',
-    status: statusConverter(vehicle?.status || ''),
+    plate: vehicle.plate ? vehicle.plate.toUpperCase() : '',
+    renavam: vehicle.renavam ? vehicle.renavam : '',
+    crv: vehicle.crv ? vehicle.crv : '',
+    brand_model: vehicle.brand_model ? vehicle.brand_model.toUpperCase() : '',
+    type: vehicle.type ? vehicle.type : '',
+    status: statusConverter(vehicle.status ? vehicle.status : ''),
   };
   /* END DEFINE INITIAL DATA */
 
