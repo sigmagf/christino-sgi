@@ -9,6 +9,7 @@ import { IClientsRepository } from '../IClientsRepository';
 export class TypeORMClientsRepository implements IClientsRepository {
   async list(page = 1, limit = 10, filters: IClientsListFilters): Promise<IPagination<Client> | Client[]> {
     const filtersString = makeWhereString({ ...filters, pagination: undefined });
+    const effectiveLimit = limit > 100 ? 100 : limit;
 
     if(filters.pagination) {
       const maxRows = await getRepository(Client)
@@ -16,21 +17,21 @@ export class TypeORMClientsRepository implements IClientsRepository {
         .where(filtersString)
         .getCount();
 
-      const pages = Math.ceil(maxRows / limit);
-      const startIndex = (page - 1) * limit;
+      const pages = Math.ceil(maxRows / effectiveLimit);
+      const startIndex = (page - 1) * effectiveLimit;
 
       const dbPageData = await getRepository(Client)
         .createQueryBuilder()
         .where(filtersString)
         .skip(startIndex)
-        .limit(limit)
+        .limit(effectiveLimit)
         .orderBy('name', 'ASC')
         .getMany();
 
       return {
         page: {
           total: pages < 1 ? 1 : pages,
-          limit,
+          limit: effectiveLimit,
           current: page,
         },
         data: dbPageData,

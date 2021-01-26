@@ -13,8 +13,4 @@ export const typeormConfig: ConnectionOptions = {
     `${__dirname}/../entities/**/*.ts`,
     `${__dirname}/../entities/**/*.js`,
   ],
-  migrations: [
-    `${__dirname}/migrations/**/*.ts`,
-    `${__dirname}/migrations/**/*.js`,
-  ],
 };

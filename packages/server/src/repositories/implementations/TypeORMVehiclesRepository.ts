@@ -25,11 +25,7 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
 
     if(Array.isArray(filters.status)) {
       const statusPart: string[] = [];
-
-      filters.status.forEach((el) => {
-        statusPart.push(el ? `v.status = ${el}` : null);
-      });
-
+      filters.status.forEach((el) => statusPart.push(el ? `v.status = ${el}` : null));
       filtersPart.push(`(${statusPart.join(' OR ')})`);
     } else {
       filtersPart.push(filters.status ? `v.status = ${filters.status}` : null);
@@ -40,8 +36,9 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
     return filtersPart.filter((el) => el !== null).join(' AND ');
   }
 
-  async list(page: number, limit: number, filters: IVehiclesListFilters): Promise<IPagination<Vehicle> | Vehicle[]> {
+  async list(page = 1, limit = 10, filters: IVehiclesListFilters): Promise<IPagination<Vehicle> | Vehicle[]> {
     const whereString = this.makeSpecialWhereString(filters);
+    const effectiveLimit = limit > 100 ? 100 : limit;
 
     if(filters.pagination) {
       const maxRows = await getRepository(Vehicle)
@@ -50,8 +47,8 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
         .where(whereString)
         .getCount();
 
-      const pages = Math.ceil(maxRows / limit);
-      const startIndex = (page - 1) * limit;
+      const pages = Math.ceil(maxRows / effectiveLimit);
+      const startIndex = (page - 1) * effectiveLimit;
 
       const dbPageData = await getRepository(Vehicle)
         .createQueryBuilder('v')
@@ -62,13 +59,13 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
         .addOrderBy('c.name', 'ASC')
         .addOrderBy('v.plate', 'ASC')
         .offset(startIndex)
-        .limit(limit)
+        .limit(effectiveLimit)
         .getMany();
 
       return {
         page: {
           total: pages < 1 ? 1 : pages,
-          limit,
+          limit: effectiveLimit,
           current: page,
         },
         data: dbPageData,

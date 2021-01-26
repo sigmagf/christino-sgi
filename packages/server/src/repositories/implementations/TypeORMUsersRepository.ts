@@ -17,16 +17,18 @@ export class TypeORMUsersRepository implements IUsersRepository {
     return hash;
   }
 
-  async list(page: number, limit: number): Promise<IPagination<User>> {
-    const pages = Math.ceil((await getRepository(User).count()) / limit);
-    const startIndex = (page - 1) * limit;
+  async list(page = 1, limit = 10): Promise<IPagination<User>> {
+    const effectiveLimit = limit > 100 ? 100 : limit;
 
-    const dbPageData = await getRepository(User).find({ order: { name: 'ASC' }, skip: startIndex, take: limit });
+    const pages = Math.ceil((await getRepository(User).count()) / effectiveLimit);
+    const startIndex = (page - 1) * effectiveLimit;
+
+    const dbPageData = await getRepository(User).find({ order: { name: 'ASC' }, skip: startIndex, take: effectiveLimit });
 
     return {
       page: {
         total: pages,
-        limit,
+        limit: effectiveLimit,
         current: page,
       },
       data: dbPageData,

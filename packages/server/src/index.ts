@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import 'reflect-metadata';
-import './database/connect';
+import './config/databaseConnect';
 
 import { app } from './app';
 
