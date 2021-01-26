@@ -57,8 +57,8 @@ export interface IClient {
   name: string;
   document: string;
   group: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface IUser {
@@ -66,8 +66,8 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface IVehicle {
@@ -80,8 +80,8 @@ export interface IVehicle {
   type: string;
   details: string;
   status: number;
-  created_at: Date;
-  updated_at: Date;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface IUserAuth {

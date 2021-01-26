@@ -1,5 +1,11 @@
 export function convertStatus(status: string) {
-  switch(status) {
+  if(!status) {
+    return 1;
+  }
+
+  const st = status.toLowerCase();
+
+  switch(st) {
     case '0':
     case 'baixado': return 0;
 

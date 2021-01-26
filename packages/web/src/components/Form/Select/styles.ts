@@ -73,13 +73,6 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
     background: ${({ theme }) => lighten(0.1, theme.primary.main)};
     color: ${({ theme }) => theme.primary.contrastText};
     border-radius: 5px;
-    
-    ::-webkit-scrollbar {
-      width: 10px;
-    }
-    ::-webkit-scrollbar-track { background: ${({ theme }) => lighten(0.2, theme.primary.main)}; }
-    ::-webkit-scrollbar-thumb { background: ${({ theme }) => transparentize(0.75, theme.secondary.main)}; }
-    ::-webkit-scrollbar-thumb:hover { background: ${({ theme }) => transparentize(0.50, theme.secondary.main)}; }
 
     .react-select__option {
       font-family: 'Roboto Mono', monospace;

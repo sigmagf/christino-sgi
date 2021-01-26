@@ -1,6 +1,8 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { FaPrint } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
+import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
 import { Layout } from '~/components/Layout';
 import { Pagination } from '~/components/Pagination';
@@ -8,6 +10,7 @@ import { useLocalStorage } from '~/hooks';
 import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
+import { statusConverter } from '~/utils/statusConverter';
 
 import { VehiclesDataTable } from './DataTable';
 import { VehiclesDetailsModal } from './DetailsModal';
@@ -66,6 +69,72 @@ export const VehiclesPage: React.FC = () => {
     getData();
   }, [getData]);
 
+  const onPrintClick = useCallback(async () => {
+    try {
+      const response = await api.get<IVehicle[]>(`/vehicles?noPagination=true&${qsConverter(filters)}`, {
+        headers: {
+          authorization: `Bearer ${storage.getItem('token')}`,
+        },
+      });
+
+      // eslint-disable-next-line
+      const win = window.open('', 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${screen.width},height=${screen.height}`);
+
+      if(win) {
+        win.document.body.innerHTML = `
+          <style>
+            @page { size: landscape; -webkit-print-color-adjust: exact; }
+            * { font-family: 'Roboto Mono', monospace; font-size: 10px; }
+            html, body { margin: 0; padding: 0; }
+            table { width: 100%; border-radius: 5px; overflow: hidden; border-collapse: collapse; }
+            td, th { padding: 8px; }
+            thead > tr > th{ font-weight: 800; }
+            tbody > tr:nth-child(even) { background: white; }
+            tbody > tr:nth-child(odd) { background: lightgray; }
+          </style>
+
+          <table>
+            <thead>
+              <tr>
+                <th style="text-align: left">CLIENTE</th>
+                <th>PLACA</th>
+                <th>RENAVAM</th>
+                <th>CRV</th>
+                <th>MARCA/MODELO</th>
+                <th>TIPO</th>
+                <th>DETALHES</th>
+                <th>STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+            ${response.data.map((v) => `
+              <tr>
+                <td>${v.client.document.padStart(14, '*')} - ${v.client.name}</td>
+                <td style="text-align: center">${v.plate}</td>
+                <td style="text-align: center">${v.renavam.padStart(11, '0')}</td>
+                <td style="text-align: center">${(v.crv || '').padStart(12, '0')}</td>
+                <td style="text-align: center">${v.brand_model}</td>
+                <td style="text-align: center">${v.type}</td>
+                <td style="text-align: center">${v.details || ''}</td>
+                <td style="text-align: center">${statusConverter(v.status)}</td>
+              </tr>
+            `).join('')}
+            </tbody>
+          </table>
+        `;
+
+        win.print();
+        win.close();
+      }
+    } catch(err) {
+      if(err.message === 'Network Error' || !err.response) {
+        toast.error('Verifique sua conexão com a internet.');
+      } else {
+        toast.error(err.response.data.message);
+      }
+    }
+  }, [filters, storage]);
+
   // eslint-disable-next-line
   useEffect(() => { getData(); }, []);
 
@@ -89,7 +158,7 @@ export const VehiclesPage: React.FC = () => {
             inLoading={inLoading}
             onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
             onMaxResultsChange={() => console.log('onMaxResultsChange')}
-            overrideMaxResultsBy={<></>}
+            overrideMaxResultsBy={<Button variant="info" onClick={onPrintClick}><FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR</Button>}
           />
         </Card>
       </Layout>

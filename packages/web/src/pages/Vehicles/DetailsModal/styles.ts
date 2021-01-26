@@ -6,14 +6,16 @@ export const DetailsModalContainer = styled(Form)`
   display: grid;
   gap: 15px;
   text-transform: uppercase;
-  grid-template-columns: 90px 70px 40px 40px 70px;
+  grid-template-columns: 175px 90px 40px 40px 70px;
 
   grid-template-areas: 'CN CN CN CN CN'
-                       'CD CD CG CG CG'
+                       'CD CG CG CG CG'
                        'HR HR HR HR HR'
                        'VP VR VR VC VC'
                        'VM VM VM VM VM'
                        'VT VT VT VS VS'
+                       'VD VD VD VD VD'
+                       'HH HH HH HH HH'
                        'AB AB AB AB AB';
 
   .action-buttons {

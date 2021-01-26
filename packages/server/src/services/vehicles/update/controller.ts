@@ -21,7 +21,7 @@ export class VehiclesUpdateController {
     const brand_model = stringFix(req.body.brand_model, undefined, 'UPPERCASE');
     const type = stringFix(req.body.type, undefined, 'UPPERCASE');
     const details = stringFix(req.body.details, undefined, 'UPPERCASE');
-    const status = stringFix(req.body.status, undefined, 'UPPERCASE');
+    const status = stringFix(req.body.status, undefined, 'LOWERCASE');
 
     try {
       const user = await this.service.execute({ id, name, document, group, plate, renavam, crv, brand_model, type, details, status });

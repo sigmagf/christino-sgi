@@ -41,7 +41,6 @@ export class TypeORMClientsRepository implements IClientsRepository {
     const dbData = await getRepository(Client)
       .createQueryBuilder()
       .where(filtersString)
-      .limit(100)
       .orderBy('name', 'ASC')
       .getMany();
 

@@ -58,8 +58,8 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
         },
       });
 
-      const data = response.data.map((client) => ({ value: client.id, label: client.name }));
-      setClients(data);
+      const data = response.data.map((client) => ({ value: client.id, label: `${client.document.padStart(14, '*')} - ${client.name}` }));
+      setClients([{ label: 'TODOS', value: '' }, ...data]);
     } catch(err) {
       if(err.message === 'Network Error' || !err.response) {
         toast.error('Verifique sua conexão com a internet.');
@@ -69,7 +69,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     }
   }, [storage]);
 
-  const loadClients = (newValue: string) => {
+  const onChange = (newValue: string) => {
     clearTimeout(timer);
 
     timer = setTimeout(() => {
@@ -103,23 +103,15 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     <FiltersCard>
       <FiltersContainer open={open}>
         <Form ref={formRef} onSubmit={onFiltersApplyClick}>
-          <Select
-            label="CLIENTE"
-            name="client_id"
-            style={{ gridArea: 'CN' }}
-            options={clients}
-            openMenuOnFocus={false}
-            openMenuOnClick={false}
-            onInputChange={loadClients}
-          />
-          <Select label="GRUPO" name="group" style={{ gridArea: 'CG' }} options={groups} />
+          <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} defaultValue={{ label: 'TODOS', value: '' }} onInputChange={onChange} />
+          <Select label="GRUPO" name="group" style={{ gridArea: 'CG' }} options={groups} defaultValue={{ value: '', label: 'TODOS' }} />
           <Select label="STATUS" name="status" style={{ gridArea: 'VS' }} options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
 
           <Input label="PLACA" name="plate" style={{ gridArea: 'VP' }} />
           <Input label="RENAVAM" name="renavam" style={{ gridArea: 'VR' }} />
           <Input label="CRV" name="crv" style={{ gridArea: 'VC' }} />
           <Input label="MARCA/MODELO" name="brand_model" style={{ gridArea: 'VM' }} />
-          <Select label="FINAL DE PLACA" name="plate_end" style={{ gridArea: 'VF' }} options={plateEnd} />
+          <Select label="FINAL DE PLACA" name="plate_end" style={{ gridArea: 'VF' }} options={plateEnd} defaultValue={{ value: '', label: 'TODOS' }} />
         </Form>
 
         <FiltersHeaders onClick={() => setOpen((old) => !old)}>

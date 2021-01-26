@@ -80,7 +80,6 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
       .addOrderBy('SUBSTRING(v.plate, 7)')
       .addOrderBy('c.name')
       .addOrderBy('v.plate')
-      .limit(100)
       .getMany();
 
     return dbData;
