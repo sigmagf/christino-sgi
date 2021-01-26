@@ -9,6 +9,7 @@ export class UsersUpdateController {
 
   async handle(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
+
     const name = req.body.name ? (req.body.name as string).toUpperCase() : undefined;
     const email = req.body.email ? (req.body.email as string).toLowerCase() : undefined;
     const password = req.body.password ? (req.body.password as string).trim() : undefined;

@@ -9,6 +9,7 @@ export class ClientsUpdateController {
 
   async handle(req: Request, res: Response): Promise<Response> {
     const { id } = req.params;
+
     const name = req.body.name ? (req.body.name as string).toUpperCase() : undefined;
     const document = req.body.document ? (req.body.document as string).toUpperCase() : undefined;
     const group = req.body.group ? (req.body.group as string).toUpperCase() : undefined;

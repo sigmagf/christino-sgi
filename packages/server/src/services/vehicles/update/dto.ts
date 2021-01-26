@@ -7,7 +7,6 @@ export interface IVehiclesUpdateRequestDTO {
 
   plate: string;
   renavam: string;
-  cla: string;
   crv: string;
   brand_model: string;
   type: string;

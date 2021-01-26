@@ -13,10 +13,10 @@ export class VehiclesListController {
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
 
     const client_id = req.query.client_id as string || undefined;
-    const plate = req.query.plate as string || undefined;
+    const plate = req.query.plate ? (req.query.plate as string).trim().toUpperCase() : undefined;
     const renavam = req.query.renavam as string || undefined;
     const crv = req.query.crv as string || undefined;
-    const brand_model = req.query.brand_model as string || undefined;
+    const brand_model = req.query.brand_model ? (req.query.brand_model as string).toUpperCase() : undefined;
     const status = req.query.status as string || undefined;
 
     const group = req.query.group as string || undefined;

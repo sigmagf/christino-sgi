@@ -1,7 +1,9 @@
-import { Client } from '~/entities/Client';
 import { Vehicle } from '~/entities/Vehicle';
 
-export type errorType = Partial<Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'>> & { error: string };
+export interface IImportError extends Partial<Omit<Vehicle, 'id'|'client'|'status'|'created_at'|'updated_at'>> {
+  status: number | string;
+  error: string;
+}
 
 export interface IVehiclesImportRequestDTO {
   data: {

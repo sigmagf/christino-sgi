@@ -5,7 +5,6 @@ export interface IVehiclesCreateRequestDTO {
 
   plate: string;
   renavam: string;
-  cla: string;
   crv: string;
   brand_model: string;
   type: string;
