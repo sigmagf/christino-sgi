@@ -31,8 +31,12 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
     background: ${({ theme }) => lighten(0.1, theme.primary.main)};
     border: 2px solid ${({ theme }) => lighten(0.1, theme.primary.main)};
 
-    :hover,
-    :focus {
+    :hover {
+      border: 2px solid ${({ theme }) => lighten(0.1, theme.primary.main)};
+      box-shadow: ${({ theme }) => theme.shadow};
+    }
+
+    :focus-within {
       border-color: ${({ theme }) => theme.secondary.main};
       box-shadow: 0 0 4px 4px ${({ theme }) => transparentize(0.95, theme.secondary.main)};
     }
