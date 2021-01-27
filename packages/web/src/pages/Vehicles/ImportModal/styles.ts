@@ -3,6 +3,18 @@ import styled from 'styled-components';
 
 export const TableResult = styled.div`
   position: relative;
+    
+  @media (max-width: 1600px) {
+    th, td {
+      font-size: 12px;
+      height: 25px;
+
+      button {
+        min-height: 25px;
+        min-width: 25px;
+      }
+    }
+  }
 
   th, td {
     font-family: 'Roboto Mono', monospace;

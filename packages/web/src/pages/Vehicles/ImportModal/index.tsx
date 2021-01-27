@@ -142,7 +142,6 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
 
       {(vehiclesToImport.length === 0) ? (
         <Dropzone
-          accept="text/csv"
           maxFiles={1}
           onDropAccepted={onFileUploaded}
         />
@@ -156,7 +155,7 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                 </LoadingModal>
               )}
 
-              <Table style={{ marginBottom: 15, minWidth: 1500 }}>
+              <Table style={{ marginBottom: 15 }}>
                 <thead>
                   <tr>
                     <th style={{ textAlign: 'left' }}>NOME</th>

@@ -45,10 +45,15 @@ export const GlobalStyle = createGlobalStyle`
   *, button, input {
     outline: 0;
     font: 14px "Roboto", -apple-system, system-ui, sans-serif;
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
   input, select {
     font-family: 'Roboto Mono', monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   ::placeholder, ::-ms-input-placeholder, :-ms-input-placeholder {
