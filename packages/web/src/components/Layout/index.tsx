@@ -12,6 +12,9 @@ export const Layout: React.FC = ({ children }) => (
       <AppContent>
         { children }
       </AppContent>
+      <div style={{ marginTop: 15, textAlign: 'center' }}>
+        CHRISTINO SISTEMA DE GESTAO INTERNO v0.0.1
+      </div>
     </AppMain>
   </>
 );
