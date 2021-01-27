@@ -41,11 +41,11 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   const [inLoading, setInLoading] = useState(false);
   const [haveClient, setHaveClient] = useState(true);
 
-  const onCloseHandler = useCallback(() => {
+  const onCloseHandler = () => {
     setInLoading(false);
     setHaveClient(true);
     onClose();
-  }, [onClose]);
+  };
 
   /* - DEFINE INITIAL DATA - */
   const initialData = {
@@ -72,24 +72,16 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   /* END DEFINE STATUS OPTIONS */
 
   /* - SEARCH CLIENT IN DATABASE - */
-  const getClient = useCallback(async (document: string) => {
+  const getClient = async (document: string) => {
     if(formRef.current) {
       try {
         const client = await api.get<IClient[]>(`/clients?noPagination=true&document=${document}`, {
-          headers: {
-            authorization: `Bearer ${storage.getItem('token')}`,
-          },
+          headers: { authorization: `Bearer ${storage.getItem('token')}` },
         });
 
-        if(client.data.length === 1) {
-          setHaveClient(true);
-          formRef.current.setFieldValue('name', client.data[0].name);
-          formRef.current.setFieldValue('group', client.data[0].group);
-        } else {
-          setHaveClient(false);
-          formRef.current.setFieldValue('name', '');
-          formRef.current.setFieldValue('group', '');
-        }
+        setHaveClient(client.data.length === 1);
+        formRef.current.setFieldValue('name', client.data[0]?.name || '');
+        formRef.current.setFieldValue('group', client.data[0]?.group || '');
       } catch(err) {
         if(err.message === 'Network Error' || !err.response) {
           toast.error('Verifique sua conexão com a internet.');
@@ -100,34 +92,40 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         setHaveClient(false);
       }
     }
-  }, [storage]);
+  };
   /* END SEARCH CLIENT IN DATABASE */
 
   /* - DOCUMENT FORMAT HANDLER - */
-  const onDocumentFocus = useCallback(() => {
+  const onDocumentFocus = () => {
     if(formRef.current) {
       const document = formRef.current.getFieldValue('document').replace(/\D/g, '');
       formRef.current.setFieldValue('document', document);
     }
-  }, []);
+  };
 
-  const onDocumentBlur = useCallback(() => {
+  const onDocumentBlur = () => {
     if(formRef.current) {
       const document: string = formRef.current.getFieldValue('document').replace(/\D/g, '');
 
-      if((document.length > 0 && document.length !== 11 && document.length !== 14) || !validCPForCNPJ(document)) {
+      if(document.length === 0 || (document.length !== 11 && document.length !== 14)) {
         toast.error('CPF/CNPJ inválido!');
         return;
       }
 
       formRef.current.setFieldValue('document', formatCPForCNPJ(document));
+
+      if(!validCPForCNPJ(document)) {
+        toast.error('CPF/CNPJ inválido!');
+        return;
+      }
+
       getClient(document);
     }
-  }, [getClient]);
+  };
   /* END DOCUMENT FORMAT HANDLER */
 
   /* - SAVE OR UPDATE VEHICLE - */
-  const onSubmit: SubmitHandler<IFormData> = useCallback(async (data, { reset }) => {
+  const onSubmit: SubmitHandler<IFormData> = async (data, { reset }) => {
     setInLoading(true);
 
     try {
@@ -163,11 +161,11 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
     setInLoading(false);
 
     reset();
-  }, [onCloseHandler, onDocumentFocus, storage, vehicle]);
+  };
   /* END SAVE OR UPDATE VEHICLE */
 
   /* - DELETE VEHICLE - */
-  const onRemoveClick = useCallback(async (id: string) => {
+  const onRemoveClick = async (id: string) => {
     setInLoading(true);
 
     try {
@@ -189,7 +187,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
     }
 
     setInLoading(false);
-  }, [onCloseHandler, storage]);
+  };
   /* END DELETE VEHICLE */
 
   return (

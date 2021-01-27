@@ -50,4 +50,8 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
       color: rgba(255, 255, 255, .75);
     }
   }
+
+  .error-container {
+    background: ${({ theme }) => theme.error.main};
+  }
 `;

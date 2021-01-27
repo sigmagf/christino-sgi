@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { FaTimes } from 'react-icons/fa';
 
 import { Card } from '~/components/Card';
@@ -14,13 +14,13 @@ export const HomePage: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [tags, setTags] = useState<string[]>([]);
 
-  const removeTags = useCallback((key: number) => {
+  const removeTags = (key: number) => {
     const newTags = tags.filter((e, k) => k !== key);
 
     setTags(newTags);
-  }, [tags]);
+  };
 
-  const addTags = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
+  const addTags = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if(inputRef.current) {
       if(e.key === 'Enter') {
         inputRef.current.value.split(',').forEach((tag) => {
@@ -31,11 +31,12 @@ export const HomePage: React.FC = () => {
 
         inputRef.current.value = '';
       }
+
       if(e.key === 'Backspace' && !inputRef.current.value) {
         removeTags(tags.length - 1);
       }
     }
-  }, [removeTags, tags.length]);
+  };
 
   return (
     <Layout>

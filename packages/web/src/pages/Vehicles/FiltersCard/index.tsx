@@ -1,6 +1,6 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
-import React, { useRef, useState, useCallback, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FaLayerGroup, FaPlus, FaFilter, FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { NamedProps } from 'react-select';
 import { toast } from 'react-toastify';
@@ -10,6 +10,7 @@ import { Select, Input } from '~/components/Form';
 import { useLocalStorage } from '~/hooks';
 import { IClient, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
+import { vehiclePlateEnd, vehicleStatus } from '~/utils/commonSelectOptions';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders } from './styles';
 
@@ -29,28 +30,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
   const [groups, setGroups] = useState<NamedProps['options']>([]);
   const [clients, setClients] = useState<NamedProps['options']>([]);
 
-  const plateEnd: NamedProps['options'] = [
-    { value: '', label: 'TODOS' },
-    { value: '0', label: 'FINAL 0' },
-    { value: '1', label: 'FINAL 1' },
-    { value: '2', label: 'FINAL 2' },
-    { value: '3', label: 'FINAL 3' },
-    { value: '4', label: 'FINAL 4' },
-    { value: '5', label: 'FINAL 5' },
-    { value: '6', label: 'FINAL 6' },
-    { value: '7', label: 'FINAL 7' },
-    { value: '8', label: 'FINAL 8' },
-    { value: '9', label: 'FINAL 9' },
-  ];
-
-  const status: NamedProps['options'] = [
-    { value: '0', label: 'BAIXADO' },
-    { value: '1', label: 'CRLVe' },
-    { value: '2', label: 'CRV' },
-    { value: '3', label: 'OUTRO' },
-  ];
-
-  const getClients = useCallback(async (name?: string) => {
+  const getClients = async (name?: string) => {
     try {
       const response = await api.get<IClient[]>(`/clients?noPagination=true${name ? `&name=${name}` : ''}`, {
         headers: {
@@ -67,9 +47,9 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
         toast.error(err.response.data.message);
       }
     }
-  }, [storage]);
+  };
 
-  const onChange = (newValue: string) => {
+  const onClientsInputChange = (newValue: string) => {
     clearTimeout(timer);
 
     timer = setTimeout(() => {
@@ -77,7 +57,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     }, 1000);
   };
 
-  const getGroups = useCallback(async () => {
+  const getGroups = async () => {
     try {
       const response = await api.get<string[]>('/clients/groups', {
         headers: {
@@ -94,7 +74,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
         toast.error(err.response.data.message);
       }
     }
-  }, [storage]);
+  };
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { getGroups(); }, []);
@@ -103,15 +83,57 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     <FiltersCard>
       <FiltersContainer open={open}>
         <Form ref={formRef} onSubmit={onFiltersApplyClick}>
-          <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} defaultValue={{ label: 'TODOS', value: '' }} onInputChange={onChange} />
-          <Select label="GRUPO" name="group" style={{ gridArea: 'CG' }} options={groups} defaultValue={{ value: '', label: 'TODOS' }} />
-          <Select label="STATUS" name="status" style={{ gridArea: 'VS' }} options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
+          <Select
+            label="CLIENTE"
+            name="client_id"
+            style={{ gridArea: 'CN' }}
+            options={clients}
+            defaultValue={{ label: 'TODOS', value: '' }}
+            onInputChange={onClientsInputChange}
+          />
+          <Select
+            label="GRUPO"
+            name="group"
+            style={{ gridArea: 'CG' }}
+            options={groups}
+            defaultValue={{ value: '', label: 'TODOS' }}
+          />
+          <Select
+            label="STATUS"
+            name="status"
+            style={{ gridArea: 'VS' }}
+            options={vehicleStatus}
+            defaultValue={[vehicleStatus[1], vehicleStatus[2], vehicleStatus[3]]}
+            isMulti
+          />
 
-          <Input label="PLACA" name="plate" style={{ gridArea: 'VP' }} />
-          <Input label="RENAVAM" name="renavam" style={{ gridArea: 'VR' }} />
-          <Input label="CRV" name="crv" style={{ gridArea: 'VC' }} />
-          <Input label="MARCA/MODELO" name="brand_model" style={{ gridArea: 'VM' }} />
-          <Select label="FINAL DE PLACA" name="plate_end" style={{ gridArea: 'VF' }} options={plateEnd} defaultValue={{ value: '', label: 'TODOS' }} />
+          <Input
+            label="PLACA"
+            name="plate"
+            style={{ gridArea: 'VP' }}
+          />
+          <Input
+            label="RENAVAM"
+            name="renavam"
+            style={{ gridArea: 'VR' }}
+          />
+          <Input
+            label="CRV"
+            name="crv"
+            style={{ gridArea: 'VC' }}
+          />
+          <Input
+            label="MARCA/MODELO"
+            name="brand_model"
+            style={{ gridArea: 'VM' }}
+          />
+          <Select
+            label="FINAL DE PLACA"
+            name="plate_end"
+            style={{ gridArea: 'VF' }}
+            options={vehiclePlateEnd}
+            defaultValue={vehiclePlateEnd[0]}
+          />
         </Form>
 
         <FiltersHeaders onClick={() => setOpen((old) => !old)}>

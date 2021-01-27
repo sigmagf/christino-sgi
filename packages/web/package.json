@@ -41,7 +41,7 @@
     "react-select": "^3.1.1",
     "react-toastify": "^6.1.0",
     "styled-components": "^5.1.1",
-    "yup": "^0.29.2"
+    "yup": "^0.32.8"
   },
   "devDependencies": {
     "@types/react": "^16.9.0",
@@ -52,7 +52,7 @@
     "@types/react-router-dom": "^5.1.6",
     "@types/react-select": "^3.0.26",
     "@types/styled-components": "^5.1.0",
-    "@types/yup": "^0.29.3",
+    "@types/yup": "^0.29.11",
     "sigma-cli": "^0.5.4-r3"
   },
   "license": "MIT"

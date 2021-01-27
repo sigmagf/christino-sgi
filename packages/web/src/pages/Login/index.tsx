@@ -1,14 +1,15 @@
-import { SubmitHandler } from '@unform/core';
+import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import * as yup from 'yup';
 
 import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
 import { Input } from '~/components/Form';
-import { useLocalStorage, usePersistedState } from '~/hooks';
+import { useLocalStorage } from '~/hooks';
 import { IUser, IUserAuth } from '~/interfaces';
 import { api } from '~/utils/api';
 
@@ -17,38 +18,42 @@ import { LoginContainer } from './styles';
 export const Login: React.FC = () => {
   document.title = 'Login | Christino';
 
+  const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
-
-  const { value: token, setValue: setToken } = usePersistedState('token', '');
   const [inLoading, setInLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if(token && token.length > 1) {
+    if(storage.getItem('token')) {
       navigate('/');
     }
-  }, [navigate, token]);
+  }, [navigate, storage]);
 
   const onSubmit: SubmitHandler<IUser> = async (data) => {
     setInLoading(true);
 
     try {
-      const request = await api.post<IUserAuth>('/users/auth', {
-        email: data.email,
-        password: data.password,
-      }, {
-        headers: {
-          authorization: `Bearer ${storage.getItem('token')}`,
-        },
+      const schema = yup.object().shape({
+        email: yup.string().required('O e-mail é obrigatório!'),
+        password: yup.string().required('A senha é obrigatória!'),
       });
+      await schema.validate(data, { abortEarly: false });
 
-      setToken(request.data.token);
+      const request = await api.post<IUserAuth>('/users/auth', data);
+      storage.setItem('token', request.data.token);
       navigate('/');
     } catch(err) {
-      if(err.message === 'Network Error') {
+      if(err instanceof yup.ValidationError) {
+        err.inner.forEach((error) => {
+          toast.error(error.message);
+        });
+      } else if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
-      } else {
+      } else if(err.response.data && err.response.data.message) {
         toast.error(err.response.data.message);
+      } else {
+        toast.error('Ocorreu um erro inesperado');
+        console.log(err);
       }
     }
 
@@ -64,7 +69,7 @@ export const Login: React.FC = () => {
               <img src="assets/logo-texto.png" alt="" />
               <div className="divider" />
 
-              <Form onSubmit={onSubmit}>
+              <Form ref={formRef} onSubmit={onSubmit}>
                 <Input style={{ gridArea: 'EM' }} name="email" label="E-MAIL" />
                 <Input style={{ gridArea: 'PW' }} type="password" name="password" label="SENHA" />
                 <Button style={{ gridArea: 'SB' }} type="submit" variant="success">

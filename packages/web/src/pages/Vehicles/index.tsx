@@ -109,7 +109,7 @@ export const VehiclesPage: React.FC = () => {
             <tbody>
             ${response.data.map((v) => `
               <tr>
-                <td>${v.client.document.padStart(14, '*')} - ${v.client.name}</td>
+                <td>${v.client.name}</td>
                 <td style="text-align: center">${v.plate}</td>
                 <td style="text-align: center">${v.renavam.padStart(11, '0')}</td>
                 <td style="text-align: center">${(v.crv || '').padStart(12, '0')}</td>
