@@ -11,7 +11,7 @@ export const AppMain = styled.main`
 `;
 
 export const AppContent = styled.section`
-  height: calc(100% - 130px);
+  height: calc(100% - 85px);
   width: 100%;
   max-width: 1080px;
   margin: 15px auto 0 auto;
