@@ -1,8 +1,8 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useCallback, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import ReactLoading from 'react-loading';
-import { NamedProps } from 'react-select';
 import { toast } from 'react-toastify';
+import * as yup from 'yup';
 
 import { Button } from '~/components/Button';
 import { Input, Select } from '~/components/Form';
@@ -10,6 +10,7 @@ import { Modal } from '~/components/Modal';
 import { useLocalStorage } from '~/hooks';
 import { IClient, IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
+import { vehicleStatus } from '~/utils/commonSelectOptions';
 import { formatCPForCNPJ } from '~/utils/formatCPForCNPJ';
 import { statusConverter } from '~/utils/statusConverter';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
@@ -62,15 +63,6 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   };
   /* END DEFINE INITIAL DATA */
 
-  /* - DEFINE STATUS OPTIONS - */
-  const status: NamedProps['options'] = [
-    { value: '0', label: 'BAIXADO' },
-    { value: '1', label: 'CRLVe' },
-    { value: '2', label: 'CRV' },
-    { value: '3', label: 'OUTRO' },
-  ];
-  /* END DEFINE STATUS OPTIONS */
-
   /* - SEARCH CLIENT IN DATABASE - */
   const getClient = async (document: string) => {
     if(formRef.current) {
@@ -108,14 +100,14 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
       const document: string = formRef.current.getFieldValue('document').replace(/\D/g, '');
 
       if(document.length === 0 || (document.length !== 11 && document.length !== 14)) {
-        toast.error('CPF/CNPJ inválido!');
+        toast.error('CPF/CNPJ inválido.');
         return;
       }
 
       formRef.current.setFieldValue('document', formatCPForCNPJ(document));
 
       if(!validCPForCNPJ(document)) {
-        toast.error('CPF/CNPJ inválido!');
+        toast.error('CPF/CNPJ inválido.');
         return;
       }
 
@@ -129,32 +121,46 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
     setInLoading(true);
 
     try {
-      if(vehicle) {
-        onDocumentFocus();
+      const scheme = yup.object().shape({
+        name: yup.string()
+          .min(3, 'Nome precisa ter pelo menos 3 caracteres.')
+          .required('Nome é obrigatório'),
+        document: yup.string()
+          .min(11, 'Documento deve ter pelo menos 11 caracteres.')
+          .max(14, 'Caractere deve ter no maximo 14 caracteres.')
+          .test('validate-document', 'Documento inválido.', (val) => validCPForCNPJ(val || ''))
+          .required('Documento é obrigatório.'),
+        plate: yup.string()
+          .min(7, 'Placa inválida')
+          .max(7, 'Placa inválida')
+          .required('A placa é obrigatória.'),
+        renavam: yup.string()
+          .max(11, 'O renavam deve ter no maximo 11 caracteres.')
+          .required('O renavam é obrigatório.'),
+        crv: yup.string().required('O crv é obrigatório.'),
+        brand_model: yup.string().required('A marca/modelo é obrigatória.'),
+        type: yup.string().required('O tipo é obrigatória.'),
+      });
 
-        await api.put(`/vehicles/${vehicle.id}`, { ...data, document: data.document.replace(/\D/g, '') }, {
-          headers: {
-            authorization: `Bearer ${storage.getItem('token')}`,
-          },
-        });
+      await scheme.validate(data, { abortEarly: false });
 
-        toast.success('Veículo atualizado com sucesso!');
-      } else {
-        await api.post('/vehicles', data, {
-          headers: {
-            authorization: `Bearer ${storage.getItem('token')}`,
-          },
-        });
+      const document = data.document.replace(/\D/g, '');
+      await api.put(`/vehicles/${vehicle?.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
-        toast.success('Veículo atualizado com sucesso!');
-      }
-
+      toast.success(`Veículo ${vehicle ? 'atualizado' : 'cadastrado'} com sucesso!`);
       onCloseHandler();
     } catch(err) {
-      if(err.message === 'Network Error' || !err.response) {
+      if(err instanceof yup.ValidationError) {
+        err.inner.forEach((error) => {
+          toast.error(error.message);
+        });
+      } else if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
-      } else {
+      } else if(err.response.data && err.response.data.message) {
         toast.error(err.response.data.message);
+      } else {
+        toast.error('Ocorreu um erro inesperado.');
+        console.log(err);
       }
     }
 
@@ -169,20 +175,17 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
     setInLoading(true);
 
     try {
-      await api.delete(`/vehicles/${id}`, {
-        headers: {
-          authorization: `Bearer ${storage.getItem('token')}`,
-        },
-      });
-
-      toast.success('Veículo removido com sucesso!');
-
+      await api.delete(`/vehicles/${id}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+      toast.success('Veículo removido com sucesso.');
       onCloseHandler();
     } catch(err) {
-      if(err.message === 'Network Error' || !err.response) {
+      if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
-      } else {
+      } else if(err.response.data && err.response.data.message) {
         toast.error(err.response.data.message);
+      } else {
+        toast.error('Ocorreu um erro inesperado.');
+        console.log(err);
       }
     }
 
@@ -204,7 +207,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         <Input style={{ gridArea: 'VC' }} disabled={inLoading} name="crv" label="CRV" />
         <Input style={{ gridArea: 'VM' }} disabled={inLoading} name="brand_model" label="MARCA/MODELO" />
         <Input style={{ gridArea: 'VT' }} disabled={inLoading} name="type" label="TIPO" />
-        <Select style={{ gridArea: 'VS' }} isDisabled={inLoading} name="status" label="STATUS" options={status} />
+        <Select style={{ gridArea: 'VS' }} isDisabled={inLoading} name="status" label="STATUS" options={[...vehicleStatus.filter((e) => e.value)]} isSearchable={false} />
         <Input style={{ gridArea: 'VD' }} disabled={inLoading} name="details" label="DETALHES" />
 
         <div style={{ gridArea: 'HH', height: 10 }} />

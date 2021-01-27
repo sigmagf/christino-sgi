@@ -34,9 +34,7 @@ export const VehiclesPage: React.FC = () => {
 
     try {
       const response = await api.get<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`, {
-        headers: {
-          authorization: `Bearer ${storage.getItem('token')}`,
-        },
+        headers: { authorization: `Bearer ${storage.getItem('token')}` },
       });
 
       if(response.data.page.total < filters.page) {
@@ -45,10 +43,13 @@ export const VehiclesPage: React.FC = () => {
 
       setVehicles(response.data);
     } catch(err) {
-      if(err.message === 'Network Error' || !err.response) {
+      if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
-      } else {
+      } else if(err.response.data && err.response.data.message) {
         toast.error(err.response.data.message);
+      } else {
+        toast.error('Ocorreu um erro inesperado.');
+        console.log(err);
       }
 
       setVehicles({ page: { total: 1, current: 1, limit: 10 }, data: [] });
@@ -57,24 +58,22 @@ export const VehiclesPage: React.FC = () => {
     setInLoading(false);
   }, [filters, storage]);
 
-  const onDetailsClick = useCallback((vehicleId: string) => {
+  const onDetailsClick = (vehicleId: string) => {
     setVehicleToDetails(vehicles.data.filter((el) => el.id === vehicleId)[0]);
     setDetailsModalOpen(true);
-  }, [vehicles.data]);
+  };
 
-  const onModalsClose = useCallback(() => {
+  const onModalsClose = () => {
     setImportModalOpen(false);
     setDetailsModalOpen(false);
     setVehicleToDetails(undefined);
     getData();
-  }, [getData]);
+  };
 
-  const onPrintClick = useCallback(async () => {
+  const onPrintClick = async () => {
     try {
       const response = await api.get<IVehicle[]>(`/vehicles?noPagination=true&${qsConverter(filters)}`, {
-        headers: {
-          authorization: `Bearer ${storage.getItem('token')}`,
-        },
+        headers: { authorization: `Bearer ${storage.getItem('token')}` },
       });
 
       // eslint-disable-next-line
@@ -127,19 +126,19 @@ export const VehiclesPage: React.FC = () => {
         win.close();
       }
     } catch(err) {
-      if(err.message === 'Network Error' || !err.response) {
+      if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
-      } else {
+      } else if(err.response.data && err.response.data.message) {
         toast.error(err.response.data.message);
+      } else {
+        toast.error('Ocorreu um erro inesperado.');
+        console.log(err);
       }
     }
-  }, [filters, storage]);
+  };
 
-  // eslint-disable-next-line
-  useEffect(() => { getData(); }, []);
-
-  // eslint-disable-next-line
-  useEffect(() => { getData(); }, [filters]);
+  useEffect(() => { getData(); }, []); // eslint-disable-line
+  useEffect(() => { getData(); }, [filters]); // eslint-disable-line
 
   return (
     <>

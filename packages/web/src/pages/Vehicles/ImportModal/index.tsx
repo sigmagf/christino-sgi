@@ -1,5 +1,5 @@
 import csv2json from 'csvtojson';
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { FaEraser, FaTrash, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
@@ -35,17 +35,17 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
 
   const vehiclesPagination = withPagination(vehiclesToImport, vehiclesToImportTablePage, 10);
 
-  const onClearHandle = useCallback(() => {
+  const onClearHandle = () => {
     setVehiclesToImport([]);
     setInLoading(false);
     setVehiclesToImportTablePage(1);
-  }, []);
+  };
 
-  const onVehicleRemove = useCallback((renavam: string) => {
+  const onVehicleRemove = (renavam: string) => {
     setVehiclesToImport((old) => old.filter((el) => el.renavam !== renavam));
-  }, []);
+  };
 
-  const onFileUploaded = useCallback((files: File[]) => {
+  const onFileUploaded = (files: File[]) => {
     setRequestErrorDetails([]);
     onClearHandle();
 
@@ -71,38 +71,35 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
     };
 
     reader.readAsText(files[0]);
-  }, [onClearHandle]);
+  };
 
-  const onSendHandle = useCallback(async () => {
+  const onSendHandle = async () => {
     setRequestErrorDetails([]);
     setInLoading(true);
 
     try {
-      await api.post('/vehicles/import', {
-        data: vehiclesToImport,
-      }, {
-        headers: {
-          authorization: `Bearer ${storage.getItem('token')}`,
-        },
-      });
+      await api.post('/vehicles/import', { data: vehiclesToImport }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
       toast.success('Arquivo enviado com sucesso!');
       onClose();
     } catch(err) {
-      if(err.message === 'Network Error' || !err.response) {
+      if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
-      } else {
+      } else if(err.response.data && err.response.data.message) {
         toast.error(err.response.data.message);
 
         if(err.response.data.type === 'PARTIAL INVALID DATA') {
           setRequestErrorDetails(err.response.data.details);
         }
+      } else {
+        toast.error('Ocorreu um erro inesperado.');
+        console.log(err);
       }
     }
 
     setInLoading(false);
     onClearHandle();
-  }, [onClearHandle, onClose, storage, vehiclesToImport]);
+  };
 
   const onCloseHandle = () => {
     setRequestErrorDetails([]);
