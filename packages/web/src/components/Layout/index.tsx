@@ -11,10 +11,10 @@ export const Layout: React.FC = ({ children }) => (
       <UserBar />
       <AppContent>
         { children }
+        <div style={{ marginTop: 15, textAlign: 'center', height: 30 }}>
+          CHRISTINO SISTEMA DE GESTAO INTERNO v0.0.1
+        </div>
       </AppContent>
-      <div style={{ marginTop: 15, textAlign: 'center', height: 30 }}>
-        CHRISTINO SISTEMA DE GESTAO INTERNO v0.0.1
-      </div>
     </AppMain>
   </>
 );
