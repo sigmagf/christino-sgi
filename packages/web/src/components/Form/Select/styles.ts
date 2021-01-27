@@ -1,4 +1,4 @@
-import { lighten, transparentize } from 'polished';
+import { lighten, shade, transparentize } from 'polished';
 import styled from 'styled-components';
 
 interface IInputContainerStyledProps {
@@ -39,6 +39,10 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
     :focus-within {
       border-color: ${({ theme }) => theme.secondary.main};
       box-shadow: 0 0 4px 4px ${({ theme }) => transparentize(0.95, theme.secondary.main)};
+    }
+
+    &.react-select__control--is-disabled {
+      background: ${({ theme }) => shade(0.1, theme.primary.main)};
     }
 
     .react-select__value-container {

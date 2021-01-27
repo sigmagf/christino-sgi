@@ -5,24 +5,40 @@ import styled from 'styled-components';
 export const DetailsModalContainer = styled(Form)`
   display: grid;
   gap: 15px;
-  text-transform: uppercase;
-  grid-template-columns: 175px 90px 40px 40px 70px;
+  grid-template-columns: 75px 85px 40px 70px 70px;
 
   grid-template-areas: 'CN CN CN CN CN'
-                       'CD CG CG CG CG'
+                       'CD CD CG CG CG'
                        'HR HR HR HR HR'
                        'VP VR VR VC VC'
                        'VM VM VM VM VM'
                        'VT VT VT VS VS'
-                       'VD VD VD VD VD'
-                       'HH HH HH HH HH'
-                       'AB AB AB AB AB';
+                       'VD VD VD VD VD';
 
-  .action-buttons {
-    display: flex;
-    gap: 15px;
-    justify-content: flex-end;
+  input {
+    text-transform: uppercase;
   }
+
+  > :nth-child(1) { grid-area: CN; } /* NAME */
+  > :nth-child(2) { grid-area: CD; } /* DOCUMENT */
+  > :nth-child(3) { grid-area: CG; } /* GROUP */
+
+  > :nth-child(4) { grid-area: HR; } /* HR */
+
+  > :nth-child(5) { grid-area: VP; } /* PLATE */
+  > :nth-child(6) { grid-area: VR; } /* RENAVAM */
+  > :nth-child(7) { grid-area: VC; } /* CRV */
+  > :nth-child(8) { grid-area: VM; } /* BRAND/MODEL */
+  > :nth-child(9) { grid-area: VT; } /* TYPE */
+  > :nth-child(10) { grid-area: VS; } /* STATUS */
+  > :nth-child(11) { grid-area: VD; } /* DETAILS */
+`;
+
+export const DetailsModalActionButtons = styled.div`
+  margin-top: 15px;
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
 `;
 
 export const DetailsModalLoadingContainer = styled.div`

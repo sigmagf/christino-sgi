@@ -12,6 +12,8 @@ export class VehiclesUpdateService {
   ) { }
 
   async execute(data: IVehiclesUpdateRequestDTO): Promise<Vehicle> {
+    console.log(data);
+
     const client = await this.clientsRepo.create({
       name: data.name,
       document: data.document,
@@ -22,7 +24,7 @@ export class VehiclesUpdateService {
       client_id: client.id || null,
       plate: data.plate,
       renavam: data.renavam,
-      crv: data.crv === '-' ? null : data.crv,
+      crv: data.crv,
       brand_model: data.brand_model,
       type: data.type,
       details: data.details || null,

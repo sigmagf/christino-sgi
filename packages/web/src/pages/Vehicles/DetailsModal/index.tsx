@@ -10,12 +10,11 @@ import { Modal } from '~/components/Modal';
 import { useLocalStorage } from '~/hooks';
 import { IClient, IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
-import { vehicleStatus } from '~/utils/commonSelectOptions';
+import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { formatCPForCNPJ } from '~/utils/formatCPForCNPJ';
-import { statusConverter } from '~/utils/statusConverter';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
-import { DetailsModalContainer, DetailsModalLoadingContainer } from './styles';
+import { DetailsModalActionButtons, DetailsModalContainer, DetailsModalLoadingContainer } from './styles';
 
 interface IFormData {
   name: string;
@@ -40,28 +39,17 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   const storage = useLocalStorage();
 
   const [inLoading, setInLoading] = useState(false);
+  const [editing, setEditing] = useState(!!vehicle);
+  const [clientSearched, setClientSearched] = useState(false);
   const [haveClient, setHaveClient] = useState(true);
 
   const onCloseHandler = () => {
     setInLoading(false);
     setHaveClient(true);
+    setEditing(false);
+    setClientSearched(false);
     onClose();
   };
-
-  /* - DEFINE INITIAL DATA - */
-  const initialData = {
-    name: vehicle?.client.name || '',
-    document: formatCPForCNPJ(vehicle?.client.document || ''),
-    group: vehicle?.client.group || '',
-
-    plate: vehicle?.plate || '',
-    renavam: vehicle?.renavam || '',
-    crv: vehicle?.crv || '',
-    brand_model: vehicle?.brand_model || '',
-    type: vehicle?.type || '',
-    status: { value: vehicle?.status || '0', label: statusConverter(vehicle?.status || '') },
-  };
-  /* END DEFINE INITIAL DATA */
 
   /* - SEARCH CLIENT IN DATABASE - */
   const getClient = async (document: string) => {
@@ -74,6 +62,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         setHaveClient(client.data.length === 1);
         formRef.current.setFieldValue('name', client.data[0]?.name || '');
         formRef.current.setFieldValue('group', client.data[0]?.group || '');
+        setClientSearched(true);
       } catch(err) {
         if(err.message === 'Network Error' || !err.response) {
           toast.error('Verifique sua conexão com a internet.');
@@ -82,6 +71,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         }
 
         setHaveClient(false);
+        setClientSearched(false);
       }
     }
   };
@@ -116,38 +106,52 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   };
   /* END DOCUMENT FORMAT HANDLER */
 
+  /* - SET MAXLENGTH- */
+  const onBlurMaxLengths = (inputName: string, maxLength: number, fillString: string) => {
+    if(formRef.current) {
+      const inputVal: string = formRef.current.getFieldValue(inputName).replace(/\D/g, '');
+
+      formRef.current.setFieldValue(inputName, inputVal.padStart(maxLength, fillString));
+    }
+  };
+
   /* - SAVE OR UPDATE VEHICLE - */
   const onSubmit: SubmitHandler<IFormData> = async (data, { reset }) => {
     setInLoading(true);
 
     try {
       const scheme = yup.object().shape({
-        name: yup.string()
-          .min(3, 'Nome precisa ter pelo menos 3 caracteres.')
-          .required('Nome é obrigatório'),
+        name: yup.string().required('Nome é obrigatório'),
         document: yup.string()
           .min(11, 'Documento deve ter pelo menos 11 caracteres.')
-          .max(14, 'Caractere deve ter no maximo 14 caracteres.')
+          .max(14, 'Documento deve ter no maximo 14 caracteres.')
           .test('validate-document', 'Documento inválido.', (val) => validCPForCNPJ(val || ''))
           .required('Documento é obrigatório.'),
         plate: yup.string()
-          .min(7, 'Placa inválida')
-          .max(7, 'Placa inválida')
+          .min(7, 'Placa inválida.')
+          .max(7, 'Placa inválida.')
           .required('A placa é obrigatória.'),
         renavam: yup.string()
           .max(11, 'O renavam deve ter no maximo 11 caracteres.')
           .required('O renavam é obrigatório.'),
-        crv: yup.string().required('O crv é obrigatório.'),
+        crv: yup.string()
+          .max(12, 'O crv deve ter no maximo 12 caracteres.')
+          .required('O crv é obrigatório.'),
         brand_model: yup.string().required('A marca/modelo é obrigatória.'),
         type: yup.string().required('O tipo é obrigatória.'),
       });
 
-      await scheme.validate(data, { abortEarly: false });
-
       const document = data.document.replace(/\D/g, '');
-      await api.put(`/vehicles/${vehicle?.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+      await scheme.validate({ ...data, document }, { abortEarly: false });
+
+      if(vehicle) {
+        await api.put(`/vehicles/${vehicle.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+      } else {
+        await api.post('/vehicles', { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+      }
 
       toast.success(`Veículo ${vehicle ? 'atualizado' : 'cadastrado'} com sucesso!`);
+      reset();
       onCloseHandler();
     } catch(err) {
       if(err instanceof yup.ValidationError) {
@@ -165,64 +169,43 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
     }
 
     setInLoading(false);
-
-    reset();
   };
   /* END SAVE OR UPDATE VEHICLE */
 
-  /* - DELETE VEHICLE - */
-  const onRemoveClick = async (id: string) => {
-    setInLoading(true);
-
-    try {
-      await api.delete(`/vehicles/${id}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-      toast.success('Veículo removido com sucesso.');
-      onCloseHandler();
-    } catch(err) {
-      if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-        console.log(err);
-      }
-    }
-
-    setInLoading(false);
-  };
-  /* END DELETE VEHICLE */
-
   return (
     <Modal isOpen={isOpen} onRequestClose={onCloseHandler} header={`${vehicle ? 'ALTERACAO' : 'CADASTRO'} DE VEICULOS`}>
-      <DetailsModalContainer initialData={initialData} ref={formRef} onSubmit={onSubmit}>
-        <Input style={{ gridArea: 'CN' }} disabled={inLoading || haveClient} name="name" label="NOME" />
-        <Input style={{ gridArea: 'CD' }} disabled={inLoading} name="document" label="DOCUMENTO" onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
-        <Input style={{ gridArea: 'CG' }} disabled={inLoading || haveClient} name="group" label="GRUPO" />
+      <DetailsModalContainer ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle.client, ...vehicle, status: status[vehicle.status] }}>
+        <Input disabled={inLoading || haveClient || !editing} name="name" label="NOME" />
+        <Input disabled={inLoading || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
+        <Input disabled={inLoading || haveClient || !editing} name="group" label="GRUPO" />
 
-        <hr style={{ gridArea: 'HR' }} />
+        <hr />
 
-        <Input style={{ gridArea: 'VP' }} disabled={inLoading} name="plate" label="PLACA" />
-        <Input style={{ gridArea: 'VR' }} disabled={inLoading} name="renavam" label="RENAVAM" />
-        <Input style={{ gridArea: 'VC' }} disabled={inLoading} name="crv" label="CRV" />
-        <Input style={{ gridArea: 'VM' }} disabled={inLoading} name="brand_model" label="MARCA/MODELO" />
-        <Input style={{ gridArea: 'VT' }} disabled={inLoading} name="type" label="TIPO" />
-        <Select style={{ gridArea: 'VS' }} isDisabled={inLoading} name="status" label="STATUS" options={[...vehicleStatus.filter((e) => e.value)]} isSearchable={false} />
-        <Input style={{ gridArea: 'VD' }} disabled={inLoading} name="details" label="DETALHES" />
-
-        <div style={{ gridArea: 'HH', height: 10 }} />
-
-        <div className="action-buttons" style={{ gridArea: 'AB' }}>
-          <Button type="submit" variant="success" disabled={inLoading}>
-            {vehicle ? 'SALVAR' : 'INCLUIR'}
-          </Button>
-          {vehicle && (
-            <Button type="button" variant="error" disabled={inLoading} onClick={() => onRemoveClick(vehicle.id)}>
-              EXCLUIR
-            </Button>
-          )}
-        </div>
+        <Input disabled={inLoading || !editing} name="plate" label="PLACA" maxLength={7} />
+        <Input disabled={inLoading || !editing} name="renavam" label="RENAVAM" maxLength={11} onBlur={() => onBlurMaxLengths('renavam', 11, '0')} />
+        <Input disabled={inLoading || !editing} name="crv" label="CRV" maxLength={12} onBlur={() => onBlurMaxLengths('crv', 12, '0')} />
+        <Input disabled={inLoading || !editing} name="brand_model" label="MARCA/MODELO" />
+        <Input disabled={inLoading || !editing} name="type" label="TIPO" />
+        <Select isDisabled={inLoading || !editing} name="status" label="STATUS" options={[...status.filter((e) => e)]} isSearchable={false} />
+        <Input disabled={inLoading || !editing} name="details" label="DETALHES" />
       </DetailsModalContainer>
+
+      <DetailsModalActionButtons>
+        {editing ? (
+          <>
+            <Button type="submit" variant="success" disabled={inLoading} onClick={() => formRef.current && formRef.current.submitForm()}>
+              {vehicle ? 'SALVAR' : 'INCLUIR'}
+            </Button>
+            <Button variant="warning" disabled={inLoading} onClick={() => setEditing(false)}>
+              CANCELAR
+            </Button>
+          </>
+        ) : (
+          <Button variant="warning" disabled={inLoading} onClick={() => setEditing(true)}>
+            EDITAR
+          </Button>
+        )}
+      </DetailsModalActionButtons>
 
       {inLoading && (
         <DetailsModalLoadingContainer>
