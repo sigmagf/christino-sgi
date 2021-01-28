@@ -1,2 +1,5 @@
-import { lighten } from 'polished';
 import styled from 'styled-components';
+
+export const HomePageContainer = styled.div`
+
+`;

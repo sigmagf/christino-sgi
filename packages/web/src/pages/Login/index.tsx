@@ -61,27 +61,23 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <>
-      <LoginContainer>
+    <LoginContainer>
+      {!inLoading ? (
         <Card>
-          {!inLoading ? (
-            <>
-              <img src="assets/logo-texto.png" alt="" />
-              <div className="divider" />
+          <img src="assets/logo-texto.png" alt="" />
+          <div className="divider" />
 
-              <Form ref={formRef} onSubmit={onSubmit}>
-                <Input style={{ gridArea: 'EM' }} name="email" label="E-MAIL" />
-                <Input style={{ gridArea: 'PW' }} type="password" name="password" label="SENHA" />
-                <Button style={{ gridArea: 'SB' }} type="submit" variant="success">
-                  Entrar
-                </Button>
-              </Form>
-            </>
-          ) : (
-            <ReactLoading type="bars" />
-          )}
+          <Form ref={formRef} onSubmit={onSubmit}>
+            <Input style={{ gridArea: 'EM' }} name="email" label="E-MAIL" />
+            <Input style={{ gridArea: 'PW' }} type="password" name="password" label="SENHA" />
+            <Button style={{ gridArea: 'SB' }} type="submit" variant="success">
+              Entrar
+            </Button>
+          </Form>
         </Card>
-      </LoginContainer>
-    </>
+      ) : (
+        <ReactLoading type="bars" />
+      )}
+    </LoginContainer>
   );
 };
