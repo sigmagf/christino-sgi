@@ -30,11 +30,11 @@ export class VehiclesCreateService {
       client_id: client.id,
       plate: data.plate,
       renavam: data.renavam,
-      crv: data.crv === '-' ? null : data.crv,
+      crv: data.crv || null,
       brand_model: data.brand_model,
       type: data.type,
       details: data.details || null,
-      status: convertStatus(data.status.toLowerCase()),
+      status: convertStatus(data.status),
     });
 
     return vehicle;

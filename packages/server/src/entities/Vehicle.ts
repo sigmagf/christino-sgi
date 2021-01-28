@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { Client } from './Client';
@@ -10,10 +11,10 @@ export class Vehicle {
     @Column('uuid')
     client_id: string;
 
-    @Column('character varying', { length: 7, unique: true })
+    @Column('character varying', { length: 7 })
     plate: string;
 
-    @Column('character varying', { length: 11, unique: true })
+    @Column('character varying', { length: 11 })
     renavam: string;
 
     @Column('character varying', { length: 16, nullable: true, unique: true })

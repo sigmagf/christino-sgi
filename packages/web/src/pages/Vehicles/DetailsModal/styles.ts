@@ -35,7 +35,7 @@ export const DetailsModalContainer = styled(Form)`
 `;
 
 export const DetailsModalActionButtons = styled.div`
-  margin-top: 15px;
+  margin-top: 50px;
   display: flex;
   gap: 15px;
   justify-content: flex-end;

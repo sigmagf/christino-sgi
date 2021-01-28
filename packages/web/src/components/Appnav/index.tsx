@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { IconType } from 'react-icons';
-import { FaHome, FaAngleLeft, FaAngleRight, FaFile, FaUsers } from 'react-icons/fa';
+import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, FaUserShield } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { usePersistedState } from '~/hooks';
@@ -31,14 +31,19 @@ export const Appnav: React.FC = () => {
       path: '/',
     },
     {
-      icon: FaFile,
-      label: 'Recibos',
+      icon: FaCar,
+      label: 'Veículos',
       path: '/vehicles',
+    },
+    {
+      icon: FaUserShield,
+      label: 'Seguros',
+      path: '/insurances',
     },
     {
       icon: FaUsers,
       label: 'Clientes',
-      path: '/clientes',
+      path: '/clients',
     },
   ];
 

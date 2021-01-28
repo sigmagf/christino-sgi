@@ -93,7 +93,6 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
         }
       } else {
         toast.error('Ocorreu um erro inesperado.');
-        console.log(err);
       }
     }
 

@@ -4,8 +4,6 @@ import { IPagination, IVehiclesListFilters } from '~/interfaces';
 export interface IVehiclesRepository {
   list(page: number, limit: number, filters: IVehiclesListFilters): Promise<IPagination<Vehicle> | Vehicle[]>;
   findById(id: string): Promise<Vehicle>;
-  findByPlate(plate: string): Promise<Vehicle>;
-  findByRenavam(renavam: string): Promise<Vehicle>;
   findByClientPlate(client_id: string, plate: string): Promise<Vehicle>;
   findByClientRenavam(client_id: string, plate: string): Promise<Vehicle>;
 

@@ -164,7 +164,6 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         toast.error(err.response.data.message);
       } else {
         toast.error('Ocorreu um erro inesperado.');
-        console.log(err);
       }
     }
 

@@ -46,11 +46,6 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
     }
 
     .react-select__value-container {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      flex-wrap: nowrap;
-
       .react-select__single-value {
         color: ${({ theme }) => theme.primary.contrastText};
         font-family: 'Roboto Mono', monospace;
@@ -64,6 +59,11 @@ export const InputContainer = styled.div<IInputContainerStyledProps>`
           color: rgba(255, 255, 255, .75);
         }
       }
+    }
+
+    .react-select__value-container--is-multi {
+      flex-wrap: nowrap;
+      flex-direction: row;
     }
   }
 

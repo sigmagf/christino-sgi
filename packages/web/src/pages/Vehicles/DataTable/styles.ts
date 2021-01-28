@@ -27,7 +27,7 @@ export const StatusBadge = styled.div<IStatusBadgeStyledProps>`
   }}
 `;
 
-export const VehiclesDataTableCardContainer = styled(Card)`
+export const DataTableCardContainer = styled(Card)`
   position: relative;
   
   th, td {

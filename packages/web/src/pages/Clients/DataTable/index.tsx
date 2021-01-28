@@ -5,18 +5,18 @@ import ReactLoading from 'react-loading';
 import { Badge } from '~/components/Badge';
 import { Button } from '~/components/Button';
 import { Table } from '~/components/Table';
-import { IVehicle } from '~/interfaces';
-import { statusConverter } from '~/utils/statusConverter';
+import { IClient } from '~/interfaces';
+import { formatCPForCNPJ } from '~/utils/formatCPForCNPJ';
 
-import { DataTableCardContainer, StatusBadge } from './styles';
+import { DataTableCardContainer } from './styles';
 
 interface IVehicleDataTableProps {
-  vehicles: IVehicle[];
+  data: IClient[];
   inLoading: boolean;
   onDetailsClick: (id: string) => void;
 }
 
-export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick }) => {
+export const ClientsDataTable: React.FC<IVehicleDataTableProps> = ({ data, inLoading, onDetailsClick }) => {
   return (
     <DataTableCardContainer style={{ position: 'relative' }}>
       { inLoading && (
@@ -28,11 +28,11 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
       <Table>
         <thead>
           <tr>
-            <th style={{ width: 20 }} aria-label="status-column" />
-            <th style={{ textAlign: 'left' }}>CLIENTE</th>
-            <th style={{ width: 100 }}>PLACA</th>
-            <th style={{ width: 150 }}>RENAVAM</th>
-            <th style={{ width: 250 }}>MARCA/MODELO</th>
+            <th style={{ textAlign: 'left' }}>NOME</th>
+            <th style={{ width: 100 }}>DOCUMENTO</th>
+            <th style={{ width: 250 }}>E-MAIL</th>
+            <th style={{ width: 250 }}>TELEFONE 1</th>
+            <th style={{ width: 250 }}>TELEFONE 2</th>
             <th style={{ width: 50 }} aria-label="action-column" />
           </tr>
         </thead>
@@ -44,31 +44,29 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
             </>
           )}
 
-          {(!inLoading && vehicles.length === 0) && (
+          {(!inLoading && data.length === 0) && (
             <>
               <tr><td colSpan={6} style={{ textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
               <tr><td colSpan={6} style={{ textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
             </>
           )}
 
-          {!inLoading && vehicles.map((vehicle) => (
-            <tr key={vehicle.id}>
-              <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <StatusBadge status={vehicle.status} title={statusConverter(vehicle.status)} />
-              </td>
+          {!inLoading && data.map((el) => (
+            <tr key={el.id}>
               <td>
-                { vehicle.client.name }
-                { vehicle.client.group && (
+                { el.name }
+                {el.group && (
                   <Badge>
-                    { vehicle.client.group }
+                    { el.group }
                   </Badge>
                 )}
               </td>
-              <td style={{ textAlign: 'center' }}>{ vehicle.plate }</td>
-              <td style={{ textAlign: 'center' }}>{ vehicle.renavam }</td>
-              <td style={{ textAlign: 'center' }}>{ vehicle.brand_model }</td>
+              <td style={{ textAlign: 'center' }}>{ formatCPForCNPJ(el.document) }</td>
+              <td style={{ textAlign: 'center' }}>{ el.email }</td>
+              <td style={{ textAlign: 'center' }}>{ el.phone1 }</td>
+              <td style={{ textAlign: 'center' }}>{ el.phone2 }</td>
               <td style={{ textAlign: 'center' }}>
-                <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(vehicle.id)} disabled={inLoading}>
+                <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(el.id)} disabled={inLoading || true}>
                   <SearchIcon />
                 </Button>
               </td>

@@ -7,6 +7,7 @@ import { theme } from '~/styles/theme';
 
 import { StyledToastContainer } from './components/StyledToastContainer';
 import { NotFoundErrorPage } from './pages/404';
+import { ClientsPage } from './pages/Clients';
 import { HomePage } from './pages/Home';
 import { Login } from './pages/Login';
 import { VehiclesPage } from './pages/Vehicles';
@@ -20,6 +21,7 @@ export const App: React.FC = () => (
 
         <SecureRoute path="/" element={<HomePage />} />
         <SecureRoute path="/vehicles" element={<VehiclesPage />} />
+        <SecureRoute path="/clients" element={<ClientsPage />} />
 
         <Route path="*" element={<NotFoundErrorPage />} />
       </Routes>

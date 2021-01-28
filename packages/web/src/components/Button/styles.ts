@@ -21,6 +21,13 @@ export const ButtonContainer = styled.button<IButtonContainerStyledProps>`
   ${({ theme, variant }) => css`
     background: ${theme[variant].main};
     color: ${theme[variant].contrastText};
-    :hover { background: ${shade(0.2, theme[variant].main)}; }
+
+    :hover {
+      background: ${shade(0.2, theme[variant].main)};
+    }
+    :disabled {
+      cursor: not-allowed;
+      background: ${shade(0.25, theme[variant].main)};
+    }
   `}
 `;

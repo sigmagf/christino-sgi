@@ -23,7 +23,7 @@ export class TypeORMClientsRepository implements IClientsRepository {
       const dbPageData = await getRepository(Client)
         .createQueryBuilder()
         .where(filtersString)
-        .skip(startIndex)
+        .offset(startIndex)
         .limit(effectiveLimit)
         .orderBy('name', 'ASC')
         .getMany();

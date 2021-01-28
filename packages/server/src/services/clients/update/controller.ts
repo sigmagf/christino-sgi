@@ -14,9 +14,12 @@ export class ClientsUpdateController {
     const name = stringFix(req.body.name, undefined, 'UPPERCASE');
     const document = stringFix(req.body.document, undefined, 'UPPERCASE');
     const group = stringFix(req.body.group, undefined, 'UPPERCASE');
+    const email = stringFix(req.body.email, undefined, 'UPPERCASE');
+    const phone1 = stringFix(req.body.phone1, undefined, 'UPPERCASE');
+    const phone2 = stringFix(req.body.phone2, undefined, 'UPPERCASE');
 
     try {
-      const user = await this.service.execute({ id, name, document, group });
+      const user = await this.service.execute({ id, name, document, group, email, phone1, phone2 });
 
       return res.status(200).json(user);
     } catch(err) {

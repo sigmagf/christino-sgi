@@ -1,9 +1,9 @@
-export function convertStatus(status: string) {
+export function convertStatus(status: string|number) {
   if(!status) {
     return 1;
   }
 
-  const st = status.toLowerCase();
+  const st = status.toString().trim().toLowerCase();
 
   switch(st) {
     case '0':

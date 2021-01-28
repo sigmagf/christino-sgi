@@ -29,7 +29,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
   const [groups, setGroups] = useState([{ label: 'TODOS', value: '' }]);
   const [clients, setClients] = useState([{ label: 'TODOS', value: '' }]);
 
-  const getClients = async (name?: string) => {
+  const getClients = async (name: string) => {
     try {
       const response = await api.get<IClient[]>(`/clients?noPagination=true${name ? `&name=${name}` : ''}`, {
         headers: { authorization: `Bearer ${storage.getItem('token')}` },
@@ -44,15 +44,14 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
         toast.error(err.response.data.message);
       } else {
         toast.error('Ocorreu um erro inesperado.');
-        console.log(err);
       }
     }
   };
 
-  const onClientsInputChange = (newValue: string) => {
+  const onClientsInputChange = () => {
     clearTimeout(timer);
 
-    timer = setTimeout(() => { getClients(newValue.toUpperCase()); }, 1000);
+    timer = setTimeout(() => { getClients('a'); }, 1000);
   };
 
   const getGroups = async () => {
@@ -60,7 +59,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
       const response = await api.get<string[]>('/clients/groups', { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
       const data = response.data.map((group) => ({ value: group, label: group }));
-      setGroups(data);
+      setGroups([{ label: 'TODOS', value: '' }, ...data]);
     } catch(err) {
       if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
@@ -68,7 +67,6 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
         toast.error(err.response.data.message);
       } else {
         toast.error('Ocorreu um erro inesperado.');
-        console.log(err);
       }
     }
   };
@@ -79,7 +77,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     <FiltersCard>
       <FiltersContainer open={open}>
         <Form ref={formRef} onSubmit={onFiltersApplyClick}>
-          <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
+          <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} defaultValue={clients[0]} onKeyDown={onClientsInputChange} />
           <Select
             label="GRUPO"
             name="group"

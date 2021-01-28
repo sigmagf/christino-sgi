@@ -91,18 +91,6 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
     return dbData;
   }
 
-  async findByPlate(plate: string): Promise<Vehicle> {
-    const dbData = await getRepository(Vehicle).findOne({ where: { plate } });
-
-    return dbData;
-  }
-
-  async findByRenavam(renavam: string): Promise<Vehicle> {
-    const dbData = await getRepository(Vehicle).findOne({ where: { renavam } });
-
-    return dbData;
-  }
-
   async findByClientPlate(client_id: string, plate: string): Promise<Vehicle> {
     const dbData = await getRepository(Vehicle).findOne({ where: { client_id, plate } });
 

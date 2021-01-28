@@ -1,3 +1,3 @@
 import { Client } from '~/entities/Client';
 
-export type IClientsUpdateRequestDTO = Pick<Client, 'id'|'name'|'document'|'group'>;
+export type IClientsUpdateRequestDTO = Omit<Client, 'created_at'|'updated_at'>;

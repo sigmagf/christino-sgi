@@ -43,6 +43,15 @@ export interface IVehiclesFilters {
   status: number|number[];
 }
 
+export interface IClientsFilters {
+  page: number;
+  limit: number;
+
+  name?: string;
+  document?: string;
+  group?: string;
+}
+
 export interface IPagination<T> {
   page: {
     total: number;
@@ -57,6 +66,9 @@ export interface IClient {
   name: string;
   document: string;
   group: string;
+  email?: string;
+  phone1?: string;
+  phone2?: string;
   created_at?: Date;
   updated_at?: Date;
 }

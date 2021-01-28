@@ -49,7 +49,6 @@ export const VehiclesPage: React.FC = () => {
         toast.error(err.response.data.message);
       } else {
         toast.error('Ocorreu um erro inesperado.');
-        console.log(err);
       }
 
       setVehicles({ page: { total: 1, current: 1, limit: 10 }, data: [] });
@@ -132,7 +131,6 @@ export const VehiclesPage: React.FC = () => {
         toast.error(err.response.data.message);
       } else {
         toast.error('Ocorreu um erro inesperado.');
-        console.log(err);
       }
     }
   };

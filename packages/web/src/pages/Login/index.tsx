@@ -41,6 +41,7 @@ export const Login: React.FC = () => {
 
       const request = await api.post<IUserAuth>('/users/auth', data);
       storage.setItem('token', request.data.token);
+      storage.setItem('userName', request.data.user.name);
       navigate('/');
     } catch(err) {
       if(err instanceof yup.ValidationError) {
@@ -53,7 +54,6 @@ export const Login: React.FC = () => {
         toast.error(err.response.data.message);
       } else {
         toast.error('Ocorreu um erro inesperado');
-        console.log(err);
       }
     }
 
