@@ -13,6 +13,7 @@ export class VehiclesListController {
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
+    const include_truck = (req.query.include_truck as string || 'false').toLowerCase() === 'true';
     const client_id = stringFix(req.query.client_id, undefined);
     const group = stringFix(req.query.group, undefined, 'UPPERCASE');
     const plate = stringFix(req.query.plate, undefined, 'UPPERCASE');
@@ -23,7 +24,9 @@ export class VehiclesListController {
     const plate_end = stringFix(req.query.plate_end, undefined, 'UPPERCASE');
 
     try {
-      const vehicles = await this.service.execute({ page, limit, filters: { pagination, plate_end, client_id, status, group, plate, renavam, crv, brand_model } });
+      const vehicles = await this.service.execute({
+        page, limit, filters: { pagination, plate_end, client_id, status, group, plate, renavam, crv, brand_model, include_truck },
+      });
       return res.status(200).json(vehicles);
     } catch(err) {
       return errorWork(res, err.message || null);

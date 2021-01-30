@@ -2,7 +2,7 @@ import { useField } from '@unform/core';
 import React, { useEffect, useRef } from 'react';
 import ReactInputMask, { Props } from 'react-input-mask';
 
-import { InputContainer } from './styles';
+import { InputMaskContainer } from './styles';
 
 type InputMask = Props & {
   label?: string;
@@ -28,14 +28,14 @@ const InputMask: React.FC<InputMask> = ({ name, label, style, ...props }) => {
   }, [fieldName, registerField]);
 
   return (
-    <InputContainer hasLabel={!!label} style={style}>
+    <InputMaskContainer hasLabel={!!label} style={style}>
       {label && (
         <label htmlFor={name}>
           { label }
         </label>
       )}
       <ReactInputMask ref={inputRef} defaultValue={defaultValue} id={name} {...props} />
-    </InputContainer>
+    </InputMaskContainer>
   );
 };
 

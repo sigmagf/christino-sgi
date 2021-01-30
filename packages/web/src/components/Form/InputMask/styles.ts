@@ -5,7 +5,7 @@ interface IInputContainerStyledProps {
   hasLabel: boolean;
 }
 
-export const InputContainer = styled.div<IInputContainerStyledProps>`
+export const InputMaskContainer = styled.div<IInputContainerStyledProps>`
   position: relative;
   width: 100%;
 

@@ -10,7 +10,7 @@ type Input = React.InputHTMLAttributes<HTMLInputElement> & {
 
 const Input: React.FC<Input> = ({ name, label, style, id, ...props }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { fieldName, defaultValue, registerField, error } = useField(name);
+  const { fieldName, defaultValue, registerField } = useField(name);
 
   useEffect(() => {
     registerField({
@@ -28,9 +28,6 @@ const Input: React.FC<Input> = ({ name, label, style, id, ...props }) => {
         </label>
       )}
       <input ref={inputRef} defaultValue={defaultValue} id={name} {...props} />
-      <div className="error-container">
-        { error }
-      </div>
     </InputContainer>
   );
 };

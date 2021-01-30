@@ -26,7 +26,7 @@ export const FiltersContainer = styled.div<IFiltersContainerStyledProps>`
 
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-areas: 'CN CN CN CN CN CN CN CG CG VS VS VS'
-                         'VP VR VR VC VC VM VM VM VM VM VF VF';
+                         'VP VR VR VC VC VM VM VM VF VF VT VT';
   }
 
   form {

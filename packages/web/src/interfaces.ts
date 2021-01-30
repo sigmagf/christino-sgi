@@ -43,6 +43,7 @@ export interface IVehiclesFilters {
   brand_model?: string;
   plate_end?: string;
   status: number|number[];
+  include_truck?: boolean;
 }
 
 export interface IClientsFilters {

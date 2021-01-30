@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
 import { Select, Input } from '~/components/Form';
+import { Switch } from '~/components/Switch';
 import { useLocalStorage } from '~/hooks';
 import { IClient, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
@@ -17,7 +18,7 @@ import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders
 interface IVehiclesFiltersCardProps {
   onOpenImportModalClick: () => void;
   onOpenCreateModalClick: () => void;
-  onFiltersApplyClick: (data: SubmitHandler<Omit<IVehiclesFilters, 'page'|'limit'>>) => void;
+  onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
 }
 
 export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick, onFiltersApplyClick }) => {
@@ -27,6 +28,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
   let timer: any;
 
   const [open, setOpen] = useState(true);
+  const [includeTruck, setIncludeTruck] = useState(true);
   const [groups, setGroups] = useState([{ label: 'TODOS', value: '' }]);
   const [clients, setClients] = useState([{ label: 'TODOS', value: '' }]);
 
@@ -72,12 +74,19 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     }
   };
 
+  const onSubmitHandler: SubmitHandler<Omit<IVehiclesFilters, 'page'|'limit'>> = (data) => {
+    onFiltersApplyClick({
+      ...data,
+      include_truck: includeTruck,
+    });
+  };
+
   useEffect(() => { getGroups(); }, []); // eslint-disable-line
 
   return (
     <FiltersCard>
       <FiltersContainer open={open}>
-        <Form ref={formRef} onSubmit={onFiltersApplyClick}>
+        <Form ref={formRef} onSubmit={onSubmitHandler}>
           <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} defaultValue={clients[0]} onKeyDown={onClientsInputChange} />
           <Select
             label="GRUPO"
@@ -93,6 +102,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
           <Input label="CRV" name="crv" style={{ gridArea: 'VC' }} />
           <Input label="MARCA/MODELO" name="brand_model" style={{ gridArea: 'VM' }} />
           <Select label="FINAL DE PLACA" name="plate_end" style={{ gridArea: 'VF' }} options={plateEnd} defaultValue={plateEnd[0]} />
+          <Switch label="INCLUIR CAMINHÕES" style={{ gridArea: 'VT' }} checked={includeTruck} onChange={() => setIncludeTruck((old) => !old)} />
         </Form>
 
         <FiltersHeaders onClick={() => setOpen((old) => !old)}>

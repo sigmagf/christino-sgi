@@ -19,4 +19,5 @@ export interface IVehiclesListFilters extends Omit<Vehicle, 'id'|'client'|'type'
   status: string|string[];
   group: string;
   plate_end: string;
+  include_truck: boolean;
 }

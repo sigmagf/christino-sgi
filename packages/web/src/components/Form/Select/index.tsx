@@ -2,7 +2,7 @@ import { useField } from '@unform/core';
 import React, { useEffect, useRef } from 'react';
 import ReactSelect, { OptionTypeBase, Props } from 'react-select';
 
-import { InputContainer } from './styles';
+import { SelectContainer } from './styles';
 
 interface ISelectProps extends Props<OptionTypeBase, boolean> {
   label?: string;
@@ -37,7 +37,7 @@ const Select: React.FC<ISelectProps> = ({ name, label, style, id, placeholder, .
   }, [fieldName, registerField, rest.isMulti]);
 
   return (
-    <InputContainer hasLabel={!!label} style={style} id={id}>
+    <SelectContainer hasLabel={!!label} style={style} id={id}>
       {label && (
         <label htmlFor={name}>
           { label }
@@ -51,7 +51,7 @@ const Select: React.FC<ISelectProps> = ({ name, label, style, id, placeholder, .
         placeholder={placeholder || ''}
         {...rest}
       />
-    </InputContainer>
+    </SelectContainer>
   );
 };
 
