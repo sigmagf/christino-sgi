@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { FaPrint } from 'react-icons/fa';
+import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
@@ -11,6 +12,7 @@ import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 import { statusConverter } from '~/utils/statusConverter';
+import { validPermission } from '~/utils/validPermission';
 
 import { VehiclesDataTable } from './DataTable';
 import { VehiclesDetailsModal } from './DetailsModal';
@@ -138,6 +140,11 @@ export const VehiclesPage: React.FC = () => {
   useEffect(() => { getData(); }, []); // eslint-disable-line
   useEffect(() => { getData(); }, [filters]); // eslint-disable-line
 
+  if(!validPermission('desp_permission')) {
+    toast.error('Você não tem acesso ao módulo despachante!');
+    return (<Navigate to="/" replace />);
+  }
+
   return (
     <>
       <Layout>
@@ -159,7 +166,8 @@ export const VehiclesPage: React.FC = () => {
           />
         </Card>
       </Layout>
-      <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />
+
+      {validPermission('desp_permission', 2) && <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />}
       <VehiclesDetailsModal isOpen={detailsModalOpen} onClose={onModalsClose} vehicle={vehicleToDetails} />
     </>
   );

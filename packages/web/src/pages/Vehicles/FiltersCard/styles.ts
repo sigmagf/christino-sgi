@@ -19,7 +19,6 @@ export const FiltersContainer = styled.div<IFiltersContainerStyledProps>`
   transition: height 250ms ease;
 
   padding-bottom: ${({ open }) => (open ? '41px' : '26px')};
-  margin-bottom: 15px;
 
   > :nth-child(1) {
     display: grid;
@@ -54,6 +53,10 @@ export const FiltersHeaders = styled.div`
 `;
 
 export const FiltersCardActionButtons = styled.div`
+  &:not(:empty) {
+    margin-top: 15px;
+  }
+
   grid-area: AC;
   display: flex;
   gap: 10px;

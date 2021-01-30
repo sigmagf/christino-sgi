@@ -10,6 +10,7 @@ import { useLocalStorage } from '~/hooks';
 import { IClient, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
+import { validPermission } from '~/utils/validPermission';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders } from './styles';
 
@@ -104,12 +105,16 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
       </FiltersContainer>
 
       <FiltersCardActionButtons>
-        <Button variant="success" style={{ width: 175.97 }} onClick={onOpenCreateModalClick}>
-          <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
-        </Button>
-        <Button variant="info" style={{ width: 217.19 }} onClick={onOpenImportModalClick}>
-          <FaLayerGroup />&nbsp;&nbsp;&nbsp;ENVIAR LOTE DE VEICULOS
-        </Button>
+        {validPermission('desp_permission', 2) && (
+          <>
+            <Button variant="success" style={{ width: 175.97 }} onClick={onOpenCreateModalClick}>
+              <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
+            </Button>
+            <Button variant="info" style={{ width: 217.19 }} onClick={onOpenImportModalClick}>
+              <FaLayerGroup />&nbsp;&nbsp;&nbsp;ENVIAR LOTE DE VEICULOS
+            </Button>
+          </>
+        )}
         {open && (
         <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>
           <FaFilter />&nbsp;&nbsp;&nbsp;FILTRAR

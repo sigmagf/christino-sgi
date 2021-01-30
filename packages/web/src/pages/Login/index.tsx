@@ -41,6 +41,8 @@ export const Login: React.FC = () => {
 
       const request = await api.post<IUserAuth>('/users/auth', data);
       storage.setItem('token', request.data.token);
+      storage.setItem('desp_permission', request.data.user.desp_permission);
+      storage.setItem('segu_permission', request.data.user.segu_permission);
       storage.setItem('userName', request.data.user.name);
       navigate('/');
     } catch(err) {

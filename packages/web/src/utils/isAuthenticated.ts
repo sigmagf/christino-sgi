@@ -10,12 +10,15 @@ export async function isAuthenticated(storage: IUseLocalStorage): Promise<boolea
   }
 
   try {
-    await api.get<IUser>('/users/valid', {
+    const request = await api.get<IUser>('/users/valid', {
       headers: {
         authorization: `Bearer ${storage.getItem('token')}`,
       },
     });
 
+    storage.setItem('desp_permission', request.data.desp_permission);
+    storage.setItem('segu_permission', request.data.segu_permission);
+    storage.setItem('userName', request.data.name);
     return true;
   } catch(err) {
     storage.setItem('token', null);

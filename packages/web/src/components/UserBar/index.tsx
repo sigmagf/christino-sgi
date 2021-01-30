@@ -25,7 +25,7 @@ export const UserBar: React.FC = () => {
       <div className="user-actions">
         <Button variant="error" onClick={onLogout}><FaSignOutAlt size={17} /></Button>
         <Button variant="secondary"><FaCog size={17} /></Button>
-        <img src="https://www.codeapi.io/initials/Joao%20Gabriel" alt="" />
+        <img src={`https://www.codeapi.io/initials/${storage.getItem('userName')?.replaceAll(' ', '%20')}`} alt="" />
       </div>
     </UserBarContainer>
   );
