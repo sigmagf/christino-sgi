@@ -83,6 +83,8 @@ export interface IUser {
   password: string;
   desp_permission: number;
   segu_permission: number;
+  clie_permission: number;
+  user_permission: number;
   created_at?: Date;
   updated_at?: Date;
 }

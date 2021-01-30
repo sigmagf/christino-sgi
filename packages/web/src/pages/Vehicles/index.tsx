@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { FaPrint } from 'react-icons/fa';
+import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
@@ -21,7 +22,7 @@ export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
   const storage = useLocalStorage();
 
-  const [desp_permission, setDesp_permission] = useState(0);
+  const [desp_permission, setDesp_permission] = useState(-1);
 
   const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
   const [vehicleToDetails, setVehicleToDetails] = useState<IVehicle>();
@@ -97,6 +98,10 @@ export const VehiclesPage: React.FC = () => {
   };
 
   useEffect(() => { getVehicles(); }, [filters]); // eslint-disable-line
+
+  if(desp_permission === 0) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <>

@@ -14,8 +14,14 @@ export class UsersCreateController {
     const password = stringFix(req.body.password, undefined);
     const desp_permission = stringFix(req.body.desp_permission, undefined);
     const segu_permission = stringFix(req.body.segu_permission, undefined);
+    const clie_permission = stringFix(req.body.clie_permission, undefined);
+    const user_permission = stringFix(req.body.user_permission, undefined);
 
     try {
+      if(req.user && req.user.clie_permission < 2) {
+        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
+      }
+
       if(!name) {
         throw new Error(JSON.stringify({ code: 400, message: 'Name is null or undefined.' }));
       }
@@ -28,7 +34,7 @@ export class UsersCreateController {
         throw new Error(JSON.stringify({ code: 400, message: 'Password is null or undefined.' }));
       }
 
-      const user = await this.service.execute({ name, email, password, desp_permission, segu_permission });
+      const user = await this.service.execute({ name, email, password, desp_permission, segu_permission, clie_permission, user_permission });
       return res.status(201).json(user);
     } catch(err) {
       return errorWork(res, err.message || null);

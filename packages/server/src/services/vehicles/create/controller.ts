@@ -22,6 +22,10 @@ export class VehiclesCreateController {
     const status = stringFix(req.body.status, undefined, 'UPPERCASE');
 
     try {
+      if(req.user && req.user.desp_permission < 2) {
+        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
+      }
+
       if(!name) {
         throw new Error(JSON.stringify({ code: 400, message: 'Client name is null or undefined.' }));
       }

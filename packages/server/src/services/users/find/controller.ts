@@ -11,6 +11,10 @@ export class UsersFindController {
     const { id } = req.params;
 
     try {
+      if(req.user && req.user.clie_permission < 1) {
+        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
+      }
+
       const user = await this.service.execute({ id });
       return res.status(200).json(user);
     } catch(err) {

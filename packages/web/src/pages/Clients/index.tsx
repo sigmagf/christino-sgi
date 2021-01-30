@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { FaPrint } from 'react-icons/fa';
+import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
@@ -12,10 +13,13 @@ import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 
 import { ClientsDataTable } from './DataTable';
+import { ClientsPrintScreen } from './printScreen';
 
 export const ClientsPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
   const storage = useLocalStorage();
+
+  const [clie_permission, setClie_permission] = useState(-1);
 
   const [clients, setClients] = useState<IPagination<IClient>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
   const [filters, setFilters] = useState<IClientsFilters>({ page: 1, limit: 10 });
@@ -63,42 +67,7 @@ export const ClientsPage: React.FC = () => {
       const win = window.open('', 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${screen.width},height=${screen.height}`);
 
       if(win) {
-        win.document.body.innerHTML = `
-          <style>
-            @page { size: portrait; -webkit-print-color-adjust: exact; }
-            * { font-family: 'Roboto Mono', monospace; font-size: 10px; }
-            html, body { margin: 0; padding: 0; }
-            table { width: 100%; border-radius: 5px; overflow: hidden; border-collapse: collapse; }
-            td, th { padding: 8px; }
-            thead > tr > th{ font-weight: 800; }
-            tbody > tr:nth-child(even) { background: white; }
-            tbody > tr:nth-child(odd) { background: lightgray; }
-          </style>
-
-          <table>
-            <thead>
-              <tr>
-                <th style="text-align: left">Nome</th>
-                <th>DOCUMENTO</th>
-                <th>GRUPO</th>
-                <th>EMAIL</th>
-                <th>TELEFONES</th>
-              </tr>
-            </thead>
-            <tbody>
-            ${response.data.map((v) => `
-              <tr>
-                <td>${v.name}</td>
-                <td style="text-align: center">${v.document}</td>
-                <td style="text-align: center">${v.group || ''}</td>
-                <td style="text-align: center">${v.email || ''}</td>
-                <td style="text-align: center">${v.phone2 && v.phone1 ? `${v.phone1}\n${v.phone2}` : `${v.phone1 || ''}${v.phone2 || ''}`}</td>
-              </tr>
-            `).join('')}
-            </tbody>
-          </table>
-        `;
-
+        win.document.body.innerHTML = ClientsPrintScreen(response.data);
         win.print();
         win.close();
       }
@@ -116,8 +85,12 @@ export const ClientsPage: React.FC = () => {
   useEffect(() => { getData(); }, []); // eslint-disable-line
   useEffect(() => { getData(); }, [filters]); // eslint-disable-line
 
+  if(clie_permission === 0) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
-    <Layout>
+    <Layout setPermissions={(perms) => setClie_permission(perms.clie_permission)}>
       <ClientsDataTable inLoading={inLoading} data={clients.data} onDetailsClick={onDetailsClick} />
 
       <Card style={{ margin: '15px 0' }}>

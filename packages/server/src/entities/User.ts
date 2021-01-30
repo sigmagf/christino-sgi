@@ -32,6 +32,12 @@ export class User {
     @Column('smallint', { default: 0 })
     segu_permission: number;
 
+    @Column('smallint', { default: 0 })
+    clie_permission: number;
+
+    @Column('smallint', { default: 0 })
+    user_permission: number;
+
     @CreateDateColumn()
     created_at?: Date;
 

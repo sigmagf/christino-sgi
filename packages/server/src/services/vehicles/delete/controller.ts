@@ -11,6 +11,10 @@ export class VehiclesDeleteController {
     const { id } = req.params;
 
     try {
+      if(req.user && req.user.desp_permission < 3) {
+        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
+      }
+
       await this.service.execute({ id });
       return res.status(200).send();
     } catch(err) {

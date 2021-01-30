@@ -19,6 +19,10 @@ export class ClientsUpdateController {
     const phone2 = stringFix(req.body.phone2, undefined, 'UPPERCASE');
 
     try {
+      if(req.user && req.user.clie_permission < 2) {
+        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
+      }
+
       const user = await this.service.execute({ id, name, document, group, email, phone1, phone2 });
       return res.status(200).json(user);
     } catch(err) {

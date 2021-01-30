@@ -12,8 +12,12 @@ export class VehiclesImportController {
     const { data } = req.body as IVehiclesImportRequestDTO;
 
     try {
+      if(req.user && req.user.desp_permission < 2) {
+        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
+      }
+
       if(!Array.isArray(data)) {
-        throw new Error('Data is not array');
+        throw new Error(JSON.stringify({ code: 400, message: 'Data is not array' }));
       }
 
       await this.service.execute({ data });

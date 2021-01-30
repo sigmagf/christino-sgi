@@ -18,6 +18,10 @@ export class ClientsListController {
     const group = stringFix(req.query.group, undefined, 'UPPERCASE');
 
     try {
+      if(req.user && req.user.clie_permission < 1) {
+        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
+      }
+
       const clients = await this.service.execute({ page, limit, filters: { pagination, name, document, group } });
       return res.status(200).json(clients);
     } catch(err) {
