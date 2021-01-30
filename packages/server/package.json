@@ -15,11 +15,13 @@
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.30",
+    "bcryptjs": "^2.4.3",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.4",
     "@babel/core": "^7.10.4",
+    "@types/bcryptjs": "^2.4.2",
     "@babel/plugin-proposal-class-properties": "^7.12.1",
     "@babel/plugin-proposal-decorators": "^7.12.12",
     "@babel/preset-env": "^7.10.4",
