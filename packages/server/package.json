@@ -1,6 +1,6 @@
 {
   "name": "@christino-sgi/server",
-  "version": "0.5.7r2",
+  "version": "0.5.8",
   "main": "src/server.ts",
   "scripts": {
     "start": "node dist/index.js",
