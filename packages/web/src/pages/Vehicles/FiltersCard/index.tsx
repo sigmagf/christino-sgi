@@ -11,7 +11,6 @@ import { useLocalStorage } from '~/hooks';
 import { IClient, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
-import { validPermission } from '~/utils/validPermission';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders } from './styles';
 
@@ -19,9 +18,10 @@ interface IVehiclesFiltersCardProps {
   onOpenImportModalClick: () => void;
   onOpenCreateModalClick: () => void;
   onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
+  desp_permission: number;
 }
 
-export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick, onFiltersApplyClick }) => {
+export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick, onFiltersApplyClick, desp_permission }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
 
@@ -115,7 +115,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
       </FiltersContainer>
 
       <FiltersCardActionButtons>
-        {validPermission('desp_permission', 2) && (
+        {desp_permission >= 2 && (
           <>
             <Button variant="success" style={{ width: 175.97 }} onClick={onOpenCreateModalClick}>
               <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO

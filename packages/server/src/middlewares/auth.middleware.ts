@@ -7,27 +7,27 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
   const authHeader = req.headers.authorization;
 
   if(!authHeader) {
-    res.status(401).json(errorWork('No token provided'));
+    errorWork(res, JSON.stringify({ code: 401, message: 'No token provided.' }));
     return;
   }
 
   const tokenSplit = authHeader.split(' ');
 
   if(tokenSplit.length !== 2) {
-    res.status(401).json(errorWork('Token error'));
+    errorWork(res, JSON.stringify({ code: 401, message: 'Token error.' }));
     return;
   }
 
   const [bearer, token] = tokenSplit;
 
   if(!/^Bearer$/i.test(bearer)) {
-    res.status(401).json(errorWork('Token malformated'));
+    errorWork(res, JSON.stringify({ code: 401, message: 'Token malformated.' }));
     return;
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decode: { id: string }) => {
     if(err) {
-      res.status(401).json(errorWork('Token invalid'));
+      errorWork(res, JSON.stringify({ code: 401, message: 'Token invalid.' }));
       return;
     }
 
@@ -37,6 +37,6 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
       return;
     }
 
-    res.status(401).json(errorWork('Token user not found.'));
+    errorWork(res, JSON.stringify({ code: 401, message: 'User not found.' }));
   });
 }

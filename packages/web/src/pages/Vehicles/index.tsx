@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { FaPrint } from 'react-icons/fa';
-import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
@@ -11,17 +10,18 @@ import { useLocalStorage } from '~/hooks';
 import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
-import { statusConverter } from '~/utils/statusConverter';
-import { validPermission } from '~/utils/validPermission';
 
 import { VehiclesDataTable } from './DataTable';
 import { VehiclesDetailsModal } from './DetailsModal';
 import { VehiclesFiltersCard } from './FiltersCard';
 import { VehiclesImportModal } from './ImportModal';
+import { VehiclesPrintScreen } from './printScreen';
 
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
   const storage = useLocalStorage();
+
+  const [desp_permission, setDesp_permission] = useState(0);
 
   const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
   const [vehicleToDetails, setVehicleToDetails] = useState<IVehicle>();
@@ -31,7 +31,7 @@ export const VehiclesPage: React.FC = () => {
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
-  const getData = useCallback(async () => {
+  const getVehicles = useCallback(async () => {
     setInLoading(true);
 
     try {
@@ -68,7 +68,7 @@ export const VehiclesPage: React.FC = () => {
     setImportModalOpen(false);
     setDetailsModalOpen(false);
     setVehicleToDetails(undefined);
-    getData();
+    getVehicles();
   };
 
   const onPrintClick = async () => {
@@ -78,51 +78,10 @@ export const VehiclesPage: React.FC = () => {
       });
 
       // eslint-disable-next-line
-      const win = window.open('', 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${screen.width},height=${screen.height}`);
+      const win = window.open('', 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
 
       if(win) {
-        win.document.body.innerHTML = `
-          <style>
-            @page { size: landscape; -webkit-print-color-adjust: exact; }
-            * { font-family: 'Roboto Mono', monospace; font-size: 10px; }
-            html, body { margin: 0; padding: 0; }
-            table { width: 100%; border-radius: 5px; overflow: hidden; border-collapse: collapse; }
-            td, th { padding: 8px; }
-            thead > tr > th{ font-weight: 800; }
-            tbody > tr:nth-child(even) { background: white; }
-            tbody > tr:nth-child(odd) { background: lightgray; }
-          </style>
-
-          <table>
-            <thead>
-              <tr>
-                <th style="text-align: left">CLIENTE</th>
-                <th>PLACA</th>
-                <th>RENAVAM</th>
-                <th>CRV</th>
-                <th>MARCA/MODELO</th>
-                <th>TIPO</th>
-                <th>DETALHES</th>
-                <th>STATUS</th>
-              </tr>
-            </thead>
-            <tbody>
-            ${response.data.map((v) => `
-              <tr>
-                <td>${v.client.name}</td>
-                <td style="text-align: center">${v.plate}</td>
-                <td style="text-align: center">${v.renavam.padStart(11, '0')}</td>
-                <td style="text-align: center">${(v.crv || '').padStart(12, '0')}</td>
-                <td style="text-align: center">${v.brand_model}</td>
-                <td style="text-align: center">${v.type}</td>
-                <td style="text-align: center">${v.details || ''}</td>
-                <td style="text-align: center">${statusConverter(v.status)}</td>
-              </tr>
-            `).join('')}
-            </tbody>
-          </table>
-        `;
-
+        win.document.body.innerHTML = VehiclesPrintScreen(response.data);
         win.print();
         win.close();
       }
@@ -137,21 +96,16 @@ export const VehiclesPage: React.FC = () => {
     }
   };
 
-  useEffect(() => { getData(); }, []); // eslint-disable-line
-  useEffect(() => { getData(); }, [filters]); // eslint-disable-line
-
-  if(!validPermission('desp_permission')) {
-    toast.error('Você não tem acesso ao módulo despachante!');
-    return (<Navigate to="/" replace />);
-  }
+  useEffect(() => { getVehicles(); }, [filters]); // eslint-disable-line
 
   return (
     <>
-      <Layout>
+      <Layout setPermissions={(perms) => setDesp_permission(perms.desp_permission)}>
         <VehiclesFiltersCard
           onOpenImportModalClick={() => setImportModalOpen(true)}
           onOpenCreateModalClick={() => setDetailsModalOpen(true)}
           onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data, page: 1 }))}
+          desp_permission={desp_permission}
         />
         <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} onDetailsClick={onDetailsClick} />
 
@@ -167,8 +121,13 @@ export const VehiclesPage: React.FC = () => {
         </Card>
       </Layout>
 
-      {validPermission('desp_permission', 2) && <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />}
-      <VehiclesDetailsModal isOpen={detailsModalOpen} onClose={onModalsClose} vehicle={vehicleToDetails} />
+      <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />
+      <VehiclesDetailsModal
+        isOpen={detailsModalOpen}
+        onClose={onModalsClose}
+        vehicle={vehicleToDetails}
+        desp_permission={desp_permission}
+      />
     </>
   );
 };

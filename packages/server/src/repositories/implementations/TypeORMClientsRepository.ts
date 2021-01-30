@@ -68,7 +68,7 @@ export class TypeORMClientsRepository implements IClientsRepository {
     return dbData;
   }
 
-  async create(data: Pick<Client, 'name'|'document'|'group'>): Promise<Client> {
+  async create(data: Omit<Client, 'id'|'created_at'|'updated_at'>): Promise<Client> {
     await getRepository(Client).createQueryBuilder()
       .insert()
       .values(data)
@@ -79,8 +79,17 @@ export class TypeORMClientsRepository implements IClientsRepository {
     return dbData;
   }
 
-  async update(id: string, data: Pick<Client, 'name'|'document'|'group'>): Promise<Client> {
-    await getRepository(Client).update(id, data);
+  async update(id: string, data: Omit<Client, 'id'|'created_at'|'updated_at'>): Promise<Client> {
+    const oldData = await getRepository(Client).findOne({ id });
+
+    await getRepository(Client).update(id, {
+      name: data.name || oldData.name,
+      document: data.document || oldData.document,
+      group: data.group || oldData.group,
+      email: data.email || oldData.email,
+      phone1: data.phone1 || oldData.phone1,
+      phone2: data.phone2 || oldData.phone2,
+    });
 
     const dbData = await getRepository(Client).findOne({ where: { id } });
     return dbData;

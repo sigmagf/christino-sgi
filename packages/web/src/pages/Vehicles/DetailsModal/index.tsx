@@ -13,7 +13,6 @@ import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { formatCPForCNPJ } from '~/utils/formatCPForCNPJ';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
-import { validPermission } from '~/utils/validPermission';
 
 import { DetailsModalActionButtons, DetailsModalContainer, DetailsModalLoadingContainer } from './styles';
 
@@ -33,9 +32,10 @@ interface IDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   vehicle?: IVehicle;
+  desp_permission: number;
 }
 
-export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle }) => {
+export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle, desp_permission }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
 
@@ -190,7 +190,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         <Input disabled={inLoading || !editing} name="details" label="DETALHES" />
       </DetailsModalContainer>
 
-      {validPermission('desp_permission', 2) && (
+      {desp_permission >= 2 && (
         <DetailsModalActionButtons>
           {editing ? (
             <>

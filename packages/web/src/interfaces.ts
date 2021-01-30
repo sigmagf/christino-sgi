@@ -9,8 +9,8 @@ export interface IStorage {
   token: string;
   userName: string;
   appBarExpanded: boolean;
-  desp_permission: number;
-  segu_permission: number;
+  desp_permission: string;
+  segu_permission: string;
 }
 /* END STIRAGE */
 
