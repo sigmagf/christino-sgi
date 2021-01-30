@@ -37,8 +37,9 @@ export const Appnav: React.FC = () => {
     },
     {
       icon: FaUserShield,
-      label: 'Seguros',
+      label: 'Seguros (WIP)',
       path: '/insurances',
+      disabled: true,
     },
     {
       icon: FaUsers,

@@ -1,16 +1,17 @@
 import { IUsersRepository } from '~/repositories/IUsersRepository';
 
-import { IUsersUpdateRequestDTO } from './dto';
+import { IUsersValidRequestDTO } from './dto';
 
-export class UsersUpdateService {
+export class UsersValidService {
   constructor(private repository: IUsersRepository) { }
 
-  async execute(data: IUsersUpdateRequestDTO) {
-    if(!await this.repository.findById(data.id)) {
+  async execute(data: IUsersValidRequestDTO) {
+    const user = await this.repository.findById(data.id);
+
+    if(!user) {
       throw new Error(JSON.stringify({ code: 404, message: 'User not found.' }));
     }
 
-    const user = await this.repository.update(data.id, data);
     user.email_change_expires = undefined;
     user.email_change_token = undefined;
     user.pwd_reset_expires = undefined;

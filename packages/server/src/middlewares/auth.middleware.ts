@@ -32,6 +32,7 @@ export function authMiddleware(req: Request, res: Response, next: NextFunction) 
     }
 
     if(decode.id) {
+      req.userId = decode.id;
       next();
       return;
     }

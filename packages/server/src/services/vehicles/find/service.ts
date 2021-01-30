@@ -1,4 +1,3 @@
-import { Vehicle } from '~/entities/Vehicle';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
 import { IVehiclesFindRequestDTO } from './dto';
@@ -6,8 +5,12 @@ import { IVehiclesFindRequestDTO } from './dto';
 export class VehiclesFindService {
   constructor(private repository: IVehiclesRepository) { }
 
-  async execute(data: IVehiclesFindRequestDTO): Promise<Vehicle> {
+  async execute(data: IVehiclesFindRequestDTO) {
     const vehicle = await this.repository.findById(data.id);
+
+    if(!vehicle) {
+      throw new Error(JSON.stringify({ code: 404, message: 'Vehicle not found.' }));
+    }
 
     return vehicle;
   }

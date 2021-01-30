@@ -8,7 +8,7 @@ import { VehiclesImportService } from './service';
 export class VehiclesImportController {
   constructor(private service: VehiclesImportService) { }
 
-  async handle(req: Request, res: Response): Promise<Response> {
+  async handle(req: Request, res: Response) {
     const { data } = req.body as IVehiclesImportRequestDTO;
 
     try {
@@ -19,7 +19,7 @@ export class VehiclesImportController {
       await this.service.execute({ data });
       return res.status(201).send();
     } catch(err) {
-      return res.status(400).json(errorWork(err.message || null));
+      return errorWork(res, err.message || null);
     }
   }
 }

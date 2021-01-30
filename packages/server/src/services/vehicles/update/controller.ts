@@ -8,7 +8,7 @@ import { VehiclesUpdateService } from './service';
 export class VehiclesUpdateController {
   constructor(private service: VehiclesUpdateService) { }
 
-  async handle(req: Request, res: Response): Promise<Response> {
+  async handle(req: Request, res: Response) {
     const { id } = req.params;
 
     const name = stringFix(req.body.name, undefined, 'UPPERCASE');
@@ -25,10 +25,9 @@ export class VehiclesUpdateController {
 
     try {
       const user = await this.service.execute({ id, name, document, group, plate, renavam, crv, brand_model, type, details, status });
-
       return res.status(200).json(user);
     } catch(err) {
-      return res.status(400).json(errorWork(err.message || null));
+      return errorWork(res, err.message || null);
     }
   }
 }

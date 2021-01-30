@@ -1,6 +1,3 @@
-export interface IUsersUpdateRequestDTO {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-}
+import { User } from '~/entities/User';
+
+export type IUsersUpdateRequestDTO = Pick<User, 'id'|'name'|'email'|'password'|'desp_permission'|'segu_permission'>;

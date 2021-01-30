@@ -6,8 +6,8 @@ export interface IUsersRepository {
   findById(id: string): Promise<User>;
   findByEmail(email: string): Promise<User>;
 
-  create(data: Pick<User, 'name'|'email'|'password'>): Promise<User>;
-  update(id: string, data: Pick<User, 'name'|'email'|'password'>): Promise<User>;
+  create(data: Omit<User, 'id'|'created_at'|'updated_at'>): Promise<User>;
+  update(id: string, data: Omit<User, 'id'|'created_at'|'updated_at'>): Promise<User>;
 
   delete(id: string): Promise<void>;
 }

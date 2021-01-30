@@ -7,16 +7,15 @@ import { UsersListService } from './service';
 export class UsersListController {
   constructor(private service: UsersListService) { }
 
-  async handle(req: Request, res: Response): Promise<Response> {
+  async handle(req: Request, res: Response) {
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
     try {
       const users = await this.service.execute({ page, limit });
-
       return res.status(200).json(users);
     } catch(err) {
-      return res.status(400).json(errorWork(err.message || null));
+      return errorWork(res, err.message || null);
     }
   }
 }

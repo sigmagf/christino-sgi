@@ -7,12 +7,20 @@ import { IUsersListRequestDTO } from './dto';
 export class UsersListService {
   constructor(private repository: IUsersRepository) { }
 
-  async execute(data: IUsersListRequestDTO): Promise<IPagination<Pick<User, 'id'|'name'|'email'|'created_at'|'updated_at'>>> {
+  async execute(data: IUsersListRequestDTO) {
     const users = await this.repository.list(data.page, data.limit);
 
     const userWithOutPassword: IPagination<Pick<User, 'id'|'name'|'email'|'created_at'|'updated_at'>> = {
       page: users.page,
-      data: users.data.map(({ id, name, email, created_at, updated_at }) => ({ id, name, email, created_at, updated_at })),
+      data: users.data.map(({ id, name, email, desp_permission, segu_permission, created_at, updated_at }) => ({
+        id,
+        name,
+        email,
+        desp_permission,
+        segu_permission,
+        created_at,
+        updated_at,
+      })),
     };
 
     return userWithOutPassword;

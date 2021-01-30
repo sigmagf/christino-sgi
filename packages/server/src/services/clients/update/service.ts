@@ -1,4 +1,3 @@
-import { Client } from '~/entities/Client';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 
 import { IClientsUpdateRequestDTO } from './dto';
@@ -6,13 +5,12 @@ import { IClientsUpdateRequestDTO } from './dto';
 export class ClientsUpdateService {
   constructor(private repository: IClientsRepository) { }
 
-  async execute(data: IClientsUpdateRequestDTO): Promise<Client> {
+  async execute(data: IClientsUpdateRequestDTO) {
     if(!await this.repository.findById(data.id)) {
-      throw new Error('Client not founded');
+      throw new Error(JSON.stringify({ code: 404, message: 'Client not found.' }));
     }
 
     const client = await this.repository.update(data.id, data);
-
     return client;
   }
 }

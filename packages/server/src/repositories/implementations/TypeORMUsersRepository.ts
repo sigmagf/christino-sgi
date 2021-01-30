@@ -47,19 +47,21 @@ export class TypeORMUsersRepository implements IUsersRepository {
     return dbData;
   }
 
-  async create(data: Pick<User, 'name' | 'email' | 'password'>): Promise<User> {
+  async create(data: Omit<User, 'id'|'created_at'|'updated_at'>): Promise<User> {
     const hashPAssword = await this.hashPassword(data.password);
 
     const dbData = await getRepository(User).save({
       name: data.name,
       email: data.email,
       password: hashPAssword,
+      desp_permission: data.desp_permission,
+      segu_permission: data.segu_permission,
     });
 
     return dbData;
   }
 
-  async update(id: string, data: Pick<User, 'name' | 'email' | 'password'>): Promise<User> {
+  async update(id: string, data: Omit<User, 'id'|'created_at'|'updated_at'>): Promise<User> {
     const hashPAssword = data.password ? await this.hashPassword(data.password) : undefined;
 
     await getRepository(User).update(id, {

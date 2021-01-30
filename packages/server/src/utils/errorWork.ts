@@ -1,68 +1,24 @@
+import { Response } from 'express';
+
 type ErrorResponseType = {
-  type: string;
+  code?: number;
   message: string;
-  details: string;
+  details?: any;
 }
 
-export function errorWork(message: string): ErrorResponseType {
-  if(message !== null && message.includes('IMPORTERROR-')) {
-    const data = JSON.parse(message.replace('IMPORTERROR-', ''));
+export function errorWork(res: Response, message: string) {
+  try {
+    const errorJson: ErrorResponseType = JSON.parse(message);
 
-    return {
-      type: 'PARTIAL INVALID DATA',
-      message: 'One or more entries not saved',
-      details: data,
-    };
-  }
-
-  switch(message) {
-    case 'Invalid file type':
-    case 'Obrigatory items not informed':
-    case 'Client not informed':
-    case 'Data is not array':
-      return {
-        type: 'INVALID DATA',
-        message: message || 'Unexprected error',
-        details: '',
-      };
-
-    case 'Client already exists':
-    case 'User already exists':
-    case 'Renavam already exists for this client':
-    case 'Plate already exists for this client':
-      return {
-        type: 'DUPLICATED ENTRY',
-        message: message || 'Unexprected error',
-        details: '',
-      };
-
-    case 'Client not founded':
-    case 'User not founded':
-    case 'Vehicle not founded':
-      return {
-        type: 'ENTRY NOT FOUND',
-        message: message || 'Unexprected error',
-        details: '',
-      };
-
-    case 'No token provided':
-    case 'Token error':
-    case 'Token malformated':
-    case 'Token invalid':
-    case 'Token user not found':
-    case 'Invalid password':
-      return {
-        type: 'UNAUTHORIZED',
-        message: message || 'Unexprected error',
-        details: '',
-      };
-
-    default:
-    case '':
-      return {
-        type: 'UNEXPECTED',
-        message: message || 'Unexprected error',
-        details: '',
-      };
+    return res.status(errorJson.code || 400).json({
+      message: errorJson.message,
+      details: errorJson.details || null,
+    });
+  } catch(err) {
+    return res.status(400).json({
+      type: 'UNEXPECTED',
+      message: message || 'Unexprected error',
+      details: '',
+    });
   }
 }

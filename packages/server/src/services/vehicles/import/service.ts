@@ -1,4 +1,3 @@
-import { Vehicle } from '~/entities/Vehicle';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 import { convertStatus } from '~/utils/convertStatus';
@@ -15,14 +14,14 @@ export class VehiclesImportService {
   async execute({ data }: IVehiclesImportRequestDTO): Promise<void> {
     const errors: IImportError[] = [];
 
-    const vehicles = await Promise.all(data.map(async (vehicle): Promise<Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'> | null> => {
+    const vehicles = await Promise.all(data.map(async (vehicle) => {
       if(!vehicle.name || !vehicle.document) {
-        errors.push({ ...vehicle, error: 'Client name or document are null or invalid' });
+        errors.push({ ...vehicle, error: 'Client name or document are null or invalid.' });
         return null;
       }
 
       if(!vehicle.plate || !vehicle.renavam || !vehicle.brand_model || !vehicle.type) {
-        errors.push({ ...vehicle, error: 'Vehicle plate, renavam, brand_model or type are null or invalid' });
+        errors.push({ ...vehicle, error: 'Vehicle plate, renavam, brand_model or type are null or invalid.' });
         return null;
       }
 
@@ -51,17 +50,17 @@ export class VehiclesImportService {
 
     await Promise.all(vehicles.filter((el) => el !== null).map(async (vehicle) => {
       if(!vehicle.client_id) {
-        errors.push({ ...vehicle, error: 'Client not found!' });
+        errors.push({ ...vehicle, error: 'Client not found.' });
         return;
       }
 
       if(await this.vehiclesRepo.findByClientPlate(vehicle.client_id, vehicle.plate)) {
-        errors.push({ ...vehicle, error: 'Plate already exists for this client' });
+        errors.push({ ...vehicle, error: 'Vehicle already exists for this client.' });
         return;
       }
 
       if(await this.vehiclesRepo.findByClientRenavam(vehicle.client_id, vehicle.renavam)) {
-        errors.push({ ...vehicle, error: 'Renavam already exists for this client' });
+        errors.push({ ...vehicle, error: 'Vehicle already exists for this client.' });
         return;
       }
 
@@ -73,7 +72,7 @@ export class VehiclesImportService {
     }));
 
     if(errors.length > 0) {
-      throw new Error(`IMPORTERROR-${JSON.stringify(errors)}`);
+      throw new Error(JSON.stringify({ code: 400, message: 'Partial data invalid', details: errors }));
     }
   }
 }

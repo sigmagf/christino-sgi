@@ -8,19 +8,20 @@ import { UsersUpdateService } from './service';
 export class UsersUpdateController {
   constructor(private service: UsersUpdateService) { }
 
-  async handle(req: Request, res: Response): Promise<Response> {
+  async handle(req: Request, res: Response) {
     const { id } = req.params;
 
     const name = stringFix(req.body.name, undefined, 'UPPERCASE');
     const email = stringFix(req.body.email, undefined, 'LOWERCASE');
     const password = stringFix(req.body.password, undefined);
+    const desp_permission = stringFix(req.body.desp_permission, undefined);
+    const segu_permission = stringFix(req.body.segu_permission, undefined);
 
     try {
-      const user = await this.service.execute({ id, name, email, password });
-
+      const user = await this.service.execute({ id, name, email, password, desp_permission, segu_permission });
       return res.status(200).json(user);
     } catch(err) {
-      return res.status(400).json(errorWork(err.message || null));
+      return errorWork(res, err.message || null);
     }
   }
 }

@@ -8,21 +8,30 @@ import { UsersCreateService } from './service';
 export class UsersCreateController {
   constructor(private service: UsersCreateService) { }
 
-  async handle(req: Request, res: Response): Promise<Response> {
+  async handle(req: Request, res: Response) {
     const name = stringFix(req.body.name, undefined, 'UPPERCASE');
     const email = stringFix(req.body.email, undefined, 'LOWERCASE');
     const password = stringFix(req.body.password, undefined);
+    const desp_permission = stringFix(req.body.desp_permission, undefined);
+    const segu_permission = stringFix(req.body.segu_permission, undefined);
 
     try {
-      if(!name || !email || !password) {
-        throw new Error('Obrigatory items not informed');
+      if(!name) {
+        throw new Error(JSON.stringify({ code: 400, message: 'Name is null or undefined.' }));
       }
 
-      const user = await this.service.execute({ name, email, password });
+      if(!email) {
+        throw new Error(JSON.stringify({ code: 400, message: 'Email is null or undefined.' }));
+      }
 
+      if(!password) {
+        throw new Error(JSON.stringify({ code: 400, message: 'Password is null or undefined.' }));
+      }
+
+      const user = await this.service.execute({ name, email, password, desp_permission, segu_permission });
       return res.status(201).json(user);
     } catch(err) {
-      return res.status(400).json(errorWork(err.message || null));
+      return errorWork(res, err.message || null);
     }
   }
 }

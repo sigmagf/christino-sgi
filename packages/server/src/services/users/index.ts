@@ -8,10 +8,11 @@ import { usersDeleteController } from './delete';
 import { usersFindController } from './find';
 import { usersListController } from './list';
 import { usersUpdateController } from './update';
+import { usersValidController } from './valid';
 
 const usersRouter = Router();
 
-usersRouter.use('/users/valid', authMiddleware, (req, res) => res.json({ message: 'All Ok' }));
+usersRouter.use('/users/valid', authMiddleware, (req, res) => usersValidController.handle(req, res));
 usersRouter.post('/users/auth', (req, res) => usersAuthController.handle(req, res));
 
 usersRouter.get('/users', authMiddleware, (req, res) => usersListController.handle(req, res));

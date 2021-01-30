@@ -1,4 +1,3 @@
-import { Vehicle } from '~/entities/Vehicle';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 import { convertStatus } from '~/utils/convertStatus';
@@ -6,12 +5,9 @@ import { convertStatus } from '~/utils/convertStatus';
 import { IVehiclesCreateRequestDTO } from './dto';
 
 export class VehiclesCreateService {
-  constructor(
-    private vehiclesRepo: IVehiclesRepository,
-    private clientsRepo: IClientsRepository,
-  ) { }
+  constructor(private vehiclesRepo: IVehiclesRepository, private clientsRepo: IClientsRepository) { }
 
-  async execute(data: IVehiclesCreateRequestDTO): Promise<Vehicle> {
+  async execute(data: IVehiclesCreateRequestDTO) {
     const client = await this.clientsRepo.create({
       name: data.name,
       document: data.document,
@@ -19,11 +15,11 @@ export class VehiclesCreateService {
     });
 
     if(await this.vehiclesRepo.findByClientPlate(client.id, data.plate)) {
-      throw new Error('Plate already exists for this client');
+      throw new Error(JSON.stringify({ code: 400, message: 'Vehicle already exists for this client.' }));
     }
 
     if(await this.vehiclesRepo.findByClientRenavam(client.id, data.renavam)) {
-      throw new Error('Renavam already exists for this client');
+      throw new Error(JSON.stringify({ code: 400, message: 'Vehicle already exists for this client.' }));
     }
 
     const vehicle = await this.vehiclesRepo.create({
