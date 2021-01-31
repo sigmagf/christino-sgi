@@ -18,7 +18,11 @@ const storageTypes = {
     bucket: process.env.AWS_BUCKET,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
-      cb(null, `crlve/${(req as Request).params.id}.pdf`);
+      if(process.env.NODE_ENV === 'development') {
+        cb(null, `development/${(req as Request).params.id}.pdf`);
+      } else {
+        cb(null, `crlve/${(req as Request).params.id}.pdf`);
+      }
     },
   }),
 };
