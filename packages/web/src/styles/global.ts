@@ -63,4 +63,31 @@ export const GlobalStyle = createGlobalStyle`
   svg {
     color: ${({ theme }) => theme.text};
   }
+
+  .in-mobile {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: ${({ theme }) => theme.error.main};
+
+    > div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+
+      > h1 {
+        font-size: 25px;
+        text-align: center;
+      }
+
+      > h6 {
+        margin-top: 5px;
+        text-align: center;
+      }
+    }
+  }
 `;

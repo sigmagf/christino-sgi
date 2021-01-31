@@ -1,5 +1,6 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { FaEye, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
@@ -43,18 +44,21 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
   const [inLoading, setInLoading] = useState(false);
   const [inLoadingGetCRLVe, setInLoadingGetCRLVe] = useState(false);
-  const [CRLVeIncluded, setCRLVeIncluded] = useState(vehicle ? vehicle.crlve_included : false);
-  const [uploadCRLVeModalOpen, setUploadCRLVeModalOpen] = useState(false);
-  const [editing, setEditing] = useState(!!vehicle);
+
+  const [crlveIncloded, setCrlveIncluded] = useState(false);
+  const [editing, setEditing] = useState(false);
+
   const [clientSearched, setClientSearched] = useState(false);
   const [haveClient, setHaveClient] = useState(true);
+
+  const [uploadCrlveModalOpen, setUploadCrlveModalOpen] = useState(false);
 
   const onCloseHandler = () => {
     setInLoading(false);
     setHaveClient(true);
     setEditing(false);
     setClientSearched(false);
-    setCRLVeIncluded(false);
+    setCrlveIncluded(false);
     onClose();
   };
 
@@ -62,19 +66,19 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   const getClient = async (document: string) => {
     if(formRef.current) {
       try {
-        const client = await api.get<IClient[]>(`/clients?noPagination=true&document=${document}`, {
-          headers: { authorization: `Bearer ${storage.getItem('token')}` },
-        });
+        const client = await api.get<IClient[]>(`/clients?noPagination=true&document=${document}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
         setHaveClient(client.data.length === 1);
         formRef.current.setFieldValue('name', client.data[0]?.name || '');
         formRef.current.setFieldValue('group', client.data[0]?.group || '');
         setClientSearched(true);
       } catch(err) {
-        if(err.message === 'Network Error' || !err.response) {
+        if(err.message === 'Network Error') {
           toast.error('Verifique sua conexão com a internet.');
-        } else {
+        } else if(err.response && err.response.data && err.response.data.message) {
           toast.error(err.response.data.message);
+        } else {
+          toast.error('Ocorreu um erro inesperado.');
         }
 
         setHaveClient(false);
@@ -167,7 +171,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         });
       } else if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response.data && err.response.data.message) {
+      } else if(err.response && err.response.data && err.response.data.message) {
         toast.error(err.response.data.message);
       } else {
         toast.error('Ocorreu um erro inesperado.');
@@ -185,6 +189,30 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
       setInLoadingGetCRLVe(false);
     }
   };
+
+  useEffect(() => {
+    if(vehicle) {
+      setInLoading(false);
+      setInLoadingGetCRLVe(false);
+
+      setEditing(false);
+      setClientSearched(false);
+      setHaveClient(false);
+      setCrlveIncluded(vehicle.crlve_included);
+
+      setUploadCrlveModalOpen(false);
+    } else {
+      setInLoadingGetCRLVe(false);
+      setInLoading(false);
+
+      setEditing(true);
+      setClientSearched(false);
+      setHaveClient(true);
+      setCrlveIncluded(false);
+
+      setUploadCrlveModalOpen(false);
+    }
+  }, [isOpen, vehicle]);
 
   return (
     <>
@@ -205,39 +233,40 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
           <Input disabled={inLoading || !editing} name="details" label="DETALHES" />
         </DetailsModalContainer>
 
-        {(desp_permission === 1 && vehicle && CRLVeIncluded && !editing) && (
-        <DetailsModalActionButtons>
-          <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOnCRLVeViewClick}>
-            VIZUALIZAR CRLVe
-          </Button>
-        </DetailsModalActionButtons>
+        {(desp_permission === 1 && vehicle && crlveIncloded && !editing) && (
+          <DetailsModalActionButtons>
+            <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOnCRLVeViewClick}>
+              VIZUALIZAR CRLVe
+            </Button>
+          </DetailsModalActionButtons>
         )}
 
         {desp_permission >= 2 && (
         <DetailsModalActionButtons>
           {vehicle && (
             <>
-              {(CRLVeIncluded && !editing) && (
+              {(crlveIncloded && !editing) && (
                 <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOnCRLVeViewClick}>
-                  VIZUALIZAR CRLVe
+                  <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
                 </Button>
               )}
 
-              {!CRLVeIncluded && (
-                <Button variant="info" disabled={inLoading} onClick={() => setUploadCRLVeModalOpen(true)}>
-                  ENVIAR CRLVe
-                </Button>
-              )}
+              <Button variant="info" disabled={inLoading} onClick={() => setUploadCrlveModalOpen(true)}>
+                <FaUpload />&nbsp;&nbsp;&nbsp;{!crlveIncloded ? 'ENVIAR' : 'SUBSTITUIR'} CRLVe
+              </Button>
             </>
           )}
+
           {editing ? (
             <>
               <Button type="submit" variant="success" disabled={inLoading} onClick={() => formRef.current && formRef.current.submitForm()}>
                 {vehicle ? 'SALVAR' : 'INCLUIR'}
               </Button>
-              <Button variant="warning" disabled={inLoading} onClick={() => setEditing(false)}>
-                CANCELAR
-              </Button>
+              {vehicle && (
+                <Button variant="warning" disabled={inLoading} onClick={() => setEditing(false)}>
+                  CANCELAR
+                </Button>
+              )}
             </>
           ) : (
             <Button variant="warning" disabled={inLoading} onClick={() => setEditing(true)}>
@@ -256,11 +285,10 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
       {vehicle && (
         <VehiclesUploadCRLVeModal
-          isOpen={uploadCRLVeModalOpen}
-          onClose={() => {
-            setUploadCRLVeModalOpen(false);
-            setCRLVeIncluded(true);
-          }}
+          isOpen={uploadCrlveModalOpen}
+          onClose={() => setUploadCrlveModalOpen(false)}
+          onUploadSuccess={() => setCrlveIncluded(true)}
+          onUploadError={() => setCrlveIncluded(false)}
           vehicleId={vehicle.id}
         />
       )}

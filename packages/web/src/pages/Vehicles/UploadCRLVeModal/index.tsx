@@ -11,6 +11,8 @@ import { api } from '~/utils/api';
 interface IImportModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onUploadSuccess: () => void;
+  onUploadError: () => void;
   vehicleId: string;
 }
 
@@ -18,7 +20,7 @@ interface IRequestError extends Omit<IVehicle, 'id'|'updated_at'|'created_at'|'c
   error: string;
 }
 
-export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, onClose, vehicleId }) => {
+export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, onClose, onUploadSuccess, onUploadError, vehicleId }) => {
   const storage = useLocalStorage();
 
   const [inLoading, setInLoading] = useState(false);
@@ -31,8 +33,7 @@ export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, 
       data.append('file', files[0]);
 
       await api.post(`/vehicles/crlve/upload/${vehicleId}`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-      onClose();
+      onUploadSuccess();
     } catch(err) {
       if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
@@ -41,7 +42,11 @@ export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, 
       } else {
         toast.error('Ocorreu um erro inesperado.');
       }
+
+      onUploadError();
     }
+
+    onClose();
     setInLoading(false);
   };
 
