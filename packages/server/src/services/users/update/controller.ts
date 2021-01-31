@@ -20,10 +20,6 @@ export class UsersUpdateController {
     const user_permission = stringFix(req.body.user_permission, undefined);
 
     try {
-      if(!req.user || req.user.clie_permission < 2) {
-        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
-      }
-
       const user = await this.service.execute({ id, name, email, password, desp_permission, segu_permission, clie_permission, user_permission });
       return res.status(200).json(user);
     } catch(err) {

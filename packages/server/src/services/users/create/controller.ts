@@ -18,10 +18,6 @@ export class UsersCreateController {
     const user_permission = stringFix(req.body.user_permission, undefined);
 
     try {
-      if(!req.user || req.user.clie_permission < 2) {
-        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
-      }
-
       if(!name) {
         throw new Error(JSON.stringify({ code: 400, message: 'Name is null or undefined.' }));
       }

@@ -24,10 +24,6 @@ export class VehiclesUpdateController {
     const status = stringFix(req.body.status, undefined, 'LOWERCASE');
 
     try {
-      if(!req.user || req.user.desp_permission < 2) {
-        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
-      }
-
       const user = await this.service.execute({ id, name, document, group, plate, renavam, crv, brand_model, type, details, status });
       return res.status(200).json(user);
     } catch(err) {

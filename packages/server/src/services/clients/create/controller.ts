@@ -17,10 +17,6 @@ export class ClientsCreateController {
     const phone2 = stringFix(req.body.phone2, undefined, 'UPPERCASE');
 
     try {
-      if(!req.user || req.user.clie_permission < 2) {
-        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
-      }
-
       if(!name) {
         throw new Error(JSON.stringify({ code: 400, message: 'Name is null or undefined.' }));
       }

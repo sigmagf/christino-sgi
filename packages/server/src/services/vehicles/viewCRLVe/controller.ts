@@ -1,0 +1,32 @@
+import AWS from 'aws-sdk';
+import { Request, Response } from 'express';
+import fs from 'fs';
+import path from 'path';
+
+import { vehiclesFindService } from '../find';
+
+export class VehiclesViewCRLVeController {
+  constructor() { }
+
+  // eslint-disable-next-line consistent-return
+  async handle(req: Request, res: Response) {
+    if((await vehiclesFindService.execute({ id: req.params.id })).crlve_included) {
+      const basePath = path.resolve(__dirname, '..', '..', '..', 'tmp');
+      if(process.env.MULTER_STORAGE === 'local') {
+        return res.sendFile(path.resolve(basePath, 'crlve', `${req.params.id}.pdf`));
+      }
+
+      const s3Path = path.resolve(basePath, 's3', `${req.params.id}.pdf`);
+      const s3Key = process.env.NODE_ENV === 'development' ? `development/${req.params.id}.pdf` : `crlve/${req.params.id}.pdf`;
+
+      const s3 = new AWS.S3();
+      const fileTemp = fs.createWriteStream(s3Path);
+      const s3Stream = s3.getObject({ Bucket: process.env.AWS_BUCKET, Key: s3Key }).createReadStream();
+
+      s3Stream.on('error', (err) => res.status(400).json({ message: err.message || 'Unexpected error' }));
+      s3Stream.pipe(fileTemp).on('error', (err) => res.status(400).json({ message: err.message || 'Unexpected error' })).on('close', () => res.sendFile(s3Path));
+    } else {
+      return res.status(404).json({ message: 'No CRLVe founded!' });
+    }
+  }
+}

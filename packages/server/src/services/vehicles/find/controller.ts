@@ -11,10 +11,6 @@ export class VehiclesFindController {
     const { id } = req.params;
 
     try {
-      if(!req.user || req.user.desp_permission < 1) {
-        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
-      }
-
       const vehicle = await this.service.execute({ id });
       return res.status(200).json(vehicle);
     } catch(err) {

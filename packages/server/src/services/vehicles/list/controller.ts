@@ -24,10 +24,6 @@ export class VehiclesListController {
     const plate_end = stringFix(req.query.plate_end, undefined, 'UPPERCASE');
 
     try {
-      if(!req.user || req.user.desp_permission < 1) {
-        throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
-      }
-
       const vehicles = await this.service.execute({
         page, limit, filters: { pagination, plate_end, client_id, status, group, plate, renavam, crv, brand_model, include_truck },
       });
