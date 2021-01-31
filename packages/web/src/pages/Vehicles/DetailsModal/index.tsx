@@ -54,6 +54,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
     setHaveClient(true);
     setEditing(false);
     setClientSearched(false);
+    setCRLVeIncluded(false);
     onClose();
   };
 
