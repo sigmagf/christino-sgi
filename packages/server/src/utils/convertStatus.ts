@@ -1,6 +1,6 @@
 export function convertStatus(status: string|number) {
   if(!status) {
-    return 1;
+    return undefined;
   }
 
   const st = status.toString().trim().toLowerCase();

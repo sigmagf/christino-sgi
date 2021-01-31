@@ -17,13 +17,6 @@ app.listen(process.env.PORT || 3000, async () => {
     console.log('Pasta tmp ja existe!');
   }
 
-  if(!fs.existsSync(path.resolve(__dirname, '..', 'tmp', 's3'))) {
-    console.log('Criando pasta tmp/s3');
-    fs.mkdirSync(path.resolve(__dirname, '..', 'tmp', 's3'));
-  } else {
-    console.log('Pasta tmp/s3 ja existe!');
-  }
-
   if(!fs.existsSync(path.resolve(__dirname, '..', 'tmp', 'crlve'))) {
     console.log('Criando pasta tmp/crlve');
     fs.mkdirSync(path.resolve(__dirname, '..', 'tmp', 'crlve'));

@@ -14,6 +14,7 @@ import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { formatCPForCNPJ } from '~/utils/formatCPForCNPJ';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
+import { VehiclesUploadCRLVeModal } from '../UploadCRLVeModal';
 import { DetailsModalActionButtons, DetailsModalContainer, DetailsModalLoadingContainer } from './styles';
 
 interface IFormData {
@@ -42,6 +43,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
   const [inLoading, setInLoading] = useState(false);
   const [inLoadingGetCRLVe, setInLoadingGetCRLVe] = useState(false);
+  const [uploadCRLVeModalOpen, setUploadCRLVeModalOpen] = useState(false);
   const [editing, setEditing] = useState(!!vehicle);
   const [clientSearched, setClientSearched] = useState(false);
   const [haveClient, setHaveClient] = useState(true);
@@ -183,32 +185,33 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onCloseHandler} header={`${vehicle ? 'ALTERACAO' : 'CADASTRO'} DE VEICULOS`}>
-      <DetailsModalContainer ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle.client, ...vehicle, status: status[vehicle.status] }}>
-        <Input disabled={inLoading || haveClient || !editing} name="name" label="NOME" />
-        <Input disabled={inLoading || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
-        <Input disabled={inLoading || haveClient || !editing} name="group" label="GRUPO" />
+    <>
+      <Modal isOpen={isOpen} onRequestClose={onCloseHandler} header={`${vehicle ? 'ALTERACAO' : 'CADASTRO'} DE VEICULOS`}>
+        <DetailsModalContainer ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle.client, ...vehicle, status: status[vehicle.status] }}>
+          <Input disabled={inLoading || haveClient || !editing} name="name" label="NOME" />
+          <Input disabled={inLoading || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
+          <Input disabled={inLoading || haveClient || !editing} name="group" label="GRUPO" />
 
-        <hr />
+          <hr />
 
-        <Input disabled={inLoading || !editing} name="plate" label="PLACA" maxLength={7} />
-        <Input disabled={inLoading || !editing} name="renavam" label="RENAVAM" maxLength={11} onBlur={() => onBlurMaxLengths('renavam', 11, '0')} />
-        <Input disabled={inLoading || !editing} name="crv" label="CRV" maxLength={12} onBlur={() => onBlurMaxLengths('crv', 12, '0')} />
-        <Input disabled={inLoading || !editing} name="brand_model" label="MARCA/MODELO" />
-        <Input disabled={inLoading || !editing} name="type" label="TIPO" />
-        <Select isDisabled={inLoading || !editing} name="status" label="STATUS" options={[...status.filter((e) => e)]} isSearchable={false} />
-        <Input disabled={inLoading || !editing} name="details" label="DETALHES" />
-      </DetailsModalContainer>
+          <Input disabled={inLoading || !editing} name="plate" label="PLACA" maxLength={7} />
+          <Input disabled={inLoading || !editing} name="renavam" label="RENAVAM" maxLength={11} onBlur={() => onBlurMaxLengths('renavam', 11, '0')} />
+          <Input disabled={inLoading || !editing} name="crv" label="CRV" maxLength={12} onBlur={() => onBlurMaxLengths('crv', 12, '0')} />
+          <Input disabled={inLoading || !editing} name="brand_model" label="MARCA/MODELO" />
+          <Input disabled={inLoading || !editing} name="type" label="TIPO" />
+          <Select isDisabled={inLoading || !editing} name="status" label="STATUS" options={[...status.filter((e) => e)]} isSearchable={false} />
+          <Input disabled={inLoading || !editing} name="details" label="DETALHES" />
+        </DetailsModalContainer>
 
-      {(desp_permission === 1 && vehicle && vehicle.crlve_included && !editing) && (
+        {(desp_permission === 1 && vehicle && vehicle.crlve_included && !editing) && (
         <DetailsModalActionButtons>
           <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOnCRLVeViewClick}>
             VIZUALIZAR CRLVe
           </Button>
         </DetailsModalActionButtons>
-      )}
+        )}
 
-      {desp_permission >= 2 && (
+        {desp_permission >= 2 && (
         <DetailsModalActionButtons>
           {vehicle && (
             <>
@@ -218,7 +221,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
                 </Button>
               )}
 
-              <Button variant="info" disabled={inLoading}>
+              <Button variant="info" disabled={inLoading} onClick={() => setUploadCRLVeModalOpen(true)}>
                 ENVIAR CRLVe
               </Button>
             </>
@@ -238,13 +241,22 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
             </Button>
           )}
         </DetailsModalActionButtons>
-      )}
+        )}
 
-      {inLoading && (
+        {inLoading && (
         <DetailsModalLoadingContainer>
           <ReactLoading type="bars" />
         </DetailsModalLoadingContainer>
+        )}
+      </Modal>
+
+      {vehicle && (
+        <VehiclesUploadCRLVeModal
+          isOpen={uploadCRLVeModalOpen}
+          onClose={() => setUploadCRLVeModalOpen(false)}
+          vehicleId={vehicle.id}
+        />
       )}
-    </Modal>
+    </>
   );
 };
