@@ -255,7 +255,11 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
       {vehicle && (
         <VehiclesUploadCRLVeModal
           isOpen={uploadCRLVeModalOpen}
-          onClose={() => setUploadCRLVeModalOpen(false)}
+          onClose={() => {
+            setUploadCRLVeModalOpen(false);
+            // eslint-disable-next-line no-param-reassign
+            vehicle.crlve_included = true;
+          }}
           vehicleId={vehicle.id}
         />
       )}
