@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaSearch, FaFile } from 'react-icons/fa';
+import { FaSearch, FaFilePdf } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 
 import { Badge } from '~/components/Badge';
@@ -18,12 +18,12 @@ interface IVehicleDataTableProps {
 }
 
 export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick, onViewCRLVeClick }) => {
-  const [inLoadingGetCRLVe, setInLoadingGetCRLVe] = useState(false);
+  const [inLoadingCRLVe, setInLoadingCRLVe] = useState(false);
 
-  const handleOnCRLVeViewClick = async (id: string) => {
-    setInLoadingGetCRLVe(true);
+  const handleOnCRLVeView = async (id: string) => {
+    setInLoadingCRLVe(true);
     await onViewCRLVeClick(id);
-    setInLoadingGetCRLVe(false);
+    setInLoadingCRLVe(false);
   };
 
   return (
@@ -78,10 +78,14 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
               <td style={{ textAlign: 'center' }}>{ vehicle.brand_model }</td>
               <td style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 10 }}>
                 {vehicle.crlve_included && (
-
-                <Button variant="secondary" style={{ height: 34 }} onClick={() => handleOnCRLVeViewClick(vehicle.id)} disabled={inLoading || inLoadingGetCRLVe}>
-                  <FaFile />
-                </Button>
+                  <Button
+                    variant="secondary"
+                    style={{ height: 34, cursor: inLoadingCRLVe ? 'progress' : 'pointer' }}
+                    onClick={() => handleOnCRLVeView(vehicle.id)}
+                    disabled={inLoading || inLoadingCRLVe}
+                  >
+                    <FaFilePdf />
+                  </Button>
                 )}
                 <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(vehicle.id)} disabled={inLoading}>
                   <FaSearch />

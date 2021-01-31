@@ -235,8 +235,13 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
         {(desp_permission === 1 && vehicle && crlveIncloded && !editing) && (
           <DetailsModalActionButtons>
-            <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOnCRLVeViewClick}>
-              VIZUALIZAR CRLVe
+            <Button
+              variant="secondary"
+              disabled={inLoading || inLoadingGetCRLVe}
+              style={{ cursor: inLoadingGetCRLVe ? 'progress' : 'pointer' }}
+              onClick={handleOnCRLVeViewClick}
+            >
+              <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
             </Button>
           </DetailsModalActionButtons>
         )}
@@ -246,7 +251,12 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
           {vehicle && (
             <>
               {(crlveIncloded && !editing) && (
-                <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOnCRLVeViewClick}>
+                <Button
+                  variant="secondary"
+                  disabled={inLoading || inLoadingGetCRLVe}
+                  style={{ cursor: inLoadingGetCRLVe ? 'progress' : 'pointer' }}
+                  onClick={handleOnCRLVeViewClick}
+                >
                   <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
                 </Button>
               )}

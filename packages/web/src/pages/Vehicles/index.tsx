@@ -28,6 +28,7 @@ export const VehiclesPage: React.FC = () => {
   const [vehicleToDetails, setVehicleToDetails] = useState<IVehicle>();
   const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
   const [inLoading, setInLoading] = useState(false);
+  const [inLoadingPrint, setInLoadingPrint] = useState(false);
 
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
@@ -73,6 +74,8 @@ export const VehiclesPage: React.FC = () => {
   };
 
   const onPrintClick = async () => {
+    setInLoadingPrint(true);
+
     try {
       const response = await api.get<IVehicle[]>(`/vehicles?noPagination=true&${qsConverter(filters)}`, {
         headers: { authorization: `Bearer ${storage.getItem('token')}` },
@@ -95,6 +98,8 @@ export const VehiclesPage: React.FC = () => {
         toast.error('Ocorreu um erro inesperado.');
       }
     }
+
+    setInLoadingPrint(false);
   };
 
   /* - GET CRLVe FROM BACK-END - */
@@ -126,6 +131,17 @@ export const VehiclesPage: React.FC = () => {
     return <Navigate to="/" replace />;
   }
 
+  const printButton = (
+    <Button
+      variant="info"
+      disabled={inLoadingPrint}
+      style={{ cursor: inLoadingPrint ? 'progress' : 'pointer' }}
+      onClick={onPrintClick}
+    >
+      <FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR
+    </Button>
+  );
+
   return (
     <>
       <Layout setPermissions={(perms) => setDesp_permission(perms.desp_permission)}>
@@ -144,7 +160,7 @@ export const VehiclesPage: React.FC = () => {
             inLoading={inLoading}
             onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
             onMaxResultsChange={() => console.log('onMaxResultsChange')}
-            overrideMaxResultsBy={<Button variant="info" onClick={onPrintClick}><FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR</Button>}
+            overrideMaxResultsBy={printButton}
           />
         </Card>
       </Layout>
