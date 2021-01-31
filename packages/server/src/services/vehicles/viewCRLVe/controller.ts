@@ -11,7 +11,8 @@ export class VehiclesViewCRLVeController {
   // eslint-disable-next-line consistent-return
   async handle(req: Request, res: Response) {
     if((await vehiclesFindService.execute({ id: req.params.id })).crlve_included) {
-      const basePath = path.resolve(__dirname, '..', '..', '..', 'tmp');
+      const basePath = path.resolve(__dirname, '..', '..', '..', '..', 'tmp');
+
       if(process.env.MULTER_STORAGE === 'local') {
         return res.sendFile(path.resolve(basePath, 'crlve', `${req.params.id}.pdf`));
       }
