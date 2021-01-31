@@ -33,17 +33,18 @@ interface IDetailsModalProps {
   onClose: () => void;
   vehicle?: IVehicle;
   desp_permission: number;
+  onViewCRLVeClick: (id: string) => Promise<void>;
 }
 
-export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle, desp_permission }) => {
+export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle, desp_permission, onViewCRLVeClick }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
 
   const [inLoading, setInLoading] = useState(false);
+  const [inLoadingGetCRLVe, setInLoadingGetCRLVe] = useState(false);
   const [editing, setEditing] = useState(!!vehicle);
   const [clientSearched, setClientSearched] = useState(false);
   const [haveClient, setHaveClient] = useState(true);
-  const [inLoadingGetCRLVe, setInLoadingGetCRLVe] = useState(false);
 
   const onCloseHandler = () => {
     setInLoading(false);
@@ -173,34 +174,13 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   };
   /* END SAVE OR UPDATE VEHICLE */
 
-  /* - GET CRLVe FROM BACK-END - */
-  const handleOpenCRLVe = async () => {
+  const handleOnCRLVeViewClick = async () => {
     if(vehicle) {
       setInLoadingGetCRLVe(true);
-
-      try {
-        const response = await api.get(`/vehicles/crlve/view/${vehicle.id}`, {
-          headers: { authorization: `Bearer ${storage.getItem('token')}` },
-          responseType: 'blob',
-        });
-
-        const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-        // eslint-disable-next-line no-restricted-globals
-        window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
-      } catch(err) {
-        if(err.message === 'Network Error') {
-          toast.error('Verifique sua conexão com a internet.');
-        } else if(err.response && err.response.data && err.response.data.message) {
-          toast.error(err.response.data.message);
-        } else {
-          toast.error('Ocorreu um erro inesperado.');
-        }
-      }
-
+      await onViewCRLVeClick(vehicle.id);
       setInLoadingGetCRLVe(false);
     }
   };
-  /* END GET CRLVe FROM BACK-END */
 
   return (
     <Modal isOpen={isOpen} onRequestClose={onCloseHandler} header={`${vehicle ? 'ALTERACAO' : 'CADASTRO'} DE VEICULOS`}>
@@ -222,7 +202,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
       {(desp_permission === 1 && vehicle && vehicle.crlve_included && !editing) && (
         <DetailsModalActionButtons>
-          <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOpenCRLVe}>
+          <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOnCRLVeViewClick}>
             VIZUALIZAR CRLVe
           </Button>
         </DetailsModalActionButtons>
@@ -233,7 +213,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
           {vehicle && (
             <>
               {(vehicle.crlve_included && !editing) && (
-                <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOpenCRLVe}>
+                <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOnCRLVeViewClick}>
                   VIZUALIZAR CRLVe
                 </Button>
               )}

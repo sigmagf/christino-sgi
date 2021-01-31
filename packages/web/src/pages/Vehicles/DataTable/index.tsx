@@ -1,5 +1,5 @@
-import React from 'react';
-import { FaSearch as SearchIcon } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaSearch, FaFile } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 
 import { Badge } from '~/components/Badge';
@@ -14,9 +14,18 @@ interface IVehicleDataTableProps {
   vehicles: IVehicle[];
   inLoading: boolean;
   onDetailsClick: (id: string) => void;
+  onViewCRLVeClick: (id: string) => Promise<void>;
 }
 
-export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick }) => {
+export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick, onViewCRLVeClick }) => {
+  const [inLoadingGetCRLVe, setInLoadingGetCRLVe] = useState(false);
+
+  const handleOnCRLVeViewClick = async (id: string) => {
+    setInLoadingGetCRLVe(true);
+    await onViewCRLVeClick(id);
+    setInLoadingGetCRLVe(false);
+  };
+
   return (
     <DataTableCardContainer style={{ position: 'relative' }}>
       { inLoading && (
@@ -33,7 +42,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
             <th style={{ width: 100 }}>PLACA</th>
             <th style={{ width: 150 }}>RENAVAM</th>
             <th style={{ width: 250 }}>MARCA/MODELO</th>
-            <th style={{ width: 50 }} aria-label="action-column" />
+            <th style={{ width: 94 }} aria-label="action-column" />
           </tr>
         </thead>
         <tbody>
@@ -67,9 +76,15 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
               <td style={{ textAlign: 'center' }}>{ vehicle.plate }</td>
               <td style={{ textAlign: 'center' }}>{ vehicle.renavam }</td>
               <td style={{ textAlign: 'center' }}>{ vehicle.brand_model }</td>
-              <td style={{ textAlign: 'center' }}>
+              <td style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 10 }}>
+                {vehicle.crlve_included && (
+
+                <Button variant="secondary" style={{ height: 34 }} onClick={() => handleOnCRLVeViewClick(vehicle.id)} disabled={inLoading || inLoadingGetCRLVe}>
+                  <FaFile />
+                </Button>
+                )}
                 <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(vehicle.id)} disabled={inLoading}>
-                  <SearchIcon />
+                  <FaSearch />
                 </Button>
               </td>
             </tr>

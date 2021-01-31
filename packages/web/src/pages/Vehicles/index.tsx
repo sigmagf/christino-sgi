@@ -97,6 +97,29 @@ export const VehiclesPage: React.FC = () => {
     }
   };
 
+  /* - GET CRLVe FROM BACK-END - */
+  const handleOpenCRLVe = async (id: string) => {
+    try {
+      const response = await api.get(`/vehicles/crlve/view/${id}`, {
+        headers: { authorization: `Bearer ${storage.getItem('token')}` },
+        responseType: 'blob',
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      // eslint-disable-next-line no-restricted-globals
+      window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+    } catch(err) {
+      if(err.message === 'Network Error') {
+        toast.error('Verifique sua conexão com a internet.');
+      } else if(err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error('Ocorreu um erro inesperado.');
+      }
+    }
+  };
+  /* END GET CRLVe FROM BACK-END */
+
   useEffect(() => { getVehicles(); }, [filters]); // eslint-disable-line
 
   if(desp_permission === 0) {
@@ -112,7 +135,7 @@ export const VehiclesPage: React.FC = () => {
           onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data, page: 1 }))}
           desp_permission={desp_permission}
         />
-        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} onDetailsClick={onDetailsClick} />
+        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} onDetailsClick={onDetailsClick} onViewCRLVeClick={handleOpenCRLVe} />
 
         <Card style={{ margin: '15px 0' }}>
           <Pagination
@@ -132,6 +155,7 @@ export const VehiclesPage: React.FC = () => {
         onClose={onModalsClose}
         vehicle={vehicleToDetails}
         desp_permission={desp_permission}
+        onViewCRLVeClick={handleOpenCRLVe}
       />
     </>
   );
