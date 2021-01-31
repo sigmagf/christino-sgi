@@ -22,6 +22,6 @@ app.use(usersRouter);
 app.use(clientsRouter);
 app.use(vehiclesRouter);
 
-app.use('*', (req, res) => res.json({ message: 'Hello World!' }));
+// app.use('*', (req, res) => res.json({ message: 'Hello World!' }));
 
 export { app };

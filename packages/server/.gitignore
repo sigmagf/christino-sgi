@@ -9,8 +9,5 @@
 /__OLD__
 
 /.response_returns.ts
-/tmp/crlves
-/tmp/crlve
-/tmp/s3
-!/tmp/crlve/.gitkeep
-!/tmp/s3/.gitkeep
+/tmp
+!/tmp/**/.gitkeep

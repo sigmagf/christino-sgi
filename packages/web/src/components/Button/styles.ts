@@ -3,12 +3,12 @@ import styled, { css } from 'styled-components';
 
 interface IButtonContainerStyledProps {
   variant: 'primary'|'secondary'|'success'|'error'|'warning'|'info';
+  uppercase?: boolean;
 }
 
 export const ButtonContainer = styled.button<IButtonContainerStyledProps>`
   min-height: 30px;
   min-width: 30px;
-  text-transform: uppercase;
   padding: 0 10px;
   display: flex;
   justify-content: center;

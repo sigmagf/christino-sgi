@@ -43,6 +43,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   const [editing, setEditing] = useState(!!vehicle);
   const [clientSearched, setClientSearched] = useState(false);
   const [haveClient, setHaveClient] = useState(true);
+  const [inLoadingGetCRLVe, setInLoadingGetCRLVe] = useState(false);
 
   const onCloseHandler = () => {
     setInLoading(false);
@@ -172,6 +173,35 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   };
   /* END SAVE OR UPDATE VEHICLE */
 
+  /* - GET CRLVe FROM BACK-END - */
+  const handleOpenCRLVe = async () => {
+    if(vehicle) {
+      setInLoadingGetCRLVe(true);
+
+      try {
+        const response = await api.get(`/vehicles/crlve/view/${vehicle.id}`, {
+          headers: { authorization: `Bearer ${storage.getItem('token')}` },
+          responseType: 'blob',
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+        // eslint-disable-next-line no-restricted-globals
+        window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+      } catch(err) {
+        if(err.message === 'Network Error') {
+          toast.error('Verifique sua conexão com a internet.');
+        } else if(err.response && err.response.data && err.response.data.message) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error('Ocorreu um erro inesperado.');
+        }
+      }
+
+      setInLoadingGetCRLVe(false);
+    }
+  };
+  /* END GET CRLVe FROM BACK-END */
+
   return (
     <Modal isOpen={isOpen} onRequestClose={onCloseHandler} header={`${vehicle ? 'ALTERACAO' : 'CADASTRO'} DE VEICULOS`}>
       <DetailsModalContainer ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle.client, ...vehicle, status: status[vehicle.status] }}>
@@ -192,6 +222,19 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
       {desp_permission >= 2 && (
         <DetailsModalActionButtons>
+          {vehicle && (
+            <>
+              {(vehicle.crlve_included && !editing) && (
+                <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOpenCRLVe}>
+                  VIZUALIZAR CRLVe
+                </Button>
+              )}
+
+              <Button variant="info" disabled={inLoading}>
+                ENVIAR CRLVe
+              </Button>
+            </>
+          )}
           {editing ? (
             <>
               <Button type="submit" variant="success" disabled={inLoading} onClick={() => formRef.current && formRef.current.submitForm()}>

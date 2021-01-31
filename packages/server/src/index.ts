@@ -23,4 +23,13 @@ app.listen(process.env.PORT || 3000, async () => {
   } else {
     console.log('Pasta tmp/s3 ja existe!');
   }
+
+  if(!fs.existsSync(path.resolve(__dirname, '..', 'tmp', 'crlve'))) {
+    console.log('Criando pasta tmp/crlve');
+    fs.mkdirSync(path.resolve(__dirname, '..', 'tmp', 'crlve'));
+  } else {
+    console.log('Pasta tmp/crlve ja existe!');
+  }
+
+  console.log(`Utilizando o metodo de upload '${process.env.MULTER_STORAGE}'`);
 });

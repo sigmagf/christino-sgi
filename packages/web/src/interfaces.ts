@@ -99,6 +99,7 @@ export interface IVehicle {
   type: string;
   details: string;
   status: number;
+  crlve_included: boolean;
   created_at?: Date;
   updated_at?: Date;
 }
