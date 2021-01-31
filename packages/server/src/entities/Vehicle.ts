@@ -18,19 +18,22 @@ export class Vehicle {
     renavam: string;
 
     @Column('character varying', { length: 16, nullable: true, unique: true })
-    crv: string;
+    crv?: string;
 
-    @Column('character varying', { length: 32, nullable: true })
+    @Column('character varying', { length: 32 })
     brand_model: string;
 
-    @Column('character varying', { length: 16, nullable: true })
+    @Column('character varying', { length: 16 })
     type: string;
 
     @Column('character varying', { length: 64, nullable: true })
-    details: string;
+    details?: string;
 
     @Column('smallint', { default: 1 })
     status: number;
+
+    @Column('boolean', { default: false })
+    crlve_included?: boolean;
 
     @CreateDateColumn()
     created_at?: Date;

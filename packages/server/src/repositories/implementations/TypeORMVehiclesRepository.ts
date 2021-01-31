@@ -114,10 +114,22 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
   }
 
   async update(id: string, data: Omit<Vehicle, 'id'|'created_at'|'updated_at'>): Promise<Vehicle> {
-    await getRepository(Vehicle).update(id, data);
+    const oldData = await getRepository(Vehicle).findOne({ id });
 
-    const newData = await getRepository(Vehicle).findOne({ where: { id } });
-    return newData;
+    await getRepository(Vehicle).update(id, {
+      client_id: data.client_id || oldData.client_id,
+      plate: data.plate || oldData.plate,
+      renavam: data.renavam || oldData.renavam,
+      crv: data.crv || oldData.crv,
+      brand_model: data.brand_model || oldData.brand_model,
+      type: data.type || oldData.type,
+      details: data.details || oldData.details,
+      status: data.status || oldData.status,
+      crlve_included: data.crlve_included || oldData.crlve_included,
+    });
+
+    const dbData = await getRepository(Vehicle).findOne({ where: { id } });
+    return dbData;
   }
 
   async delete(id: string): Promise<void> {

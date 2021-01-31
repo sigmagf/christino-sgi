@@ -1,3 +1,4 @@
+import { Client } from '~/entities/Client';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 import { convertStatus } from '~/utils/convertStatus';
@@ -8,14 +9,13 @@ export class VehiclesUpdateService {
   constructor(private vehiclesRepo: IVehiclesRepository, private clientsRepo: IClientsRepository) { }
 
   async execute(data: IVehiclesUpdateRequestDTO) {
-    const client = await this.clientsRepo.create({
-      name: data.name,
-      document: data.document,
-      group: data.group,
-    });
-
-    if(!client) {
-      JSON.stringify({ code: 404, message: 'Client not found.' });
+    let client: Client;
+    if(data.document) {
+      client = await this.clientsRepo.create({
+        name: data.name || undefined,
+        document: data.document || undefined,
+        group: data.group || undefined,
+      });
     }
 
     if(!await this.vehiclesRepo.findById(data.id)) {
@@ -23,14 +23,15 @@ export class VehiclesUpdateService {
     }
 
     const vehicle = await this.vehiclesRepo.update(data.id, {
-      client_id: client.id || null,
-      plate: data.plate,
-      renavam: data.renavam,
-      crv: data.crv || null,
-      brand_model: data.brand_model,
+      client_id: client ? client.id : undefined,
+      plate: data.plate || undefined,
+      renavam: data.renavam || undefined,
+      crv: data.crv || undefined,
+      brand_model: data.brand_model || undefined,
       type: data.type,
-      details: data.details || null,
+      details: data.details || undefined,
       status: convertStatus(data.status),
+      crlve_included: data.crlve_included || undefined,
     });
 
     return vehicle;

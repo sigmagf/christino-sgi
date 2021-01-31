@@ -12,10 +12,7 @@ const app = express();
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
-app.use(cors({
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  origin: '*',
-}));
+app.use(cors({ methods: ['GET', 'POST', 'PUT', 'DELETE'], origin: '*' }));
 
 if(process.env.NODE_ENV === 'development') {
   app.use(devMiddleware);
