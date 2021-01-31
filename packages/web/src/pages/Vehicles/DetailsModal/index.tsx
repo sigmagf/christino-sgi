@@ -43,6 +43,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
   const [inLoading, setInLoading] = useState(false);
   const [inLoadingGetCRLVe, setInLoadingGetCRLVe] = useState(false);
+  const [CRLVeIncluded, setCRLVeIncluded] = useState(vehicle ? vehicle.crlve_included : false);
   const [uploadCRLVeModalOpen, setUploadCRLVeModalOpen] = useState(false);
   const [editing, setEditing] = useState(!!vehicle);
   const [clientSearched, setClientSearched] = useState(false);
@@ -203,7 +204,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
           <Input disabled={inLoading || !editing} name="details" label="DETALHES" />
         </DetailsModalContainer>
 
-        {(desp_permission === 1 && vehicle && vehicle.crlve_included && !editing) && (
+        {(desp_permission === 1 && vehicle && CRLVeIncluded && !editing) && (
         <DetailsModalActionButtons>
           <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOnCRLVeViewClick}>
             VIZUALIZAR CRLVe
@@ -215,13 +216,13 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         <DetailsModalActionButtons>
           {vehicle && (
             <>
-              {(vehicle.crlve_included && !editing) && (
+              {(CRLVeIncluded && !editing) && (
                 <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOnCRLVeViewClick}>
                   VIZUALIZAR CRLVe
                 </Button>
               )}
 
-              {!vehicle.crlve_included && (
+              {!CRLVeIncluded && (
                 <Button variant="info" disabled={inLoading} onClick={() => setUploadCRLVeModalOpen(true)}>
                   ENVIAR CRLVe
                 </Button>
@@ -257,8 +258,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
           isOpen={uploadCRLVeModalOpen}
           onClose={() => {
             setUploadCRLVeModalOpen(false);
-            // eslint-disable-next-line no-param-reassign
-            vehicle.crlve_included = true;
+            setCRLVeIncluded(true);
           }}
           vehicleId={vehicle.id}
         />
