@@ -221,9 +221,11 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
                 </Button>
               )}
 
-              <Button variant="info" disabled={inLoading} onClick={() => setUploadCRLVeModalOpen(true)}>
-                ENVIAR CRLVe
-              </Button>
+              {!vehicle.crlve_included && (
+                <Button variant="info" disabled={inLoading} onClick={() => setUploadCRLVeModalOpen(true)}>
+                  ENVIAR CRLVe
+                </Button>
+              )}
             </>
           )}
           {editing ? (
