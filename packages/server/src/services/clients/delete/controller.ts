@@ -11,7 +11,7 @@ export class ClientsDeleteController {
     const { id } = req.params;
 
     try {
-      if(req.user && req.user.clie_permission < 3) {
+      if(!req.user || req.user.clie_permission < 3) {
         throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
       }
 

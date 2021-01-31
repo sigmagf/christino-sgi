@@ -48,7 +48,7 @@ vehiclesRouter.get('/vehicles/crlve/view/:id', async (req, res) => {
 });
 
 vehiclesRouter.post('/vehicles/crlve/upload/:id', multer(multerConfig).single('file'), async (req, res) => {
-  if(req.user && req.user.desp_permission < 2) {
+  if(!req.user || req.user.desp_permission < 2) {
     return res.status(401).json({ message: 'User not have permission for this route.' });
   }
 

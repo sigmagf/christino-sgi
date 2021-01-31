@@ -24,7 +24,7 @@ export class VehiclesListController {
     const plate_end = stringFix(req.query.plate_end, undefined, 'UPPERCASE');
 
     try {
-      if(req.user && req.user.desp_permission < 1) {
+      if(!req.user || req.user.desp_permission < 1) {
         throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
       }
 

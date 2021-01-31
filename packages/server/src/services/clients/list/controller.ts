@@ -18,7 +18,7 @@ export class ClientsListController {
     const group = stringFix(req.query.group, undefined, 'UPPERCASE');
 
     try {
-      if(req.user && req.user.clie_permission < 1) {
+      if(!req.user || req.user.clie_permission < 1) {
         throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
       }
 

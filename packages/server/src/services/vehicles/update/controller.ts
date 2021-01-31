@@ -24,7 +24,7 @@ export class VehiclesUpdateController {
     const status = stringFix(req.body.status, undefined, 'LOWERCASE');
 
     try {
-      if(req.user && req.user.desp_permission < 2) {
+      if(!req.user || req.user.desp_permission < 2) {
         throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
       }
 

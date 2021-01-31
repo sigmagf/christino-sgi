@@ -17,7 +17,7 @@ export class ClientsCreateController {
     const phone2 = stringFix(req.body.phone2, undefined, 'UPPERCASE');
 
     try {
-      if(req.user && req.user.clie_permission < 2) {
+      if(!req.user || req.user.clie_permission < 2) {
         throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
       }
 

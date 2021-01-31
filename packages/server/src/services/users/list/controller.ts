@@ -12,7 +12,7 @@ export class UsersListController {
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
     try {
-      if(req.user && req.user.clie_permission < 1) {
+      if(!req.user || req.user.clie_permission < 1) {
         throw new Error(JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
       }
 
