@@ -1,6 +1,5 @@
 import AWS from 'aws-sdk';
 import { Router } from 'express';
-import fs from 'fs';
 import multer from 'multer';
 import path from 'path';
 
@@ -26,9 +25,8 @@ vehiclesRouter.delete('/vehicles/:id', (req, res) => vehiclesDeleteController.ha
 
 vehiclesRouter.post('/vehicles/import', (req, res) => vehiclesImportController.handle(req, res));
 
-// eslint-disable-next-line consistent-return
 vehiclesRouter.get('/vehicles/crlve/view/:id', async (req, res) => {
-  if(req.user && req.user.desp_permission < 1) {
+  if(!req.user || req.user.desp_permission < 1) {
     return res.status(401).json({ message: 'User not have permission for this route.' });
   }
 
@@ -37,23 +35,18 @@ vehiclesRouter.get('/vehicles/crlve/view/:id', async (req, res) => {
       return res.contentType('application/pdf').sendFile(path.resolve(__dirname, '..', '..', '..', 'tmp', 'crlve', `${req.params.id}.pdf`));
     }
 
-    const s3 = new AWS.S3();
-    const fileTemp = fs.createWriteStream(path.resolve(__dirname, '..', '..', '..', 'tmp', 's3', `${req.params.id}.pdf`));
-    const s3Stream = s3.getObject({ Bucket: process.env.AWS_BUCKET, Key: `crlve/${req.params.id}.pdf` }).createReadStream();
-
-    s3Stream.on('error', (err) => {
+    try {
+      const s3 = new AWS.S3();
+      const object = await s3.getObject({ Bucket: process.env.AWS_BUCKET, Key: `crlve/${req.params.id}.pdf` }).promise();
+      return res.json(object.Body);
+    } catch(err) {
       return res.status(400).json({ message: err.message || 'Unexpected error' });
-    });
-
-    s3Stream.pipe(fileTemp).on('error', (err) => {
-      return res.status(400).json({ message: err.message || 'Unexpected error' });
-    }).on('close', () => {
-      return res.contentType('application/pdf').sendFile(fileTemp.path.toString());
-    });
+    }
   } else {
     return res.status(404).json({ message: 'No CRLVe founded!' });
   }
 });
+
 vehiclesRouter.post('/vehicles/crlve/upload/:id', multer(multerConfig).single('file'), async (req, res) => {
   if(req.user && req.user.desp_permission < 2) {
     return res.status(401).json({ message: 'User not have permission for this route.' });
