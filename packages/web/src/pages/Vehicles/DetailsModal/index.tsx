@@ -220,6 +220,14 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         <Input disabled={inLoading || !editing} name="details" label="DETALHES" />
       </DetailsModalContainer>
 
+      {(desp_permission === 1 && vehicle && vehicle.crlve_included && !editing) && (
+        <DetailsModalActionButtons>
+          <Button variant="secondary" disabled={inLoading || inLoadingGetCRLVe} onClick={handleOpenCRLVe}>
+            VIZUALIZAR CRLVe
+          </Button>
+        </DetailsModalActionButtons>
+      )}
+
       {desp_permission >= 2 && (
         <DetailsModalActionButtons>
           {vehicle && (
