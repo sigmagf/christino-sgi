@@ -218,9 +218,9 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
     <>
       <Modal isOpen={isOpen} onRequestClose={onCloseHandler} header={`${vehicle ? 'ALTERACAO' : 'CADASTRO'} DE VEICULOS`}>
         <DetailsModalContainer ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle.client, ...vehicle, status: status[vehicle.status] }}>
-          <Input disabled={inLoading || haveClient || !editing} name="name" label="NOME" />
+          <Input disabled={inLoading || !editing || haveClient} name="name" label="NOME" />
           <Input disabled={inLoading || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
-          <Input disabled={inLoading || haveClient || !editing} name="group" label="GRUPO" />
+          <Input disabled={inLoading || !editing || haveClient} name="group" label="GRUPO" />
 
           <hr />
 

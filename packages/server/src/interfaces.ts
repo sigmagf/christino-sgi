@@ -14,10 +14,10 @@ export interface IClientsListFilters extends Pick<Client, 'name'|'document'|'gro
   pagination: boolean;
 }
 
-export interface IVehiclesListFilters extends Omit<Vehicle, 'id'|'client'|'type'|'details'|'status'|'created_at'|'updated_at'> {
-  pagination: boolean;
-  status: string|string[];
-  group: string;
-  plate_end: string;
-  include_truck: boolean;
+export interface IVehiclesListFilters extends Partial<Omit<Vehicle, 'id'|'client'|'type'|'details'|'status'|'created_at'|'updated_at'>> {
+  pagination?: boolean;
+  status?: string|string[];
+  group?: string;
+  plate_end?: string;
+  include_truck?: boolean;
 }

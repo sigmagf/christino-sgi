@@ -52,7 +52,7 @@ export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, 
 
   return (
     <>
-      <Modal isOpen={isOpen} onRequestClose={onClose} haveHeader={!inLoading} header="ENVIAR CRLVe">
+      <Modal isOpen={isOpen} onRequestClose={onClose} haveHeader={false}>
         {inLoading ? (
           <ReactLoading type="bars" />
         ) : (
