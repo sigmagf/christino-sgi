@@ -33,8 +33,17 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
 
     filtersPart.push(filters.plate_end ? `v.plate LIKE '%${filters.plate_end}'` : null);
 
-    if(!filters.include_truck) {
-      filtersPart.push('v.type <> \'CAMINHAO\' AND v.type <> \'C. TRATOR\'');
+    switch(filters.include_truck) {
+      case '0':
+        filtersPart.push('v.type <> \'CAMINHAO\' AND v.type <> \'C. TRATOR\'');
+        break;
+      case '2':
+        filtersPart.push('v.type = \'CAMINHAO\' AND v.type = \'C. TRATOR\'');
+        break;
+      default:
+      case '1':
+        filtersPart.push(null);
+        break;
     }
 
     return filtersPart.filter((el) => el !== null).join(' AND ');

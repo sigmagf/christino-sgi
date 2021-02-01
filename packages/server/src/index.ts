@@ -10,25 +10,21 @@ app.listen(process.env.PORT || 3000, async () => {
   console.clear();
   console.log(`Servidor iniciado na porta ${process.env.PORT || 3000} no ambiente de ${process.env.NODE_ENV}...`);
 
-  if(!fs.existsSync(path.resolve(__dirname, '..', 'tmp'))) {
-    console.log('Criando pasta tmp');
-    fs.mkdirSync(path.resolve(__dirname, '..', 'tmp'));
-  } else {
-    console.log('Pasta tmp ja existe!');
+  const tmpFolder = process.env.NODE_ENV !== 'development' ? path.resolve(__dirname, '..', '..', 'tmp') : path.resolve(__dirname, '..', 'tmp');
+
+  if(!fs.existsSync(tmpFolder)) {
+    console.log('Criando pasta tmp...');
+    fs.mkdirSync(tmpFolder);
   }
 
-  if(!fs.existsSync(path.resolve(__dirname, '..', 'tmp', 's3'))) {
-    console.log('Criando pasta tmp/s3');
-    fs.mkdirSync(path.resolve(__dirname, '..', 'tmp', 's3'));
-  } else {
-    console.log('Pasta tmp/s3 ja existe!');
+  if(!fs.existsSync(path.resolve(tmpFolder, 's3'))) {
+    console.log('Criando pasta tmp/s3...');
+    fs.mkdirSync(path.resolve(tmpFolder, 's3'));
   }
 
-  if(!fs.existsSync(path.resolve(__dirname, '..', 'tmp', 'crlve'))) {
-    console.log('Criando pasta tmp/crlve');
-    fs.mkdirSync(path.resolve(__dirname, '..', 'tmp', 'crlve'));
-  } else {
-    console.log('Pasta tmp/crlve ja existe!');
+  if(!fs.existsSync(path.resolve(tmpFolder, 'crlve'))) {
+    console.log('Criando pasta tmp/crlve...');
+    fs.mkdirSync(path.resolve(tmpFolder, 'crlve'));
   }
 
   console.log(`Utilizando o metodo de upload '${process.env.MULTER_STORAGE}'`);

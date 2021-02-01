@@ -7,7 +7,11 @@ import path from 'path';
 const storageTypes = {
   local: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, path.resolve(__dirname, '..', '..', 'tmp', 'crlve'));
+      if(process.env.NODE_ENV !== 'development') {
+        cb(null, path.resolve(__dirname, '..', '..', '..', 'tmp', 'crlve'));
+      } else {
+        cb(null, path.resolve(__dirname, '..', '..', 'tmp', 'crlve'));
+      }
     },
     filename: (req, file, cb) => {
       cb(null, `${req.params.id}.pdf`);

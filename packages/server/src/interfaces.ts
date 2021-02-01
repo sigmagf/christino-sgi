@@ -19,5 +19,5 @@ export interface IVehiclesListFilters extends Partial<Omit<Vehicle, 'id'|'client
   status?: string|string[];
   group?: string;
   plate_end?: string;
-  include_truck?: boolean;
+  include_truck?: string;
 }

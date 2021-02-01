@@ -1,4 +1,4 @@
-import { FormHandles, SubmitHandler } from '@unform/core';
+import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useRef, useState, useEffect } from 'react';
 import { FaLayerGroup, FaPlus, FaFilter, FaAngleDown, FaAngleUp } from 'react-icons/fa';
@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
 import { Select, Input } from '~/components/Form';
-import { Switch } from '~/components/Switch';
 import { useLocalStorage } from '~/hooks';
 import { IClient, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
@@ -28,9 +27,21 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
   let timer: any;
 
   const [open, setOpen] = useState(true);
-  const [includeTruck, setIncludeTruck] = useState(true);
   const [groups, setGroups] = useState([{ label: 'TODOS', value: '' }]);
   const [clients, setClients] = useState([{ label: 'TODOS', value: '' }]);
+
+  const includeTruckOptions = [
+    {
+      value: '0',
+      label: 'SEM CAMINHÕES',
+    }, {
+      value: '1',
+      label: 'AMBOS',
+    }, {
+      value: '2',
+      label: 'APENAS CAMINHOES',
+    },
+  ];
 
   const getClients = async (name: string) => {
     try {
@@ -43,7 +54,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     } catch(err) {
       if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response.data && err.response.data.message) {
+      } else if(err.response && err.response.data && err.response.data.message) {
         toast.error(err.response.data.message);
       } else {
         toast.error('Ocorreu um erro inesperado.');
@@ -66,7 +77,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     } catch(err) {
       if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response.data && err.response.data.message) {
+      } else if(err.response && err.response.data && err.response.data.message) {
         toast.error(err.response.data.message);
       } else {
         toast.error('Ocorreu um erro inesperado.');
@@ -74,27 +85,16 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     }
   };
 
-  const onSubmitHandler: SubmitHandler<Omit<IVehiclesFilters, 'page'|'limit'>> = (data) => {
-    onFiltersApplyClick({
-      ...data,
-      include_truck: includeTruck,
-    });
-  };
-
-  useEffect(() => { getGroups(); }, []); // eslint-disable-line
+  useEffect(() => {
+    getGroups();
+  }, []); // eslint-disable-line
 
   return (
     <FiltersCard>
       <FiltersContainer open={open}>
-        <Form ref={formRef} onSubmit={onSubmitHandler}>
+        <Form ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
           <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} defaultValue={clients[0]} onKeyDown={onClientsInputChange} />
-          <Select
-            label="GRUPO"
-            name="group"
-            style={{ gridArea: 'CG' }}
-            options={groups}
-            defaultValue={{ value: '', label: 'TODOS' }}
-          />
+          <Select label="GRUPO" name="group" style={{ gridArea: 'CG' }} options={groups} defaultValue={groups[0]} />
           <Select label="STATUS" name="status" style={{ gridArea: 'VS' }} options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
 
           <Input label="PLACA" name="plate" style={{ gridArea: 'VP' }} />
@@ -102,7 +102,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
           <Input label="CRV" name="crv" style={{ gridArea: 'VC' }} />
           <Input label="MARCA/MODELO" name="brand_model" style={{ gridArea: 'VM' }} />
           <Select label="FINAL DE PLACA" name="plate_end" style={{ gridArea: 'VF' }} options={plateEnd} defaultValue={plateEnd[0]} />
-          <Switch label="INCLUIR CAMINHÕES" style={{ gridArea: 'VT' }} checked={includeTruck} onChange={() => setIncludeTruck((old) => !old)} />
+          <Select label="CAMINHOES" name="include_truck" style={{ gridArea: 'VT' }} options={includeTruckOptions} defaultValue={includeTruckOptions[1]} />
         </Form>
 
         <FiltersHeaders onClick={() => setOpen((old) => !old)}>

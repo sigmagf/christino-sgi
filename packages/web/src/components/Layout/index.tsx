@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ReactLoading from 'react-loading';
+import { useNavigate } from 'react-router-dom';
 
 import { useLocalStorage } from '~/hooks';
 import { IUser } from '~/interfaces';
@@ -15,30 +16,30 @@ interface ILayoutProps {
 
 export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => {
   const storage = useLocalStorage();
+  const navigate = useNavigate();
 
-  const [isAuth, setIsAuth] = useState(-1);
+  const [validFinished, setValidFinished] = useState(false);
 
   const validate = useCallback(async () => {
-    const response = await api.get<IUser>('/users/valid', {
-      headers: { authorization: `Bearer ${storage.getItem('token')}` },
-    });
-
-    if(response.status >= 200 && response.status < 400) {
-      setIsAuth(1);
+    try {
+      const response = await api.get<IUser>('/users/valid', { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
       if(setPermissions) {
         setPermissions(response.data);
       }
-    } else {
-      setIsAuth(0);
+    } catch(err) {
+      storage.setItem('token', null);
+      navigate('/login');
     }
-  }, [setPermissions, storage]);
+
+    setValidFinished(true);
+  }, [navigate, setPermissions, storage]);
 
   useEffect(() => {
     validate();
   }, []); // eslint-disable-line
 
-  if(isAuth === -1) {
+  if(!validFinished) {
     return (
       <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <ReactLoading type="bars" />
@@ -53,8 +54,8 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
         <UserBar />
         <AppContent>
           { children }
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 75 }}>
-            CHRISTINO SISTEMA DE GESTAO INTERNO v0.0.20
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50 }}>
+            CHRISTINO SISTEMA DE GESTAO INTERNO v0.0.20 (01/02/2020)
           </div>
         </AppContent>
       </AppMain>

@@ -1,4 +1,8 @@
 export function statusConverter(status: number|string) {
+  if(!status) {
+    return 'ERRO';
+  }
+
   const stNum = parseInt(status.toString(), 10);
 
   switch(stNum) {
