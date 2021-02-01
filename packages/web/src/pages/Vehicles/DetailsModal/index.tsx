@@ -197,7 +197,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
       setEditing(false);
       setClientSearched(false);
-      setHaveClient(false);
+      setHaveClient(true);
       setCrlveIncluded(vehicle.crlve_included);
 
       setUploadCrlveModalOpen(false);
