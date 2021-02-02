@@ -12,14 +12,14 @@
     "eslint-config": "yarn workspace @christino-sgi/eslint-config"
   },
   "workspaces": {
-    "packages": [ "packages/*" ]
+    "packages": [
+      "packages/*"
+    ]
   },
   "author": {
     "name": "João Gabriel Furlan e Leonel",
     "email": "jgfurlan2@gmail.com",
     "url": "https://furlansolutions.com.br"
-  },
-  "dependencies": {
   },
   "devDependencies": {
     "@christino-sgi/eslint-config": "*",
