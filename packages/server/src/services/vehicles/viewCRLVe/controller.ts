@@ -14,9 +14,9 @@ export class VehiclesViewCRLVeController {
       let basePath = '';
 
       if(process.env.NODE_ENV !== 'development') {
-        basePath = path.resolve(__dirname, '..', '..', '..', '..', '..', 'tmp', 'crlve');
+        basePath = path.resolve(__dirname, '..', '..', '..', '..', '..', 'tmp');
       } else {
-        basePath = path.resolve(__dirname, '..', '..', '..', '..', 'tmp', 'crlve');
+        basePath = path.resolve(__dirname, '..', '..', '..', '..', 'tmp');
       }
 
       if(process.env.MULTER_STORAGE === 'local') {
