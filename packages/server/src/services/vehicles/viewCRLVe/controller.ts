@@ -23,7 +23,7 @@ export class VehiclesViewCRLVeController {
         return res.sendFile(path.resolve(basePath, `${req.params.id}.pdf`));
       }
 
-      const s3TempPath = path.resolve(basePath, 's3', `${req.params.id}.pdf`);
+      const s3TempPath = path.resolve(basePath, `${req.params.id}.pdf`);
       const s3Key = `${process.env.AWS_CRLVE_FOLDER}/${req.params.id}.pdf`;
 
       const s3 = new AWS.S3();
