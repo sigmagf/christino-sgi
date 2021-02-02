@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { getRepository } from 'typeorm';
+import { v4 } from 'uuid';
 
 import { User } from '~/entities/User';
 import { IPagination } from '~/interfaces';
@@ -51,11 +52,9 @@ export class TypeORMUsersRepository implements IUsersRepository {
     const hashPAssword = await this.hashPassword(data.password);
 
     const dbData = await getRepository(User).save({
-      name: data.name,
-      email: data.email,
+      ...data,
+      id: v4(),
       password: hashPAssword,
-      desp_permission: data.desp_permission,
-      segu_permission: data.segu_permission,
     });
 
     return dbData;

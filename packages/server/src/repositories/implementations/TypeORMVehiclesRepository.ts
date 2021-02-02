@@ -1,4 +1,5 @@
 import { getRepository } from 'typeorm';
+import { v4 } from 'uuid';
 
 import { Client } from '~/entities/Client';
 import { Vehicle } from '~/entities/Vehicle';
@@ -117,7 +118,7 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
   }
 
   async create(data: Omit<Vehicle, 'id'|'created_at'|'updated_at'>): Promise<Vehicle> {
-    const dbData = await getRepository(Vehicle).save(data);
+    const dbData = await getRepository(Vehicle).save({ ...data, id: v4() });
 
     return dbData;
   }

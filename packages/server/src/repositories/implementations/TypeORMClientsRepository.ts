@@ -1,4 +1,5 @@
 import { getRepository } from 'typeorm';
+import { v4 } from 'uuid';
 
 import { Client } from '~/entities/Client';
 import { IClientsListFilters, IPagination } from '~/interfaces';
@@ -71,7 +72,7 @@ export class TypeORMClientsRepository implements IClientsRepository {
   async create(data: Omit<Client, 'id'|'created_at'|'updated_at'>): Promise<Client> {
     await getRepository(Client).createQueryBuilder()
       .insert()
-      .values(data)
+      .values({ ...data, id: v4() })
       .onConflict('("document") DO NOTHING')
       .execute();
 

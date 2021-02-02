@@ -5,14 +5,14 @@
   "private": "true",
   "main": "index.js",
   "scripts": {
+    "start": "yarn server start",
+    "prestart": "yarn server build",
     "web": "yarn workspace @christino-sgi/web",
     "server": "yarn workspace @christino-sgi/server",
     "eslint-config": "yarn workspace @christino-sgi/eslint-config"
   },
   "workspaces": {
-    "packages": [
-      "packages/*"
-    ]
+    "packages": [ "packages/*" ]
   },
   "author": {
     "name": "João Gabriel Furlan e Leonel",
