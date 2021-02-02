@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 
 import { usersFindService } from '~/services/users/find';
-import { errorWork } from '~/utils/errorWork';
 
 function userCanAccessRoute(req: Request, path: string, permLevel: number) {
   if(req.path.includes(path)) {
@@ -18,68 +17,58 @@ function userCanAccessRoute(req: Request, path: string, permLevel: number) {
   return true;
 }
 
-export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+// eslint-disable-next-line consistent-return
+export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
 
   if(!authHeader) {
-    errorWork(res, JSON.stringify({ code: 401, message: 'No token provided.' }));
-    return;
+    return res.status(401).json({ message: 'No token provided.' });
   }
 
   const tokenSplit = authHeader.split(' ');
 
   if(tokenSplit.length !== 2) {
-    errorWork(res, JSON.stringify({ code: 401, message: 'Token error.' }));
-    return;
+    return res.status(401).json({ message: 'Token error.' });
   }
 
   const [bearer, token] = tokenSplit;
 
   if(!/^Bearer$/i.test(bearer)) {
-    errorWork(res, JSON.stringify({ code: 401, message: 'Token malformated.' }));
-    return;
+    return res.status(401).json({ message: 'Token malformated.' });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decode: { id: string }) => {
     if(err) {
-      errorWork(res, JSON.stringify({ code: 401, message: 'Token invalid.' }));
-      return;
+      return res.status(401).json({ message: 'Token invalid.' });
     }
 
     if(decode.id) {
       const user = await usersFindService.execute({ id: decode.id });
 
       if(!user) {
-        errorWork(res, JSON.stringify({ code: 401, message: 'User not found.' }));
-        return;
+        return res.status(404).json({ message: 'User not found.' });
       }
 
       if(!userCanAccessRoute(req, '/vehicles', user.desp_permission)) {
-        errorWork(res, JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
-        return;
+        return res.status(401).json({ message: 'User not have permission for this route.' });
       }
 
       if(!userCanAccessRoute(req, '/clients', user.clie_permission)) {
-        errorWork(res, JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
-        return;
+        return res.status(401).json({ message: 'User not have permission for this route.' });
       }
 
       if(!userCanAccessRoute(req, '/users', user.user_permission)) {
-        errorWork(res, JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
-        return;
+        return res.status(401).json({ message: 'User not have permission for this route.' });
       }
 
       if(!userCanAccessRoute(req, '/isurances', user.segu_permission)) {
-        errorWork(res, JSON.stringify({ code: 401, message: 'User not have permission for this route.' }));
-        return;
+        return res.status(401).json({ message: 'User not have permission for this route.' });
       }
 
       req.user = user;
-
-      next();
-      return;
+      return next();
     }
 
-    errorWork(res, JSON.stringify({ code: 401, message: 'User not found.' }));
+    return res.status(404).json({ message: 'User not found.' });
   });
 }
