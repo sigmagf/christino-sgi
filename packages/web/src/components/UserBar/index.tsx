@@ -18,8 +18,8 @@ export const UserBar: React.FC = () => {
 
   return (
     <UserBarContainer>
-      <div className="actions">
-        <strong>Olá,</strong> { storage.getItem('userName') }
+      <div className="user-name">
+        Olá, <strong>{ storage.getItem('userName') }</strong>
       </div>
 
       <div className="user-actions">

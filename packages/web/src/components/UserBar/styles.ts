@@ -14,7 +14,7 @@ export const UserBarContainer = styled.div`
   border-radius: 5px;
   padding: 10px;
 
-  .actions {
+  .user-name {
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -22,8 +22,6 @@ export const UserBarContainer = styled.div`
 
     margin: 5px 0;
     height: calc(100% - 10px);
-
-    font-weight: 800;
   }
 
   .user-actions {
