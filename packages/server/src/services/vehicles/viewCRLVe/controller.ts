@@ -20,18 +20,18 @@ export class VehiclesViewCRLVeController {
       }
 
       if(process.env.MULTER_STORAGE === 'local') {
-        return res.sendFile(path.resolve(basePath, 'crlve', `${req.params.id}.pdf`));
+        return res.sendFile(path.resolve(basePath, `${req.params.id}.pdf`));
       }
 
-      const s3Path = path.resolve(basePath, 's3', `${req.params.id}.pdf`);
-      const s3Key = process.env.NODE_ENV === 'development' ? `development/${req.params.id}.pdf` : `crlve/${req.params.id}.pdf`;
+      const s3TempPath = path.resolve(basePath, 's3', `${req.params.id}.pdf`);
+      const s3Key = `${process.env.AWS_CRLVE_FOLDER}/${req.params.id}.pdf`;
 
       const s3 = new AWS.S3();
-      const fileTemp = fs.createWriteStream(s3Path);
+      const fileTemp = fs.createWriteStream(s3TempPath);
       const s3Stream = s3.getObject({ Bucket: process.env.AWS_BUCKET, Key: s3Key }).createReadStream();
 
       s3Stream.on('error', (err) => res.status(400).json({ message: err.message || 'Unexpected error' }));
-      s3Stream.pipe(fileTemp).on('error', (err) => res.status(400).json({ message: err.message || 'Unexpected error' })).on('close', () => res.sendFile(s3Path));
+      s3Stream.pipe(fileTemp).on('error', (err) => res.status(400).json({ message: err.message || 'Unexpected error' })).on('close', () => res.sendFile(s3TempPath));
     } else {
       return res.status(404).json({ message: 'No CRLVe founded!' });
     }
