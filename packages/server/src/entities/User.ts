@@ -26,17 +26,20 @@ export class User {
     @Column('timestamp without time zone', { nullable: true })
     email_change_expires?: Date;
 
-    @Column('smallint', { default: 0 })
+    @Column('smallint', { default: 1 })
     desp_permission: number;
 
-    @Column('smallint', { default: 0 })
+    @Column('smallint', { default: 1 })
     segu_permission: number;
 
-    @Column('smallint', { default: 0 })
+    @Column('smallint', { default: 1 })
     clie_permission: number;
 
-    @Column('smallint', { default: 0 })
+    @Column('smallint', { default: 1 })
     user_permission: number;
+
+    @Column('smallint', { default: 1 })
+    work_permission: number;
 
     @CreateDateColumn()
     created_at?: Date;

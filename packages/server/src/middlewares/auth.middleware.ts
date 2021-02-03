@@ -65,6 +65,10 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         return res.status(401).json({ message: 'User not have permission for this route.' });
       }
 
+      if(!userCanAccessRoute(req, '/works', user.work_permission)) {
+        return res.status(401).json({ message: 'User not have permission for this route.' });
+      }
+
       req.user = user;
       return next();
     }

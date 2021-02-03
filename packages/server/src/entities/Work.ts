@@ -12,10 +12,10 @@ export class Work {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid')
+  @Column('uuid', { select: false })
   client_id: string;
 
-  @Column('uuid')
+  @Column('uuid', { select: false })
   service_id: string;
 
   @Column('character varying', { length: 16, nullable: true })

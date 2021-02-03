@@ -5,11 +5,12 @@ import ReactLoading from 'react-loading';
 import { Badge } from '~/components/Badge';
 import { Button } from '~/components/Button';
 import { Table } from '~/components/Table';
+import { IWork } from '~/interfaces';
 
 import { DataTableCardContainer, StatusBadge } from './styles';
 
 interface IVehicleDataTableProps {
-  data: any[];
+  data: IWork[];
   inLoading: boolean;
   onDetailsClick: (id: string) => void;
 }
@@ -62,8 +63,8 @@ export const WorksDataTable: React.FC<IVehicleDataTableProps> = ({ data, inLoadi
                   </Badge>
                 )}
               </td>
-              <td style={{ textAlign: 'center' }}>{ el.sector }</td>
-              <td style={{ textAlign: 'center' }}>{ el.service }</td>
+              <td style={{ textAlign: 'center' }}>{ el.sector.name }</td>
+              <td style={{ textAlign: 'center' }}>{ el.service.name }</td>
               <td style={{ textAlign: 'center' }}>{ el.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) }</td>
               <td style={{ textAlign: 'center' }}>
                 <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(el.id)} disabled={inLoading || true}>

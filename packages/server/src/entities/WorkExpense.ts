@@ -9,10 +9,10 @@ export class WorkExpense {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid')
+  @Column('uuid', { select: false })
   work_id: string;
 
-  @Column('uuid')
+  @Column('uuid', { select: false })
   expense_type_id: string;
 
   @Column('float')

@@ -21,8 +21,8 @@ export interface IWorksListFilters extends Partial<Pick<Work, 'identifier'|'valu
   document?: string;
   group?: string;
   service?: string;
-  revenues?: string|string[];
-  expenses?: string|string[];
+  payment_methods?: string|string[];
+  expense_types?: string|string[];
 }
 
 export interface IVehiclesListFilters extends Partial<Omit<Vehicle, 'id'|'client'|'type'|'details'|'status'|'created_at'|'updated_at'>> {

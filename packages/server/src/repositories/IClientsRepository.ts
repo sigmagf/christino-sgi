@@ -7,8 +7,8 @@ export interface IClientsRepository {
   findById(id: string): Promise<Client>;
   findByDocument(document: string): Promise<Client>;
 
-  create(data: Omit<Client, 'id'|'created_at'|'updated_at'>): Promise<Client>;
-  update(id: string, data: Omit<Client, 'id'|'created_at'|'updated_at'>): Promise<Client>;
+  create(data: Omit<Client, 'id'|'vehicles'|'works'|'created_at'|'updated_at'>): Promise<Client>;
+  update(id: string, data: Omit<Client, 'id'|'vehicles'|'works'|'created_at'|'updated_at'>): Promise<Client>;
 
   delete(id: string): Promise<void>;
 }

@@ -3,19 +3,16 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGenerat
 
 import { Work } from './Work';
 
-@Entity('work_history')
+@Entity('work_histories')
 export class WorkHistory {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid')
+  @Column('uuid', { select: false })
   work_id: string;
 
   @Column('character varying', { length: 128 })
-  details: number;
-
-  @Column('character varying', { length: 512 })
-  old_work_data: number;
+  details: string;
 
   @CreateDateColumn()
   created_at?: Date;

@@ -9,10 +9,10 @@ export class WorkRevenue {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid')
+  @Column('uuid', { select: false })
   work_id: string;
 
-  @Column('uuid')
+  @Column('uuid', { select: false })
   payment_method_id: string;
 
   @Column('float')

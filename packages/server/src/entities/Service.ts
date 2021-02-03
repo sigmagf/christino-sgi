@@ -9,7 +9,7 @@ export class Service {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid', { nullable: false })
+  @Column('uuid', { nullable: false, select: false })
   sector_id: string;
 
   @Column('character varying', { length: 64 })

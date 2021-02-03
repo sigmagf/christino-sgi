@@ -8,7 +8,7 @@ export class Vehicle {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('uuid')
+    @Column('uuid', { select: false })
     client_id: string;
 
     @Column('character varying', { length: 7 })
