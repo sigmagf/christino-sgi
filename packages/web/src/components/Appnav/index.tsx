@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { IconType } from 'react-icons';
-import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, FaUserShield } from 'react-icons/fa';
+import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, /* FaUserShield, */ FaReceipt } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { usePersistedState } from '~/hooks';
@@ -36,10 +36,9 @@ export const Appnav: React.FC = () => {
       path: '/vehicles',
     },
     {
-      icon: FaUserShield,
-      label: 'Seguros (WIP)',
-      path: '/insurances',
-      disabled: true,
+      icon: FaReceipt,
+      label: 'Ordens de Serviço',
+      path: '/works',
     },
     {
       icon: FaUsers,
@@ -59,13 +58,7 @@ export const Appnav: React.FC = () => {
       </AppnavHeader>
       <AppnavContent>
         {menuItems.map(({ icon: Icon, label, disabled = false, path }) => (
-          <AppnavItem
-            key={label}
-            selected={pathname === path}
-            type="button"
-            disabled={disabled || pathname === path}
-            onClick={() => navigate(path)}
-          >
+          <AppnavItem key={label} selected={pathname === path} type="button" disabled={disabled || pathname === path} onClick={() => navigate(path)}>
             <div className="appnav-item-icon">
               <Icon size={20} />
             </div>

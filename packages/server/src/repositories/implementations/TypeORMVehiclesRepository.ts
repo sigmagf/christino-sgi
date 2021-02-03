@@ -36,10 +36,10 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
 
     switch(filters.include_truck) {
       case '0':
-        filtersPart.push('v.type <> \'CAMINHAO\' AND v.type <> \'C. TRATOR\'');
+        filtersPart.push('(v.type <> \'CAMINHAO\' AND v.type <> \'C. TRATOR\')');
         break;
       case '2':
-        filtersPart.push('v.type = \'CAMINHAO\' AND v.type = \'C. TRATOR\'');
+        filtersPart.push('(v.type = \'CAMINHAO\' OR v.type = \'C. TRATOR\')');
         break;
       default:
       case '1':
