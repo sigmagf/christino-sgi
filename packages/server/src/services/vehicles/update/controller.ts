@@ -24,6 +24,7 @@ export class VehiclesUpdateController {
     const status = req.body.status || undefined;
 
     try {
+      console.log({ id, name, document, group, plate, renavam, crv, brand_model, type, details, status });
       const user = await this.service.execute({ id, name, document, group, plate, renavam, crv, brand_model, type, details, status });
       return res.status(200).json(user);
     } catch(err) {
