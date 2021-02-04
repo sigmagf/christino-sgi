@@ -19,7 +19,7 @@ export class VehiclesUpdateService {
     }
 
     if(!await this.vehiclesRepo.findById(data.id)) {
-      JSON.stringify({ code: 404, message: 'Vehicle not found.' });
+      throw new Error(JSON.stringify({ code: 404, message: 'Vehicle not found.' }));
     }
 
     const vehicle = await this.vehiclesRepo.update(data.id, {
