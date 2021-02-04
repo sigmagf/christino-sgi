@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const CardContainer = styled.div`
+  position: relative;
   width: auto;
   background: ${({ theme }) => theme.primary.main};
   box-shadow: ${({ theme }) => theme.shadow};

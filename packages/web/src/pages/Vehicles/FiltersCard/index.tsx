@@ -1,12 +1,13 @@
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { FaLayerGroup, FaPlus, FaFilter, FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
 import { Select, Input } from '~/components/Form';
 import { useLocalStorage } from '~/hooks';
+import { useSWR } from '~/hooks/useSWR';
 import { IClient, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
@@ -17,17 +18,18 @@ interface IVehiclesFiltersCardProps {
   onOpenImportModalClick: () => void;
   onOpenCreateModalClick: () => void;
   onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
-  desp_permission: number;
+  despPermission: number;
 }
 
-export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick, onFiltersApplyClick, desp_permission }) => {
+export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick, onFiltersApplyClick, despPermission }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
+
+  const { data: groups } = useSWR<string[]>('/clients/groups?pagination=false');
 
   let timer: any;
 
   const [open, setOpen] = useState(true);
-  const [groups, setGroups] = useState([{ label: 'TODOS', value: '' }]);
   const [clients, setClients] = useState([{ label: 'TODOS', value: '' }]);
 
   const includeTruckOptions = [
@@ -68,41 +70,29 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     timer = setTimeout(() => { getClients('a'); }, 1000);
   };
 
-  const getGroups = async () => {
-    try {
-      const response = await api.get<string[]>('/clients/groups', { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+  const handleGroups = (gr: string[]) => {
+    const array = gr.map((g) => ({ value: g, label: g }));
 
-      const data = response.data.map((group) => ({ value: group, label: group }));
-      setGroups([{ label: 'TODOS', value: '' }, ...data]);
-    } catch(err) {
-      if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-      }
-    }
+    return [
+      { label: 'TODOS', value: '' },
+      ...array,
+    ];
   };
-
-  useEffect(() => {
-    getGroups();
-  }, []); // eslint-disable-line
 
   return (
     <FiltersCard>
       <FiltersContainer open={open}>
         <Form ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
-          <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} defaultValue={clients[0]} onKeyDown={onClientsInputChange} />
-          <Select label="GRUPO" name="group" style={{ gridArea: 'CG' }} options={groups} defaultValue={groups[0]} />
-          <Select label="STATUS" name="status" style={{ gridArea: 'VS' }} options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
+          <Select label="CLIENTE" name="client_id" options={clients} defaultValue={clients[0]} onKeyDown={onClientsInputChange} />
+          <Select label="GRUPO" name="group" options={handleGroups(groups || [])} defaultValue={{ label: 'TODOS', value: '' }} />
+          <Select label="STATUS" name="status" options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
 
-          <Input label="PLACA" name="plate" style={{ gridArea: 'VP' }} />
-          <Input label="RENAVAM" name="renavam" style={{ gridArea: 'VR' }} />
-          <Input label="CRV" name="crv" style={{ gridArea: 'VC' }} />
-          <Input label="MARCA/MODELO" name="brand_model" style={{ gridArea: 'VM' }} />
-          <Select label="FINAL DE PLACA" name="plate_end" style={{ gridArea: 'VF' }} options={plateEnd} defaultValue={plateEnd[0]} />
-          <Select label="CAMINHOES" name="include_truck" style={{ gridArea: 'VT' }} options={includeTruckOptions} defaultValue={includeTruckOptions[1]} />
+          <Input label="PLACA" name="plate" />
+          <Input label="RENAVAM" name="renavam" />
+          <Input label="CRV" name="crv" />
+          <Input label="MARCA/MODELO" name="brand_model" />
+          <Select label="FINAL DE PLACA" name="plate_end" options={plateEnd} defaultValue={plateEnd[0]} />
+          <Select label="CAMINHOES" name="include_truck" options={includeTruckOptions} defaultValue={includeTruckOptions[1]} />
         </Form>
 
         <FiltersHeaders onClick={() => setOpen((old) => !old)}>
@@ -115,7 +105,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
       </FiltersContainer>
 
       <FiltersCardActionButtons>
-        {desp_permission >= 2 && (
+        {despPermission >= 2 && (
           <>
             <Button variant="success" style={{ width: 175.97 }} onClick={onOpenCreateModalClick}>
               <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO

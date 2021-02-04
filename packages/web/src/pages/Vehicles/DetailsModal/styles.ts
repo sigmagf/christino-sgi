@@ -2,7 +2,7 @@ import { Form } from '@unform/web';
 import { transparentize } from 'polished';
 import styled from 'styled-components';
 
-export const DetailsModalContainer = styled(Form)`
+export const DetailsModalForm = styled(Form)`
   display: grid;
   gap: 15px;
   grid-template-columns: 75px 85px 40px 70px 70px;
@@ -35,7 +35,7 @@ export const DetailsModalContainer = styled(Form)`
 `;
 
 export const DetailsModalActionButtons = styled.div`
-  margin-top: 40px;
+  margin-top: 20px;
   display: flex;
   gap: 15px;
   justify-content: flex-end;

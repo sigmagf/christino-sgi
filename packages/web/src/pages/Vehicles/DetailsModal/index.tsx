@@ -16,7 +16,7 @@ import { formatCPForCNPJ } from '~/utils/formatCPForCNPJ';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
 import { VehiclesUploadCRLVeModal } from '../UploadCRLVeModal';
-import { DetailsModalActionButtons, DetailsModalContainer, DetailsModalLoadingContainer } from './styles';
+import { DetailsModalActionButtons, DetailsModalForm, DetailsModalLoadingContainer } from './styles';
 
 interface IFormData {
   name: string;
@@ -34,20 +34,20 @@ interface IDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   vehicle?: IVehicle;
-  desp_permission: number;
+  despPermission: number;
   onViewCRLVeClick: (id: string) => Promise<void>;
 }
 
-export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle, desp_permission, onViewCRLVeClick }) => {
+export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle, despPermission, onViewCRLVeClick }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
 
   const [inLoading, setInLoading] = useState(false);
-  const [inLoadingGetCRLVe, setInLoadingGetCRLVe] = useState(false);
+  const [inLoadingCRLVe, setInLoadingCRLVe] = useState(false);
 
   const [crlveIncloded, setCrlveIncluded] = useState(false);
-  const [editing, setEditing] = useState(false);
 
+  const [editing, setEditing] = useState(false);
   const [clientSearched, setClientSearched] = useState(false);
   const [haveClient, setHaveClient] = useState(true);
 
@@ -88,7 +88,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   };
   /* END SEARCH CLIENT IN DATABASE */
 
-  /* - DOCUMENT FORMAT HANDLER - */
+  /* - HANDLE DOCUMENT FORMAT - */
   const onDocumentFocus = () => {
     if(formRef.current) {
       const document = formRef.current.getFieldValue('document').replace(/\D/g, '');
@@ -115,7 +115,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
       getClient(document);
     }
   };
-  /* END DOCUMENT FORMAT HANDLER */
+  /* END HANDLE DOCUMENT FORMAT */
 
   /* - SET MAXLENGTH- */
   const onBlurMaxLengths = (inputName: string, maxLength: number, fillString: string) => {
@@ -134,9 +134,9 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
       const scheme = yup.object().shape({
         name: yup.string().required('Nome é obrigatório'),
         document: yup.string()
-          .min(11, 'Documento deve ter pelo menos 11 caracteres.')
-          .max(14, 'Documento deve ter no maximo 14 caracteres.')
-          .test('validate-document', 'Documento inválido.', (val) => validCPForCNPJ(val || ''))
+          .min(11, 'Documento deve ter pelo menos 11 caracteres (CPF).')
+          .max(14, 'Documento deve ter no maximo 14 caracteres (CNPJ).')
+          .test('validate-document', 'Documento inválido.', (el) => validCPForCNPJ(el || ''))
           .required('Documento é obrigatório.'),
         plate: yup.string()
           .min(7, 'Placa inválida.')
@@ -145,20 +145,17 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         renavam: yup.string()
           .max(11, 'O renavam deve ter no maximo 11 caracteres.')
           .required('O renavam é obrigatório.'),
-        crv: yup.string()
-          .max(12, 'O crv deve ter no maximo 12 caracteres.')
-          .required('O crv é obrigatório.'),
         brand_model: yup.string().required('A marca/modelo é obrigatória.'),
         type: yup.string().required('O tipo é obrigatória.'),
       });
 
-      const document = data.document.replace(/\D/g, '');
+      onDocumentFocus();
       await scheme.validate({ ...data, document }, { abortEarly: false });
 
       if(vehicle) {
-        await api.put(`/vehicles/${vehicle.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.put(`/vehicles/${vehicle.id}`, { ...data }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        await api.post('/vehicles', { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.post('/vehicles', { ...data }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
       toast.success(`Veículo ${vehicle ? 'atualizado' : 'cadastrado'} com sucesso!`);
@@ -184,16 +181,16 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
   const handleOnCRLVeViewClick = async () => {
     if(vehicle) {
-      setInLoadingGetCRLVe(true);
+      setInLoadingCRLVe(true);
       await onViewCRLVeClick(vehicle.id);
-      setInLoadingGetCRLVe(false);
+      setInLoadingCRLVe(false);
     }
   };
 
   useEffect(() => {
     if(vehicle) {
       setInLoading(false);
-      setInLoadingGetCRLVe(false);
+      setInLoadingCRLVe(false);
 
       setEditing(false);
       setClientSearched(false);
@@ -202,7 +199,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
       setUploadCrlveModalOpen(false);
     } else {
-      setInLoadingGetCRLVe(false);
+      setInLoadingCRLVe(false);
       setInLoading(false);
 
       setEditing(true);
@@ -217,7 +214,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   return (
     <>
       <Modal isOpen={isOpen} onRequestClose={onCloseHandler} header={`${vehicle ? 'ALTERACAO' : 'CADASTRO'} DE VEICULOS`}>
-        <DetailsModalContainer ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle.client, ...vehicle, status: status[vehicle.status] }}>
+        <DetailsModalForm ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle.client, ...vehicle, status: status[vehicle.status] }}>
           <Input disabled={inLoading || !editing || haveClient} name="name" label="NOME" />
           <Input disabled={inLoading || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
           <Input disabled={inLoading || !editing || haveClient} name="group" label="GRUPO" />
@@ -229,16 +226,16 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
           <Input disabled={inLoading || !editing} name="crv" label="CRV" maxLength={12} onBlur={() => onBlurMaxLengths('crv', 12, '0')} />
           <Input disabled={inLoading || !editing} name="brand_model" label="MARCA/MODELO" />
           <Input disabled={inLoading || !editing} name="type" label="TIPO" />
-          <Select isDisabled={inLoading || !editing} name="status" label="STATUS" options={[...status.filter((e) => e)]} isSearchable={false} />
+          <Select isDisabled={inLoading || !editing} name="status" label="STATUS" options={[...status.filter((e) => e.value > '0')]} isSearchable={false} />
           <Input disabled={inLoading || !editing} name="details" label="DETALHES" />
-        </DetailsModalContainer>
+        </DetailsModalForm>
 
-        {(desp_permission === 1 && vehicle && crlveIncloded && !editing) && (
+        {(despPermission === 1 && vehicle && crlveIncloded && !editing) && (
           <DetailsModalActionButtons>
             <Button
               variant="secondary"
-              disabled={inLoading || inLoadingGetCRLVe}
-              style={{ cursor: inLoadingGetCRLVe ? 'progress' : 'pointer' }}
+              disabled={inLoading || inLoadingCRLVe}
+              style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }}
               onClick={handleOnCRLVeViewClick}
             >
               <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
@@ -246,50 +243,45 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
           </DetailsModalActionButtons>
         )}
 
-        {desp_permission >= 2 && (
-        <DetailsModalActionButtons>
-          {vehicle && (
-            <>
-              {(crlveIncloded && !editing) && (
-                <Button
-                  variant="secondary"
-                  disabled={inLoading || inLoadingGetCRLVe}
-                  style={{ cursor: inLoadingGetCRLVe ? 'progress' : 'pointer' }}
-                  onClick={handleOnCRLVeViewClick}
-                >
-                  <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
-                </Button>
-              )}
+        {despPermission >= 2 && (
+          <DetailsModalActionButtons>
+            {(vehicle && !editing) && (
+              <>
+                {(crlveIncloded && !editing) && (
+                  <Button variant="secondary" disabled={inLoading || inLoadingCRLVe} style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }} onClick={handleOnCRLVeViewClick}>
+                    <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
+                  </Button>
+                )}
 
-              <Button variant="info" disabled={inLoading} onClick={() => setUploadCrlveModalOpen(true)}>
-                <FaUpload />&nbsp;&nbsp;&nbsp;{!crlveIncloded ? 'ENVIAR' : 'SUBSTITUIR'} CRLVe
-              </Button>
-            </>
-          )}
-
-          {editing ? (
-            <>
-              <Button type="submit" variant="success" disabled={inLoading} onClick={() => formRef.current && formRef.current.submitForm()}>
-                {vehicle ? 'SALVAR' : 'INCLUIR'}
-              </Button>
-              {vehicle && (
-                <Button variant="warning" disabled={inLoading} onClick={() => setEditing(false)}>
-                  CANCELAR
+                <Button variant="info" disabled={inLoading} onClick={() => setUploadCrlveModalOpen(true)}>
+                  <FaUpload />&nbsp;&nbsp;&nbsp; CRLVe
                 </Button>
-              )}
-            </>
-          ) : (
-            <Button variant="warning" disabled={inLoading} onClick={() => setEditing(true)}>
-              EDITAR
-            </Button>
-          )}
-        </DetailsModalActionButtons>
+              </>
+            )}
+
+            {editing ? (
+              <>
+                <Button type="submit" variant="success" disabled={inLoading} onClick={() => formRef.current && formRef.current.submitForm()}>
+                  {vehicle ? 'SALVAR' : 'INCLUIR'}
+                </Button>
+                {vehicle && (
+                  <Button variant="warning" disabled={inLoading} onClick={() => setEditing(false)}>
+                    CANCELAR
+                  </Button>
+                )}
+              </>
+            ) : (
+              <Button variant="warning" disabled={inLoading} onClick={() => setEditing(true)}>
+                EDITAR
+              </Button>
+            )}
+          </DetailsModalActionButtons>
         )}
 
         {inLoading && (
-        <DetailsModalLoadingContainer>
-          <ReactLoading type="bars" />
-        </DetailsModalLoadingContainer>
+          <DetailsModalLoadingContainer>
+            <ReactLoading type="bars" />
+          </DetailsModalLoadingContainer>
         )}
       </Modal>
 

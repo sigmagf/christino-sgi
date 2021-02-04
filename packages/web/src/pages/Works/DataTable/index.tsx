@@ -67,7 +67,7 @@ export const WorksDataTable: React.FC<IVehicleDataTableProps> = ({ data, inLoadi
               <td style={{ textAlign: 'center' }}>{ el.service.name }</td>
               <td style={{ textAlign: 'center' }}>{ el.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) }</td>
               <td style={{ textAlign: 'center' }}>
-                <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(el.id)} disabled={inLoading || true}>
+                <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(el.id)} disabled={inLoading}>
                   <SearchIcon />
                 </Button>
               </td>

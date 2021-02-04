@@ -19,7 +19,7 @@ export class VehiclesCreateController {
     const brand_model = stringFix(req.body.brand_model, undefined, 'UPPERCASE');
     const type = stringFix(req.body.type, undefined, 'UPPERCASE');
     const details = stringFix(req.body.details, undefined, 'UPPERCASE');
-    const status = stringFix(req.body.status, undefined, 'UPPERCASE');
+    const status = req.body.status || '1';
 
     try {
       if(!name) {
