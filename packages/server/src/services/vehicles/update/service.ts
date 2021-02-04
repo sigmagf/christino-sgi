@@ -9,6 +9,7 @@ export class VehiclesUpdateService {
   constructor(private vehiclesRepo: IVehiclesRepository, private clientsRepo: IClientsRepository) { }
 
   async execute(data: IVehiclesUpdateRequestDTO) {
+    console.log(data);
     let client: Client;
     if(data.document) {
       client = await this.clientsRepo.create({
