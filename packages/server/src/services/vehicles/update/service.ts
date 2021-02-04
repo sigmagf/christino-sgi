@@ -30,7 +30,7 @@ export class VehiclesUpdateService {
       brand_model: data.brand_model || undefined,
       type: data.type,
       details: data.details || undefined,
-      status: convertStatus(data.status),
+      status: parseInt(convertStatus(data.status), 10),
       crlve_included: data.crlve_included || undefined,
     });
 
