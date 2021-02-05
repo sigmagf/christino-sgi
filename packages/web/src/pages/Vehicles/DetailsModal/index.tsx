@@ -149,13 +149,14 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         type: yup.string().required('O tipo é obrigatória.'),
       });
 
-      const document = data.document.replace(/\D/g, '');
-      await scheme.validate({ ...data, document }, { abortEarly: false });
+      onDocumentFocus();
+      console.log(data);
+      await scheme.validate(data, { abortEarly: false });
 
       if(vehicle) {
-        await api.put(`/vehicles/${vehicle.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.put(`/vehicles/${vehicle.id}`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        await api.post('/vehicles', { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.post('/vehicles', data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
       toast.success(`Veículo ${vehicle ? 'atualizado' : 'cadastrado'} com sucesso!`);

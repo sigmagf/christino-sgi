@@ -19,8 +19,20 @@ export class VehiclesUpdateService {
     }
 
     if(!await this.vehiclesRepo.findById(data.id)) {
-      JSON.stringify({ code: 404, message: 'Vehicle not found.' });
+      throw new Error(JSON.stringify({ code: 404, message: 'Vehicle not found.' }));
     }
+
+    console.log({
+      client_id: client ? client.id : undefined,
+      plate: data.plate || undefined,
+      renavam: data.renavam || undefined,
+      crv: data.crv || undefined,
+      brand_model: data.brand_model || undefined,
+      type: data.type,
+      details: data.details || undefined,
+      status: convertStatus(data.status),
+      crlve_included: data.crlve_included || undefined,
+    });
 
     const vehicle = await this.vehiclesRepo.update(data.id, {
       client_id: client ? client.id : undefined,
