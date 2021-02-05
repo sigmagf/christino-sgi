@@ -19,6 +19,14 @@ export class ClientsUpdateController {
     const phone2 = stringFix(req.body.phone2, undefined, 'UPPERCASE');
 
     try {
+      if(!name) {
+        throw new Error(JSON.stringify({ code: 400, message: 'Name is null or undefined.' }));
+      }
+
+      if(!document) {
+        throw new Error(JSON.stringify({ code: 400, message: 'Document is null or undefined.' }));
+      }
+
       const user = await this.service.execute({ id, name, document, group, email, phone1, phone2 });
       return res.status(200).json(user);
     } catch(err) {

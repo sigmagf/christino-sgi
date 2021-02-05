@@ -134,7 +134,7 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
       brand_model: data.brand_model || oldData.brand_model,
       type: data.type || oldData.type,
       details: data.details || oldData.details,
-      status: data.status || oldData.status,
+      status: data.status,
       crlve_included: data.crlve_included || oldData.crlve_included,
     });
 

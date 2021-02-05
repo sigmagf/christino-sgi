@@ -38,10 +38,6 @@ export class VehiclesCreateController {
         throw new Error(JSON.stringify({ code: 400, message: 'Vehicle renavam is null or undefined.' }));
       }
 
-      if(!crv) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Vehicle crv is null or undefined.' }));
-      }
-
       if(!brand_model) {
         throw new Error(JSON.stringify({ code: 400, message: 'Vehicle brand_model is null or undefined.' }));
       }
