@@ -150,7 +150,6 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
       });
 
       onDocumentFocus();
-      console.log(data);
       await scheme.validate(data, { abortEarly: false });
 
       if(vehicle) {
