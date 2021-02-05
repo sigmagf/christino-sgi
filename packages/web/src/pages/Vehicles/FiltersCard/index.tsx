@@ -44,11 +44,6 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
   ];
 
   const getClients = async (name: string) => {
-    console.log(name)
-    if(name === null || name === undefined || name.trim() === '' || name.trim().length < 2) {
-      return;
-    }
-    
     try {
       const response = await api.get<IClient[]>(`/clients?noPagination=true${name ? `&name=${name}` : ''}`, {
         headers: { authorization: `Bearer ${storage.getItem('token')}` },
@@ -68,6 +63,10 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
   };
 
   const onClientsInputChange = (name: string) => {
+    if(!name) {
+      return;
+    }
+    
     clearTimeout(timer);
 
     timer = setTimeout(() => { getClients(name); }, 1000);
