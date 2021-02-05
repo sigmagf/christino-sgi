@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaSearch as SearchIcon } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 
 import { Badge } from '~/components/Badge';
@@ -68,7 +68,7 @@ export const WorksDataTable: React.FC<IVehicleDataTableProps> = ({ data, inLoadi
               <td style={{ textAlign: 'center' }}>{ el.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) }</td>
               <td style={{ textAlign: 'center' }}>
                 <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(el.id)} disabled={inLoading}>
-                  <SearchIcon />
+                  <FaSearch />
                 </Button>
               </td>
             </tr>

@@ -129,8 +129,7 @@ export const VehiclesPage: React.FC = () => {
             totalPages={vehicles?.page.total || 1}
             inLoading={inLoading}
             onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
-            onMaxResultsChange={() => console.log('onMaxResultsChange')}
-            overrideMaxResultsBy={printButton}
+            leftContent={printButton}
           />
         </Card>
       </Layout>

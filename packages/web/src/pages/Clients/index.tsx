@@ -99,8 +99,7 @@ export const ClientsPage: React.FC = () => {
           totalPages={clients.page.total}
           inLoading={inLoading}
           onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
-          onMaxResultsChange={() => console.log('onMaxResultsChange')}
-          overrideMaxResultsBy={<Button variant="info" onClick={onPrintClick}><FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR</Button>}
+          leftContent={<Button variant="info" onClick={onPrintClick}><FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR</Button>}
         />
       </Card>
     </Layout>

@@ -149,7 +149,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         type: yup.string().required('O tipo é obrigatória.'),
       });
 
-      onDocumentFocus();
+      const document = data.document.replace(/\D/g, '');
       await scheme.validate({ ...data, document }, { abortEarly: false });
 
       if(vehicle) {
@@ -158,7 +158,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         await api.post('/vehicles', { ...data }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
-      toast.success(`Veículo ${vehicle ? 'atualizado' : 'cadastrado'} com sucesso!`);
+      toast.success(`O.S. ${vehicle ? 'atualizada' : 'cadastrada'} com sucesso!`);
       reset();
       onCloseHandler();
     } catch(err) {

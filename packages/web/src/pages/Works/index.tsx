@@ -1,55 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
 import { Layout } from '~/components/Layout';
 import { Pagination } from '~/components/Pagination';
-import { useLocalStorage } from '~/hooks';
+import { useSWR } from '~/hooks/useSWR';
 import { IPagination, IWork } from '~/interfaces';
-import { api } from '~/utils/api';
 
 import { WorksDataTable } from './DataTable';
 import { WorkDetailsModal } from './DetailsModal';
 
 export const WorksPage: React.FC = () => {
   document.title = 'Ordens de Serviço | Christino';
-  const storage = useLocalStorage();
   const [workPermission, setWorkPermission] = useState(-1);
 
-  const [data, setData] = useState<IPagination<IWork>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
+  const { data: works, isValidating: inLoading, revalidate: getWorks } = useSWR<IPagination<IWork>>('/works');
   const [workToDetails, setWorkToDetails] = useState<IWork>();
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const request = await api.get('/works', { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-        setData(request.data);
-      } catch(err) {
-        if(err.message === 'Network Error') {
-          toast.error('Verifique sua conexão com a internet.');
-        } else if(err.response && err.response.data && err.response.data.message) {
-          toast.error(err.response.data.message);
-        } else {
-          toast.error('Ocorreu um erro inesperado.');
-        }
-
-        setData({ page: { total: 1, current: 1, limit: 10 }, data: [] });
-      }
-    };
-
-    getData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const onDetailsClick = (workId: string) => {
-    setWorkToDetails(data.data.filter((el) => el.id === workId)[0]);
-    setDetailsModalOpen(true);
+    if(works) {
+      setWorkToDetails(works.data.filter((el) => el.id === workId)[0]);
+      setDetailsModalOpen(true);
+    }
   };
 
   if(workPermission === 0) {
@@ -59,16 +35,15 @@ export const WorksPage: React.FC = () => {
   return (
     <>
       <Layout setPermissions={(perms) => setWorkPermission(perms.work_permission)}>
-        <WorksDataTable inLoading={false} data={data.data} onDetailsClick={onDetailsClick} />
+        <WorksDataTable inLoading={inLoading} data={works?.data || []} onDetailsClick={onDetailsClick} />
 
         <Card style={{ margin: '15px 0' }}>
           <Pagination
-            currentPage={data.page.current}
-            totalPages={data.page.total}
-            inLoading={false}
+            currentPage={works?.page.current || 1}
+            totalPages={works?.page.total || 1}
+            inLoading={inLoading}
             onNumberClick={(page) => console.log(`onNumberClick(${page})`)}
-            onMaxResultsChange={() => console.log('onMaxResultsChange()')}
-            overrideMaxResultsBy={<Button variant="info" onClick={() => console.log('onPrin()')}><FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR</Button>}
+            leftContent={<Button variant="info" onClick={() => console.log('onPrin()')}><FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR</Button>}
           />
         </Card>
       </Layout>
