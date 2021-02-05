@@ -65,8 +65,10 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
               <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <StatusBadge status={vehicle.status} title={statusConverter(vehicle.status)} />
               </td>
-              <td style={{ textOverflow: 'ellipsis' }}>
-                { vehicle.client.name }
+              <td>
+                <span style={{ textOverflow: 'ellipsis' }}>
+                  { vehicle.client.name }
+                </span>
                 { vehicle.client.group && (
                   <Badge>
                     { vehicle.client.group }
