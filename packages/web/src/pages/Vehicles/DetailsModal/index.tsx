@@ -145,9 +145,6 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         renavam: yup.string()
           .max(11, 'O renavam deve ter no maximo 11 caracteres.')
           .required('O renavam é obrigatório.'),
-        crv: yup.string()
-          .max(12, 'O crv deve ter no maximo 12 caracteres.')
-          .required('O crv é obrigatório.'),
         brand_model: yup.string().required('A marca/modelo é obrigatória.'),
         type: yup.string().required('O tipo é obrigatória.'),
       });
