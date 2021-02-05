@@ -44,6 +44,10 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
   ];
 
   const getClients = async (name: string) => {
+    if(string === null || string === undefined || string.trim() === '') {
+      return;
+    }
+    
     try {
       const response = await api.get<IClient[]>(`/clients?noPagination=true${name ? `&name=${name}` : ''}`, {
         headers: { authorization: `Bearer ${storage.getItem('token')}` },
