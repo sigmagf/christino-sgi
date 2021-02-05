@@ -19,7 +19,7 @@ export class VehiclesCreateController {
     const brand_model = stringFix(req.body.brand_model, undefined, 'UPPERCASE');
     const type = stringFix(req.body.type, undefined, 'UPPERCASE');
     const details = stringFix(req.body.details, undefined, 'UPPERCASE');
-    const status = req.body.status || undefined;
+    const status = stringFix(req.body.status, undefined, 'UPPERCASE');
 
     try {
       if(!name) {
@@ -48,6 +48,10 @@ export class VehiclesCreateController {
 
       if(!type) {
         throw new Error(JSON.stringify({ code: 400, message: 'Vehicle type is null or undefined.' }));
+      }
+
+      if(!status) {
+        throw new Error(JSON.stringify({ code: 400, message: 'Vehicle status is null or undefined.' }));
       }
 
       const vehicle = await this.service.execute({ name, document, group, plate, renavam, crv, brand_model, type, details, status });
