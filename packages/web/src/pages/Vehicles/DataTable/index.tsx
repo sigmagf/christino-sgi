@@ -34,11 +34,11 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
       </div>
       )}
 
-      <Table>
+      <Table style={{ tableLayout: 'fixed' }}>
         <thead>
           <tr>
             <th style={{ width: 20 }} aria-label="status-column" />
-            <th style={{ textAlign: 'left' }}>CLIENTE</th>
+            <th style={{ width: 434, textAlign: 'left' }}>CLIENTE</th>
             <th style={{ width: 100 }}>PLACA</th>
             <th style={{ width: 150 }}>RENAVAM</th>
             <th style={{ width: 250 }}>MARCA/MODELO</th>
@@ -65,7 +65,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
               <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <StatusBadge status={vehicle.status} title={statusConverter(vehicle.status)} />
               </td>
-              <td>
+              <td style={{ textOverflow: 'ellipsis' }}>
                 { vehicle.client.name }
                 { vehicle.client.group && (
                   <Badge>
