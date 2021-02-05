@@ -44,6 +44,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
   ];
 
   const getClients = async (name: string) => {
+    console.log(name)
     if(name === null || name === undefined || name.trim() === '' || name.trim().length < 2) {
       return;
     }
