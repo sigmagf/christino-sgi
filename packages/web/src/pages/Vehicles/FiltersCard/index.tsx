@@ -67,10 +67,10 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     }
   };
 
-  const onClientsInputChange = () => {
+  const onClientsInputChange = (name: string) => {
     clearTimeout(timer);
 
-    timer = setTimeout(() => { getClients('a'); }, 1000);
+    timer = setTimeout(() => { getClients(name); }, 1000);
   };
 
   const getGroups = async () => {
@@ -98,7 +98,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     <FiltersCard>
       <FiltersContainer open={open}>
         <Form ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
-          <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} defaultValue={clients[0]} onKeyDown={onClientsInputChange} />
+          <Select label="CLIENTE" name="client_id" style={{ gridArea: 'CN' }} options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
           <Select label="GRUPO" name="group" style={{ gridArea: 'CG' }} options={groups} defaultValue={groups[0]} />
           <Select label="STATUS" name="status" style={{ gridArea: 'VS' }} options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
 
