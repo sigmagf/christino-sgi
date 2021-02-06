@@ -14,7 +14,6 @@ import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 
 import { VehiclesDataTable } from './DataTable';
-import { VehiclesDetailsModal } from './DetailsModal';
 import { VehiclesFiltersCard } from './FiltersCard';
 import { VehiclesImportModal } from './ImportModal';
 import { VehiclesPrintScreen } from './printScreen';
@@ -24,26 +23,15 @@ export const VehiclesPage: React.FC = () => {
   const storage = useLocalStorage();
   const [despPermission, setDespPermission] = useState(-1);
 
-  const [vehicleToDetails, setVehicleToDetails] = useState<IVehicle>();
   const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
   const [inLoadingPrint, setInLoadingPrint] = useState(false);
 
   const [importModalOpen, setImportModalOpen] = useState(false);
-  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   const { data: vehicles, revalidate: reloadVehicles, isValidating: inLoading } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
 
-  const onDetailsClick = (vehicleId: string) => {
-    if(vehicles) {
-      setVehicleToDetails(vehicles.data.filter((el) => el.id === vehicleId)[0]);
-      setDetailsModalOpen(true);
-    }
-  };
-
   const onModalsClose = () => {
     setImportModalOpen(false);
-    setDetailsModalOpen(false);
-    setVehicleToDetails(undefined);
     reloadVehicles();
   };
 
@@ -76,27 +64,6 @@ export const VehiclesPage: React.FC = () => {
     setInLoadingPrint(false);
   };
 
-  const handleOpenCRLVe = async (id: string) => {
-    try {
-      const response = await api.get(`/vehicles/crlve/view/${id}`, {
-        headers: { authorization: `Bearer ${storage.getItem('token')}` },
-        responseType: 'blob',
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-      // eslint-disable-next-line no-restricted-globals
-      window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
-    } catch(err) {
-      if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-      }
-    }
-  };
-
   if(despPermission === 0) {
     return <Navigate to="/" replace />;
   }
@@ -117,11 +84,10 @@ export const VehiclesPage: React.FC = () => {
       <Layout setPermissions={(perms) => setDespPermission(perms.desp_permission)}>
         <VehiclesFiltersCard
           onOpenImportModalClick={() => setImportModalOpen(true)}
-          onOpenCreateModalClick={() => setDetailsModalOpen(true)}
           onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data, page: 1 }))}
           despPermission={despPermission}
         />
-        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles?.data || []} onDetailsClick={onDetailsClick} onViewCRLVeClick={handleOpenCRLVe} />
+        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles?.data || []} />
 
         <Card style={{ margin: '15px 0' }}>
           <Pagination
@@ -135,13 +101,6 @@ export const VehiclesPage: React.FC = () => {
       </Layout>
 
       <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />
-      <VehiclesDetailsModal
-        isOpen={detailsModalOpen}
-        onClose={onModalsClose}
-        vehicle={vehicleToDetails}
-        despPermission={despPermission}
-        onViewCRLVeClick={handleOpenCRLVe}
-      />
     </>
   );
 };

@@ -18,3 +18,10 @@ export const vehiclePlateEnd = [
   { value: '8', label: 'FINAL 8' },
   { value: '9', label: 'FINAL 9' },
 ];
+
+export const worksStatus = [
+  { value: '0', label: 'EM ANALISE' },
+  { value: '1', label: 'REPROVADO' },
+  { value: '2', label: 'APROVADO' },
+  { value: '3', label: 'FINALIZADO' },
+];

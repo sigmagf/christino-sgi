@@ -1,10 +1,11 @@
-import swr from 'swr';
+import swr, { ConfigInterface } from 'swr';
+import { fetcherFn } from 'swr/dist/types';
 
 import { api } from '~/utils/api';
 
 import useLocalStorage from './useLocalStorage';
 
-export function useSWR<T = any>(url: string) {
+export function useSWR<T = any>(url: string, swrConfig?: ConfigInterface<T, any, fetcherFn<T>>) {
   const storage = useLocalStorage();
 
   const swrResponse = swr<T>(url, async (urlSwr) => {
@@ -15,7 +16,7 @@ export function useSWR<T = any>(url: string) {
     });
 
     return response.data;
-  }, {});
+  }, swrConfig);
 
   return swrResponse;
 }

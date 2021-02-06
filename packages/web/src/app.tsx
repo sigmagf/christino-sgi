@@ -12,6 +12,7 @@ import { NotFoundErrorPage } from './pages/404';
 import { ClientsPage } from './pages/Clients';
 import { HomePage } from './pages/Home';
 import { Login } from './pages/Login';
+import { VehiclesDetailsPage } from './pages/VehicleDetails';
 import { VehiclesPage } from './pages/Vehicles';
 import { WorksPage } from './pages/Works';
 import { SecureRoute } from './utils/secureRoute';
@@ -39,6 +40,7 @@ export const App: React.FC = () => {
 
               <SecureRoute path="/" element={<HomePage />} />
               <SecureRoute path="/vehicles" element={<VehiclesPage />} />
+              <SecureRoute path="/vehicles/details/:id" element={<VehiclesDetailsPage />} />
               <SecureRoute path="/clients" element={<ClientsPage />} />
               <SecureRoute path="/works" element={<WorksPage />} />
 

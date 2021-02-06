@@ -16,7 +16,7 @@ export const WorksPage: React.FC = () => {
   document.title = 'Ordens de Serviço | Christino';
   const [workPermission, setWorkPermission] = useState(-1);
 
-  const { data: works, isValidating: inLoading, revalidate: getWorks } = useSWR<IPagination<IWork>>('/works');
+  const { data: works, isValidating: inLoading } = useSWR<IPagination<IWork>>('/works');
   const [workToDetails, setWorkToDetails] = useState<IWork>();
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);

@@ -79,35 +79,12 @@ export interface IService {
   updated_at?: Date;
 }
 
-export interface IPaymentMethodsAndExpenseTypes {
-  id: string;
-  name: string;
-  created_at?: Date;
-  updated_at?: Date;
-}
-
 export interface IWorkHistory {
   id: string;
   work_id: string;
   details: string;
   created_at?: Date;
   updated_at?: Date;
-}
-
-export interface IWorkExpenses {
-  id: string;
-  work_id: string;
-  value: number;
-  expense_type: IPaymentMethodsAndExpenseTypes;
-  effective_on?: Date;
-}
-
-export interface IWorkRevenues {
-  id: string;
-  work_id: string;
-  value: number;
-  payment_method: IPaymentMethodsAndExpenseTypes;
-  effective_on?: Date;
 }
 
 export interface IWork {
@@ -120,8 +97,6 @@ export interface IWork {
   details?: string;
   status: number;
   history: Omit<IWorkHistory, 'work_id'>[];
-  revenues: Omit<IWorkRevenues, 'work_id'>[];
-  expenses: Omit<IWorkExpenses, 'work_id'>[];
   created_at?: Date;
   updated_at?: Date;
 }

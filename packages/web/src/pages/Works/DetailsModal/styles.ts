@@ -9,7 +9,9 @@ export const DetailsForm = styled(Form)`
   grid-template-areas: 'CN CN CN CN CN CN CN CN CD CD CG CG'
                        'HR HR HR HR HR HR HR HR HR HR HR HR'
                        'SC SC SV SV SV ID ID VL VL ST ST ST'
-                       'EX EX EX EX EX EX RV RV RV RV RV RV';
+                       'DT DT DT DT DT DT DT DT DT DT DT DT'
+                       'HS HS HS HS HS HS HS HS HS HS HS HS'
+                       'AC AC AC AC AC AC AC AC AC AC AC AC';
 
   input {
     text-transform: uppercase;
@@ -26,7 +28,18 @@ export const DetailsForm = styled(Form)`
   > :nth-child(7) { grid-area: ID; } /* IDENTIFIER */
   > :nth-child(8) { grid-area: VL; } /* VALUE */
   > :nth-child(9) { grid-area: ST; } /* STATUS */
+  > :nth-child(10) { grid-area: DT; } /* STATUS */
 
-  > :nth-child(10) { grid-area: EX; } /* EXPENSES */
-  > :nth-child(11) { grid-area: RV; } /* REVENUES */
+  > :nth-child(11) { grid-area: HS; } /* HISTORY */
+  > :nth-child(12) { grid-area: AC; } /* ACTION BUTTONS */
+
+  table {
+    * {
+      font-family: 'Roboto Mono', monospace;
+    }
+  }
+`;
+
+export const ActionButtons = styled.div`
+
 `;

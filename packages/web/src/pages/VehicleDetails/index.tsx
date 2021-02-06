@@ -1,22 +1,25 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState, useEffect } from 'react';
-import { FaEye, FaUpload } from 'react-icons/fa';
+import { Form } from '@unform/web';
+import React, { useRef, useState } from 'react';
+import { FaAngleLeft, FaEye, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
 import { Button } from '~/components/Button';
 import { Input, Select } from '~/components/Form';
-import { Modal } from '~/components/Modal';
+import { Layout } from '~/components/Layout';
 import { useLocalStorage } from '~/hooks';
+import { useSWR } from '~/hooks/useSWR';
 import { IClient, IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { formatCPForCNPJ } from '~/utils/formatCPForCNPJ';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
-import { VehiclesUploadCRLVeModal } from '../UploadCRLVeModal';
-import { DetailsModalActionButtons, DetailsModalForm, DetailsModalLoadingContainer } from './styles';
+import { VehicleDetailsLoadingContainer, VehicleDetailsActionButtons, VehicleDetailsContainer, VehicleDetailsHeader } from './styles';
+import { VehiclesDetailsUploadCRLVeModal } from './UploadCRLVeModal';
 
 interface IFormData {
   name: string;
@@ -28,24 +31,20 @@ interface IFormData {
   brand_model: string;
   type: string;
   status: string;
+  details: string;
 }
 
-interface IDetailsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  vehicle?: IVehicle;
-  despPermission: number;
-  onViewCRLVeClick: (id: string) => Promise<void>;
-}
+export const VehiclesDetailsPage: React.FC = () => {
+  document.title = 'Veiculos | Christino';
 
-export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle, despPermission, onViewCRLVeClick }) => {
-  const formRef = useRef<FormHandles>(null);
+  const { id } = useParams();
   const storage = useLocalStorage();
+  const formRef = useRef<FormHandles>(null);
+  const navigateHook = useNavigate();
 
-  const [inLoading, setInLoading] = useState(false);
+  const [despPermission, setDespPermission] = useState(-1);
   const [inLoadingCRLVe, setInLoadingCRLVe] = useState(false);
-
-  const [crlveIncloded, setCrlveIncluded] = useState(false);
+  const [inSubmitProcess, setInSubmitProcess] = useState(false);
 
   const [editing, setEditing] = useState(false);
   const [clientSearched, setClientSearched] = useState(false);
@@ -53,14 +52,35 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
   const [uploadCrlveModalOpen, setUploadCrlveModalOpen] = useState(false);
 
-  const onCloseHandler = () => {
-    setInLoading(false);
-    setHaveClient(true);
-    setEditing(false);
-    setClientSearched(false);
-    setCrlveIncluded(false);
-    onClose();
+  const statusOptions = status.filter((e) => e.value > '0');
+  const { data: vehicle, isValidating: inLoading, mutate: onVehicleChange, revalidate, error } = useSWR<IVehicle>(`/vehicles/${id}`, { revalidateOnFocus: false });
+
+  /* - HANDLE GET CRLVe PDF FILE - */
+  const handleGetCRLVe = async () => {
+    setInLoadingCRLVe(true);
+
+    try {
+      const response = await api.get(`/vehicles/crlve/view/${id}`, {
+        headers: { authorization: `Bearer ${storage.getItem('token')}` },
+        responseType: 'blob',
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      // eslint-disable-next-line no-restricted-globals
+      window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+    } catch(err) {
+      if(err.message === 'Network Error') {
+        toast.error('Verifique sua conexão com a internet.');
+      } else if(err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error('Ocorreu um erro inesperado.');
+      }
+    }
+
+    setInLoadingCRLVe(false);
   };
+  /* END HANDLE GET CRLVe PDF FILE */
 
   /* - SEARCH CLIENT IN DATABASE - */
   const getClient = async (document: string) => {
@@ -125,10 +145,11 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
       formRef.current.setFieldValue(inputName, inputVal.padStart(maxLength, fillString));
     }
   };
+  /* END SET MAX LENGTH */
 
   /* - SAVE OR UPDATE VEHICLE - */
-  const onSubmit: SubmitHandler<IFormData> = async (data, { reset }) => {
-    setInLoading(true);
+  const onSubmit: SubmitHandler<IFormData> = async (data) => {
+    setInSubmitProcess(true);
 
     try {
       const scheme = yup.object().shape({
@@ -158,14 +179,12 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
         await api.post('/vehicles', { ...data }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
-      toast.success(`O.S. ${vehicle ? 'atualizada' : 'cadastrada'} com sucesso!`);
-      reset();
-      onCloseHandler();
+      revalidate();
+      setEditing(false);
+      toast.success(`Veículo ${vehicle ? 'atualizado' : 'cadastrado'} com sucesso!`);
     } catch(err) {
       if(err instanceof yup.ValidationError) {
-        err.inner.forEach((error) => {
-          toast.error(error.message);
-        });
+        err.inner.forEach((yupError) => toast.error(yupError.message));
       } else if(err.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
       } else if(err.response && err.response.data && err.response.data.message) {
@@ -175,46 +194,32 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
       }
     }
 
-    setInLoading(false);
+    setInSubmitProcess(false);
   };
   /* END SAVE OR UPDATE VEHICLE */
 
-  const handleOnCRLVeViewClick = async () => {
+  const onUploadCRLVeSuccess = () => {
     if(vehicle) {
-      setInLoadingCRLVe(true);
-      await onViewCRLVeClick(vehicle.id);
-      setInLoadingCRLVe(false);
+      const newVehicleData = vehicle;
+      newVehicleData.crlve_included = true;
+      onVehicleChange(newVehicleData, false);
     }
   };
 
-  useEffect(() => {
-    if(vehicle) {
-      setInLoading(false);
-      setInLoadingCRLVe(false);
-
-      setEditing(false);
-      setClientSearched(false);
-      setHaveClient(true);
-      setCrlveIncluded(vehicle.crlve_included);
-
-      setUploadCrlveModalOpen(false);
-    } else {
-      setInLoadingCRLVe(false);
-      setInLoading(false);
-
-      setEditing(true);
-      setClientSearched(false);
-      setHaveClient(true);
-      setCrlveIncluded(false);
-
-      setUploadCrlveModalOpen(false);
-    }
-  }, [isOpen, vehicle]);
+  if(despPermission === 0 || (!inLoading && error)) {
+    return <Navigate to="/" />;
+  }
 
   return (
-    <>
-      <Modal isOpen={isOpen} onRequestClose={onCloseHandler} header={`${vehicle ? 'ALTERACAO' : 'CADASTRO'} DE VEICULOS`}>
-        <DetailsModalForm ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle.client, ...vehicle, status: status[vehicle.status] }}>
+    <Layout setPermissions={(perms) => setDespPermission(perms.desp_permission)}>
+      <VehicleDetailsHeader>
+        <Button variant="secondary" onClick={() => navigateHook('/vehicles')}><FaAngleLeft /></Button>
+        <p>
+          DETALHES DO VEÍCULO
+        </p>
+      </VehicleDetailsHeader>
+      <VehicleDetailsContainer>
+        <Form ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle, ...vehicle.client, document: formatCPForCNPJ(vehicle.client.document) }}>
           <Input disabled={inLoading || !editing || haveClient} name="name" label="NOME" />
           <Input disabled={inLoading || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
           <Input disabled={inLoading || !editing || haveClient} name="group" label="GRUPO" />
@@ -226,74 +231,56 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
           <Input disabled={inLoading || !editing} name="crv" label="CRV" maxLength={12} onBlur={() => onBlurMaxLengths('crv', 12, '0')} />
           <Input disabled={inLoading || !editing} name="brand_model" label="MARCA/MODELO" />
           <Input disabled={inLoading || !editing} name="type" label="TIPO" />
-          <Select isDisabled={inLoading || !editing} name="status" label="STATUS" options={[...status.filter((e) => e.value > '0')]} isSearchable={false} />
+          <Select isDisabled={inLoading || !editing} name="status" label="STATUS" options={statusOptions} value={vehicle && status[vehicle.status]} />
           <Input disabled={inLoading || !editing} name="details" label="DETALHES" />
-        </DetailsModalForm>
-
-        {(despPermission === 1 && vehicle && crlveIncloded && !editing) && (
-          <DetailsModalActionButtons>
-            <Button
-              variant="secondary"
-              disabled={inLoading || inLoadingCRLVe}
-              style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }}
-              onClick={handleOnCRLVeViewClick}
-            >
+        </Form>
+        <VehicleDetailsActionButtons>
+          {(!editing && vehicle && vehicle.crlve_included) && (
+            <Button variant="secondary" disabled={inLoading || inLoadingCRLVe} style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }} onClick={handleGetCRLVe}>
               <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
             </Button>
-          </DetailsModalActionButtons>
-        )}
+          )}
 
-        {despPermission >= 2 && (
-          <DetailsModalActionButtons>
-            {(vehicle && !editing) && (
-              <>
-                {(crlveIncloded && !editing) && (
-                  <Button variant="secondary" disabled={inLoading || inLoadingCRLVe} style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }} onClick={handleOnCRLVeViewClick}>
-                    <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
+          {despPermission >= 2 && (
+            <>
+              {(vehicle && !editing) && (
+              <Button variant="info" disabled={inLoading} onClick={() => setUploadCrlveModalOpen(true)}>
+                <FaUpload />&nbsp;&nbsp;&nbsp; CRLVe
+              </Button>
+              )}
+
+              {editing ? (
+                <>
+                  <Button type="submit" variant="success" disabled={inLoading || inSubmitProcess} onClick={() => formRef.current && formRef.current.submitForm()}>
+                    {vehicle ? 'SALVAR' : 'INCLUIR'}
                   </Button>
-                )}
-
-                <Button variant="info" disabled={inLoading} onClick={() => setUploadCrlveModalOpen(true)}>
-                  <FaUpload />&nbsp;&nbsp;&nbsp; CRLVe
-                </Button>
-              </>
-            )}
-
-            {editing ? (
-              <>
-                <Button type="submit" variant="success" disabled={inLoading} onClick={() => formRef.current && formRef.current.submitForm()}>
-                  {vehicle ? 'SALVAR' : 'INCLUIR'}
-                </Button>
-                {vehicle && (
+                  {vehicle && (
                   <Button variant="warning" disabled={inLoading} onClick={() => setEditing(false)}>
                     CANCELAR
                   </Button>
-                )}
-              </>
-            ) : (
-              <Button variant="warning" disabled={inLoading} onClick={() => setEditing(true)}>
-                EDITAR
-              </Button>
-            )}
-          </DetailsModalActionButtons>
-        )}
+                  )}
+                </>
+              ) : (
+                <Button variant="warning" disabled={inLoading} onClick={() => setEditing(true)}>
+                  EDITAR
+                </Button>
+              )}
+            </>
+          )}
+        </VehicleDetailsActionButtons>
 
         {inLoading && (
-          <DetailsModalLoadingContainer>
+          <VehicleDetailsLoadingContainer>
             <ReactLoading type="bars" />
-          </DetailsModalLoadingContainer>
+          </VehicleDetailsLoadingContainer>
         )}
-      </Modal>
-
-      {vehicle && (
-        <VehiclesUploadCRLVeModal
-          isOpen={uploadCrlveModalOpen}
-          onClose={() => setUploadCrlveModalOpen(false)}
-          onUploadSuccess={() => setCrlveIncluded(true)}
-          onUploadError={() => setCrlveIncluded(false)}
-          vehicleId={vehicle.id}
-        />
-      )}
-    </>
+      </VehicleDetailsContainer>
+      <VehiclesDetailsUploadCRLVeModal
+        isOpen={uploadCrlveModalOpen}
+        onClose={() => setUploadCrlveModalOpen(false)}
+        vehicleId={vehicle?.id || ''}
+        onUploadSuccess={onUploadCRLVeSuccess}
+      />
+    </Layout>
   );
 };

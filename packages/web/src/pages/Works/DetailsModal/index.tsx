@@ -1,20 +1,22 @@
 import { FormHandles } from '@unform/core';
-import React, { useRef, useState } from 'react';
-import { FaSearch, FaTimes } from 'react-icons/fa';
+import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
-import { Input } from '~/components/Form';
+import { Input, Select } from '~/components/Form';
 import { Modal } from '~/components/Modal';
 import { Table } from '~/components/Table';
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
-import { IClient, IWork } from '~/interfaces';
+import { IClient, IService, IWork } from '~/interfaces';
 import { api } from '~/utils/api';
+import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatCPForCNPJ } from '~/utils/formatCPForCNPJ';
+import { formatDate } from '~/utils/formatDate';
+import { formatMoney } from '~/utils/formatMoney';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
-import { DetailsForm } from './styles';
+import { ActionButtons, DetailsForm } from './styles';
 
 interface IDetailsModalProps {
   isOpen: boolean;
@@ -23,14 +25,14 @@ interface IDetailsModalProps {
   workPermission: number;
 }
 
-export const WorkDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, work, workPermission }) => {
+export const WorkDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, work }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
 
-  const services = useSWR('/services');
+  const { data: services } = useSWR<IService[]>('/services');
 
-  const [inLoading] = useState(false);
-  const [editing] = useState(true);
+  const [inLoading, setInLoading] = useState(false);
+  const [editing, setEditing] = useState(true);
   const [haveClient, setHaveClient] = useState(true);
   const [clientSearched, setClientSearched] = useState(false);
 
@@ -89,9 +91,64 @@ export const WorkDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose
   };
   /* END HANDLE DOCUMENT FORMAT */
 
+  const handleChangeSector = () => {
+    if(formRef && services) {
+      const srv = formRef.current?.getFieldValue('service');
+      formRef.current?.setFieldValue('sector.name', services.filter((sv) => sv.id === srv)[0].sector.name);
+    }
+  };
+
+  const handleServices = (srvs: IService[]) => {
+    return srvs.map((serv) => ({
+      label: serv.name,
+      value: serv.id,
+    }));
+  };
+
+  const onValueBlur = () => {
+    if(formRef.current) {
+      const value: number = parseFloat(formRef.current.getFieldValue('value').replace(',', '.'));
+      formRef.current.setFieldValue('value', formatMoney(value));
+    }
+  };
+
+  const onValueFocus = () => {
+    if(formRef.current) {
+      const value: string = formRef.current.getFieldValue('value');
+      formRef.current.setFieldValue('value', value.replace('.', '').trim());
+    }
+  };
+
+  useEffect(() => {
+    if(work) {
+      setInLoading(false);
+
+      setEditing(true);
+      setClientSearched(false);
+      setHaveClient(true);
+    } else {
+      setInLoading(false);
+
+      setEditing(true);
+      setClientSearched(false);
+      setHaveClient(true);
+    }
+  }, [isOpen, work]);
+
   return (
     <Modal isOpen={isOpen} onRequestClose={onClose} shouldCloseOnEsc={false} shouldCloseOnOverlayClick={false} header="ORDEM DE SERVIÇO">
-      <DetailsForm ref={formRef} onSubmit={console.log} initialData={work && { ...work.client, ...work, value: work.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) }}>
+      <DetailsForm
+        ref={formRef}
+        onSubmit={console.log}
+        initialData={work && {
+          ...work.client,
+          ...work,
+          document: formatCPForCNPJ(work.client.document),
+          value: work.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).replace('R$', '').trim(),
+          status: worksStatus[work.status],
+          service: handleServices(services || []).filter((s) => s.value === work.service.id)[0],
+        }}
+      >
         <Input disabled={inLoading || !editing || haveClient} name="name" label="NOME" />
         <Input disabled={inLoading || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
         <Input disabled={inLoading || !editing || haveClient} name="group" label="GRUPO" />
@@ -99,54 +156,34 @@ export const WorkDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose
         <hr />
 
         <Input disabled name="sector.name" label="SETOR" />
-        <Input disabled={inLoading || !editing} name="service.name" label="SERVIÇO" />
+        <Select isDisabled={inLoading || !editing} name="service" label="SERVIÇO" options={handleServices(services || [])} onChange={handleChangeSector} />
         <Input disabled={inLoading || !editing} name="identifier" label="IDENTIFICADOR" />
-        <Input disabled={inLoading || !editing} name="value" label="VALOR" />
-        <Input disabled={inLoading || !editing} name="status" label="STATUS" />
+        <Input disabled={inLoading || !editing} name="value" label="VALOR" onBlur={onValueBlur} onFocus={onValueFocus} />
+        <Select isDisabled={inLoading || !editing} name="status" label="STATUS" options={worksStatus} />
+        <Input disabled={inLoading || !editing} name="details" label="DETALHES" />
+
         <Table>
           <thead>
             <tr>
-              <th style={{ height: 25 }}>TAXAS</th>
-              <th style={{ width: 150, height: 25 }}>VALOR</th>
-              <th style={{ width: 25, height: 25 }} aria-label="removeExpense" />
+              <th style={{ height: 25 }}>DESCRICAO</th>
+              <th style={{ height: 25, width: 75 }}>DATA</th>
             </tr>
           </thead>
           <tbody>
-            {work && work.expenses.map((el) => (
-              <tr>
-                <td style={{ height: 25 }}>{ el.expense_type.name }</td>
-                <td style={{ height: 25 }}>{ el.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) }</td>
-                <td style={{ height: 25 }}>
-                  <Button variant="error" style={{ height: 9, width: 9 }} onClick={() => console.log('removeExpense()')} disabled={inLoading}>
-                    <FaTimes />
-                  </Button>
-                </td>
+            {work && work.history.map((el) => (
+              <tr key={el.id}>
+                <td style={{ height: 25 }}>{ el.details }</td>
+                <td style={{ height: 25, textAlign: 'center' }}>{ formatDate(el.created_at) }</td>
               </tr>
             ))}
           </tbody>
         </Table>
-        <Table>
-          <thead>
-            <tr>
-              <th style={{ height: 25 }}>PAGAMENTOS</th>
-              <th style={{ width: 150, height: 25 }}>VALOR</th>
-              <th style={{ width: 25, height: 25 }} aria-label="removeRevenues" />
-            </tr>
-          </thead>
-          <tbody>
-            {work && work.revenues.map((el) => (
-              <tr>
-                <td style={{ height: 25 }}>{ el.payment_method.name }</td>
-                <td style={{ height: 25 }}>{ el.value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }) }</td>
-                <td style={{ height: 25 }}>
-                  <Button variant="error" style={{ height: 9, width: 9 }} onClick={() => console.log('removeRevenues()')} disabled={inLoading}>
-                    <FaTimes />
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+
+        <ActionButtons>
+          <Button variant="info">
+            NOVA ENTRADA
+          </Button>
+        </ActionButtons>
       </DetailsForm>
     </Modal>
   );

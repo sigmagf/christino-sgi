@@ -78,6 +78,7 @@ export const GlobalStyle = createGlobalStyle`
       justify-content: center;
       align-items: center;
       flex-wrap: wrap;
+      flex-direction: column;
 
       > h1 {
         font-size: 25px;

@@ -3,9 +3,7 @@ import { Column, CreateDateColumn, Entity, ManyToOne, JoinColumn, PrimaryGenerat
 
 import { Client } from './Client';
 import { Service } from './Service';
-import { WorkExpense } from './WorkExpense';
 import { WorkHistory } from './WorkHistory';
-import { WorkRevenue } from './WorkRevenue';
 
 @Entity('works')
 export class Work {
@@ -46,10 +44,4 @@ export class Work {
 
   @OneToMany((type) => WorkHistory, (work) => Work, { eager: true })
   history: WorkHistory[];
-
-  @OneToMany((type) => WorkRevenue, (work) => Work, { eager: true })
-  revenues: WorkRevenue[];
-
-  @OneToMany((type) => WorkExpense, (work) => Work, { eager: true })
-  expenses: WorkExpense[];
 }

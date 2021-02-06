@@ -4,6 +4,7 @@ import morgan from 'morgan';
 
 import { devMiddleware } from './middlewares/dev.middleware';
 import { clientsRouter } from './services/clients';
+import { servicesRouter } from './services/services';
 import { usersRouter } from './services/users';
 import { vehiclesRouter } from './services/vehicles';
 import { worksRouter } from './services/works';
@@ -22,6 +23,7 @@ app.use(usersRouter);
 app.use(clientsRouter);
 app.use(vehiclesRouter);
 app.use(worksRouter);
+app.use(servicesRouter);
 
 app.use('*', (req, res) => res.json({ message: 'Hello World!' }));
 

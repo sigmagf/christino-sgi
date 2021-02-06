@@ -2,6 +2,7 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useRef, useState } from 'react';
 import { FaLayerGroup, FaPlus, FaFilter, FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
@@ -16,14 +17,14 @@ import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders
 
 interface IVehiclesFiltersCardProps {
   onOpenImportModalClick: () => void;
-  onOpenCreateModalClick: () => void;
   onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
   despPermission: number;
 }
 
-export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenCreateModalClick, onOpenImportModalClick, onFiltersApplyClick, despPermission }) => {
+export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenImportModalClick, onFiltersApplyClick, despPermission }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
+  const navigate = useNavigate();
 
   const { data: groups } = useSWR<string[]>('/clients/groups?pagination=false');
 
@@ -107,7 +108,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
       <FiltersCardActionButtons>
         {despPermission >= 2 && (
           <>
-            <Button variant="success" style={{ width: 175.97 }} onClick={onOpenCreateModalClick}>
+            <Button variant="success" style={{ width: 175.97 }} onClick={() => navigate('/vehicles/include')}>
               <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
             </Button>
             <Button variant="info" style={{ width: 217.19 }} onClick={onOpenImportModalClick}>

@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { FaSearch, FaFilePdf } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Badge } from '~/components/Badge';
 import { Button } from '~/components/Button';
 import { Table } from '~/components/Table';
+import { useLocalStorage } from '~/hooks';
 import { IVehicle } from '~/interfaces';
+import { api } from '~/utils/api';
 import { statusConverter } from '~/utils/statusConverter';
 
 import { DataTableCardContainer, StatusBadge } from './styles';
@@ -13,16 +17,36 @@ import { DataTableCardContainer, StatusBadge } from './styles';
 interface IVehicleDataTableProps {
   vehicles: IVehicle[];
   inLoading: boolean;
-  onDetailsClick: (id: string) => void;
-  onViewCRLVeClick: (id: string) => Promise<void>;
 }
 
-export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick, onViewCRLVeClick }) => {
+export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading }) => {
+  const navigate = useNavigate();
+  const storage = useLocalStorage();
+
   const [inLoadingCRLVe, setInLoadingCRLVe] = useState(false);
 
   const handleOnCRLVeView = async (id: string) => {
     setInLoadingCRLVe(true);
-    await onViewCRLVeClick(id);
+
+    try {
+      const response = await api.get(`/vehicles/crlve/view/${id}`, {
+        headers: { authorization: `Bearer ${storage.getItem('token')}` },
+        responseType: 'blob',
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      // eslint-disable-next-line no-restricted-globals
+      window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+    } catch(err) {
+      if(err.message === 'Network Error') {
+        toast.error('Verifique sua conexão com a internet.');
+      } else if(err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error('Ocorreu um erro inesperado.');
+      }
+    }
+
     setInLoadingCRLVe(false);
   };
 
@@ -87,7 +111,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
                     <FaFilePdf />
                   </Button>
                 )}
-                <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(vehicle.id)} disabled={inLoading}>
+                <Button variant="secondary" style={{ height: 34 }} onClick={() => navigate(`/vehicles/details/${vehicle.id}`)} disabled={inLoading}>
                   <FaSearch />
                 </Button>
               </td>
