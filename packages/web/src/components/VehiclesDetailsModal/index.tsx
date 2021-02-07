@@ -1,5 +1,4 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import { AxiosResponse } from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
 import { FaEye, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
@@ -85,13 +84,14 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   /* - SEARCH CLIENT IN DATABASE - */
   const getClient = async (document: string) => {
     if(formRef.current) {
+      setClientSearched(true);
+
       try {
         const client = await api.get<IClient[]>(`/clients?noPagination=true&document=${document}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
         setHaveClient(client.data.length === 1);
         formRef.current.setFieldValue('name', client.data[0]?.name || '');
         formRef.current.setFieldValue('group', client.data[0]?.group || '');
-        setClientSearched(true);
       } catch(err) {
         if(err.message === 'Network Error') {
           toast.error('Verifique sua conexão com a internet.');
@@ -112,7 +112,6 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   const onBlurMaxLengths = (inputName: string, maxLength: number, fillString: string) => {
     if(formRef.current) {
       const inputVal: string = formRef.current.getFieldValue(inputName).replace(/\D/g, '');
-
       formRef.current.setFieldValue(inputName, inputVal.padStart(maxLength, fillString));
     }
   };
@@ -180,15 +179,14 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
       const document = data.document.replace(/\D/g, '');
       await scheme.validate({ ...data, document }, { abortEarly: false });
-      let response: AxiosResponse<IVehicle>;
+
       if(vehicle) {
-        response = await api.put<IVehicle>(`/vehicles/${vehicle.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.put<IVehicle>(`/vehicles/${vehicle.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        response = await api.post<IVehicle>('/vehicles', { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.post<IVehicle>('/vehicles', { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
       setEditing(false);
-      onChangeSuccess(response.data);
       toast.success('Veículo atualizado com sucesso!');
     } catch(err) {
       if(err instanceof yup.ValidationError) {

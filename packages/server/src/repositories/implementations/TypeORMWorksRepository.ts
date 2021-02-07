@@ -111,7 +111,8 @@ export class TypeORMWorksRepository implements IWorksRepository {
       identifier: data.identifier || oldData.identifier,
       value: data.value || oldData.value,
       details: data.details || oldData.details,
-      status: data.status || oldData.status,
+      status: data.status === undefined || data.status === null || data.status < 0 ? oldData.status : data.status,
+
     });
 
     await getRepository(WorkHistory).save({
@@ -120,7 +121,15 @@ export class TypeORMWorksRepository implements IWorksRepository {
       details: data.history,
     });
 
-    const dbData = await getRepository(Work).findOne({ where: { id } });
+    const dbData = await getRepository(Work)
+      .createQueryBuilder('wk')
+      .leftJoinAndMapOne('wk.client', Client, 'cl', 'wk.client_id = cl.id')
+      .leftJoinAndMapOne('wk.service', Service, 'sv', 'wk.service_id = sv.id')
+      .leftJoinAndMapOne('wk.sector', Sector, 'sc', 'sv.sector_id = sc.id')
+      .leftJoinAndMapMany('wk.histories', WorkHistory, 'ht', 'ht.work_id = wk.id')
+      .where(`wk.id = '${id}'`)
+      .getOne();
+
     return dbData;
   }
 

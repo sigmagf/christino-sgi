@@ -38,7 +38,7 @@ export class Work {
   @JoinColumn({ name: 'client_id' })
   client: Client;
 
-  @ManyToOne((type) => Service, { eager: true })
+  @ManyToOne((type) => Service, (works) => Work, { eager: true })
   @JoinColumn({ name: 'service_id' })
   service: Service;
 

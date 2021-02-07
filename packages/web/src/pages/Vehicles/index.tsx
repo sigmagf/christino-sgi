@@ -7,16 +7,16 @@ import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
 import { Layout } from '~/components/Layout';
 import { Pagination } from '~/components/Pagination';
+import { VehiclesDataTable } from '~/components/VehiclesDataTable';
+import { VehiclesDetailsModal } from '~/components/VehiclesDetailsModal';
+import { VehiclesFiltersCard } from '~/components/VehiclesFiltersCard';
+import { VehiclesImportModal } from '~/components/VehiclesImportModal';
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 
-import { VehiclesDataTable } from './DataTable';
-import { VehiclesDetailsModal } from './DetailsModal';
-import { VehiclesFiltersCard } from './FiltersCard';
-import { VehiclesImportModal } from './ImportModal';
 import { VehiclesPrintScreen } from './printScreen';
 
 export const VehiclesPage: React.FC = () => {

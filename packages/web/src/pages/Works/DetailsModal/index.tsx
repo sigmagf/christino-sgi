@@ -11,7 +11,7 @@ import { Modal } from '~/components/Modal';
 import { Table } from '~/components/Table';
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
-import { IClient, IService, IWork, IWorkHistory } from '~/interfaces';
+import { IClient, IService, IWork } from '~/interfaces';
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatDate } from '~/utils/formatDate';
@@ -31,7 +31,7 @@ interface IFormData {
   value: string;
   status: string;
   details: string;
-  history: IWorkHistory[];
+  history: string;
 }
 
 interface IWorksDetailsModalProps {
@@ -149,6 +149,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
         service_id: yup.string().required('O serviço é obrigatório.'),
         value: yup.string().required('O valor é obrigatório.'),
         status: yup.string().required('O status é obrigatório.'),
+        history: yup.string().required('O historico é obrigatório.'),
       });
 
       const document = data.document.replace(/\D/g, '');
@@ -223,22 +224,24 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
           ...work.client,
           document: formatDocument(work.client.document),
           service_id: services && services.filter((el) => el.id === work.service.id).map((el) => ({ label: el.name, value: el.id }))[0],
+          client_id: work.client.id,
           status: worksStatus.filter((el) => el.value === work.status.toString())[0],
           sector: work.sector.name,
         }}
       >
-        <Input disabled={!editing || haveClient} name="name" label="NOME" />
-        <Input disabled={!editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
-        <Input disabled={!editing || haveClient} name="group" label="GRUPO" />
+        <Input disabled={!!work || !editing || haveClient} name="name" label="NOME" />
+        <Input disabled={!!work || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
+        <Input disabled={!!work || !editing || haveClient} name="group" label="GRUPO" />
 
         <hr />
 
         <Input disabled name="sector" label="SETOR" />
-        <Select isDisabled={!editing} name="service_id" label="SERVIÇO" options={handleServiceOptions()} onChange={onServiceChange} />
-        <Input disabled={!editing} name="identifier" label="IDENTIFICADOR" />
-        <Input disabled={!editing} name="value" label="VALOR" onFocus={onValueFocus} onBlur={onValueBlur} />
+        <Select isDisabled={!!work || !editing} name="service_id" label="SERVIÇO" options={handleServiceOptions()} onChange={onServiceChange} />
+        <Input disabled={!!work || !editing} name="identifier" label="IDENTIFICADOR" />
+        <Input disabled={!!work || !editing} name="value" label="VALOR" onFocus={onValueFocus} onBlur={onValueBlur} />
         <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
-        <Input disabled={!editing} name="details" label="DETALHES" />
+        <Input disabled={!!work || !editing} name="details" label="DETALHES" />
+        <Input disabled={!editing} name="history" label="NOVA ENTRADA" />
 
         <Table>
           <thead>

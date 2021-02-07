@@ -11,6 +11,7 @@ export const WorksDetailsModalForm = styled(Form)`
                        'HR HR HR HR HR HR HR HR HR HR HR HR'
                        'SC SC SV SV SV ID ID ID VL VL ST ST'
                        'DT DT DT DT DT DT DT DT DT DT DT DT'
+                       'HS HS HS HS HS HS HS HS HS HS HS HS'
                        'HT HT HT HT HT HT HT HT HT HT HT HT';
 
   input {
@@ -59,7 +60,8 @@ export const WorksDetailsModalForm = styled(Form)`
   > :nth-child(8) { grid-area: VL; } /* VALUE */
   > :nth-child(9) { grid-area: ST; } /* STATUS */
   > :nth-child(10) { grid-area: DT; } /* DETAILS */
-  > :nth-child(11) { grid-area: HT; } /* HISTORY */
+  > :nth-child(11) { grid-area: HS; } /* NEW HISTORY */
+  > :nth-child(12) { grid-area: HT; } /* HISTORY */
 `;
 
 export const WorksDetailsActionButtons = styled.div`

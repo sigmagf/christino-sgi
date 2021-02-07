@@ -1,3 +1,8 @@
-import { User } from '~/entities/User';
+import { Work } from '~/entities/Work';
 
-export type IWorksUpdateRequestDTO = Omit<User, 'email_change_token'|'email_change_expires'|'pwd_reset_token'|'pwd_reset_expires'>;
+export interface IWorksUpdateRequestDTO extends Pick<Work, 'id'|'service_id'|'identifier'|'value'|'details'|'status'> {
+  history: string;
+  name: string;
+  document: string;
+  group: string;
+}
