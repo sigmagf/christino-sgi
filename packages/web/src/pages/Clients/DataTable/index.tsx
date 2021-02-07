@@ -6,7 +6,7 @@ import { Badge } from '~/components/Badge';
 import { Button } from '~/components/Button';
 import { Table } from '~/components/Table';
 import { IClient } from '~/interfaces';
-import { formatCPForCNPJ } from '~/utils/formatCPForCNPJ';
+import { formatDocument } from '~/utils/formatDocument';
 
 import { DataTableCardContainer } from './styles';
 
@@ -61,7 +61,7 @@ export const ClientsDataTable: React.FC<IVehicleDataTableProps> = ({ data, inLoa
                   </Badge>
                 )}
               </td>
-              <td style={{ textAlign: 'center' }}>{ formatCPForCNPJ(el.document) }</td>
+              <td style={{ textAlign: 'center' }}>{ formatDocument(el.document) }</td>
               <td style={{ textAlign: 'center' }}>{ el.email }</td>
               <td style={{ textAlign: 'center' }}>{ el.phone1 }</td>
               <td style={{ textAlign: 'center' }}>{ el.phone2 }</td>

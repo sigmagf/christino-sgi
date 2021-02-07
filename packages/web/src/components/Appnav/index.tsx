@@ -31,18 +31,11 @@ export const Appnav: React.FC = () => {
       icon: FaHome,
       label: 'Início',
       path: '/',
-    },
-    {
+    }, {
       icon: FaCar,
       label: 'Veículos',
       path: '/vehicles',
-    },
-    {
-      icon: FaReceipt,
-      label: 'Ordens de Serviço',
-      path: '/works',
-    },
-    {
+    }, {
       icon: FaUsers,
       label: 'Clientes',
       path: '/clients',

@@ -1,4 +1,4 @@
-export function formatCPForCNPJ(document: string) {
+export function formatDocument(document: string) {
   if(!document) {
     return '';
   }

@@ -13,8 +13,7 @@ import { useLocalStorage } from '~/hooks';
 import { IClient, IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
-import { formatCPForCNPJ } from '~/utils/formatCPForCNPJ';
-import { onDocumentFocus, onDocumentBlur } from '~/utils/formatCPForCNPJInput';
+import { formatDocument } from '~/utils/formatDocument';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
 import { DetailsModalForm, VehicleDetailsActionButtons, VehicleDetailsLoadingContainer } from './styles';
@@ -118,6 +117,35 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   };
   /* END SET MAX LENGTH */
 
+  /* - HANDLE DOCUMENT FORMAT - */
+  const onDocumentFocus = () => {
+    if(formRef.current) {
+      const document = formRef.current.getFieldValue('document').replace(/\D/g, '');
+      formRef.current.setFieldValue('document', document);
+    }
+  };
+
+  const onDocumentBlur = () => {
+    if(formRef.current) {
+      const document: string = formRef.current.getFieldValue('document').replace(/\D/g, '');
+
+      if(document.length === 0 || (document.length !== 11 && document.length !== 14)) {
+        toast.error('CPF/CNPJ inválido.');
+        return;
+      }
+
+      formRef.current.setFieldValue('document', formatDocument(document));
+
+      if(!validCPForCNPJ(document)) {
+        toast.error('CPF/CNPJ inválido.');
+        return;
+      }
+
+      getClient(document);
+    }
+  };
+  /* END HANDLE DOCUMENT FORMAT */
+
   /* - SAVE OR UPDATE VEHICLE - */
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     setInSubmitProcess(true);
@@ -205,9 +233,9 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         haveHeader
         header={`${vehicle ? 'CRIAR' : 'ALTERAR'} IMPORTACAO DE VEICULOS`}
       >
-        <DetailsModalForm ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle, ...vehicle.client, document: formatCPForCNPJ(vehicle.client.document) }}>
+        <DetailsModalForm ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle, ...vehicle.client, document: formatDocument(vehicle.client.document) }}>
           <Input disabled={!editing || haveClient} name="name" label="NOME" />
-          <Input disabled={!editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={() => onDocumentFocus(formRef)} onBlur={() => onDocumentBlur(formRef, getClient)} />
+          <Input disabled={!editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
           <Input disabled={!editing || haveClient} name="group" label="GRUPO" />
 
           <hr />
