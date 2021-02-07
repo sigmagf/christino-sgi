@@ -11,8 +11,9 @@ import { StyledToastContainer } from './components/StyledToastContainer';
 import { NotFoundErrorPage } from './pages/404';
 import { ClientsPage } from './pages/Clients';
 import { HomePage } from './pages/Home';
-import { Login } from './pages/Login';
+import { LoginPage } from './pages/Login';
 import { VehiclesPage } from './pages/Vehicles';
+import { WorksPage } from './pages/Works';
 import { SecureRoute } from './utils/secureRoute';
 
 export const App: React.FC = () => {
@@ -34,11 +35,12 @@ export const App: React.FC = () => {
         <>
           <BrowserRouter>
             <Routes>
-              <Route path="/login" element={<Login />} />
+              <Route path="/login" element={<LoginPage />} />
 
               <SecureRoute path="/" element={<HomePage />} />
               <SecureRoute path="/vehicles" element={<VehiclesPage />} />
               <SecureRoute path="/clients" element={<ClientsPage />} />
+              <SecureRoute path="/works" element={<WorksPage />} />
 
               <Route path="*" element={<NotFoundErrorPage />} />
             </Routes>

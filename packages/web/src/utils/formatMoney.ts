@@ -1,7 +1,8 @@
-export function formatMoney(value: string|number) {
+export function formatMoney(value: string | number) {
   if(!value) {
     return '';
   }
 
-  return value.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' }).replace('R$', '').trim();
+  const newValue = parseFloat(value.toString()).toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
+  return newValue.replace('R$', '').trim();
 }

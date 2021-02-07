@@ -10,19 +10,19 @@ import { formatDocument } from '~/utils/formatDocument';
 
 import { DataTableCardContainer } from './styles';
 
-interface IVehicleDataTableProps {
+interface IClientsDataTableProps {
   data: IClient[];
   inLoading: boolean;
   onDetailsClick: (id: string) => void;
 }
 
-export const ClientsDataTable: React.FC<IVehicleDataTableProps> = ({ data, inLoading, onDetailsClick }) => {
+export const ClientsDataTable: React.FC<IClientsDataTableProps> = ({ data, inLoading, onDetailsClick }) => {
   return (
     <DataTableCardContainer style={{ position: 'relative' }}>
       { inLoading && (
-      <div style={{ position: 'absolute', marginTop: 25, top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <ReactLoading type="bars" />
-      </div>
+        <div style={{ position: 'absolute', marginTop: 25, top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+          <ReactLoading type="bars" />
+        </div>
       )}
 
       <Table>
@@ -75,6 +75,5 @@ export const ClientsDataTable: React.FC<IVehicleDataTableProps> = ({ data, inLoa
         </tbody>
       </Table>
     </DataTableCardContainer>
-
   );
 };

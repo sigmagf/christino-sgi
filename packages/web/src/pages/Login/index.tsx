@@ -16,7 +16,7 @@ import { api } from '~/utils/api';
 
 import { LoginContainer } from './styles';
 
-export const Login: React.FC = () => {
+export const LoginPage: React.FC = () => {
   document.title = 'Login | Christino';
 
   const formRef = useRef<FormHandles>(null);

@@ -35,13 +35,13 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
   const includeTruckOptions = [
     {
       value: '0',
-      label: 'SEM CAMINHÕES',
+      label: 'SEM CAMINHOES',
     }, {
       value: '1',
-      label: 'AMBOS',
+      label: 'COM CAMINHOES',
     }, {
       value: '2',
-      label: 'APENAS CAMINHOES',
+      label: 'SÓ CAMINHOES',
     },
   ];
 

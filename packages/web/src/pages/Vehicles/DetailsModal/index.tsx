@@ -1,4 +1,5 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
+import { AxiosResponse } from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
 import { FaEye, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
@@ -129,7 +130,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
     if(formRef.current) {
       const document: string = formRef.current.getFieldValue('document').replace(/\D/g, '');
 
-      if(document.length === 0 || (document.length !== 11 && document.length !== 14)) {
+      if(document.length !== 11 && document.length !== 14) {
         toast.error('CPF/CNPJ inválido.');
         return;
       }
@@ -179,7 +180,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
       const document = data.document.replace(/\D/g, '');
       await scheme.validate({ ...data, document }, { abortEarly: false });
-      let response;
+      let response: AxiosResponse<IVehicle>;
       if(vehicle) {
         response = await api.put<IVehicle>(`/vehicles/${vehicle.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
@@ -187,7 +188,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
       }
 
       setEditing(false);
-      onChangeSuccess(response);
+      onChangeSuccess(response.data);
       toast.success('Veículo atualizado com sucesso!');
     } catch(err) {
       if(err instanceof yup.ValidationError) {
@@ -239,7 +240,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         isOpen={isOpen}
         onRequestClose={onClose}
         haveHeader
-        header={`${vehicle ? 'CRIAR' : 'ALTERAR'} IMPORTACAO DE VEICULOS`}
+        header={`${vehicle ? 'ALTERAR' : 'CRIAR'} VEÍCULO`}
       >
         <DetailsModalForm
           ref={formRef}

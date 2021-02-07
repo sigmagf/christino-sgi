@@ -90,13 +90,13 @@ export interface IWorkHistory {
 export interface IWork {
   id: string;
   client: IClient;
-  service: Omit<IService, 'sector'>;
   sector: ISector;
+  service: Omit<IService, 'sector'>;
   identifier?: string;
   value: number;
   details?: string;
   status: number;
-  history: Omit<IWorkHistory, 'work_id'>[];
+  histories: Omit<IWorkHistory, 'work_id'>[];
   created_at?: Date;
   updated_at?: Date;
 }

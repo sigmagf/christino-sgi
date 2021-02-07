@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { IconType } from 'react-icons';
-import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar } from 'react-icons/fa';
+import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, FaReceipt } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import LogoWithText from '~/assets/logo-texto.png';
@@ -35,6 +35,10 @@ export const Appnav: React.FC = () => {
       icon: FaCar,
       label: 'Veículos',
       path: '/vehicles',
+    }, {
+      icon: FaReceipt,
+      label: 'Ordem de Serviço',
+      path: '/works',
     }, {
       icon: FaUsers,
       label: 'Clientes',

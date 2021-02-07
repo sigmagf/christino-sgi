@@ -20,7 +20,9 @@ export interface IWorksListFilters extends Partial<Pick<Work, 'identifier'|'valu
   name?: string;
   document?: string;
   group?: string;
+
   service?: string;
+  sector?: string;
 }
 
 export interface IVehiclesListFilters extends Partial<Omit<Vehicle, 'id'|'client'|'type'|'details'|'status'|'created_at'|'updated_at'>> {

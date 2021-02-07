@@ -77,14 +77,19 @@ export const SelectContainer = styled.div<IInputContainerStyledProps>`
     background: ${({ theme }) => lighten(0.1, theme.primary.main)};
     color: ${({ theme }) => theme.primary.contrastText};
     border-radius: 5px;
+    max-height: 113px;
 
     .react-select__option {
       font-family: 'Roboto Mono', monospace;
     }
 
-    .react-select__option--is-focused,
+    .react-select__option--is-focused {
+      background: ${({ theme }) => shade(0.05, theme.primary.main)};
+      color: ${({ theme }) => theme.primary.contrastText};
+    }
+
     .react-select__option--is-selected {
-      background: ${({ theme }) => theme.secondary.main};
+      background: ${({ theme }) => shade(0.05, theme.secondary.main)};
       color: ${({ theme }) => theme.secondary.contrastText};
     }
   }
