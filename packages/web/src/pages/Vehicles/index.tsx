@@ -119,7 +119,7 @@ export const VehiclesPage: React.FC = () => {
       </Layout>
 
       <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />
-      <VehiclesDetailsModal isOpen={detailsModalOpen} despPermission={despPermission} onClose={onModalsClose} onVehicleChange={revalidate} vehicle={vehicleToDetails} />
+      <VehiclesDetailsModal isOpen={detailsModalOpen} despPermission={despPermission} onClose={onModalsClose} vehicle={vehicleToDetails} />
     </>
   );
 };

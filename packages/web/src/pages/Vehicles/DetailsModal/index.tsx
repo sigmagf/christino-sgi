@@ -37,10 +37,9 @@ interface IVehiclesDetailsModalProps {
   onClose: () => void;
   vehicle?: IVehicle;
   despPermission: number;
-  onVehicleChange: () => void;
 }
 
-export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, despPermission, onVehicleChange }) => {
+export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, despPermission }) => {
   const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);
 
