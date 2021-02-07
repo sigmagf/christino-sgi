@@ -18,9 +18,10 @@ export class UsersUpdateController {
     const segu_permission = stringFix(req.body.segu_permission, undefined);
     const clie_permission = stringFix(req.body.clie_permission, undefined);
     const user_permission = stringFix(req.body.user_permission, undefined);
+    const work_permission = stringFix(req.body.work_permission, undefined);
 
     try {
-      const user = await this.service.execute({ id, name, email, password, desp_permission, segu_permission, clie_permission, user_permission });
+      const user = await this.service.execute({ id, name, email, password, desp_permission, segu_permission, clie_permission, user_permission, work_permission });
       return res.status(200).json(user);
     } catch(err) {
       return errorWork(res, err.message || null);

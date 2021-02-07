@@ -52,8 +52,6 @@ export class VehiclesUpdateController {
         throw new Error(JSON.stringify({ code: 400, message: 'Vehicle status is null or undefined.' }));
       }
 
-      console.log({ id, name, document, group, plate, renavam, crv, brand_model, type, details, status });
-
       const user = await this.service.execute({ id, name, document, group, plate, renavam, crv, brand_model, type, details, status });
       return res.status(200).json(user);
     } catch(err) {

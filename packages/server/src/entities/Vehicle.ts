@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable import/no-cycle */
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { Client } from './Client';
@@ -8,7 +8,7 @@ export class Vehicle {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @Column('uuid')
+    @Column('uuid', { select: false })
     client_id: string;
 
     @Column('character varying', { length: 7 })

@@ -5,22 +5,16 @@ import { toast } from 'react-toastify';
 import { Dropzone } from '~/components/Dropzone';
 import { Modal } from '~/components/Modal';
 import { useLocalStorage } from '~/hooks';
-import { IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
 
 interface IImportModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUploadSuccess: () => void;
-  onUploadError: () => void;
   vehicleId: string;
 }
 
-interface IRequestError extends Omit<IVehicle, 'id'|'updated_at'|'created_at'|'client'> {
-  error: string;
-}
-
-export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, onClose, onUploadSuccess, onUploadError, vehicleId }) => {
+export const VehiclesDetailsUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, onClose, onUploadSuccess, vehicleId }) => {
   const storage = useLocalStorage();
 
   const [inLoading, setInLoading] = useState(false);
@@ -42,8 +36,6 @@ export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, 
       } else {
         toast.error('Ocorreu um erro inesperado.');
       }
-
-      onUploadError();
     }
 
     onClose();
@@ -56,11 +48,7 @@ export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, 
         {inLoading ? (
           <ReactLoading type="bars" />
         ) : (
-          <Dropzone
-            maxFiles={1}
-            accept="application/pdf"
-            onDropAccepted={onFileUploaded}
-          />
+          <Dropzone maxFiles={1} accept="application/pdf" onDropAccepted={onFileUploaded} />
         )}
       </Modal>
     </>

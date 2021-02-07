@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -8,6 +8,7 @@ import { Card } from '~/components/Card';
 import { Layout } from '~/components/Layout';
 import { Pagination } from '~/components/Pagination';
 import { useLocalStorage } from '~/hooks';
+import { useSWR } from '~/hooks/useSWR';
 import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
@@ -20,57 +21,35 @@ import { VehiclesPrintScreen } from './printScreen';
 
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
+
   const storage = useLocalStorage();
+  const [despPermission, setDespPermission] = useState(-1);
 
-  const [desp_permission, setDesp_permission] = useState(-1);
-
-  const [vehicles, setVehicles] = useState<IPagination<IVehicle>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
-  const [vehicleToDetails, setVehicleToDetails] = useState<IVehicle>();
   const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
-  const [inLoading, setInLoading] = useState(false);
+  const [vehicleToDetails, setVehicleToDetails] = useState<IVehicle>();
   const [inLoadingPrint, setInLoadingPrint] = useState(false);
 
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
-  const getVehicles = useCallback(async () => {
-    setInLoading(true);
-
-    try {
-      const response = await api.get<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`, {
-        headers: { authorization: `Bearer ${storage.getItem('token')}` },
-      });
-
-      if(response.data.page.total < filters.page) {
-        setFilters((old) => ({ ...old, page: response.data.page.total }));
-      }
-
-      setVehicles(response.data);
-    } catch(err) {
-      if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-      }
-
-      setVehicles({ page: { total: 1, current: 1, limit: 10 }, data: [] });
-    }
-
-    setInLoading(false);
-  }, [filters, storage]);
-
-  const onDetailsClick = (vehicleId: string) => {
-    setVehicleToDetails(vehicles.data.filter((el) => el.id === vehicleId)[0]);
-    setDetailsModalOpen(true);
-  };
+  const { data: vehicles, revalidate, isValidating: inLoading } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
 
   const onModalsClose = () => {
     setImportModalOpen(false);
     setDetailsModalOpen(false);
+    revalidate();
+  };
+
+  const onCreateVehicleClick = () => {
     setVehicleToDetails(undefined);
-    getVehicles();
+    setDetailsModalOpen(true);
+  };
+
+  const onDetailsVehicleClick = (id: string) => {
+    if(vehicles) {
+      setVehicleToDetails(vehicles.data.filter((el) => el.id === id)[0]);
+      setDetailsModalOpen(true);
+    }
   };
 
   const onPrintClick = async () => {
@@ -102,32 +81,7 @@ export const VehiclesPage: React.FC = () => {
     setInLoadingPrint(false);
   };
 
-  /* - GET CRLVe FROM BACK-END - */
-  const handleOpenCRLVe = async (id: string) => {
-    try {
-      const response = await api.get(`/vehicles/crlve/view/${id}`, {
-        headers: { authorization: `Bearer ${storage.getItem('token')}` },
-        responseType: 'blob',
-      });
-
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-      // eslint-disable-next-line no-restricted-globals
-      window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
-    } catch(err) {
-      if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-      }
-    }
-  };
-  /* END GET CRLVe FROM BACK-END */
-
-  useEffect(() => { getVehicles(); }, [filters]); // eslint-disable-line
-
-  if(desp_permission === 0) {
+  if(despPermission === 0) {
     return <Navigate to="/" replace />;
   }
 
@@ -144,35 +98,28 @@ export const VehiclesPage: React.FC = () => {
 
   return (
     <>
-      <Layout setPermissions={(perms) => setDesp_permission(perms.desp_permission)}>
+      <Layout setPermissions={(perms) => setDespPermission(perms.desp_permission)}>
         <VehiclesFiltersCard
           onOpenImportModalClick={() => setImportModalOpen(true)}
-          onOpenCreateModalClick={() => setDetailsModalOpen(true)}
+          onCreateClick={onCreateVehicleClick}
           onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data, page: 1 }))}
-          desp_permission={desp_permission}
+          despPermission={despPermission}
         />
-        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles.data} onDetailsClick={onDetailsClick} onViewCRLVeClick={handleOpenCRLVe} />
+        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles?.data || []} onDetailsClick={onDetailsVehicleClick} />
 
         <Card style={{ margin: '15px 0' }}>
           <Pagination
-            currentPage={vehicles.page.current}
-            totalPages={vehicles.page.total}
+            currentPage={vehicles?.page.current || 1}
+            totalPages={vehicles?.page.total || 1}
             inLoading={inLoading}
             onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
-            onMaxResultsChange={() => console.log('onMaxResultsChange')}
-            overrideMaxResultsBy={printButton}
+            leftContent={printButton}
           />
         </Card>
       </Layout>
 
       <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />
-      <VehiclesDetailsModal
-        isOpen={detailsModalOpen}
-        onClose={onModalsClose}
-        vehicle={vehicleToDetails}
-        desp_permission={desp_permission}
-        onViewCRLVeClick={handleOpenCRLVe}
-      />
+      <VehiclesDetailsModal isOpen={detailsModalOpen} despPermission={despPermission} onClose={onModalsClose} onVehicleChange={revalidate} vehicle={vehicleToDetails} />
     </>
   );
 };

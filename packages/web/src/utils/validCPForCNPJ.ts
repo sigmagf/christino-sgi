@@ -81,6 +81,10 @@ function validCNPJ(cnpj: string) {
 }
 
 export function validCPForCNPJ(document: string) {
+  if(!document) {
+    return false;
+  }
+
   const doc = document.replace(/[^\d]+/g, '');
 
   if(!doc) {

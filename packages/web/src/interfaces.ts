@@ -64,6 +64,43 @@ export interface IPagination<T> {
   data: Array<T>;
 }
 
+export interface ISector {
+  id: string;
+  name: string;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface IService {
+  id: string;
+  sector: ISector;
+  name: string;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface IWorkHistory {
+  id: string;
+  work_id: string;
+  details: string;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface IWork {
+  id: string;
+  client: IClient;
+  service: Omit<IService, 'sector'>;
+  sector: ISector;
+  identifier?: string;
+  value: number;
+  details?: string;
+  status: number;
+  history: Omit<IWorkHistory, 'work_id'>[];
+  created_at?: Date;
+  updated_at?: Date;
+}
+
 export interface IClient {
   id: string;
   name: string;
@@ -85,6 +122,7 @@ export interface IUser {
   segu_permission: number;
   clie_permission: number;
   user_permission: number;
+  work_permission: number;
   created_at?: Date;
   updated_at?: Date;
 }

@@ -198,8 +198,7 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                 currentPage={vehiclesToImportTablePage}
                 totalPages={vehiclesPagination.page.total}
                 onNumberClick={(n) => setVehiclesToImportTablePage(n)}
-                onMaxResultsChange={() => {}}
-                overrideMaxResultsBy={buttonsGroup}
+                leftContent={buttonsGroup}
               />
             </TableResult>
           )}

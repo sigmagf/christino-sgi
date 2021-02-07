@@ -75,6 +75,7 @@ export class TypeORMUsersRepository implements IUsersRepository {
       email_change_expires: data.email_change_expires || oldData.email_change_expires,
       desp_permission: data.desp_permission || oldData.desp_permission,
       segu_permission: data.segu_permission || oldData.segu_permission,
+      work_permission: data.work_permission || oldData.work_permission,
     });
 
     const dbData = await getRepository(User).findOne({ where: { id } });

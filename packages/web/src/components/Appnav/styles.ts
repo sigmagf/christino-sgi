@@ -17,6 +17,7 @@ const appnavExpandedItemLabel = css`
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  white-space: nowrap;
 `;
 
 const appnavCollapseItemLabel = css`

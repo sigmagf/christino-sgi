@@ -19,7 +19,7 @@ export const UserBar: React.FC = () => {
   return (
     <UserBarContainer>
       <div className="user-name">
-        Olá, <strong>{ storage.getItem('userName') }</strong>
+        Olá, <strong style={{ fontWeight: 'bold' }}>{ storage.getItem('userName') }</strong>
       </div>
 
       <div className="user-actions">

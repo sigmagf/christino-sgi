@@ -1,8 +1,10 @@
 import React, { useCallback } from 'react';
 import { IconType } from 'react-icons';
-import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, FaUserShield } from 'react-icons/fa';
+import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, /* FaUserShield, */ FaReceipt } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import LogoWithText from '~/assets/logo-texto.png';
+import LogoWithoutText from '~/assets/logo.png';
 import { usePersistedState } from '~/hooks';
 
 import { AppnavContainer, AppnavContent, AppnavControllers, AppnavHeader, AppnavItem } from './styles';
@@ -36,10 +38,9 @@ export const Appnav: React.FC = () => {
       path: '/vehicles',
     },
     {
-      icon: FaUserShield,
-      label: 'Seguros (WIP)',
-      path: '/insurances',
-      disabled: true,
+      icon: FaReceipt,
+      label: 'Ordens de Serviço',
+      path: '/works',
     },
     {
       icon: FaUsers,
@@ -55,17 +56,11 @@ export const Appnav: React.FC = () => {
         {expanded && <button type="button" onClick={toggleAppnav} aria-label="Collapse"><FaAngleLeft size={20} /></button>}
       </AppnavControllers>
       <AppnavHeader>
-        <img src={expanded ? 'assets/logo-texto.png' : 'assets/logo.png'} alt="CHRISTINO-SGI" />
+        <img src={expanded ? LogoWithText : LogoWithoutText} alt="CHRISTINO-SGI" />
       </AppnavHeader>
       <AppnavContent>
         {menuItems.map(({ icon: Icon, label, disabled = false, path }) => (
-          <AppnavItem
-            key={label}
-            selected={pathname === path}
-            type="button"
-            disabled={disabled || pathname === path}
-            onClick={() => navigate(path)}
-          >
+          <AppnavItem key={label} selected={pathname === path} type="button" disabled={disabled || pathname === path} onClick={() => navigate(path)}>
             <div className="appnav-item-icon">
               <Icon size={20} />
             </div>

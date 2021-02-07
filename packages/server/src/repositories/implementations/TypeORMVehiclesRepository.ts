@@ -27,7 +27,7 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
     if(Array.isArray(filters.status)) {
       const statusPart: string[] = [];
       filters.status.forEach((el) => statusPart.push(el ? `v.status = ${el}` : null));
-      filtersPart.push(`(${statusPart.join(' OR ')})`);
+      filtersPart.push(`(${statusPart.filter((el) => el !== null).join(' OR ')})`);
     } else {
       filtersPart.push(filters.status ? `v.status = ${filters.status}` : null);
     }
@@ -36,10 +36,10 @@ export class TypeORMVehiclesRepository implements IVehiclesRepository {
 
     switch(filters.include_truck) {
       case '0':
-        filtersPart.push('v.type <> \'CAMINHAO\' AND v.type <> \'C. TRATOR\'');
+        filtersPart.push('(v.type <> \'CAMINHAO\' AND v.type <> \'C. TRATOR\')');
         break;
       case '2':
-        filtersPart.push('v.type = \'CAMINHAO\' AND v.type = \'C. TRATOR\'');
+        filtersPart.push('(v.type = \'CAMINHAO\' OR v.type = \'C. TRATOR\')');
         break;
       default:
       case '1':
