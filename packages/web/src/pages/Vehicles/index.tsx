@@ -54,12 +54,9 @@ export const VehiclesPage: React.FC = () => {
 
   const onVehicleChange = (vehicle: IVehicle) => {
     if(vehicles) {
+      setVehicleIdToDetails(vehicle.id);
       mutate({
-        page: {
-          total: vehicles.page.total,
-          limit: vehicles.page.limit,
-          current: vehicles.page.current,
-        },
+        ...vehicles,
         data: [...vehicles.data.filter((el) => el.id !== vehicle.id), vehicle],
       }, true);
     }
