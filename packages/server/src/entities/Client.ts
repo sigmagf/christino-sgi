@@ -1,7 +1,5 @@
 /* eslint-disable import/no-cycle */
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-
-import { Vehicle } from './Vehicle';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('clients')
 export class Client {
@@ -31,7 +29,4 @@ export class Client {
 
   @UpdateDateColumn()
   updated_at?: Date;
-
-  @OneToMany((type) => Vehicle, (client) => Client, { lazy: true })
-  vehicles: Vehicle[];
 }
