@@ -2,7 +2,6 @@ import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useRef, useState } from 'react';
 import { FaLayerGroup, FaPlus, FaFilter, FaAngleDown, FaAngleUp } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Button } from '~/components/Button';
@@ -18,13 +17,13 @@ import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders
 interface IVehiclesFiltersCardProps {
   onOpenImportModalClick: () => void;
   onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
+  onCreateClick: () => void;
   despPermission: number;
 }
 
-export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenImportModalClick, onFiltersApplyClick, despPermission }) => {
+export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenImportModalClick, onCreateClick, onFiltersApplyClick, despPermission }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
-  const navigate = useNavigate();
 
   const { data: groups } = useSWR<string[]>('/clients/groups?pagination=false');
 
@@ -65,10 +64,12 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     }
   };
 
-  const onClientsInputChange = () => {
-    clearTimeout(timer);
+  const onClientsInputChange = (e: string) => {
+    if(e.length > 2) {
+      clearTimeout(timer);
 
-    timer = setTimeout(() => { getClients('a'); }, 1000);
+      timer = setTimeout(() => { getClients(e); }, 1000);
+    }
   };
 
   const handleGroups = (gr: string[]) => {
@@ -84,7 +85,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     <FiltersCard>
       <FiltersContainer open={open}>
         <Form ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
-          <Select label="CLIENTE" name="client_id" options={clients} defaultValue={clients[0]} onKeyDown={onClientsInputChange} />
+          <Select label="CLIENTE" name="client_id" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
           <Select label="GRUPO" name="group" options={handleGroups(groups || [])} defaultValue={{ label: 'TODOS', value: '' }} />
           <Select label="STATUS" name="status" options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
 
@@ -108,7 +109,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
       <FiltersCardActionButtons>
         {despPermission >= 2 && (
           <>
-            <Button variant="success" style={{ width: 175.97 }} onClick={() => navigate('/vehicles/include')}>
+            <Button variant="success" style={{ width: 175.97 }} onClick={onCreateClick}>
               <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
             </Button>
             <Button variant="info" style={{ width: 217.19 }} onClick={onOpenImportModalClick}>
@@ -117,9 +118,9 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
           </>
         )}
         {open && (
-        <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>
-          <FaFilter />&nbsp;&nbsp;&nbsp;FILTRAR
-        </Button>
+          <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>
+            <FaFilter />&nbsp;&nbsp;&nbsp;FILTRAR
+          </Button>
         )}
       </FiltersCardActionButtons>
     </FiltersCard>

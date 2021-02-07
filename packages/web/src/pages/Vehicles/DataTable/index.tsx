@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FaSearch, FaFilePdf } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Badge } from '~/components/Badge';
@@ -17,10 +16,10 @@ import { DataTableCardContainer, StatusBadge } from './styles';
 interface IVehicleDataTableProps {
   vehicles: IVehicle[];
   inLoading: boolean;
+  onDetailsClick: (id: string) => void;
 }
 
-export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading }) => {
-  const navigate = useNavigate();
+export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick }) => {
   const storage = useLocalStorage();
 
   const [inLoadingCRLVe, setInLoadingCRLVe] = useState(false);
@@ -90,12 +89,12 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
                 <StatusBadge status={vehicle.status} title={statusConverter(vehicle.status)} />
               </td>
               <td>
-                <span style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ vehicle.client.name }</span>
                 { vehicle.client.group && (
                   <Badge>
                     { vehicle.client.group }
                   </Badge>
                 )}
+                <span style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ vehicle.client.name }</span>
               </td>
               <td style={{ textAlign: 'center' }}>{ vehicle.plate }</td>
               <td style={{ textAlign: 'center' }}>{ vehicle.renavam }</td>
@@ -111,7 +110,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
                     <FaFilePdf />
                   </Button>
                 )}
-                <Button variant="secondary" style={{ height: 34 }} onClick={() => navigate(`/vehicles/details/${vehicle.id}`)} disabled={inLoading}>
+                <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(vehicle.id)} disabled={inLoading}>
                   <FaSearch />
                 </Button>
               </td>

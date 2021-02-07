@@ -14,25 +14,42 @@ import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 
 import { VehiclesDataTable } from './DataTable';
+import { VehiclesDetailsModal } from './DetailsModal';
 import { VehiclesFiltersCard } from './FiltersCard';
 import { VehiclesImportModal } from './ImportModal';
 import { VehiclesPrintScreen } from './printScreen';
 
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
+
   const storage = useLocalStorage();
   const [despPermission, setDespPermission] = useState(-1);
 
   const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
+  const [vehicleToDetails, setVehicleToDetails] = useState<IVehicle>();
   const [inLoadingPrint, setInLoadingPrint] = useState(false);
 
   const [importModalOpen, setImportModalOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
-  const { data: vehicles, revalidate: reloadVehicles, isValidating: inLoading } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
+  const { data: vehicles, revalidate, isValidating: inLoading } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
 
   const onModalsClose = () => {
     setImportModalOpen(false);
-    reloadVehicles();
+    setDetailsModalOpen(false);
+    revalidate();
+  };
+
+  const onCreateVehicleClick = () => {
+    setVehicleToDetails(undefined);
+    setDetailsModalOpen(true);
+  };
+
+  const onDetailsVehicleClick = (id: string) => {
+    if(vehicles) {
+      setVehicleToDetails(vehicles.data.filter((el) => el.id === id)[0]);
+      setDetailsModalOpen(true);
+    }
   };
 
   const onPrintClick = async () => {
@@ -84,10 +101,11 @@ export const VehiclesPage: React.FC = () => {
       <Layout setPermissions={(perms) => setDespPermission(perms.desp_permission)}>
         <VehiclesFiltersCard
           onOpenImportModalClick={() => setImportModalOpen(true)}
+          onCreateClick={onCreateVehicleClick}
           onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data, page: 1 }))}
           despPermission={despPermission}
         />
-        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles?.data || []} />
+        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles?.data || []} onDetailsClick={onDetailsVehicleClick} />
 
         <Card style={{ margin: '15px 0' }}>
           <Pagination
@@ -101,6 +119,7 @@ export const VehiclesPage: React.FC = () => {
       </Layout>
 
       <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />
+      <VehiclesDetailsModal isOpen={detailsModalOpen} despPermission={despPermission} onClose={onModalsClose} onVehicleChange={revalidate} vehicle={vehicleToDetails} />
     </>
   );
 };
