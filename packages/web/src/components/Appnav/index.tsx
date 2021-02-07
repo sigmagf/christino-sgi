@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { IconType } from 'react-icons';
-import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, /* FaUserShield, */ FaReceipt } from 'react-icons/fa';
+import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import LogoWithText from '~/assets/logo-texto.png';
