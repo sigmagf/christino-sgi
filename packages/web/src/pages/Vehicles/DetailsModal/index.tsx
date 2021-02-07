@@ -46,6 +46,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
   const [inLoadingCRLVe, setInLoadingCRLVe] = useState(false);
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
+  const [haveCRLVe, setHaveCRLVe] = useState(false);
 
   const [editing, setEditing] = useState(false);
   const [clientSearched, setClientSearched] = useState(false);
@@ -173,12 +174,6 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
     setHaveClient(true);
   };
 
-  const onUploadCRLVeSuccess = () => {
-    if(vehicle) {
-      onVehicleChange();
-    }
-  };
-
   useEffect(() => {
     if(vehicle) {
       setInLoadingCRLVe(false);
@@ -189,6 +184,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
       setHaveClient(true);
 
       setUploadCrlveModalOpen(false);
+      setHaveCRLVe(vehicle.crlve_included);
     } else {
       setInLoadingCRLVe(false);
       setInSubmitProcess(false);
@@ -198,6 +194,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
       setHaveClient(true);
 
       setUploadCrlveModalOpen(false);
+      setHaveCRLVe(false);
     }
   }, [vehicle]);
 
@@ -225,7 +222,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           <Input disabled={!editing} name="details" label="DETALHES" />
         </DetailsModalForm>
         <VehicleDetailsActionButtons>
-          {(!editing && vehicle && vehicle.crlve_included) && (
+          {(!editing && haveCRLVe) && (
             <Button variant="secondary" disabled={inLoadingCRLVe} style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }} onClick={handleGetCRLVe}>
               <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
             </Button>
@@ -269,7 +266,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         isOpen={uploadCrlveModalOpen}
         onClose={() => setUploadCrlveModalOpen(false)}
         vehicleId={vehicle?.id || ''}
-        onUploadSuccess={onUploadCRLVeSuccess}
+        onUploadSuccess={() => setHaveCRLVe(true)}
       />
     </>
   );
