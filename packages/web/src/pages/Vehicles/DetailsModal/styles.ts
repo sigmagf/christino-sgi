@@ -10,8 +10,8 @@ export const DetailsModalForm = styled(Form)`
 
   grid-template-areas: 'CN CN CN CN CN CN CN CD CD CG CG CG'
                         'HR HR HR HR HR HR HR HR HR HR HR HR'
-                        'VP VR VR VC VC VM VM VM VM VM VT VT'
-                        'VS VS VD VD VD VD VD VD VD VD VD VD';
+                        'VP VR VR VC VC VM VM VM VT VT VS VS'
+                        'VD VD VD VD VD VD VD VD VD VD VD VD';
 
   input {
     text-transform: uppercase;
@@ -33,7 +33,7 @@ export const DetailsModalForm = styled(Form)`
 `;
 
 export const VehicleDetailsActionButtons = styled.div`
-  margin-top: 15px;
+  margin-top: 40px;
   display: flex;
   justify-content: flex-end;
   align-items: center;

@@ -26,13 +26,13 @@ export const VehiclesPage: React.FC = () => {
   const [despPermission, setDespPermission] = useState(-1);
 
   const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
-  const [vehicleToDetails, setVehicleToDetails] = useState<IVehicle>();
+  const [vehicleIdToDetails, setVehicleIdToDetails] = useState<string>();
   const [inLoadingPrint, setInLoadingPrint] = useState(false);
 
   const [importModalOpen, setImportModalOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
-  const { data: vehicles, revalidate, isValidating: inLoading } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
+  const { data: vehicles, revalidate, mutate, isValidating: inLoading } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
 
   const onModalsClose = () => {
     setImportModalOpen(false);
@@ -41,14 +41,27 @@ export const VehiclesPage: React.FC = () => {
   };
 
   const onCreateVehicleClick = () => {
-    setVehicleToDetails(undefined);
+    setVehicleIdToDetails(undefined);
     setDetailsModalOpen(true);
   };
 
   const onDetailsVehicleClick = (id: string) => {
     if(vehicles) {
-      setVehicleToDetails(vehicles.data.filter((el) => el.id === id)[0]);
+      setVehicleIdToDetails(id);
       setDetailsModalOpen(true);
+    }
+  };
+
+  const onVehicleChange = (vehicle: IVehicle) => {
+    if(vehicles) {
+      mutate({
+        page: {
+          total: vehicles.page.total,
+          limit: vehicles.page.limit,
+          current: vehicles.page.current,
+        },
+        data: [...vehicles.data.filter((el) => el.id !== vehicle.id), vehicle],
+      }, true);
     }
   };
 
@@ -119,7 +132,13 @@ export const VehiclesPage: React.FC = () => {
       </Layout>
 
       <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />
-      <VehiclesDetailsModal isOpen={detailsModalOpen} despPermission={despPermission} onClose={onModalsClose} vehicle={vehicleToDetails} />
+      <VehiclesDetailsModal
+        isOpen={detailsModalOpen}
+        despPermission={despPermission}
+        onClose={onModalsClose}
+        vehicle={vehicles?.data.filter((el) => el.id === vehicleIdToDetails)[0]}
+        onChangeSuccess={onVehicleChange}
+      />
     </>
   );
 };

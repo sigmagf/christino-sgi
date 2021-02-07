@@ -36,15 +36,15 @@ interface IVehiclesDetailsModalProps {
   onClose: () => void;
   vehicle?: IVehicle;
   despPermission: number;
+  onChangeSuccess: (vehicle: IVehicle) => void;
 }
 
-export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, despPermission }) => {
+export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, despPermission, onChangeSuccess }) => {
   const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);
 
   const [inLoadingCRLVe, setInLoadingCRLVe] = useState(false);
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
-  const [haveCRLVe, setHaveCRLVe] = useState(false);
 
   const [editing, setEditing] = useState(false);
   const [clientSearched, setClientSearched] = useState(false);
@@ -146,6 +146,14 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   };
   /* END HANDLE DOCUMENT FORMAT */
 
+  /* - ON CRLVe CHANGE - */
+  const onCRLVeUploadSuccess = () => {
+    if(vehicle) {
+      onChangeSuccess({ ...vehicle, crlve_included: true });
+    }
+  };
+  /* END ON CRLVe CHANGE */
+
   /* - SAVE OR UPDATE VEHICLE - */
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     setInSubmitProcess(true);
@@ -171,13 +179,15 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
       const document = data.document.replace(/\D/g, '');
       await scheme.validate({ ...data, document }, { abortEarly: false });
+      let response;
       if(vehicle) {
-        await api.put(`/vehicles/${vehicle.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        response = await api.put<IVehicle>(`/vehicles/${vehicle.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        await api.post<IVehicle>('/vehicles', { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        response = await api.post<IVehicle>('/vehicles', { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
       setEditing(false);
+      onChangeSuccess(response);
       toast.success('Veículo atualizado com sucesso!');
     } catch(err) {
       if(err instanceof yup.ValidationError) {
@@ -211,7 +221,6 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
       setHaveClient(true);
 
       setUploadCrlveModalOpen(false);
-      setHaveCRLVe(vehicle.crlve_included);
     } else {
       setInLoadingCRLVe(false);
       setInSubmitProcess(false);
@@ -221,7 +230,6 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
       setHaveClient(true);
 
       setUploadCrlveModalOpen(false);
-      setHaveCRLVe(false);
     }
   }, [vehicle]);
 
@@ -233,7 +241,18 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         haveHeader
         header={`${vehicle ? 'CRIAR' : 'ALTERAR'} IMPORTACAO DE VEICULOS`}
       >
-        <DetailsModalForm ref={formRef} onSubmit={onSubmit} initialData={vehicle && { ...vehicle, ...vehicle.client, document: formatDocument(vehicle.client.document) }}>
+        <DetailsModalForm
+          ref={formRef}
+          onSubmit={onSubmit}
+          initialData={
+            vehicle && {
+              ...vehicle,
+              ...vehicle.client,
+              document: formatDocument(vehicle.client.document),
+              status: status.filter((el) => el.value === vehicle.status.toString()),
+            }
+          }
+        >
           <Input disabled={!editing || haveClient} name="name" label="NOME" />
           <Input disabled={!editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
           <Input disabled={!editing || haveClient} name="group" label="GRUPO" />
@@ -245,11 +264,11 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           <Input disabled={!editing} name="crv" label="CRV" maxLength={12} onBlur={() => onBlurMaxLengths('crv', 12, '0')} />
           <Input disabled={!editing} name="brand_model" label="MARCA/MODELO" />
           <Input disabled={!editing} name="type" label="TIPO" />
-          <Select isDisabled={!editing} name="status" label="STATUS" options={status.filter((e) => e.value > '0')} value={vehicle && status[vehicle.status]} />
+          <Select isDisabled={!editing} name="status" label="STATUS" options={status} />
           <Input disabled={!editing} name="details" label="DETALHES" />
         </DetailsModalForm>
         <VehicleDetailsActionButtons>
-          {(!editing && haveCRLVe) && (
+          {(!editing && vehicle && vehicle?.crlve_included) && (
             <Button variant="secondary" disabled={inLoadingCRLVe} style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }} onClick={handleGetCRLVe}>
               <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
             </Button>
@@ -293,7 +312,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         isOpen={uploadCrlveModalOpen}
         onClose={() => setUploadCrlveModalOpen(false)}
         vehicleId={vehicle?.id || ''}
-        onUploadSuccess={() => setHaveCRLVe(true)}
+        onUploadSuccess={onCRLVeUploadSuccess}
       />
     </>
   );
