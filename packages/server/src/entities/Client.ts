@@ -2,7 +2,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 import { Vehicle } from './Vehicle';
-import { Work } from './Work';
 
 @Entity('clients')
 export class Client {
@@ -35,7 +34,4 @@ export class Client {
 
   @OneToMany((type) => Vehicle, (client) => Client, { lazy: true })
   vehicles: Vehicle[];
-
-  @OneToMany((type) => Work, (client) => Client, { lazy: true })
-  works: Work[];
 }

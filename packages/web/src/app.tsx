@@ -13,7 +13,6 @@ import { ClientsPage } from './pages/Clients';
 import { HomePage } from './pages/Home';
 import { Login } from './pages/Login';
 import { VehiclesPage } from './pages/Vehicles';
-import { WorksPage } from './pages/Works';
 import { SecureRoute } from './utils/secureRoute';
 
 export const App: React.FC = () => {
@@ -40,7 +39,6 @@ export const App: React.FC = () => {
               <SecureRoute path="/" element={<HomePage />} />
               <SecureRoute path="/vehicles" element={<VehiclesPage />} />
               <SecureRoute path="/clients" element={<ClientsPage />} />
-              <SecureRoute path="/works" element={<WorksPage />} />
 
               <Route path="*" element={<NotFoundErrorPage />} />
             </Routes>
