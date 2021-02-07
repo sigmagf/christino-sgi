@@ -29,6 +29,7 @@ export class VehiclesListController {
       });
       return res.status(200).json(vehicles);
     } catch(err) {
+      console.log(err);
       return errorWork(res, err.message || null);
     }
   }
