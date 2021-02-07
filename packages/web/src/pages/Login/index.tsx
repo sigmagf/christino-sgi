@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
+import ChristinoLogo from '~/assets/logo-texto.png';
 import { Button } from '~/components/Button';
 import { Card } from '~/components/Card';
 import { Input } from '~/components/Form';
@@ -64,7 +65,7 @@ export const Login: React.FC = () => {
     <LoginContainer>
       {!inLoading ? (
         <Card>
-          <img src="assets/logo-texto.png" alt="" />
+          <img src={ChristinoLogo} alt="" />
           <div className="divider" />
 
           <Form ref={formRef} onSubmit={onSubmit}>

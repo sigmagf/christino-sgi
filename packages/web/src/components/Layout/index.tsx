@@ -55,7 +55,7 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
         <AppContent>
           { children }
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50 }}>
-            CHRISTINO SISTEMA DE GESTAO INTERNO v0.0.20 (01/02/2020)
+            CHRISTINO SISTEMA DE GESTAO INTERNO v0.0.21 (06/02/2020)
           </div>
         </AppContent>
       </AppMain>
