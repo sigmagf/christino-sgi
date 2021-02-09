@@ -1,4 +1,5 @@
 import { Work } from '~/entities/Work';
+
 import { IPagination, IWorksListFilters } from '~/interfaces';
 
 export interface IWorkCreateOrUpdate extends Pick<Work, 'client_id'|'service_id'|'identifier'|'value'|'details'|'status'> {

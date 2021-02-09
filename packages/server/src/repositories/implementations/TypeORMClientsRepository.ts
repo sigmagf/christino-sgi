@@ -2,7 +2,9 @@ import { getRepository } from 'typeorm';
 import { v4 } from 'uuid';
 
 import { Client } from '~/entities/Client';
+
 import { IClientsListFilters, IPagination } from '~/interfaces';
+
 import { makeWhereString } from '~/utils/makeWhereString';
 
 import { IClientsRepository } from '../IClientsRepository';

@@ -1,4 +1,5 @@
 import { Vehicle } from '~/entities/Vehicle';
+
 import { IPagination, IVehiclesListFilters } from '~/interfaces';
 
 export interface IVehiclesRepository {

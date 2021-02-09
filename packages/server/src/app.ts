@@ -3,13 +3,15 @@ import express from 'express';
 import morgan from 'morgan';
 import { getRepository } from 'typeorm';
 
-import { Sector } from './entities/Sector';
-import { Service } from './entities/Service';
-import { devMiddleware } from './middlewares/dev.middleware';
-import { clientsRouter } from './services/clients';
-import { usersRouter } from './services/users';
-import { vehiclesRouter } from './services/vehicles';
-import { worksRouter } from './services/works';
+import { Sector } from '~/entities/Sector';
+import { Service } from '~/entities/Service';
+
+import { devMiddleware } from '~/middlewares/dev.middleware';
+
+import { clientsRouter } from '~/services/clients';
+import { usersRouter } from '~/services/users';
+import { vehiclesRouter } from '~/services/vehicles';
+import { worksRouter } from '~/services/works';
 
 const app = express();
 

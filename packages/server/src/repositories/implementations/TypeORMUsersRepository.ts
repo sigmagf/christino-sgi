@@ -3,6 +3,7 @@ import { getRepository } from 'typeorm';
 import { v4 } from 'uuid';
 
 import { User } from '~/entities/User';
+
 import { IPagination } from '~/interfaces';
 
 import { IUsersRepository } from '../IUsersRepository';

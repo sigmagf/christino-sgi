@@ -1,4 +1,5 @@
 import { User } from '~/entities/User';
+
 import { IPagination } from '~/interfaces';
 
 export interface IUsersRepository {

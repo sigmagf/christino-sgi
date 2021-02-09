@@ -1,4 +1,5 @@
 import { Client } from '~/entities/Client';
+
 import { IClientsListFilters, IPagination } from '~/interfaces';
 
 export interface IClientsRepository {

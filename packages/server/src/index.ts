@@ -1,9 +1,6 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 import './config/databaseConnect';
-import fs from 'fs';
-import path from 'path';
-
 import { app } from './app';
 
 app.listen(process.env.PORT || 3000, async () => {
