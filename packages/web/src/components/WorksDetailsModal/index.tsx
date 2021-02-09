@@ -190,12 +190,14 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
 
   useEffect(() => {
     if(work) {
+      setEditing(false);
       setInSubmitProcess(false);
 
       setEditing(false);
       setClientSearched(false);
       setHaveClient(true);
     } else {
+      setEditing(true);
       setInSubmitProcess(false);
 
       setEditing(true);
@@ -233,9 +235,9 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
         <Input disabled={!!work || !editing} name="identifier" label="IDENTIFICADOR" />
         <Input disabled={!!work || !editing} name="value" label="VALOR" onFocus={onValueFocus} onBlur={onValueBlur} />
         <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
-        <TextArea disabled={!!work || !editing} name="details" label="DETALHES" />
+        <TextArea disabled={!editing} name="details" label="DETALHES" />
         { editing && (
-          <Input disabled={!editing} name="history" label="NOVA ENTRADA" />
+          <Input name="history" label="NOVA ENTRADA" />
         )}
 
         <Table>
