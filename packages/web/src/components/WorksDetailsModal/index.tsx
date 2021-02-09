@@ -235,7 +235,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
         <Input disabled={!!work || !editing} name="identifier" label="IDENTIFICADOR" />
         <Input disabled={!!work || !editing} name="value" label="VALOR" onFocus={onValueFocus} onBlur={onValueBlur} />
         <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
-        <TextArea disabled={!editing} name="details" label="DETALHES" />
+        <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} />
         { editing && (
           <Input name="history" label="NOVA ENTRADA" />
         )}

@@ -1,5 +1,6 @@
 import { useField } from '@unform/core';
 import React, { useEffect, useRef } from 'react';
+import TextareaAutosize from 'react-autosize-textarea';
 
 import { InputContainer } from './styles';
 
@@ -27,7 +28,7 @@ const TextArea: React.FC<TextArea> = ({ name, label, style, id, ...props }) => {
           { label }
         </label>
       )}
-      <textarea ref={inputRef} defaultValue={defaultValue} id={name} {...props} />
+      <TextareaAutosize ref={inputRef} defaultValue={defaultValue} id={name} {...props} maxRows={3} />
     </InputContainer>
   );
 };
