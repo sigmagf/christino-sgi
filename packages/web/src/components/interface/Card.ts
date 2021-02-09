@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const CardContainer = styled.div`
+export const Card = styled.div`
   position: relative;
   width: auto;
   background: ${({ theme }) => theme.primary.main};

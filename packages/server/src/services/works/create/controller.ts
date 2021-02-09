@@ -15,9 +15,9 @@ export class WorksCreateController {
 
     const service_id = stringFix(req.body.service_id, undefined);
     const identifier = stringFix(req.body.identifier, undefined, 'UPPERCASE');
-    const value = stringFix(req.body.value, undefined);
-    const details = stringFix(req.body.details, undefined);
-    const status = stringFix(req.body.status, undefined);
+    const value = stringFix(req.body.value, undefined, 'UPPERCASE');
+    const details = stringFix(req.body.details, undefined, 'UPPERCASE');
+    const status = stringFix(req.body.status, undefined, 'UPPERCASE');
     const history = stringFix(req.body.history, undefined, 'UPPERCASE');
 
     try {

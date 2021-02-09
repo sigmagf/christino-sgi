@@ -5,9 +5,9 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
-import { Button } from '~/components/Button';
-import { Input, Select } from '~/components/Form';
-import { Modal } from '~/components/Modal';
+import { Button } from '~/components/interface/Button';
+import { Input, Select } from '~/components/interface/Form';
+import { Modal } from '~/components/interface/Modal';
 import { VehiclesDetailsUploadCRLVeModal } from '~/components/VehicleUploadCRLVeModal';
 import { useLocalStorage } from '~/hooks';
 import { IClient, IVehicle } from '~/interfaces';
@@ -267,7 +267,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           <Input disabled={!editing} name="details" label="DETALHES" />
         </DetailsModalForm>
         <VehicleDetailsActionButtons>
-          {(!editing && vehicle && vehicle?.crlve_included) && (
+          {(!editing && vehicle && vehicle.crlve_included) && (
             <Button variant="secondary" disabled={inLoadingCRLVe} style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }} onClick={handleGetCRLVe}>
               <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
             </Button>

@@ -21,7 +21,7 @@ const theme = {
     contrastText: '#FFFFFF',
   },
   info: {
-    main: '#4D6Dff',
+    main: '#4D6DFF',
     contrastText: '#FFFFFF',
   },
 

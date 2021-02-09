@@ -22,6 +22,7 @@ export class TypeORMWorksRepository implements IWorksRepository {
         .leftJoinAndMapOne('wk.service', Service, 'sv', 'wk.service_id = sv.id')
         .leftJoinAndMapOne('wk.sector', Sector, 'sc', 'sv.sector_id = sc.id')
         .leftJoinAndMapMany('wk.histories', WorkHistory, 'ht', 'ht.work_id = wk.id')
+        .orderBy('wk.created_at', 'ASC')
         .getCount();
 
       const pages = Math.ceil(maxRows / effectiveLimit);
@@ -35,7 +36,7 @@ export class TypeORMWorksRepository implements IWorksRepository {
         .leftJoinAndMapMany('wk.histories', WorkHistory, 'ht', 'ht.work_id = wk.id')
         .offset(startIndex)
         .limit(effectiveLimit)
-        .orderBy('wk.updated_at', 'ASC')
+        .orderBy('wk.created_at', 'ASC')
         .getMany();
 
       return {
@@ -54,7 +55,7 @@ export class TypeORMWorksRepository implements IWorksRepository {
       .leftJoinAndMapOne('wk.service', Service, 'sv', 'wk.service_id = sv.id')
       .leftJoinAndMapOne('wk.sector', Sector, 'sc', 'sv.sector_id = sc.id')
       .leftJoinAndMapMany('wk.histories', WorkHistory, 'ht', 'ht.work_id = wk.id')
-      .orderBy('wk.updated_at', 'ASC')
+      .orderBy('wk.created_at', 'ASC')
       .getMany();
 
     return dbData;
@@ -103,7 +104,7 @@ export class TypeORMWorksRepository implements IWorksRepository {
   }
 
   async update(id: string, data: IWorkCreateOrUpdate): Promise<Work> {
-    const oldData = await getRepository(Work).findOne({ id });
+    const oldData = await getRepository(Work).createQueryBuilder('w').where(`w.id = '${id}'`).getOne();
 
     await getRepository(Work).update(id, {
       client_id: data.client_id || oldData.client_id,
@@ -112,7 +113,6 @@ export class TypeORMWorksRepository implements IWorksRepository {
       value: data.value || oldData.value,
       details: data.details || oldData.details,
       status: data.status === undefined || data.status === null || data.status < 0 ? oldData.status : data.status,
-
     });
 
     await getRepository(WorkHistory).save({

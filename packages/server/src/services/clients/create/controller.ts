@@ -25,7 +25,7 @@ export class ClientsCreateController {
         throw new Error(JSON.stringify({ code: 400, message: 'Document is null or undefined.' }));
       }
 
-      const client = await this.service.execute({ name, document, group, email, phone1, phone2 });
+      const client = await this.service.execute({ name, document: document.replace(/\D/g, ''), group, email, phone1, phone2 });
       return res.status(201).json(client);
     } catch(err) {
       return errorWork(res, err.message || null);

@@ -2,9 +2,9 @@ import React from 'react';
 import { FaSearch as SearchIcon } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 
-import { Badge } from '~/components/Badge';
-import { Button } from '~/components/Button';
-import { Table } from '~/components/Table';
+import { Badge } from '~/components/interface/Badge';
+import { Button } from '~/components/interface/Button';
+import { Table } from '~/components/interface/Table';
 import { IClient } from '~/interfaces';
 import { formatDocument } from '~/utils/formatDocument';
 

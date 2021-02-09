@@ -5,10 +5,10 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
-import { Button } from '~/components/Button';
-import { Input, Select } from '~/components/Form';
-import { Modal } from '~/components/Modal';
-import { Table } from '~/components/Table';
+import { Button } from '~/components/interface/Button';
+import { Input, Select, TextArea } from '~/components/interface/Form';
+import { Modal } from '~/components/interface/Modal';
+import { Table } from '~/components/interface/Table';
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { IClient, IService, IWork } from '~/interfaces';
@@ -96,15 +96,6 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
   };
   /* END HANDLE VALUE FORMAT */
 
-  /* - ON SERVICE CHANGE - */
-  const onServiceChange = () => {
-    if(formRef.current && services) {
-      const sv = formRef.current.getFieldValue('service_id');
-      formRef.current.setFieldValue('sector', services.filter((el) => el.id === sv)[0].sector.name);
-    }
-  };
-  /* END ON SERVICE CHANGE */
-
   /* - HANDLE DOCUMENT FORMAT - */
   const onDocumentFocus = () => {
     if(formRef.current) {
@@ -153,12 +144,13 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       });
 
       const document = data.document.replace(/\D/g, '');
-      await scheme.validate({ ...data, document }, { abortEarly: false });
+      const value = data.value.replace('.', '').replace(',', '.').trim();
+      await scheme.validate({ ...data, document, value }, { abortEarly: false });
       let response: AxiosResponse<IWork>;
       if(work) {
-        response = await api.put<IWork>(`/works/${work.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        response = await api.put<IWork>(`/works/${work.id}`, { ...data, document, value }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        response = await api.post<IWork>('/works', { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        response = await api.post<IWork>('/works', { ...data, document, value }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
       setEditing(false);
@@ -184,6 +176,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
     if(services) {
       return services.map((el) => ({ label: el.name, value: el.id }));
     }
+
     return [];
   };
 
@@ -224,7 +217,6 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
           ...work.client,
           document: formatDocument(work.client.document),
           service_id: services && services.filter((el) => el.id === work.service.id).map((el) => ({ label: el.name, value: el.id }))[0],
-          client_id: work.client.id,
           status: worksStatus.filter((el) => el.value === work.status.toString())[0],
           sector: work.sector.name,
         }}
@@ -235,13 +227,14 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
 
         <hr />
 
-        <Input disabled name="sector" label="SETOR" />
-        <Select isDisabled={!!work || !editing} name="service_id" label="SERVIÇO" options={handleServiceOptions()} onChange={onServiceChange} />
+        <Select isDisabled={!!work || !editing} name="service_id" label="SERVIÇO" options={handleServiceOptions()} />
         <Input disabled={!!work || !editing} name="identifier" label="IDENTIFICADOR" />
         <Input disabled={!!work || !editing} name="value" label="VALOR" onFocus={onValueFocus} onBlur={onValueBlur} />
         <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
-        <Input disabled={!!work || !editing} name="details" label="DETALHES" />
-        <Input disabled={!editing} name="history" label="NOVA ENTRADA" />
+        <TextArea disabled={!!work || !editing} name="details" label="DETALHES" />
+        { editing && (
+          <Input disabled={!editing} name="history" label="NOVA ENTRADA" />
+        )}
 
         <Table>
           <thead>

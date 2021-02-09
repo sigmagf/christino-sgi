@@ -9,7 +9,7 @@ export const WorksDetailsModalForm = styled(Form)`
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-areas: 'CN CN CN CN CN CN CN CD CD CG CG CG'
                        'HR HR HR HR HR HR HR HR HR HR HR HR'
-                       'SC SC SV SV SV ID ID ID VL VL ST ST'
+                       'SV SV SV SV ID ID ID ID VL VL ST ST'
                        'DT DT DT DT DT DT DT DT DT DT DT DT'
                        'HS HS HS HS HS HS HS HS HS HS HS HS'
                        'HT HT HT HT HT HT HT HT HT HT HT HT';
@@ -54,14 +54,13 @@ export const WorksDetailsModalForm = styled(Form)`
 
   > :nth-child(4) { grid-area: HR; } /* HR */
 
-  > :nth-child(5) { grid-area: SC; } /* SECTOR */
-  > :nth-child(6) { grid-area: SV; } /* SERVICE */
-  > :nth-child(7) { grid-area: ID; } /* IDENTIFIER */
-  > :nth-child(8) { grid-area: VL; } /* VALUE */
-  > :nth-child(9) { grid-area: ST; } /* STATUS */
-  > :nth-child(10) { grid-area: DT; } /* DETAILS */
-  > :nth-child(11) { grid-area: HS; } /* NEW HISTORY */
-  > :nth-child(12) { grid-area: HT; } /* HISTORY */
+  > :nth-child(5) { grid-area: SV; } /* SERVICE */
+  > :nth-child(6) { grid-area: ID; } /* IDENTIFIER */
+  > :nth-child(7) { grid-area: VL; } /* VALUE */
+  > :nth-child(8) { grid-area: ST; } /* STATUS */
+  > :nth-child(9) { grid-area: DT; } /* DETAILS */
+  > :nth-child(10) { grid-area: HS; } /* NEW HISTORY */
+  > :nth-child(11) { grid-area: HT; } /* HISTORY */
 `;
 
 export const WorksDetailsActionButtons = styled.div`

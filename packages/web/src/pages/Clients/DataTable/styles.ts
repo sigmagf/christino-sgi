@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { Card } from '~/components/Card';
+import { Card } from '~/components/interface/Card';
 
 export const DataTableCardContainer = styled(Card)`
   position: relative;

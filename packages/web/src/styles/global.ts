@@ -42,7 +42,7 @@ export const GlobalStyle = createGlobalStyle`
     border-top: 1px solid ${({ theme }) => lighten(0.1, theme.primary.main)};
   }
 
-  *, button, input {
+  *, button, input, textarea {
     outline: 0;
     font: 14px "Roboto", -apple-system, system-ui, sans-serif;
     font-smooth: always;
@@ -50,10 +50,8 @@ export const GlobalStyle = createGlobalStyle`
     -moz-osx-font-smoothing: grayscale;
   }
   
-  input, select {
+  input, select, textarea {
     font-family: 'Roboto Mono', monospace;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 
   ::placeholder, ::-ms-input-placeholder, :-ms-input-placeholder {

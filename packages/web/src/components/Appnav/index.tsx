@@ -39,7 +39,6 @@ export const Appnav: React.FC = () => {
       icon: FaReceipt,
       label: 'Ordem de Serviço',
       path: '/works',
-      disabled: true,
     }, {
       icon: FaUsers,
       label: 'Clientes',

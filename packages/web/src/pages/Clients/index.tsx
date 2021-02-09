@@ -3,10 +3,10 @@ import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { Button } from '~/components/Button';
-import { Card } from '~/components/Card';
+import { Button } from '~/components/interface/Button';
+import { Card } from '~/components/interface/Card';
+import { Pagination } from '~/components/interface/Pagination';
 import { Layout } from '~/components/Layout';
-import { Pagination } from '~/components/Pagination';
 import { useLocalStorage } from '~/hooks';
 import { IClient, IClientsFilters, IPagination } from '~/interfaces';
 import { api } from '~/utils/api';

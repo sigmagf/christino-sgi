@@ -7,9 +7,9 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
 import ChristinoLogo from '~/assets/logo-texto.png';
-import { Button } from '~/components/Button';
-import { Card } from '~/components/Card';
-import { Input } from '~/components/Form';
+import { Button } from '~/components/interface/Button';
+import { Card } from '~/components/interface/Card';
+import { Input } from '~/components/interface/Form';
 import { useLocalStorage } from '~/hooks';
 import { IUser, IUserAuth } from '~/interfaces';
 import { api } from '~/utils/api';

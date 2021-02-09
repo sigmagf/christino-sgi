@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import { Card } from '~/components/Card';
+import { Card } from '~/components/interface/Card';
 
 interface IStatusBadgeStyledProps {
   status: number;

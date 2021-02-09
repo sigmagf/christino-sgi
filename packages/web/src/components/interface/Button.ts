@@ -1,12 +1,12 @@
 import { shade } from 'polished';
 import styled, { css } from 'styled-components';
 
-interface IButtonContainerStyledProps {
-  variant: 'primary'|'secondary'|'success'|'error'|'warning'|'info';
+interface IButtonStyledProps {
+  variant?: 'primary'|'secondary'|'success'|'error'|'warning'|'info';
   uppercase?: boolean;
 }
 
-export const ButtonContainer = styled.button<IButtonContainerStyledProps>`
+export const Button = styled.button<IButtonStyledProps>`
   min-height: 30px;
   min-width: 30px;
   padding: 0 10px;
@@ -19,15 +19,15 @@ export const ButtonContainer = styled.button<IButtonContainerStyledProps>`
   transition: background-color 250ms ease;
 
   ${({ theme, variant }) => css`
-    background: ${theme[variant].main};
-    color: ${theme[variant].contrastText};
+    background: ${theme[variant || 'primary'].main};
+    color: ${theme[variant || 'primary'].contrastText};
 
     :hover {
-      background: ${shade(0.2, theme[variant].main)};
+      background: ${shade(0.2, theme[variant || 'primary'].main)};
     }
     :disabled {
       cursor: not-allowed;
-      background: ${shade(0.25, theme[variant].main)};
+      background: ${shade(0.25, theme[variant || 'primary'].main)};
     }
   `}
 `;

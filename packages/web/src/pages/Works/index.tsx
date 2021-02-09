@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { Button } from '~/components/Button';
-import { Card } from '~/components/Card';
+import { Button } from '~/components/interface/Button';
+import { Card } from '~/components/interface/Card';
 import { Layout } from '~/components/Layout';
 import { useSWR } from '~/hooks/useSWR';
 import { IPagination, IWork } from '~/interfaces';

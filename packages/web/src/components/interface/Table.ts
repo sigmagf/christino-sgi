@@ -1,7 +1,7 @@
 import { lighten, transparentize } from 'polished';
 import styled from 'styled-components';
 
-export const TableContainer = styled.table`
+export const Table = styled.table`
   width: 100%;
   box-shadow: ${({ theme }) => theme.shadow};
   border-radius: 5px;

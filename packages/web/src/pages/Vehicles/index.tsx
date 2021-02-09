@@ -3,10 +3,10 @@ import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { Button } from '~/components/Button';
-import { Card } from '~/components/Card';
+import { Button } from '~/components/interface/Button';
+import { Card } from '~/components/interface/Card';
+import { Pagination } from '~/components/interface/Pagination';
 import { Layout } from '~/components/Layout';
-import { Pagination } from '~/components/Pagination';
 import { VehiclesDataTable } from '~/components/VehiclesDataTable';
 import { VehiclesDetailsModal } from '~/components/VehiclesDetailsModal';
 import { VehiclesFiltersCard } from '~/components/VehiclesFiltersCard';
@@ -96,12 +96,7 @@ export const VehiclesPage: React.FC = () => {
   }
 
   const printButton = (
-    <Button
-      variant="info"
-      disabled={inLoadingPrint}
-      style={{ cursor: inLoadingPrint ? 'progress' : 'pointer' }}
-      onClick={onPrintClick}
-    >
+    <Button variant="info" disabled={inLoadingPrint} style={{ cursor: inLoadingPrint ? 'progress' : 'pointer' }} onClick={onPrintClick}>
       <FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR
     </Button>
   );

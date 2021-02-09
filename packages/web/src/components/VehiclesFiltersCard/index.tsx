@@ -4,8 +4,8 @@ import React, { useRef, useState } from 'react';
 import { FaLayerGroup, FaPlus, FaFilter, FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
-import { Button } from '~/components/Button';
-import { Select, Input } from '~/components/Form';
+import { Button } from '~/components/interface/Button';
+import { Select, Input } from '~/components/interface/Form';
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { IClient, IVehiclesFilters } from '~/interfaces';
