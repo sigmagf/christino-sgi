@@ -2,12 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
 
+import { Appnav } from '~/components/Appnav';
+import { UserBar } from '~/components/UserBar';
+
 import { useLocalStorage } from '~/hooks';
+
 import { IUser } from '~/interfaces';
+
 import { api } from '~/utils/api';
 
-import { Appnav } from '../Appnav';
-import { UserBar } from '../UserBar';
 import { AppContent, AppMain } from './styles';
 
 interface ILayoutProps {

@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { useLocalStorage } from '~/hooks';
 
-import { Button } from '../interface/Button';
+import { Button } from '~/interface/Button';
+
 import { UserBarContainer } from './styles';
 
 export const UserBar: React.FC = () => {

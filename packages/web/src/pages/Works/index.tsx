@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { Button } from '~/components/interface/Button';
-import { Card } from '~/components/interface/Card';
 import { Layout } from '~/components/Layout';
-import { useSWR } from '~/hooks/useSWR';
-import { IPagination, IWork } from '~/interfaces';
+import { WorksDataTable } from '~/components/WorksDataTable';
+import { WorksDetailsModal } from '~/components/WorksDetailsModal';
 
-import { WorksDataTable } from './DataTable';
-import { WorksDetailsModal } from './DetailsModal';
+import { useSWR } from '~/hooks/useSWR';
+
+import { Button } from '~/interface/Button';
+import { Card } from '~/interface/Card';
+import { IPagination, IWork } from '~/interfaces';
 
 export const WorksPage: React.FC = () => {
   document.title = 'Ordem de Serviço | Christino';

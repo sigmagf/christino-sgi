@@ -1,4 +1,5 @@
 import { IVehicle } from '~/interfaces';
+
 import { statusConverter } from '~/utils/statusConverter';
 
 export function VehiclesPrintScreen(vehicles: IVehicle[]) {

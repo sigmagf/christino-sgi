@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Card } from '~/components/interface/Card';
 import { Layout } from '~/components/Layout';
+
+import { Card } from '~/interface/Card';
 
 import { } from './styles';
 

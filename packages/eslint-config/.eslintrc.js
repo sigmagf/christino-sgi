@@ -95,6 +95,13 @@ module.exports = {
         newlinesBetween: 'always',
         groups: [
           'module',
+          ['/^~/assets/', '/^~/config/'],
+          ['/^~/components/', '/^~/entities/'],
+          ['/^~/hooks/', '/^~/middlewares/'],
+          ['/^~/interface/', '/^~/repositories/'],
+          ['/^~/pages/', '/^~/services/'],
+          '/^~/styles/',
+          '/^~/utils/',
           '/^~/',
           ['parent', 'sibling', 'index'],
         ],

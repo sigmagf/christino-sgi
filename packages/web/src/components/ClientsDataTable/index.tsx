@@ -2,10 +2,11 @@ import React from 'react';
 import { FaSearch as SearchIcon } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 
-import { Badge } from '~/components/interface/Badge';
-import { Button } from '~/components/interface/Button';
-import { Table } from '~/components/interface/Table';
+import { Badge } from '~/interface/Badge';
+import { Button } from '~/interface/Button';
+import { Table } from '~/interface/Table';
 import { IClient } from '~/interfaces';
+
 import { formatDocument } from '~/utils/formatDocument';
 
 import { DataTableCardContainer } from './styles';

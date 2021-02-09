@@ -3,16 +3,19 @@ import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { Button } from '~/components/interface/Button';
-import { Card } from '~/components/interface/Card';
-import { Pagination } from '~/components/interface/Pagination';
+import { ClientsDataTable } from '~/components/ClientsDataTable';
 import { Layout } from '~/components/Layout';
+
 import { useLocalStorage } from '~/hooks';
+
+import { Button } from '~/interface/Button';
+import { Card } from '~/interface/Card';
+import { Pagination } from '~/interface/Pagination';
 import { IClient, IClientsFilters, IPagination } from '~/interfaces';
+
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 
-import { ClientsDataTable } from './DataTable';
 import { ClientsPrintScreen } from './printScreen';
 
 export const ClientsPage: React.FC = () => {

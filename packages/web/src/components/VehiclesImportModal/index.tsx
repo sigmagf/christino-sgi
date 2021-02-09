@@ -4,13 +4,15 @@ import { FaEraser, FaTrash, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
-import { Button } from '~/components/interface/Button';
-import { Dropzone } from '~/components/interface/Dropzone';
-import { Modal } from '~/components/interface/Modal';
-import { Pagination } from '~/components/interface/Pagination';
-import { Table } from '~/components/interface/Table';
 import { useLocalStorage } from '~/hooks';
+
+import { Button } from '~/interface/Button';
+import { Dropzone } from '~/interface/Dropzone';
+import { Modal } from '~/interface/Modal';
+import { Pagination } from '~/interface/Pagination';
+import { Table } from '~/interface/Table';
 import { IVehicle, IVehiclesImportCSV } from '~/interfaces';
+
 import { api } from '~/utils/api';
 import { withPagination } from '~/utils/withPagination';
 

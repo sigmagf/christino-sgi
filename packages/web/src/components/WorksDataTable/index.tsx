@@ -2,10 +2,11 @@ import React from 'react';
 import { FaSearch } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 
-import { Badge } from '~/components/interface/Badge';
-import { Button } from '~/components/interface/Button';
-import { Table } from '~/components/interface/Table';
+import { Badge } from '~/interface/Badge';
+import { Button } from '~/interface/Button';
+import { Table } from '~/interface/Table';
 import { IWork } from '~/interfaces';
+
 import { worksStatus } from '~/utils/commonSelectOptions';
 
 import { DataTableCardContainer } from './styles';

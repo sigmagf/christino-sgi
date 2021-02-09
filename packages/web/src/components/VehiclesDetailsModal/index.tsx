@@ -5,12 +5,15 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
-import { Button } from '~/components/interface/Button';
-import { Input, Select } from '~/components/interface/Form';
-import { Modal } from '~/components/interface/Modal';
 import { VehiclesDetailsUploadCRLVeModal } from '~/components/VehicleUploadCRLVeModal';
+
 import { useLocalStorage } from '~/hooks';
+
+import { Button } from '~/interface/Button';
+import { Input, Select } from '~/interface/Form';
+import { Modal } from '~/interface/Modal';
 import { IClient, IVehicle } from '~/interfaces';
+
 import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { formatDocument } from '~/utils/formatDocument';

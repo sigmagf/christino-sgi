@@ -3,17 +3,20 @@ import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { Button } from '~/components/interface/Button';
-import { Card } from '~/components/interface/Card';
-import { Pagination } from '~/components/interface/Pagination';
 import { Layout } from '~/components/Layout';
 import { VehiclesDataTable } from '~/components/VehiclesDataTable';
 import { VehiclesDetailsModal } from '~/components/VehiclesDetailsModal';
 import { VehiclesFiltersCard } from '~/components/VehiclesFiltersCard';
 import { VehiclesImportModal } from '~/components/VehiclesImportModal';
+
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
+
+import { Button } from '~/interface/Button';
+import { Card } from '~/interface/Card';
+import { Pagination } from '~/interface/Pagination';
 import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
+
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 

@@ -3,11 +3,13 @@ import { FaSearch, FaFilePdf } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
-import { Badge } from '~/components/interface/Badge';
-import { Button } from '~/components/interface/Button';
-import { Table } from '~/components/interface/Table';
 import { useLocalStorage } from '~/hooks';
+
+import { Badge } from '~/interface/Badge';
+import { Button } from '~/interface/Button';
+import { Table } from '~/interface/Table';
 import { IVehicle } from '~/interfaces';
+
 import { api } from '~/utils/api';
 import { statusConverter } from '~/utils/statusConverter';
 

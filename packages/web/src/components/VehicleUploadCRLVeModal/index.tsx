@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
-import { Dropzone } from '~/components/interface/Dropzone';
-import { Modal } from '~/components/interface/Modal';
 import { useLocalStorage } from '~/hooks';
+
+import { Dropzone } from '~/interface/Dropzone';
+import { Modal } from '~/interface/Modal';
+
 import { api } from '~/utils/api';
 
 interface IImportModalProps {

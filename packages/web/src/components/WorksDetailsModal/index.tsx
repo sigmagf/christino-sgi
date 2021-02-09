@@ -5,13 +5,15 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
-import { Button } from '~/components/interface/Button';
-import { Input, Select, TextArea } from '~/components/interface/Form';
-import { Modal } from '~/components/interface/Modal';
-import { Table } from '~/components/interface/Table';
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
+
+import { Button } from '~/interface/Button';
+import { Input, Select, TextArea } from '~/interface/Form';
+import { Modal } from '~/interface/Modal';
+import { Table } from '~/interface/Table';
 import { IClient, IService, IWork } from '~/interfaces';
+
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatDate } from '~/utils/formatDate';

@@ -4,7 +4,8 @@ import { FaTimes } from 'react-icons/fa';
 import ReactModal, { Props } from 'react-modal';
 import { useTheme } from 'styled-components';
 
-import { Button } from '../Button';
+import { Button } from '~/interface/Button';
+
 import { ModalHeader } from './styles';
 
 interface IModalProps extends Props {

@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import LogoWithText from '~/assets/logo-texto.png';
 import LogoWithoutText from '~/assets/logo.png';
+
 import { usePersistedState } from '~/hooks';
 
 import { AppnavContainer, AppnavContent, AppnavControllers, AppnavHeader, AppnavItem } from './styles';
