@@ -35,6 +35,7 @@ export class TypeORMWorksRepository implements IWorksRepository {
         .leftJoinAndMapOne('wk.service', Service, 'sv', 'wk.service_id = sv.id')
         .leftJoinAndMapOne('wk.sector', Sector, 'sc', 'sv.sector_id = sc.id')
         .leftJoinAndMapMany('wk.histories', WorkHistory, 'ht', 'ht.work_id = wk.id')
+        .orderBy('wk.created_at', 'ASC')
         .offset(startIndex)
         .limit(effectiveLimit)
         .getMany();
@@ -58,6 +59,7 @@ export class TypeORMWorksRepository implements IWorksRepository {
       .leftJoinAndMapOne('wk.service', Service, 'sv', 'wk.service_id = sv.id')
       .leftJoinAndMapOne('wk.sector', Sector, 'sc', 'sv.sector_id = sc.id')
       .leftJoinAndMapMany('wk.histories', WorkHistory, 'ht', 'ht.work_id = wk.id')
+      .orderBy('wk.created_at', 'ASC')
       .getMany();
 
     return dbData;
