@@ -146,7 +146,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       });
 
       const document = data.document.replace(/\D/g, '');
-      const history = worksStatus.find((el) => el.value === data.status).label + ' - ' + data.history;
+      const history = worksStatus.filter((el) => el.value === data.status)[0].label + ' - ' + data.history;
       const value = data.value.replace('.', '').replace(',', '.').trim();
       await scheme.validate({ ...data, document, value, history }, { abortEarly: false });
       let response: AxiosResponse<IWork>;
