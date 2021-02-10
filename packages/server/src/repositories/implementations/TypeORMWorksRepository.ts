@@ -23,7 +23,7 @@ export class TypeORMWorksRepository implements IWorksRepository {
         .leftJoinAndMapOne('wk.service', Service, 'sv', 'wk.service_id = sv.id')
         .leftJoinAndMapOne('wk.sector', Sector, 'sc', 'sv.sector_id = sc.id')
         .leftJoinAndMapMany('wk.histories', WorkHistory, 'ht', 'ht.work_id = wk.id')
-        .orderBy('wk.created_at', 'ASC')
+        .orderBy('wk.created_at', 'DESC')
         .getCount();
 
       const pages = Math.ceil(maxRows / effectiveLimit);
@@ -37,7 +37,7 @@ export class TypeORMWorksRepository implements IWorksRepository {
         .leftJoinAndMapMany('wk.histories', WorkHistory, 'ht', 'ht.work_id = wk.id')
         .offset(startIndex)
         .limit(effectiveLimit)
-        .orderBy('wk.created_at', 'ASC')
+        .orderBy('wk.created_at', 'DESC')
         .getMany();
 
       return {
@@ -56,7 +56,7 @@ export class TypeORMWorksRepository implements IWorksRepository {
       .leftJoinAndMapOne('wk.service', Service, 'sv', 'wk.service_id = sv.id')
       .leftJoinAndMapOne('wk.sector', Sector, 'sc', 'sv.sector_id = sc.id')
       .leftJoinAndMapMany('wk.histories', WorkHistory, 'ht', 'ht.work_id = wk.id')
-      .orderBy('wk.created_at', 'ASC')
+      .orderBy('wk.created_at', 'DESC')
       .getMany();
 
     return dbData;
