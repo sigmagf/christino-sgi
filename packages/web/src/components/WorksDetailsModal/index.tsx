@@ -146,13 +146,14 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       });
 
       const document = data.document.replace(/\D/g, '');
+      const history = worksStatus.find((el) => el.value === data.status) + ' - ' + data.history;
       const value = data.value.replace('.', '').replace(',', '.').trim();
-      await scheme.validate({ ...data, document, value }, { abortEarly: false });
+      await scheme.validate({ ...data, document, value, history }, { abortEarly: false });
       let response: AxiosResponse<IWork>;
       if(work) {
-        response = await api.put<IWork>(`/works/${work.id}`, { ...data, document, value }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        response = await api.put<IWork>(`/works/${work.id}`, { ...data, document, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        response = await api.post<IWork>('/works', { ...data, document, value }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        response = await api.post<IWork>('/works', { ...data, document, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
       setEditing(false);
