@@ -156,8 +156,8 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       }
 
       setEditing(false);
-      onChangeSuccess(response.data);
-      toast.success('Veículo atualizado com sucesso!');
+      if(work) { onChangeSuccess(response.data); }
+      toast.success(`Ordem de serviço ${work ? 'atualizada' : 'criada'} com sucesso!`);
     } catch(err) {
       if(err instanceof yup.ValidationError) {
         err.inner.forEach((yupError) => toast.error(yupError.message));
@@ -176,7 +176,27 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
 
   const handleServiceOptions = () => {
     if(services) {
-      return services.map((el) => ({ label: el.name, value: el.id }));
+      const groups: {label: string; options: { label: string; value: string}[]}[] = [];
+
+      services.forEach((option) => {
+        if(!groups.find((gp) => gp.label === option.sector.name)) {
+          groups.push({ label: option.sector.name, options: [] });
+        }
+
+        const i = groups.findIndex((gp) => gp.label === option.sector.name);
+        groups[i].options.push({ label: option.name, value: option.id });
+      });
+
+      groups.forEach((group) => ({
+        label: group.label,
+        options: group.options.sort((a, b) => {
+          if(a.label < b.label) return -1;
+          if(a.label > b.label) return 1;
+          return 0;
+        }),
+      }));
+
+      return groups;
     }
 
     return [];
