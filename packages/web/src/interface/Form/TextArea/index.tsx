@@ -28,7 +28,7 @@ const TextArea: React.FC<TextArea> = ({ name, label, style, id, ...props }) => {
           { label }
         </label>
       )}
-      <TextareaAutosize ref={inputRef} defaultValue={defaultValue} id={name} {...props} maxRows={3} />
+      <TextareaAutosize ref={inputRef} defaultValue={defaultValue} id={name} {...props} maxRows={5} />
     </InputContainer>
   );
 };
