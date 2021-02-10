@@ -24,6 +24,7 @@ export class TypeORMWorksRepository implements IWorksRepository {
         .leftJoinAndMapOne('wk.sector', Sector, 'sc', 'sv.sector_id = sc.id')
         .leftJoinAndMapMany('wk.histories', WorkHistory, 'ht', 'ht.work_id = wk.id')
         .getCount();
+      console.log(maxRows);
 
       const pages = Math.ceil(maxRows / effectiveLimit);
       const startIndex = (page - 1) * effectiveLimit;
