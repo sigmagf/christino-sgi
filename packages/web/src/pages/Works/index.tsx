@@ -9,15 +9,19 @@ import { useSWR } from '~/hooks/useSWR';
 
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
+import { Pagination } from '~/interface/Pagination';
 import { IPagination, IWork } from '~/interfaces';
+
+import { qsConverter } from '~/utils/queryStringConverter';
 
 export const WorksPage: React.FC = () => {
   document.title = 'Ordem de Serviço | Christino';
 
   const [workPermission, setWorkPermission] = useState(-1);
+  const [filters, setFilters] = useState({ page: 1, limit: 10 });
 
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
-  const { data: works, revalidate, isValidating: inLoading } = useSWR<IPagination<IWork>>('/works');
+  const { data: works, revalidate, isValidating: inLoading } = useSWR<IPagination<IWork>>(`/works${qsConverter(filters)}`);
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
@@ -56,6 +60,15 @@ export const WorksPage: React.FC = () => {
           works={works?.data || []}
           onDetailsClick={onDetailsWorkClick}
         />
+
+        <Card style={{ margin: '15px 0' }}>
+          <Pagination
+            currentPage={works?.page.current || 1}
+            totalPages={works?.page.total || 1}
+            inLoading={inLoading}
+            onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
+          />
+        </Card>
       </Layout>
       <WorksDetailsModal
         isOpen={detailsModalOpen}
