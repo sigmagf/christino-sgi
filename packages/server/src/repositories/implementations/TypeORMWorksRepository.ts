@@ -37,6 +37,9 @@ export class TypeORMWorksRepository implements IWorksRepository {
         .offset(startIndex)
         .limit(effectiveLimit)
         .getMany();
+      
+      console.log(startIndex);
+      console.log(effectiveLimit);
 
       return {
         page: {
