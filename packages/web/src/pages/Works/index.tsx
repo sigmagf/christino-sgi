@@ -21,7 +21,7 @@ export const WorksPage: React.FC = () => {
   const [filters, setFilters] = useState({ page: 1, limit: 10 });
 
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
-  const { data: works, revalidate, isValidating: inLoading } = useSWR<IPagination<IWork>>(`/works${qsConverter(filters)}`);
+  const { data: works, revalidate, isValidating: inLoading } = useSWR<IWork[]>(`/works${qsConverter(filters)}`);
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
@@ -57,25 +57,16 @@ export const WorksPage: React.FC = () => {
         </Card>
         <WorksDataTable
           inLoading={inLoading}
-          works={works?.data || []}
+          works={works || []}
           onDetailsClick={onDetailsWorkClick}
         />
-
-        <Card style={{ margin: '15px 0' }}>
-          <Pagination
-            currentPage={works?.page.current || 1}
-            totalPages={works?.page.total || 1}
-            inLoading={inLoading}
-            onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
-          />
-        </Card>
       </Layout>
       <WorksDetailsModal
         isOpen={detailsModalOpen}
         onClose={onModalsClose}
         workPermission={workPermission}
         onChangeSuccess={() => console.log('onChangeSuccess()')}
-        work={works && works.data.filter((el) => el.id === workIdToDetails)[0]}
+        work={works && works.filter((el) => el.id === workIdToDetails)[0]}
       />
     </>
   );
