@@ -20,7 +20,7 @@ export const WorksPage: React.FC = () => {
   const [filters] = useState({ page: 1, limit: 10 });
 
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
-  const { data: works, revalidate, isValidating: inLoading } = useSWR<IWork[]>(`/works${qsConverter({ ...filters, noPagination: true })}`);
+  const { data: works, revalidate, isValidating: inLoading } = useSWR<IWork[]>(`/works${qsConverter({ ...filters, noPagination: true })}`, { revalidateOnFocus: false });
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
