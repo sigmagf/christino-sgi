@@ -9,8 +9,7 @@ import { useSWR } from '~/hooks/useSWR';
 
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
-import { Pagination } from '~/interface/Pagination';
-import { IPagination, IWork } from '~/interfaces';
+import {  IWork } from '~/interfaces';
 
 import { qsConverter } from '~/utils/queryStringConverter';
 
@@ -18,10 +17,10 @@ export const WorksPage: React.FC = () => {
   document.title = 'Ordem de Serviço | Christino';
 
   const [workPermission, setWorkPermission] = useState(-1);
-  const [filters, setFilters] = useState({ page: 1, limit: 10 });
+  const [filters] = useState({ page: 1, limit: 10 });
 
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
-  const { data: works, revalidate, isValidating: inLoading } = useSWR<IWork[]>(`/works${qsConverter(filters)}`);
+  const { data: works, revalidate, isValidating: inLoading } = useSWR<IWork[]>(`/works${qsConverter({ ...filters, noPagination: true })}`);
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
