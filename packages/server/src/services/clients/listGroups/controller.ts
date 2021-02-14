@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 
-import { errorWork } from '~/utils/errorWork';
-
 import { ClientsListGroupsService } from './service';
 
 export class ClientsListGroupsController {
@@ -12,7 +10,7 @@ export class ClientsListGroupsController {
       const groups = await this.service.execute();
       return res.status(200).json(groups);
     } catch(err) {
-      return errorWork(res, err.message || null);
+      return res.status(500).json({ code: 500, message: 'Erro inesperado.', details: err.message || null });
     }
   }
 }

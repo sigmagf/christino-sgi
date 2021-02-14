@@ -1,15 +1,14 @@
-import { Vehicle } from '~/entities/Vehicle';
-
+import { IVehicle } from '~/entities/IVehicle';
 import { IPagination, IVehiclesListFilters } from '~/interfaces';
 
 export interface IVehiclesRepository {
-  list(page: number, limit: number, filters: IVehiclesListFilters): Promise<IPagination<Vehicle> | Vehicle[]>;
-  findById(id: string): Promise<Vehicle>;
-  findByClientPlate(client_id: string, plate: string): Promise<Vehicle>;
-  findByClientRenavam(client_id: string, plate: string): Promise<Vehicle>;
+  list(page: number, limit: number, filters: IVehiclesListFilters): Promise<IPagination<IVehicle> | IVehicle[]>;
+  findById(id: string): Promise<IVehicle>;
+  findByClientPlate(clientId: string, plate: string): Promise<IVehicle>;
+  findByClientRenavam(clientId: string, renavam: string): Promise<IVehicle>;
 
-  create(data: Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'>): Promise<Vehicle>;
-  update(id: string, data: Omit<Vehicle, 'id'|'client'|'created_at'|'updated_at'>): Promise<Vehicle>;
+  create(data: Omit<IVehicle, 'id'|'client'|'createdAt'|'updatedAt'>): Promise<IVehicle>;
+  update(id: string, data: Omit<IVehicle, 'id'|'client'|'createdAt'|'updatedAt'>): Promise<IVehicle>;
 
   delete(id: string): Promise<void>;
 }

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 
-import { errorWork } from '~/utils/errorWork';
 import { stringFix } from '~/utils/stringFix';
 
 import { ClientsListService } from './service';
@@ -21,7 +20,7 @@ export class ClientsListController {
       const clients = await this.service.execute({ page, limit, filters: { pagination, name, document, group } });
       return res.status(200).json(clients);
     } catch(err) {
-      return errorWork(res, err.message || null);
+      return res.status(500).json({ code: 500, message: 'Erro inesperado.', details: err.message || null });
     }
   }
 }

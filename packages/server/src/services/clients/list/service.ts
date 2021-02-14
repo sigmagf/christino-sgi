@@ -1,6 +1,11 @@
+import { IClientsListFilters } from '~/interfaces';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 
-import { IClientsListRequestDTO } from './dto';
+interface IClientsListRequestDTO {
+  page: number;
+  limit: number;
+  filters: IClientsListFilters;
+}
 
 export class ClientsListService {
   constructor(private repository: IClientsRepository) { }

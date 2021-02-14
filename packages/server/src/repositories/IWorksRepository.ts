@@ -1,17 +1,16 @@
-import { Work } from '~/entities/Work';
-
+import { IWork } from '~/entities/IWork';
 import { IPagination, IWorksListFilters } from '~/interfaces';
 
-export interface IWorkCreateOrUpdate extends Pick<Work, 'client_id'|'service_id'|'identifier'|'value'|'details'|'status'> {
+export interface IWorkCreateOrUpdate extends Pick<IWork, 'clientId'|'serviceId'|'identifier'|'value'|'details'|'status'> {
   history: string;
 }
 
 export interface IWorksRepository {
-  list(page: number, limit: number, filters: IWorksListFilters): Promise<IPagination<Work> | Work[]>;
-  findById(id: string): Promise<Work>;
+  list(page: number, limit: number, filters: IWorksListFilters): Promise<IPagination<IWork> | IWork[]>;
+  findById(id: string): Promise<IWork>;
 
-  create(data: IWorkCreateOrUpdate): Promise<Work>;
-  update(id: string, data: IWorkCreateOrUpdate): Promise<Work>;
+  create(data: IWorkCreateOrUpdate): Promise<IWork>;
+  update(id: string, data: IWorkCreateOrUpdate): Promise<IWork>;
 
   delete(id: string): Promise<void>;
 }

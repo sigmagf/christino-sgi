@@ -49,23 +49,23 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         return res.status(404).json({ message: 'User not found.' });
       }
 
-      if(!userCanAccessRoute(req, '/vehicles', user.desp_permission)) {
+      if(!userCanAccessRoute(req, '/vehicles', user.despPermission)) {
         return res.status(401).json({ message: 'User not have permission for this route.' });
       }
 
-      if(!userCanAccessRoute(req, '/clients', user.clie_permission)) {
+      if(!userCanAccessRoute(req, '/clients', user.cliePermission)) {
         return res.status(401).json({ message: 'User not have permission for this route.' });
       }
 
-      if(!userCanAccessRoute(req, '/users', user.user_permission)) {
+      if(!userCanAccessRoute(req, '/users', user.userPermission)) {
         return res.status(401).json({ message: 'User not have permission for this route.' });
       }
 
-      if(!userCanAccessRoute(req, '/isurances', user.segu_permission)) {
+      if(!userCanAccessRoute(req, '/isurances', user.seguPermission)) {
         return res.status(401).json({ message: 'User not have permission for this route.' });
       }
 
-      if(!userCanAccessRoute(req, '/works', user.work_permission)) {
+      if(!userCanAccessRoute(req, '/works', user.workPermission)) {
         return res.status(401).json({ message: 'User not have permission for this route.' });
       }
 

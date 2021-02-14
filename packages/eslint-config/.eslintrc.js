@@ -95,13 +95,6 @@ module.exports = {
         newlinesBetween: 'always',
         groups: [
           'module',
-          ['/^~/assets/', '/^~/config/'],
-          ['/^~/components/', '/^~/entities/'],
-          ['/^~/hooks/', '/^~/middlewares/'],
-          ['/^~/interface/', '/^~/repositories/'],
-          ['/^~/pages/', '/^~/services/'],
-          '/^~/styles/',
-          '/^~/utils/',
           '/^~/',
           ['parent', 'sibling', 'index'],
         ],
@@ -129,8 +122,8 @@ module.exports = {
     'class-methods-use-this': 'off',
 
     /* Disable forced camelcase */
-    camelcase: 'off',
-    '@typescript-eslint/camelcase': 'off',
+    // camelcase: 'off',
+    // '@typescript-eslint/camelcase': 'off',
 
     /* Fix unused vars */
     'no-unused-vars': 'off',

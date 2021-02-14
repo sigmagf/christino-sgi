@@ -1,4 +1,4 @@
-import { Client } from '~/entities/Client';
+import { IClient } from '~/entities/IClient';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 import { convertStatus } from '~/utils/convertStatus';
@@ -9,7 +9,7 @@ export class VehiclesUpdateService {
   constructor(private vehiclesRepo: IVehiclesRepository, private clientsRepo: IClientsRepository) { }
 
   async execute(data: IVehiclesUpdateRequestDTO) {
-    let client: Client;
+    let client: IClient;
     if(data.document) {
       client = await this.clientsRepo.create({
         name: data.name || undefined,
@@ -23,15 +23,15 @@ export class VehiclesUpdateService {
     }
 
     const vehicle = await this.vehiclesRepo.update(data.id, {
-      client_id: client ? client.id : undefined,
+      clientId: client ? client.id : undefined,
       plate: data.plate || undefined,
       renavam: data.renavam || undefined,
       crv: data.crv || undefined,
-      brand_model: data.brand_model || undefined,
+      brandModel: data.brand_model || undefined,
       type: data.type,
       details: data.details || undefined,
       status: convertStatus(data.status),
-      crlve_included: data.crlve_included || undefined,
+      crlveIncluded: data.crlve_included || undefined,
     });
 
     return vehicle;

@@ -1,0 +1,53 @@
+import { IUser } from '~/entities/IUser';
+import { User } from '~/entities/sequelize/User';
+import { IPagination } from '~/interfaces';
+
+import { IUsersRepository } from '../IUsersRepository';
+
+export class SequelizeUsersRepository implements IUsersRepository {
+  async list(page = 1, limit = 10): Promise<IPagination<IUser>> {
+    const effectiveLimit = limit > 100 ? 100 : limit;
+
+    const maxRows = await User.count();
+    const pages = Math.ceil(maxRows / effectiveLimit);
+    const startIndex = (page - 1) * effectiveLimit;
+
+    const dbPageData = await User.findAll({ limit: effectiveLimit, offset: startIndex, order: [['name', 'ASC']] });
+
+    return {
+      page: {
+        total: pages,
+        limit: effectiveLimit,
+        current: page,
+      },
+      data: dbPageData,
+    };
+  }
+
+  async findById(id: string): Promise<IUser> {
+    const dbData = await User.findByPk(id);
+    return dbData;
+  }
+
+  async findByEmail(email: string): Promise<IUser> {
+    const dbData = await User.findOne({ where: { email } });
+    return dbData;
+  }
+
+  async create(data: Omit<IUser, 'id'|'createdAt'|'updatedAt'>): Promise<IUser> {
+    const dbData = await User.create(data);
+
+    return dbData;
+  }
+
+  async update(id: string, data: Omit<IUser, 'id'|'createdAt'|'updatedAt'>): Promise<IUser> {
+    await User.update(data, { where: { id } });
+
+    const dbData = await User.findByPk(id);
+    return dbData;
+  }
+
+  async delete(id: string): Promise<void> {
+    await (await User.findByPk(id)).destroy();
+  }
+}

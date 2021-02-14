@@ -1,13 +1,16 @@
+import { IClient } from '~/entities/IClient';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
-
-import { IClientsUpdateRequestDTO } from './dto';
 
 export class ClientsUpdateService {
   constructor(private repository: IClientsRepository) { }
 
-  async execute(data: IClientsUpdateRequestDTO) {
+  async execute(data: Pick<IClient, 'id'|'name'|'document'|'group'|'email'|'phone1'|'phone2'>) {
     if(!await this.repository.findById(data.id)) {
-      throw new Error(JSON.stringify({ code: 404, message: 'Client not found.' }));
+      throw new Error('Cliente não encontrado.');
+    }
+
+    if(await this.repository.findByDocument(data.document)) {
+      throw new Error('Cliente já cadastrado.');
     }
 
     const client = await this.repository.update(data.id, data);

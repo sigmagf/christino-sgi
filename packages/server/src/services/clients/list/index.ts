@@ -1,10 +1,9 @@
-import { TypeORMClientsRepository } from '~/repositories/implementations/TypeORMClientsRepository';
+import { SequelizeClientsRepository } from '~/repositories/implementations/SequelizeClientsRepository';
 
 import { ClientsListController } from './controller';
 import { ClientsListService } from './service';
 
-const repository = new TypeORMClientsRepository();
-
+const repository = new SequelizeClientsRepository();
 const service = new ClientsListService(repository);
 const controller = new ClientsListController(service);
 

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 
-import { errorWork } from '~/utils/errorWork';
 import { stringFix } from '~/utils/stringFix';
 
 import { ClientsUpdateService } from './service';
@@ -12,7 +11,7 @@ export class ClientsUpdateController {
     const { id } = req.params;
 
     const name = stringFix(req.body.name, undefined, 'UPPERCASE');
-    const document = stringFix(req.body.document, undefined, 'UPPERCASE');
+    const document = stringFix(req.body.document, undefined, 'UPPERCASE').replace(/\D/g, '');
     const group = stringFix(req.body.group, undefined, 'UPPERCASE');
     const email = stringFix(req.body.email, undefined, 'UPPERCASE');
     const phone1 = stringFix(req.body.phone1, undefined, 'UPPERCASE');
@@ -20,17 +19,17 @@ export class ClientsUpdateController {
 
     try {
       if(!name) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Name is null or undefined.' }));
+        return res.status(400).json({ code: 400, message: 'O item \'name\' é nulo ou indefinido.', details: null });
       }
 
       if(!document) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Document is null or undefined.' }));
+        return res.status(400).json({ code: 400, message: 'O item \'document\' é nulo ou indefinido.', details: null });
       }
 
-      const user = await this.service.execute({ id, name, document: document.replace(/\D/g, ''), group, email, phone1, phone2 });
-      return res.status(200).json(user);
+      const client = await this.service.execute({ id, name, document, group, email, phone1, phone2 });
+      return res.status(200).json(client);
     } catch(err) {
-      return errorWork(res, err.message || null);
+      return res.status(500).json({ code: 500, message: 'Erro inesperado.', details: err.message || null });
     }
   }
 }

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 
-import { errorWork } from '~/utils/errorWork';
 import { stringFix } from '~/utils/stringFix';
 
 import { VehiclesCreateService } from './service';
@@ -9,51 +8,44 @@ export class VehiclesCreateController {
   constructor(private service: VehiclesCreateService) { }
 
   async handle(req: Request, res: Response) {
-    const name = stringFix(req.body.name, undefined, 'UPPERCASE');
-    const document = stringFix(req.body.document, undefined, 'UPPERCASE');
-    const group = stringFix(req.body.group, undefined, 'UPPERCASE');
-
+    const clientId = stringFix(req.body.clientId, undefined);
     const plate = stringFix(req.body.plate, undefined, 'UPPERCASE');
     const renavam = stringFix(req.body.renavam, undefined, 'UPPERCASE');
     const crv = stringFix(req.body.crv, undefined, 'UPPERCASE');
-    const brand_model = stringFix(req.body.brand_model, undefined, 'UPPERCASE');
+    const brandModel = stringFix(req.body.brandModel, undefined, 'UPPERCASE');
     const type = stringFix(req.body.type, undefined, 'UPPERCASE');
     const details = stringFix(req.body.details, undefined, 'UPPERCASE');
     const status = stringFix(req.body.status, undefined, 'UPPERCASE');
 
     try {
-      if(!name) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Client name is null or undefined.' }));
-      }
-
-      if(!document) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Client document is null or undefined.' }));
+      if(!clientId) {
+        return res.status(400).json({ code: 400, message: 'O item \'clientId\' é nulo ou indefinido.', details: null });
       }
 
       if(!plate) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Vehicle plate is null or undefined.' }));
+        return res.status(400).json({ code: 400, message: 'O item \'plate\' é nulo ou indefinido.', details: null });
       }
 
       if(!renavam) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Vehicle renavam is null or undefined.' }));
+        return res.status(400).json({ code: 400, message: 'O item \'renavam\' é nulo ou indefinido.', details: null });
       }
 
-      if(!brand_model) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Vehicle brand_model is null or undefined.' }));
+      if(!brandModel) {
+        return res.status(400).json({ code: 400, message: 'O item \'brandModel\' é nulo ou indefinido.', details: null });
       }
 
       if(!type) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Vehicle type is null or undefined.' }));
+        return res.status(400).json({ code: 400, message: 'O item \'type\' é nulo ou indefinido.', details: null });
       }
 
       if(!status) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Vehicle status is null or undefined.' }));
+        return res.status(400).json({ code: 400, message: 'O item \'status\' é nulo ou indefinido.', details: null });
       }
 
-      const vehicle = await this.service.execute({ name, document, group, plate, renavam, crv, brand_model, type, details, status });
+      const vehicle = await this.service.execute({ clientId, plate, renavam, crv, brandModel, type, details, status });
       return res.status(201).json(vehicle);
     } catch(err) {
-      return errorWork(res, err.message || null);
+      return res.status(500).json({ code: 500, message: 'Erro inesperado.', details: err.message || null });
     }
   }
 }

@@ -1,13 +1,12 @@
+import { IClient } from '~/entities/IClient';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
-
-import { IClientsDeleteRequestDTO } from './dto';
 
 export class ClientsDeleteService {
   constructor(private repository: IClientsRepository) { }
 
-  async execute(data: IClientsDeleteRequestDTO) {
+  async execute(data: Pick<IClient, 'id'>) {
     if(!await this.repository.findById(data.id)) {
-      throw new Error(JSON.stringify({ code: 404, message: 'Client not found.' }));
+      throw new Error('Cliente não encontrado.');
     }
 
     await this.repository.delete(data.id);

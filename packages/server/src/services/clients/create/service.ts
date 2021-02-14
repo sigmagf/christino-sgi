@@ -1,16 +1,15 @@
+import { IClient } from '~/entities/IClient';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
-
-import { IClientsCreateRequestDTO } from './dto';
 
 export class ClientsCreateService {
   constructor(private repository: IClientsRepository) { }
 
-  async execute(data: IClientsCreateRequestDTO) {
+  async execute(data: Omit<IClient, 'id'|'createdAt'|'updatedAt'>) {
     if(await this.repository.findByDocument(data.document)) {
-      throw new Error(JSON.stringify({ code: 400, message: 'Client already exists.' }));
+      throw new Error('Cliente já cadastrado.');
     }
 
-    const client = await this.repository.create(data);
-    return client;
+    const dbData = await this.repository.create(data);
+    return dbData;
   }
 }

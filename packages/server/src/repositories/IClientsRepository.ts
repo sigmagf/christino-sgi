@@ -1,15 +1,14 @@
-import { Client } from '~/entities/Client';
-
+import { IClient } from '~/entities/IClient';
 import { IClientsListFilters, IPagination } from '~/interfaces';
 
 export interface IClientsRepository {
-  list(page: number, limit: number, filters: IClientsListFilters): Promise<IPagination<Client> | Client[]>;
+  list(page: number, limit: number, filters: IClientsListFilters): Promise<IPagination<IClient> | IClient[]>;
   listGroups(): Promise<string[]>;
-  findById(id: string): Promise<Client>;
-  findByDocument(document: string): Promise<Client>;
+  findById(id: string): Promise<IClient>;
+  findByDocument(document: string): Promise<IClient>;
 
-  create(data: Omit<Client, 'id'|'vehicles'|'works'|'created_at'|'updated_at'>): Promise<Client>;
-  update(id: string, data: Omit<Client, 'id'|'vehicles'|'works'|'created_at'|'updated_at'>): Promise<Client>;
+  create(data: Omit<IClient, 'id'|'createdAt'|'updatedAt'>): Promise<IClient>;
+  update(id: string, data: Omit<IClient, 'id'|'createdAt'|'updatedAt'>): Promise<IClient>;
 
   delete(id: string): Promise<void>;
 }

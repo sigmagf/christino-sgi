@@ -1,6 +1,6 @@
-import { Client } from './entities/Client';
-import { Vehicle } from './entities/Vehicle';
-import { Work } from './entities/Work';
+import { IClient } from './entities/IClient';
+import { IVehicle } from './entities/IVehicle';
+import { IWork } from './entities/IWork';
 
 export interface IPagination<T> {
   page: {
@@ -11,24 +11,25 @@ export interface IPagination<T> {
   data: Array<T>;
 }
 
-export interface IClientsListFilters extends Partial<Pick<Client, 'name'|'document'|'group'>> {
+export interface IClientsListFilters extends Partial<Pick<IClient, 'name'|'document'|'group'>> {
   pagination: boolean;
 }
 
-export interface IWorksListFilters extends Partial<Pick<Work, 'identifier'|'value'|'details'|'status'>> {
+export interface IWorksListFilters extends Partial<Pick<IWork, 'identifier'|'value'|'details'|'status'>> {
   pagination: boolean;
+
   name?: string;
   document?: string;
   group?: string;
-
   service?: string;
   sector?: string;
 }
 
-export interface IVehiclesListFilters extends Partial<Omit<Vehicle, 'id'|'client'|'type'|'details'|'status'|'created_at'|'updated_at'>> {
+export interface IVehiclesListFilters extends Partial<Omit<IVehicle, 'id'|'client'|'type'|'details'|'status'|'createdAt'|'updatedAt'>> {
   pagination: boolean;
+
   status?: string|string[];
   group?: string;
-  plate_end?: string;
-  include_truck?: string;
+  plateEnd?: string;
+  includeTruck?: string;
 }
