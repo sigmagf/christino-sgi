@@ -8,7 +8,7 @@ export class ClientsFindService {
     const client = await this.repository.findById(data.id);
 
     if(!client) {
-      throw new Error('Cliente não encontrado.');
+      throw new Error(JSON.stringify({ code: 400, message: 'Cliente não encontrado.', details: null }));
     }
 
     return client;

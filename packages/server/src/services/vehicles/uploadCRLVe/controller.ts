@@ -6,7 +6,7 @@ export class VehiclesUploadCRLVeController {
   constructor() { }
 
   async handle(req: Request, res: Response) {
-    await vehiclesUpdateService.execute({ id: req.params.id, crlve_included: true });
+    await vehiclesUpdateService.execute({ id: req.params.id, crlveIncluded: true });
 
     return res.end();
   }

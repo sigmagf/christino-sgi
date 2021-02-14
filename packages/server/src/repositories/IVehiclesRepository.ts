@@ -8,7 +8,7 @@ export interface IVehiclesRepository {
   findByClientRenavam(clientId: string, renavam: string): Promise<IVehicle>;
 
   create(data: Omit<IVehicle, 'id'|'client'|'createdAt'|'updatedAt'>): Promise<IVehicle>;
-  update(id: string, data: Omit<IVehicle, 'id'|'client'|'createdAt'|'updatedAt'>): Promise<IVehicle>;
+  update(id: string, data: Partial<Omit<IVehicle, 'id'|'client'|'createdAt'|'updatedAt'>>): Promise<IVehicle>;
 
   delete(id: string): Promise<void>;
 }

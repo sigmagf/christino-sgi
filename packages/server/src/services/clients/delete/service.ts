@@ -6,7 +6,7 @@ export class ClientsDeleteService {
 
   async execute(data: Pick<IClient, 'id'>) {
     if(!await this.repository.findById(data.id)) {
-      throw new Error('Cliente não encontrado.');
+      throw new Error(JSON.stringify({ code: 400, message: 'Cliente não encontrado.', details: null }));
     }
 
     await this.repository.delete(data.id);

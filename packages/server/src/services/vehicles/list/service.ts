@@ -1,6 +1,11 @@
+import { IVehiclesListFilters } from '~/interfaces';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
-import { IVehiclesListRequestDTO } from './dto';
+interface IVehiclesListRequestDTO {
+  page: number;
+  limit: number;
+  filters: IVehiclesListFilters;
+}
 
 export class VehiclesListService {
   constructor(private repository: IVehiclesRepository) { }

@@ -22,57 +22,45 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
   const authHeader = req.headers.authorization;
 
   if(!authHeader) {
-    return res.status(401).json({ message: 'No token provided.' });
+    return res.status(401).json({ code: 401, message: 'Nenhum token enviado.', details: null });
   }
 
   const tokenSplit = authHeader.split(' ');
 
   if(tokenSplit.length !== 2) {
-    return res.status(401).json({ message: 'Token error.' });
+    return res.status(401).json({ code: 401, message: 'Erro no token.', details: null });
   }
 
   const [bearer, token] = tokenSplit;
 
   if(!/^Bearer$/i.test(bearer)) {
-    return res.status(401).json({ message: 'Token malformated.' });
+    return res.status(401).json({ code: 401, message: 'Token malformatado.', details: null });
   }
 
   jwt.verify(token, process.env.JWT_SECRET, async (err, decode: { id: string }) => {
     if(err) {
-      return res.status(401).json({ message: 'Token invalid.' });
+      return res.status(401).json({ code: 401, message: 'Token inválido.', details: null });
     }
 
     if(decode.id) {
       const user = await usersFindService.execute({ id: decode.id });
 
       if(!user) {
-        return res.status(404).json({ message: 'User not found.' });
+        return res.status(404).json({ code: 404, message: 'Usuário não encontrado.', details: null });
       }
 
-      if(!userCanAccessRoute(req, '/vehicles', user.despPermission)) {
-        return res.status(401).json({ message: 'User not have permission for this route.' });
-      }
-
-      if(!userCanAccessRoute(req, '/clients', user.cliePermission)) {
-        return res.status(401).json({ message: 'User not have permission for this route.' });
-      }
-
-      if(!userCanAccessRoute(req, '/users', user.userPermission)) {
-        return res.status(401).json({ message: 'User not have permission for this route.' });
-      }
-
-      if(!userCanAccessRoute(req, '/isurances', user.seguPermission)) {
-        return res.status(401).json({ message: 'User not have permission for this route.' });
-      }
-
-      if(!userCanAccessRoute(req, '/works', user.workPermission)) {
-        return res.status(401).json({ message: 'User not have permission for this route.' });
+      if(!userCanAccessRoute(req, '/vehicles', user.despPermission)
+      || !userCanAccessRoute(req, '/clients', user.cliePermission)
+      || !userCanAccessRoute(req, '/users', user.userPermission)
+      || !userCanAccessRoute(req, '/isurances', user.seguPermission)
+      || !userCanAccessRoute(req, '/works', user.workPermission)) {
+        return res.status(401).json({ code: 401, message: 'Usuário não tem permissão para acessar essa rota.', details: `[${req.method}]  ${req.path}` });
       }
 
       req.user = user;
       return next();
     }
 
-    return res.status(404).json({ message: 'User not found.' });
+    return res.status(404).json({ code: 404, message: 'Usuário não encontrado.', details: null });
   });
 }

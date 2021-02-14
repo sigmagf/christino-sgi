@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import { errorWork } from '~/utils/errorWork';
 import { stringFix } from '~/utils/stringFix';
 
 import { ClientsCreateService } from './service';
@@ -17,17 +18,17 @@ export class ClientsCreateController {
 
     try {
       if(!name) {
-        return res.status(400).json({ code: 400, message: 'O item \'name\' é nulo ou indefinido.', details: null });
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'name\' é nulo ou indefinido.', details: null }));
       }
 
       if(!document) {
-        return res.status(400).json({ code: 400, message: 'O item \'document\' é nulo ou indefinido.', details: null });
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'document\' é nulo ou indefinido.', details: null }));
       }
 
       const client = await this.service.execute({ name, document, group, email, phone1, phone2 });
       return res.status(201).json(client);
     } catch(err) {
-      return res.status(500).json({ code: 500, message: 'Erro inesperado.', details: err.message || null });
+      return errorWork(res, err.message);
     }
   }
 }

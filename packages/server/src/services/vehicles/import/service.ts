@@ -1,9 +1,28 @@
+import { IVehicle } from '~/entities/IVehicle';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 import { convertStatus } from '~/utils/convertStatus';
 import { stringFix } from '~/utils/stringFix';
 
-import { IImportError, IVehiclesImportRequestDTO } from './dto';
+interface IImportError extends Partial<Omit<IVehicle, 'id'|'client'|'status'|'created_at'|'updated_at'>> {
+  status: number | string;
+  error: string;
+}
+
+interface IVehiclesImportRequestDTO {
+  data: {
+    name: string;
+    document: string;
+    group: string;
+    plate: string;
+    renavam: string;
+    crv: string;
+    brandModel: string;
+    type: string;
+    details: string;
+    status: string;
+  }[];
+}
 
 export class VehiclesImportService {
   constructor(
@@ -20,8 +39,8 @@ export class VehiclesImportService {
         return null;
       }
 
-      if(!vehicle.plate || !vehicle.renavam || !vehicle.brand_model || !vehicle.type) {
-        errors.push({ ...vehicle, error: 'Vehicle plate, renavam, brand_model or type are null or invalid.' });
+      if(!vehicle.plate || !vehicle.renavam || !vehicle.brandModel || !vehicle.type) {
+        errors.push({ ...vehicle, error: 'Vehicle plate, renavam, brandModel or type are null or invalid.' });
         return null;
       }
 
@@ -33,11 +52,11 @@ export class VehiclesImportService {
         });
 
         return {
-          client_id: client.id,
+          clientId: client.id,
           plate: stringFix(vehicle.plate, undefined, 'UPPERCASE'),
           renavam: stringFix(vehicle.renavam, undefined, 'UPPERCASE'),
           crv: stringFix(vehicle.crv, undefined, 'UPPERCASE'),
-          brand_model: stringFix(vehicle.brand_model, undefined, 'UPPERCASE'),
+          brandModel: stringFix(vehicle.brandModel, undefined, 'UPPERCASE'),
           type: stringFix(vehicle.type, undefined, 'UPPERCASE'),
           details: stringFix(vehicle.details, undefined, 'UPPERCASE'),
           status: convertStatus(stringFix(vehicle.status, undefined, 'LOWERCASE')),
@@ -49,17 +68,17 @@ export class VehiclesImportService {
     }));
 
     await Promise.all(vehicles.filter((el) => el !== null).map(async (vehicle) => {
-      if(!vehicle.client_id) {
+      if(!vehicle.clientId) {
         errors.push({ ...vehicle, error: 'Client not found.' });
         return;
       }
 
-      if(await this.vehiclesRepo.findByClientPlate(vehicle.client_id, vehicle.plate)) {
+      if(await this.vehiclesRepo.findByClientPlate(vehicle.clientId, vehicle.plate)) {
         errors.push({ ...vehicle, error: 'Vehicle already exists for this client.' });
         return;
       }
 
-      if(await this.vehiclesRepo.findByClientRenavam(vehicle.client_id, vehicle.renavam)) {
+      if(await this.vehiclesRepo.findByClientRenavam(vehicle.clientId, vehicle.renavam)) {
         errors.push({ ...vehicle, error: 'Vehicle already exists for this client.' });
         return;
       }

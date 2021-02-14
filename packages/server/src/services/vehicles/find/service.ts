@@ -1,11 +1,10 @@
+import { IVehicle } from '~/entities/IVehicle';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
-
-import { IVehiclesFindRequestDTO } from './dto';
 
 export class VehiclesFindService {
   constructor(private repository: IVehiclesRepository) { }
 
-  async execute(data: IVehiclesFindRequestDTO) {
+  async execute(data: Pick<IVehicle, 'id'>) {
     const vehicle = await this.repository.findById(data.id);
 
     if(!vehicle) {

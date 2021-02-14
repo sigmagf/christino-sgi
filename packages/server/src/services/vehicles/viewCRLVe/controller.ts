@@ -10,7 +10,7 @@ export class VehiclesViewCRLVeController {
 
   // eslint-disable-next-line consistent-return
   async handle(req: Request, res: Response) {
-    if((await vehiclesFindService.execute({ id: req.params.id })).crlve_included) {
+    if((await vehiclesFindService.execute({ id: req.params.id })).crlveIncluded) {
       let basePath = '';
 
       if(process.env.NODE_ENV !== 'development') {
