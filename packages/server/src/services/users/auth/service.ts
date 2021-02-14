@@ -8,23 +8,18 @@ export class UsersAuthService {
   constructor(private repository: IUsersRepository) { }
 
   async execute(data: Pick<IUser, 'email'|'password'>) {
-    const user = await this.repository.findByEmail(data.email);
+    const user = await this.repository.findByEmail(data.email, true);
 
     if(!user) {
-      throw new Error('Usuário não encontrado.');
+      throw new Error(JSON.stringify({ code: 404, message: 'Usuário não encontrado.', details: null }));
     }
 
     if(!await bcrypt.compare(data.password, user.password)) {
-      throw new Error('Senha inválida.');
+      throw new Error(JSON.stringify({ code: 401, message: 'Senha inválida.', details: null }));
     }
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 86400 });
-    user.emailChangeExpires = undefined;
-    user.emailChangeToken = undefined;
-    user.pwdResetExpires = undefined;
-    user.pwdResetToken = undefined;
     user.password = undefined;
-
     return { user, token };
   }
 }

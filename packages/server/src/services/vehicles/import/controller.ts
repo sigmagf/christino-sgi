@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+import { errorWork } from '~/utils/errorWork';
+
 import { VehiclesImportService } from './service';
 
 export class VehiclesImportController {
@@ -16,7 +18,7 @@ export class VehiclesImportController {
       await this.service.execute({ data });
       return res.status(201).send();
     } catch(err) {
-      return res.status(500).json({ code: 500, message: 'Erro inesperado.', details: err.message || null });
+      return errorWork(res, err.message);
     }
   }
 }

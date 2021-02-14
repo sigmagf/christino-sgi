@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+import { errorWork } from '~/utils/errorWork';
+
 import { UsersListService } from './service';
 
 export class UsersListController {
@@ -13,7 +15,7 @@ export class UsersListController {
       const user = await this.service.execute({ page, limit });
       return res.status(200).json(user);
     } catch(err) {
-      return res.status(500).json({ code: 500, message: 'Erro inesperado.', details: err.message || null });
+      return errorWork(res, err.message);
     }
   }
 }

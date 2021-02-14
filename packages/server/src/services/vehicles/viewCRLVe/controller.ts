@@ -30,10 +30,10 @@ export class VehiclesViewCRLVeController {
       const fileTemp = fs.createWriteStream(s3TempPath);
       const s3Stream = s3.getObject({ Bucket: process.env.AWS_BUCKET, Key: s3Key }).createReadStream();
 
-      s3Stream.on('error', (err) => res.status(400).json({ message: err.message || 'Unexpected error' }));
-      s3Stream.pipe(fileTemp).on('error', (err) => res.status(400).json({ message: err.message || 'Unexpected error' })).on('close', () => res.sendFile(s3TempPath));
+      s3Stream.on('error', (err) => res.status(400).json({ message: err.message || 'Erro inesperado.' }));
+      s3Stream.pipe(fileTemp).on('error', (err) => res.status(400).json({ message: err.message || 'Erro inesperado.' })).on('close', () => res.sendFile(s3TempPath));
     } else {
-      return res.status(404).json({ message: 'No CRLVe founded!' });
+      return res.status(404).json({ message: 'CRLVe não encontrado.' });
     }
   }
 }

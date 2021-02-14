@@ -6,15 +6,10 @@ export class UsersCreateService {
 
   async execute(data: Omit<IUser, 'id'|'createdAt'|'updatedAt'>) {
     if(await this.repository.findByEmail(data.email)) {
-      throw new Error('Usuário ja existe.');
+      throw new Error(JSON.stringify({ code: 400, message: 'Usuário ja existe.', details: null }));
     }
 
     const user = await this.repository.create(data);
-    user.emailChangeExpires = undefined;
-    user.emailChangeToken = undefined;
-    user.pwdResetExpires = undefined;
-    user.pwdResetToken = undefined;
-    user.password = undefined;
     return user;
   }
 }

@@ -44,27 +44,6 @@ User.init({
     allowNull: false,
   },
 
-  pwdResetToken: {
-    field: 'pwd_reset_token',
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  pwdResetExpires: {
-    field: 'pwd_reset_expires',
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-  emailChangeToken: {
-    field: 'email_change_token',
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  emailChangeExpires: {
-    field: 'email_change_expires',
-    type: DataTypes.DATE,
-    allowNull: true,
-  },
-
   despPermission: {
     field: 'desp_permission',
     type: DataTypes.SMALLINT,

@@ -6,15 +6,10 @@ export class UsersUpdateService {
 
   async execute(data: Omit<IUser, 'createdAt'|'updatedAt'>) {
     if(!await this.repository.findById(data.id)) {
-      throw new Error(JSON.stringify({ code: 404, message: 'User not found.' }));
+      throw new Error(JSON.stringify({ code: 404, message: 'Usuário não encontrado.', details: null }));
     }
 
     const user = await this.repository.update(data.id, data);
-    user.emailChangeExpires = undefined;
-    user.emailChangeToken = undefined;
-    user.pwdResetExpires = undefined;
-    user.pwdResetToken = undefined;
-    user.password = undefined;
     return user;
   }
 }

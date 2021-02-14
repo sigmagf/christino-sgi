@@ -6,7 +6,7 @@ export class UsersDeleteService {
 
   async execute(data: Pick<IClient, 'id'>) {
     if(!await this.repository.findById(data.id)) {
-      throw new Error('Usuário não encontrado.');
+      throw new Error(JSON.stringify({ code: 404, message: 'Usuário não encontrado.', details: null }));
     }
 
     await this.repository.delete(data.id);

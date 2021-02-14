@@ -4,11 +4,6 @@ export interface IUser {
   email: string;
   password: string;
 
-  pwdResetToken?: string;
-  pwdResetExpires?: Date;
-  emailChangeToken?: string;
-  emailChangeExpires?: Date;
-
   despPermission: number;
   seguPermission: number;
   cliePermission: number;

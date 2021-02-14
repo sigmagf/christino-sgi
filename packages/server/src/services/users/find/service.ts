@@ -8,14 +8,9 @@ export class UsersFindService {
     const user = await this.repository.findById(data.id);
 
     if(!user) {
-      throw new Error('Usuário não encontrado.');
+      throw new Error(JSON.stringify({ code: 404, message: 'Usuário não encontrado.', details: null }));
     }
 
-    user.emailChangeExpires = undefined;
-    user.emailChangeToken = undefined;
-    user.pwdResetExpires = undefined;
-    user.pwdResetToken = undefined;
-    user.password = undefined;
     return user;
   }
 }

@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+import { convertStatus } from '~/utils/convertStatus';
+import { errorWork } from '~/utils/errorWork';
 import { stringFix } from '~/utils/stringFix';
 
 import { VehiclesCreateService } from './service';
@@ -42,10 +44,10 @@ export class VehiclesCreateController {
         return res.status(400).json({ code: 400, message: 'O item \'status\' é nulo ou indefinido.', details: null });
       }
 
-      const vehicle = await this.service.execute({ clientId, plate, renavam, crv, brandModel, type, details, status });
+      const vehicle = await this.service.execute({ clientId, plate, renavam, crv, brandModel, type, details, status: convertStatus(status) });
       return res.status(201).json(vehicle);
     } catch(err) {
-      return res.status(500).json({ code: 500, message: 'Erro inesperado.', details: err.message || null });
+      return errorWork(res, err.message);
     }
   }
 }

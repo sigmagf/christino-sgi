@@ -10,23 +10,6 @@ export class UsersListService {
 
   async execute(data: IUsersListRequestDTO) {
     const users = await this.repository.list(data.page, data.limit);
-
-    const userWithOutPassword = {
-      page: users.page,
-      data: users.data.map(({ id, name, email, despPermission, seguPermission, cliePermission, userPermission, workPermission, createdAt, updatedAt }) => ({
-        id,
-        name,
-        email,
-        despPermission,
-        seguPermission,
-        cliePermission,
-        userPermission,
-        workPermission,
-        createdAt,
-        updatedAt,
-      })),
-    };
-
-    return userWithOutPassword;
+    return users;
   }
 }

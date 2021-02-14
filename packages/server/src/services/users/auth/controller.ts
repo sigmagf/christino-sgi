@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import { errorWork } from '~/utils/errorWork';
 import { stringFix } from '~/utils/stringFix';
 
 import { UsersAuthService } from './service';
@@ -13,17 +14,17 @@ export class UsersAuthController {
 
     try {
       if(!email) {
-        return res.status(400).json({ code: 400, message: 'O item \'email\' é nulo ou indefinido.', details: null });
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'email\' é nulo ou indefinido.', details: null }));
       }
 
       if(!password) {
-        return res.status(400).json({ code: 400, message: 'O item \'password\' é nulo ou indefinido.', details: null });
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'password\' é nulo ou indefinido.', details: null }));
       }
 
       const userWithToken = await this.service.execute({ email, password });
       return res.status(201).json(userWithToken);
     } catch(err) {
-      return res.status(500).json({ code: 500, message: 'Erro inesperado.', details: err.message || null });
+      return errorWork(res, err.message);
     }
   }
 }

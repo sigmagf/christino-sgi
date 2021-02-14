@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 
+import { errorWork } from '~/utils/errorWork';
 import { stringFix } from '~/utils/stringFix';
 
 import { UsersUpdateService } from './service';
@@ -23,7 +24,7 @@ export class UsersUpdateController {
       const user = this.service.execute({ id, name, email, password, despPermission, seguPermission, cliePermission, userPermission, workPermission });
       return res.status(200).json(user);
     } catch(err) {
-      return res.status(500).json({ code: 500, message: 'Erro inesperado.', details: err.message || null });
+      return errorWork(res, err.message);
     }
   }
 }
