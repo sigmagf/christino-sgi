@@ -6,7 +6,7 @@ interface IStatusBadgeStyledProps {
   status: number;
 }
 
-export const StatusBadge = styled.div<IStatusBadgeStyledProps>`
+export const VehiclesStatusBadge = styled.div<IStatusBadgeStyledProps>`
   width: 15px;
   height: 15px;
   border-radius: 15px;

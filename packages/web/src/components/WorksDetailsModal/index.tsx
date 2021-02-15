@@ -1,5 +1,4 @@
-import { FormHandles, SubmitHandler } from '@unform/core';
-import { AxiosResponse } from 'axios';
+import { FormHandles, Scope, SubmitHandler } from '@unform/core';
 import React, { useRef, useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
@@ -7,13 +6,11 @@ import * as yup from 'yup';
 
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
-
 import { Button } from '~/interface/Button';
 import { Input, Select, TextArea } from '~/interface/Form';
 import { Modal } from '~/interface/Modal';
 import { Table } from '~/interface/Table';
 import { IClient, IService, IWork } from '~/interfaces';
-
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatDate } from '~/utils/formatDate';
@@ -24,10 +21,11 @@ import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 import { WorksDetailsModalForm, WorksDetailsActionButtons, WorksDetailsLoadingContainer } from './styles';
 
 interface IFormData {
-  name: string;
-  document: string;
-  group: string;
-
+  client: {
+    name: string;
+    document: string;
+    group: string;
+  };
   service_id: string;
   identifier: string;
   value: string;
@@ -41,10 +39,9 @@ interface IWorksDetailsModalProps {
   onClose: () => void;
   work?: IWork;
   workPermission: number;
-  onChangeSuccess: (work: IWork) => void;
 }
 
-export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work, workPermission, onChangeSuccess }) => {
+export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work, workPermission }) => {
   const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);
 
@@ -133,31 +130,33 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
 
     try {
       const scheme = yup.object().shape({
-        name: yup.string().required('Nome é obrigatório'),
-        document: yup.string()
-          .min(11, 'Documento deve ter pelo menos 11 caracteres (CPF).')
-          .max(14, 'Documento deve ter no maximo 14 caracteres (CNPJ).')
-          .test('validate-document', 'Documento inválido.', (el) => validCPForCNPJ(el || ''))
-          .required('Documento é obrigatório.'),
-        service_id: yup.string().required('O serviço é obrigatório.'),
+        client: yup.object().shape({
+          name: yup.string().required('Nome é obrigatório'),
+          document: yup.string()
+            .min(11, 'Documento deve ter pelo menos 11 caracteres (CPF).')
+            .max(14, 'Documento deve ter no maximo 14 caracteres (CNPJ).')
+            .test('validate-document', 'Documento inválido.', (el) => validCPForCNPJ(el || ''))
+            .required('Documento é obrigatório.'),
+        }),
+        serviceId: yup.string().required('O serviço é obrigatório.'),
         value: yup.string().required('O valor é obrigatório.'),
         status: yup.string().required('O status é obrigatório.'),
         history: yup.string().required('O historico é obrigatório.'),
       });
 
-      const document = data.document.replace(/\D/g, '');
-      const history = worksStatus.filter((el) => el.value === data.status)[0].label + ' - ' + data.history;
+      const document = data.client.document.replace(/\D/g, '');
+      const history = `${worksStatus.filter((el) => el.value === data.status)[0].label} - ${data.history}`;
       const value = data.value.replace('.', '').replace(',', '.').trim();
       await scheme.validate({ ...data, document, value, history }, { abortEarly: false });
-      let response: AxiosResponse<IWork>;
+
       if(work) {
-        response = await api.put<IWork>(`/works/${work.id}`, { ...data, document, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.put<IWork>(`/works/${work.id}`, { ...data, document, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        response = await api.post<IWork>('/works', { ...data, document, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.post<IWork>('/works', { ...data, document, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
       setEditing(false);
-      if(work) { onChangeSuccess(response.data); }
+      onClose();
       toast.success(`Ordem de serviço ${work ? 'atualizada' : 'criada'} com sucesso!`);
     } catch(err) {
       if(err instanceof yup.ValidationError) {
@@ -239,27 +238,28 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
         onSubmit={onSubmit}
         initialData={work && {
           ...work,
-          ...work.client,
-          document: formatDocument(work.client.document),
-          service_id: services && services.filter((el) => el.id === work.service.id).map((el) => ({ label: el.name, value: el.id }))[0],
+          client: {
+            ...work.client,
+            document: formatDocument(work.client.document),
+          },
+          serviceId: services && services.filter((el) => el.id === work.service.id).map((el) => ({ label: el.name, value: el.id }))[0],
           status: worksStatus.filter((el) => el.value === work.status.toString())[0],
-          sector: work.sector.name,
         }}
       >
-        <Input disabled={!!work || !editing || haveClient} name="name" label="NOME" />
-        <Input disabled={!!work || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
-        <Input disabled={!!work || !editing || haveClient} name="group" label="GRUPO" />
+        <Scope path="client">
+          <Input disabled={!!work || !editing || haveClient} name="name" label="NOME" />
+          <Input disabled={!!work || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
+          <Input disabled={!!work || !editing || haveClient} name="group" label="GRUPO" />
+        </Scope>
 
         <hr />
 
-        <Select isDisabled={!!work || !editing} name="service_id" label="SERVIÇO" options={handleServiceOptions()} />
+        <Select isDisabled={!!work || !editing} name="serviceId" label="SERVIÇO" options={handleServiceOptions()} />
         <Input disabled={!!work || !editing} name="identifier" label="IDENTIFICADOR" />
         <Input disabled={!!work || !editing} name="value" label="VALOR" onFocus={onValueFocus} onBlur={onValueBlur} />
         <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
         <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} />
-        { editing && (
-          <Input name="history" label="NOVA ENTRADA" />
-        )}
+        { editing && <Input name="history" label="NOVA ENTRADA" /> }
 
         <Table>
           <thead>
@@ -272,7 +272,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
             {work && work.histories.map((hist) => (
               <tr>
                 <td>{ hist.details }</td>
-                <td>{ formatDate(hist.created_at) }</td>
+                <td>{ formatDate(hist.createdAt) }</td>
               </tr>
             ))}
           </tbody>

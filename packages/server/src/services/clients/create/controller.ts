@@ -10,7 +10,7 @@ export class ClientsCreateController {
 
   async handle(req: Request, res: Response) {
     const name = stringFix(req.body.name, undefined, 'UPPERCASE');
-    const document = stringFix(req.body.document, '', 'UPPERCASE').replace(/\D/g, '');
+    const document = stringFix(req.body.document, '', 'UPPERCASE');
     const group = stringFix(req.body.group, undefined, 'UPPERCASE');
     const email = stringFix(req.body.email, undefined, 'UPPERCASE');
     const phone1 = stringFix(req.body.phone1, undefined, 'UPPERCASE');
@@ -25,7 +25,7 @@ export class ClientsCreateController {
         throw new Error(JSON.stringify({ code: 400, message: 'O item \'document\' é nulo ou indefinido.', details: null }));
       }
 
-      const client = await this.service.execute({ name, document, group, email, phone1, phone2 });
+      const client = await this.service.execute({ name, document: document.replace(/\D/g, ''), group, email, phone1, phone2 });
       return res.status(201).json(client);
     } catch(err) {
       return errorWork(res, err.message);

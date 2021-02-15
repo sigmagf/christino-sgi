@@ -35,7 +35,6 @@ export class SequelizeClientsRepository implements IClientsRepository {
 
   async listGroups(): Promise<string[]> {
     const dbData = await sequelize.query<Pick<IClient, 'group'>>('SELECT DISTINCT c.group FROM clients as c WHERE c.group IS NOT NULL', { type: QueryTypes.SELECT });
-
     return dbData.map((el) => el.group);
   }
 
@@ -49,12 +48,12 @@ export class SequelizeClientsRepository implements IClientsRepository {
     return dbData;
   }
 
-  async create(data: Omit<Client, 'id'|'created_at'|'updated_at'>): Promise<IClient> {
+  async create(data: Omit<IClient, 'id'|'createdAt'|'updatedAt'>): Promise<IClient> {
     const dbData = Client.create(data);
     return dbData;
   }
 
-  async update(id: string, data: Omit<Client, 'id'|'created_at'|'updated_at'>): Promise<IClient> {
+  async update(id: string, data: Omit<IClient, 'id'|'createdAt'|'updatedAt'>): Promise<IClient> {
     await Client.update(data, { where: { id } });
 
     const dbData = Client.findByPk(id);

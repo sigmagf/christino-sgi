@@ -6,14 +6,11 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
 import { VehiclesDetailsUploadCRLVeModal } from '~/components/VehicleUploadCRLVeModal';
-
 import { useLocalStorage } from '~/hooks';
-
 import { Button } from '~/interface/Button';
 import { Input, Select } from '~/interface/Form';
 import { Modal } from '~/interface/Modal';
 import { IClient, IVehicle } from '~/interfaces';
-
 import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { formatDocument } from '~/utils/formatDocument';
@@ -152,7 +149,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   /* - ON CRLVe CHANGE - */
   const onCRLVeUploadSuccess = () => {
     if(vehicle) {
-      onChangeSuccess({ ...vehicle, crlve_included: true });
+      onChangeSuccess({ ...vehicle, crlveIncluded: true });
     }
   };
   /* END ON CRLVe CHANGE */
@@ -176,7 +173,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         renavam: yup.string()
           .max(11, 'O renavam deve ter no maximo 11 caracteres.')
           .required('O renavam é obrigatório.'),
-        brand_model: yup.string().required('A marca/modelo é obrigatória.'),
+        brandModel: yup.string().required('A marca/modelo é obrigatória.'),
         type: yup.string().required('O tipo é obrigatória.'),
       });
 
@@ -264,13 +261,13 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           <Input disabled={!editing} name="plate" label="PLACA" maxLength={7} />
           <Input disabled={!editing} name="renavam" label="RENAVAM" maxLength={11} onBlur={() => onBlurMaxLengths('renavam', 11, '0')} />
           <Input disabled={!editing} name="crv" label="CRV" maxLength={12} onBlur={() => onBlurMaxLengths('crv', 12, '0')} />
-          <Input disabled={!editing} name="brand_model" label="MARCA/MODELO" />
+          <Input disabled={!editing} name="brandModel" label="MARCA/MODELO" />
           <Input disabled={!editing} name="type" label="TIPO" />
           <Select isDisabled={!editing} name="status" label="STATUS" options={status} />
           <Input disabled={!editing} name="details" label="DETALHES" />
         </DetailsModalForm>
         <VehicleDetailsActionButtons>
-          {(!editing && vehicle && vehicle.crlve_included) && (
+          {(!editing && vehicle && vehicle.crlveIncluded) && (
             <Button variant="secondary" disabled={inLoadingCRLVe} style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }} onClick={handleGetCRLVe}>
               <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
             </Button>

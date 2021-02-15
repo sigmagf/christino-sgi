@@ -1,4 +1,7 @@
+import { v4 } from 'uuid';
+
 import { IUser } from '~/entities/IUser';
+import { InvalidToken } from '~/entities/sequelize/InvalidToken';
 import { User } from '~/entities/sequelize/User';
 import { IPagination } from '~/interfaces';
 
@@ -47,7 +50,7 @@ export class SequelizeUsersRepository implements IUsersRepository {
   }
 
   async create(data: Omit<IUser, 'id'|'createdAt'|'updatedAt'>, withPassword = false): Promise<IUser> {
-    const dbData = await User.create(data);
+    const dbData = await User.create({ ...data, id: v4() });
 
     if(!withPassword) {
       dbData.password = undefined;

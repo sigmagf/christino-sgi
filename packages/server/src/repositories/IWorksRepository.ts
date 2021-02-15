@@ -1,7 +1,7 @@
 import { IWork } from '~/entities/IWork';
 import { IPagination, IWorksListFilters } from '~/interfaces';
 
-export interface IWorkCreateOrUpdate extends Pick<IWork, 'clientId'|'serviceId'|'identifier'|'value'|'details'|'status'> {
+export interface IWorkCreateOrUpdate extends Pick<IWork, 'id'|'clientId'|'serviceId'|'identifier'|'value'|'details'|'status'> {
   history: string;
 }
 
@@ -10,7 +10,7 @@ export interface IWorksRepository {
   findById(id: string): Promise<IWork>;
 
   create(data: IWorkCreateOrUpdate): Promise<IWork>;
-  update(id: string, data: IWorkCreateOrUpdate): Promise<IWork>;
+  update(id: string, data: Partial<Omit<IWorkCreateOrUpdate, 'id'>>): Promise<IWork>;
 
   delete(id: string): Promise<void>;
 }

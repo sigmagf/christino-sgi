@@ -9,8 +9,6 @@ export interface IStorage {
   token: string;
   userName: string;
   appBarExpanded: boolean;
-  desp_permission: string;
-  segu_permission: string;
 }
 /* END STIRAGE */
 
@@ -23,7 +21,7 @@ export interface IVehiclesImportCSV {
   plate: string;
   renavam: string;
   crv: string | null;
-  brand_model: string;
+  brandModel: string;
   type: string;
   details: string;
   status: string;
@@ -35,15 +33,15 @@ export interface IVehiclesFilters {
   page: number;
   limit: number;
 
-  client_id?: string;
+  clientId?: string;
   group?: string;
   plate?: string;
   renavam?: string;
   crv?: string;
-  brand_model?: string;
-  plate_end?: string;
+  brandModel?: string;
+  plateEnd?: string;
   status: number|number[];
-  include_truck?: boolean;
+  includeTruck?: boolean;
 }
 
 export interface IClientsFilters {
@@ -67,38 +65,40 @@ export interface IPagination<T> {
 export interface ISector {
   id: string;
   name: string;
-  created_at?: Date;
-  updated_at?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IService {
   id: string;
+  sectorId: string;
   sector: ISector;
   name: string;
-  created_at?: Date;
-  updated_at?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IWorkHistory {
   id: string;
-  work_id: string;
+  workId: string;
   details: string;
-  created_at?: Date;
-  updated_at?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IWork {
   id: string;
+  clientId: string;
   client: IClient;
-  sector: ISector;
-  service: Omit<IService, 'sector'>;
+  serviceId: string;
+  service: IService;
   identifier?: string;
   value: number;
   details?: string;
   status: number;
-  histories: Omit<IWorkHistory, 'work_id'>[];
-  created_at?: Date;
-  updated_at?: Date;
+  histories: IWorkHistory[];
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IClient {
@@ -109,8 +109,8 @@ export interface IClient {
   email?: string;
   phone1?: string;
   phone2?: string;
-  created_at?: Date;
-  updated_at?: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IUser {
@@ -118,13 +118,13 @@ export interface IUser {
   name: string;
   email: string;
   password: string;
-  desp_permission: number;
-  segu_permission: number;
-  clie_permission: number;
-  user_permission: number;
-  work_permission: number;
-  created_at?: Date;
-  updated_at?: Date;
+  despPermission: number;
+  seguPermission: number;
+  cliePermission: number;
+  userPermission: number;
+  workPermission: number;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IVehicle {
@@ -133,13 +133,13 @@ export interface IVehicle {
   plate: string;
   renavam: string;
   crv: string;
-  brand_model: string;
+  brandModel: string;
   type: string;
   details: string;
   status: number;
-  crlve_included: boolean;
-  created_at?: Date;
-  updated_at?: Date;
+  crlveIncluded: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IUserAuth {

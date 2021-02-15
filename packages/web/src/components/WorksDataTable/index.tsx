@@ -6,10 +6,10 @@ import { Badge } from '~/interface/Badge';
 import { Button } from '~/interface/Button';
 import { Table } from '~/interface/Table';
 import { IWork } from '~/interfaces';
-
 import { worksStatus } from '~/utils/commonSelectOptions';
+import { formatDate } from '~/utils/formatDate';
 
-import { DataTableCardContainer } from './styles';
+import { WorksStatusBadge, DataTableCardContainer } from './styles';
 
 interface IWorksDataTableProps {
   works: IWork[];
@@ -29,31 +29,33 @@ export const WorksDataTable: React.FC<IWorksDataTableProps> = ({ works, inLoadin
       <Table style={{ tableLayout: 'fixed' }}>
         <thead>
           <tr>
+            <th style={{ width: 50 }} aria-label="status-column" />
             <th style={{ textAlign: 'left' }}>CLIENTE</th>
             <th style={{ width: 150 }}>SETOR</th>
             <th style={{ width: 150 }}>SERVICO</th>
             <th style={{ width: 150 }}>IDENTIFICADOR</th>
-            <th style={{ width: 100 }}>STATUS</th>
+            <th style={{ width: 100 }}>CRIADO EM</th>
             <th style={{ width: 50 }} aria-label="action-column" />
           </tr>
         </thead>
         <tbody>
           {inLoading && (
             <>
-              <tr><td colSpan={6} /></tr>
-              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={7} /></tr>
+              <tr><td colSpan={7} /></tr>
             </>
           )}
 
           {(!inLoading && works.length === 0) && (
             <>
-              <tr><td colSpan={6} style={{ textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
-              <tr><td colSpan={6} style={{ textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
+              <tr><td colSpan={7} style={{ textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
+              <tr><td colSpan={7} style={{ textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
             </>
           )}
 
           {!inLoading && works.map((el) => (
             <tr key={el.id}>
+              <td><WorksStatusBadge status={el.status} title={worksStatus.find((st) => st.value === el.status.toString())?.label} /></td>
               <td>
                 { el.client.group && (
                   <Badge>
@@ -62,10 +64,10 @@ export const WorksDataTable: React.FC<IWorksDataTableProps> = ({ works, inLoadin
                 )}
                 <span style={{ textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ el.client.name }</span>
               </td>
-              <td style={{ textAlign: 'center' }}>{ el.sector.name }</td>
+              <td style={{ textAlign: 'center' }}>{ el.service.sector.name }</td>
               <td style={{ textAlign: 'center' }}>{ el.service.name }</td>
               <td style={{ textAlign: 'center' }}>{ el.identifier }</td>
-              <td style={{ textAlign: 'center' }}>{ worksStatus.filter((st) => st.value === el.status.toString())[0].label }</td>
+              <td style={{ textAlign: 'center' }}>{ formatDate(el.createdAt) }</td>
               <td style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 10 }}>
                 <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(el.id)} disabled={inLoading}>
                   <FaSearch />

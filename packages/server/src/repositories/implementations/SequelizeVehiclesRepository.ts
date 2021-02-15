@@ -11,16 +11,95 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
   private selectQuery(where?: string, limit?: number, offset?: number) {
     return `
       SELECT
-      v.id as v_id, v.plate as v_plate, v.renavam as v_renavam, v.crv as v_crv, v.brand_model as v_brand_model, v.type as v_type,
-      v.details as v_details, v.status as v_status, v.crlve_included as v_crlve_included, v.created_at as v_created_at, v.updated_at as v_updated_at,
-      c.id as c_id, c.name as c_name, c.document as c_document, c.group as c_group, c.email as c_email, c.phone1 as c_phone1, c.phone2 as c_phone2,
-      c.created_at as c_created_at, c.updated_at as c_updated_at
-      FROM vehicles as v LEFT JOIN clients as c ON v.client_id = c.id
+      v.id as vehicle_id,
+      v.plate as vehicle_plate,
+      v.renavam as vehicle_renavam,
+      v.crv as vehicle_crv,
+      v.brand_model as vehicle_brand_model,
+      v.type as vehicle_type,
+      v.details as vehicle_details,
+      v.status as vehicle_status,
+      v.crlve_included as vehicle_crlve_included,
+      v.created_at as vehicle_created_at,
+      v.updated_at as vehicle_updated_at,
+
+      c.id as client_id,
+      c.name as client_name,
+      c.document as client_document,
+      c.group as client_group,
+      c.email as client_email,
+      c.phone1 as client_phone1,
+      c.phone2 as client_phone2,
+      c.created_at as client_created_at,
+      c.updated_at as client_updated_at
+
+      FROM vehicles as v
+      LEFT JOIN clients as c ON v.client_id = c.id
       ${where ? `WHERE ${where}` : ''}
       ORDER BY c.group ASC, SUBSTRING(v.plate, 7) ASC, c.name ASC, v.plate ASC
       ${offset ? `OFFSET ${offset}` : ''}
       ${limit ? `LIMIT ${limit}` : ''}
     `;
+  }
+
+  private fixData(entry: any): IVehicle | IVehicle[] {
+    if(!entry) {
+      return null;
+    }
+
+    if(Array.isArray(entry)) {
+      return entry.map((el) => ({
+        id: el.vehicle_id,
+        clientId: el.client_id,
+        client: {
+          id: el.client_id,
+          name: el.client_name,
+          document: el.client_document,
+          group: el.client_group,
+          email: el.client_email,
+          phone1: el.client_phone1,
+          phone2: el.client_phone2,
+          createdAt: el.client_created_at,
+          updatedAt: el.client_updated_at,
+        },
+        plate: el.vehicle_plate,
+        renavam: el.vehicle_renavam,
+        crv: el.vehicle_crv,
+        brandModel: el.vehicle_brand_model,
+        type: el.vehicle_type,
+        details: el.vehicle_details,
+        status: el.vehicle_status,
+        crlveIncluded: el.vehicle_crlve_included,
+        createdAt: el.vehicle_created_at,
+        updatedAt: el.vehicle_updated_at,
+      }));
+    }
+
+    return {
+      id: entry.v_id,
+      clientId: entry.c_id,
+      client: {
+        id: entry.c_id,
+        name: entry.c_name,
+        document: entry.c_document,
+        group: entry.c_group,
+        email: entry.c_email,
+        phone1: entry.c_phone1,
+        phone2: entry.c_phone2,
+        createdAt: entry.c_created_at,
+        updatedAt: entry.c_updated_at,
+      },
+      plate: entry.v_plate,
+      renavam: entry.v_renavam,
+      crv: entry.v_crv,
+      brandModel: entry.v_brand_model,
+      type: entry.v_type,
+      details: entry.v_details,
+      status: entry.v_status,
+      crlveIncluded: entry.v_crlve_included,
+      createdAt: entry.v_created_at,
+      updatedAt: entry.v_updated_at,
+    };
   }
 
   private makeSpecialWhereString(filters: IVehiclesListFilters): string {
@@ -65,66 +144,6 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
     return filtersPart.filter((el) => el !== null).join(' AND ');
   }
 
-  private fixData(entry: any): IVehicle | IVehicle[] {
-    if(!entry) {
-      return null;
-    }
-
-    if(Array.isArray(entry)) {
-      return entry.map((el) => ({
-        id: el.v_id,
-        clientId: el.c_id,
-        client: {
-          id: el.c_id,
-          name: el.c_name,
-          document: el.c_document,
-          group: el.c_group,
-          email: el.c_email,
-          phone1: el.c_phone1,
-          phone2: el.c_phone2,
-          createdAt: el.c_created_at,
-          updatedAt: el.c_updated_at,
-        },
-        plate: el.v_plate,
-        renavam: el.v_renavam,
-        crv: el.v_crv,
-        brandModel: el.v_brand_model,
-        type: el.v_type,
-        details: el.v_details,
-        status: el.v_status,
-        crlveIncluded: el.v_crlve_included,
-        createdAt: el.v_created_at,
-        updatedAt: el.v_updated_at,
-      }));
-    }
-
-    return {
-      id: entry.v_id,
-      clientId: entry.c_id,
-      client: {
-        id: entry.c_id,
-        name: entry.c_name,
-        document: entry.c_document,
-        group: entry.c_group,
-        email: entry.c_email,
-        phone1: entry.c_phone1,
-        phone2: entry.c_phone2,
-        createdAt: entry.c_created_at,
-        updatedAt: entry.c_updated_at,
-      },
-      plate: entry.v_plate,
-      renavam: entry.v_renavam,
-      crv: entry.v_crv,
-      brandModel: entry.v_brand_model,
-      type: entry.v_type,
-      details: entry.v_details,
-      status: entry.v_status,
-      crlveIncluded: entry.v_crlve_included,
-      createdAt: entry.v_created_at,
-      updatedAt: entry.v_updated_at,
-    };
-  }
-
   async list(page = 1, limit = 10, filters: IVehiclesListFilters): Promise<IPagination<IVehicle> | IVehicle[]> {
     const whereString = this.makeSpecialWhereString(filters);
     const effectiveLimit = limit > 100 ? 100 : limit;
@@ -164,18 +183,17 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
     return this.fixData(dbData[0]) as IVehicle;
   }
 
-  async create(data: Omit<Vehicle, 'id'|'created_at'|'updated_at'>): Promise<IVehicle> {
+  async create(data: Omit<IVehicle, 'id'|'createdAt'|'updatedAt'>): Promise<IVehicle> {
     const entry = await Vehicle.create(data);
 
     const dbData = await sequelize.query(this.selectQuery(`v.id = '${entry.id}'`), { type: QueryTypes.SELECT });
     return this.fixData(dbData) as IVehicle;
   }
 
-  async update(id: string, data: Omit<Vehicle, 'id'|'createdAt'|'updatedAt'>): Promise<IVehicle> {
+  async update(id: string, data: Omit<IVehicle, 'id'|'createdAt'|'updatedAt'>): Promise<IVehicle> {
     await Vehicle.update(data, { where: { id } });
 
     const dbData = await sequelize.query(this.selectQuery(`v.id = '${id}'`), { type: QueryTypes.SELECT });
-
     return this.fixData(dbData) as IVehicle;
   }
 

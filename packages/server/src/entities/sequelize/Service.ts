@@ -1,37 +1,32 @@
-import { Model, DataTypes } from 'sequelize';
+import { Model, DataTypes, Sequelize } from 'sequelize';
 import { v4 } from 'uuid';
-
-import { sequelize } from '~/config/sequelize';
 
 import { ISector } from '../ISector';
 import { IService } from '../IService';
 
-class Service extends Model implements IService {
+export class Service extends Model implements IService {
   id: string;
   name: string;
   sectorId: string;
   sector: ISector;
   createdAt?: Date;
   updatedAt?: Date;
+
+  static init(connection: Sequelize) {
+    super.init({
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: v4(),
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    }, { sequelize: connection, tableName: 'services' });
+  }
+
+  static associate(models: any) {
+    this.belongsTo(models.Sector, { foreignKey: { name: 'sectorId', field: 'sector_id' }, as: 'sector' });
+  }
 }
-
-Service.init({
-  id: {
-    type: DataTypes.UUID,
-    primaryKey: true,
-    defaultValue: v4(),
-  },
-  name: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  sectorId: {
-    field: 'sector_id',
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-}, { sequelize, tableName: 'services' });
-
-Service.belongsTo(sequelize.models.Sector, { foreignKey: 'sector_id', as: 'sector' });
-
-export { Service };

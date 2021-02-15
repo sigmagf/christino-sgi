@@ -8,15 +8,12 @@ import { VehiclesDataTable } from '~/components/VehiclesDataTable';
 import { VehiclesDetailsModal } from '~/components/VehiclesDetailsModal';
 import { VehiclesFiltersCard } from '~/components/VehiclesFiltersCard';
 import { VehiclesImportModal } from '~/components/VehiclesImportModal';
-
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
-
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Pagination } from '~/interface/Pagination';
 import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
-
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 
@@ -106,7 +103,7 @@ export const VehiclesPage: React.FC = () => {
 
   return (
     <>
-      <Layout setPermissions={(perms) => setDespPermission(perms.desp_permission)}>
+      <Layout setPermissions={(perms) => setDespPermission(perms.despPermission)}>
         <VehiclesFiltersCard
           onOpenImportModalClick={() => setImportModalOpen(true)}
           onCreateClick={onCreateVehicleClick}

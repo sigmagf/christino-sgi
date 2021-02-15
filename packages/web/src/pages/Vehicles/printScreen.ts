@@ -1,5 +1,4 @@
 import { IVehicle } from '~/interfaces';
-
 import { statusConverter } from '~/utils/statusConverter';
 
 export function VehiclesPrintScreen(vehicles: IVehicle[]) {
@@ -35,7 +34,7 @@ export function VehiclesPrintScreen(vehicles: IVehicle[]) {
           <td style="text-align: center">${v.plate}</td>
           <td style="text-align: center">${v.renavam.padStart(11, '0')}</td>
           <td style="text-align: center">${(v.crv || '').padStart(12, '0')}</td>
-          <td style="text-align: center">${v.brand_model}</td>
+          <td style="text-align: center">${v.brandModel}</td>
           <td style="text-align: center">${v.type}</td>
           <td style="text-align: center">${v.details || ''}</td>
           <td style="text-align: center">${statusConverter(v.status)}</td>

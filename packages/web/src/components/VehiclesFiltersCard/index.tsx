@@ -6,11 +6,9 @@ import { toast } from 'react-toastify';
 
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
-
 import { Button } from '~/interface/Button';
 import { Select, Input } from '~/interface/Form';
 import { IClient, IVehiclesFilters } from '~/interfaces';
-
 import { api } from '~/utils/api';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
 
@@ -89,16 +87,16 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     <FiltersCard>
       <FiltersContainer open={open}>
         <Form ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
-          <Select label="CLIENTE" name="client_id" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
+          <Select label="CLIENTE" name="clientId" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
           <Select label="GRUPO" name="group" options={handleGroups(groups || [])} defaultValue={{ label: 'TODOS', value: '' }} />
           <Select label="STATUS" name="status" options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
 
           <Input label="PLACA" name="plate" />
           <Input label="RENAVAM" name="renavam" />
           <Input label="CRV" name="crv" />
-          <Input label="MARCA/MODELO" name="brand_model" />
-          <Select label="FINAL DE PLACA" name="plate_end" options={plateEnd} defaultValue={plateEnd[0]} />
-          <Select label="CAMINHOES" name="include_truck" options={includeTruckOptions} defaultValue={includeTruckOptions[1]} />
+          <Input label="MARCA/MODELO" name="brandModel" />
+          <Select label="FINAL DE PLACA" name="plateEnd" options={plateEnd} defaultValue={plateEnd[0]} />
+          <Select label="CAMINHOES" name="includeTruck" options={includeTruckOptions} defaultValue={includeTruckOptions[1]} />
         </Form>
 
         <FiltersHeaders onClick={() => setOpen((old) => !old)}>
