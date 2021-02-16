@@ -1,4 +1,4 @@
-export function stringFix(string: any, returnIfFalse: null|undefined, stringCase?: 'UPPERCASE'|'LOWERCASE') {
+export function stringFix(string: any, returnIfFalse: null|string|number, stringCase?: 'UPPERCASE'|'LOWERCASE') {
   if(!string) {
     return returnIfFalse;
   }

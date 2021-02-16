@@ -21,7 +21,7 @@ export class ClientsListController {
       const clients = await this.service.execute({ page, limit, filters: { pagination, name, document, group } });
       return res.status(200).json(clients);
     } catch(err) {
-      return errorWork(res, err.message || null);
+      return errorWork(res, err.message);
     }
   }
 }

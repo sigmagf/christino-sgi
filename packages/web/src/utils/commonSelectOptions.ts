@@ -1,8 +1,8 @@
 export const vehicleStatus = [
-  { value: '0', label: 'BAIXADO' },
-  { value: '1', label: 'CRLVe' },
-  { value: '2', label: 'CRV' },
-  { value: '3', label: 'OUTRO' },
+  { value: '1', label: 'BAIXADO' },
+  { value: '2', label: 'CRLVe' },
+  { value: '3', label: 'CRV' },
+  { value: '4', label: 'OUTRO' },
 ];
 
 export const vehiclePlateEnd = [
@@ -20,8 +20,8 @@ export const vehiclePlateEnd = [
 ];
 
 export const worksStatus = [
-  { value: '0', label: 'EM ANALISE' },
-  { value: '1', label: 'REPROVADO' },
-  { value: '2', label: 'APROVADO' },
-  { value: '3', label: 'FINALIZADO' },
+  { value: '1', label: 'EM ANALISE' },
+  { value: '2', label: 'REPROVADO' },
+  { value: '3', label: 'APROVADO' },
+  { value: '4', label: 'FINALIZADO' },
 ];

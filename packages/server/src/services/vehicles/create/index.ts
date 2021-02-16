@@ -1,13 +1,11 @@
-import { TypeORMClientsRepository } from '~/repositories/implementations/TypeORMClientsRepository';
-import { TypeORMVehiclesRepository } from '~/repositories/implementations/TypeORMVehiclesRepository';
+import { SequelizeVehiclesRepository } from '~/repositories/implementations/SequelizeVehiclesRepository';
 
 import { VehiclesCreateController } from './controller';
 import { VehiclesCreateService } from './service';
 
-const vehiclesRepo = new TypeORMVehiclesRepository();
-const clientsRepo = new TypeORMClientsRepository();
+const repository = new SequelizeVehiclesRepository();
 
-const service = new VehiclesCreateService(vehiclesRepo, clientsRepo);
+const service = new VehiclesCreateService(repository);
 const controller = new VehiclesCreateController(service);
 
 export { service as vehiclesCreateService, controller as vehiclesCreateController };

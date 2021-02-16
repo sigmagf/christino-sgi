@@ -7,7 +7,9 @@ export const WorksDetailsModalForm = styled(Form)`
   gap: 15px;
   width: 1080px;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-areas: 'CN CN CN CN CN CN CN CD CD CG CG CG'
+  grid-template-rows: 0px 1fr;
+  grid-template-areas: 'CI CI CI CI CI CI CI CI CI CI CI CI'
+                       'CN CN CN CN CN CN CN CD CD CG CG CG'
                        'HR HR HR HR HR HR HR HR HR HR HR HR'
                        'SV SV SV SV ID ID ID ID VL VL ST ST'
                        'DT DT DT DT DT DT DT DT DT DT DT DT'
@@ -48,23 +50,24 @@ export const WorksDetailsModalForm = styled(Form)`
     }
   }
 
-  > :nth-child(1) { grid-area: CN; } /* NAME */
-  > :nth-child(2) { grid-area: CD; } /* DOCUMENT */
-  > :nth-child(3) { grid-area: CG; } /* GROUP */
+  > :nth-child(1) { grid-area: CI; } /* NAME */
+  > :nth-child(2) { grid-area: CN; } /* NAME */
+  > :nth-child(3) { grid-area: CD; } /* DOCUMENT */
+  > :nth-child(4) { grid-area: CG; } /* GROUP */
 
-  > :nth-child(4) { grid-area: HR; } /* HR */
+  > :nth-child(5) { grid-area: HR; } /* HR */
 
-  > :nth-child(5) { grid-area: SV; } /* SERVICE */
-  > :nth-child(6) { grid-area: ID; } /* IDENTIFIER */
-  > :nth-child(7) { grid-area: VL; } /* VALUE */
-  > :nth-child(8) { grid-area: ST; } /* STATUS */
-  > :nth-child(9) { grid-area: DT; } /* DETAILS */
-  > :nth-child(10) { grid-area: HS; } /* NEW HISTORY */
-  > :nth-child(11) { grid-area: HT; } /* HISTORY */
+  > :nth-child(6) { grid-area: SV; } /* SERVICE */
+  > :nth-child(7) { grid-area: ID; } /* IDENTIFIER */
+  > :nth-child(8) { grid-area: VL; } /* VALUE */
+  > :nth-child(9) { grid-area: ST; } /* STATUS */
+  > :nth-child(10) { grid-area: DT; } /* DETAILS */
+  > :nth-child(11) { grid-area: HS; } /* NEW HISTORY */
+  > :nth-child(12) { grid-area: HT; } /* HISTORY */
 `;
 
-export const WorksDetailsActionButtons = styled.div`
-  margin-top: 40px;
+export const WorksDetailsActionButtons = styled.div<{editing: boolean}>`
+  margin-top: ${({ editing }) => (editing ? '15px' : '0')};
   display: flex;
   justify-content: flex-end;
   align-items: center;

@@ -12,7 +12,7 @@ import { usersUpdateController } from './update';
 const usersRouter = Router();
 
 usersRouter.use('/users/valid', authMiddleware, (req, res) => res.status(200).json(req.user));
-usersRouter.post('/users/auth', (req, res) => usersAuthController.handle(req, res));
+usersRouter.post('/users/login', (req, res) => usersAuthController.handle(req, res));
 
 usersRouter.get('/users', authMiddleware, (req, res) => usersListController.handle(req, res));
 usersRouter.get('/users/:id', authMiddleware, (req, res) => usersFindController.handle(req, res));

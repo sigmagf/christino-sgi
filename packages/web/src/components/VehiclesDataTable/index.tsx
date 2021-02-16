@@ -4,16 +4,14 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
 import { useLocalStorage } from '~/hooks';
-
 import { Badge } from '~/interface/Badge';
 import { Button } from '~/interface/Button';
 import { Table } from '~/interface/Table';
 import { IVehicle } from '~/interfaces';
-
 import { api } from '~/utils/api';
-import { statusConverter } from '~/utils/statusConverter';
+import { vehicleStatus } from '~/utils/commonSelectOptions';
 
-import { DataTableCardContainer, StatusBadge } from './styles';
+import { DataTableCardContainer, VehiclesStatusBadge } from './styles';
 
 interface IVehicleDataTableProps {
   vehicles: IVehicle[];
@@ -88,7 +86,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
           {!inLoading && vehicles.map((vehicle) => (
             <tr key={vehicle.id}>
               <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <StatusBadge status={vehicle.status} title={statusConverter(vehicle.status)} />
+                <VehiclesStatusBadge status={vehicle.status} title={vehicleStatus.find((el) => el.value === vehicle.status.toString())?.label} />
               </td>
               <td>
                 { vehicle.client.group && (
@@ -100,9 +98,9 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
               </td>
               <td style={{ textAlign: 'center' }}>{ vehicle.plate }</td>
               <td style={{ textAlign: 'center' }}>{ vehicle.renavam }</td>
-              <td style={{ textAlign: 'center' }}>{ vehicle.brand_model }</td>
+              <td style={{ textAlign: 'center' }}>{ vehicle.brandModel }</td>
               <td style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 10 }}>
-                {vehicle.crlve_included && (
+                {vehicle.crlveIncluded && (
                   <Button
                     variant="secondary"
                     style={{ height: 34, cursor: inLoadingCRLVe ? 'progress' : 'pointer' }}

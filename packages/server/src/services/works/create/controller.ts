@@ -9,54 +9,47 @@ export class WorksCreateController {
   constructor(private service: WorksCreateService) { }
 
   async handle(req: Request, res: Response) {
-    const name = stringFix(req.body.name, undefined, 'UPPERCASE');
-    const document = stringFix(req.body.document, undefined, 'LOWERCASE');
-    const group = stringFix(req.body.group, undefined, 'UPPERCASE');
-
-    const service_id = stringFix(req.body.service_id, undefined);
-    const identifier = stringFix(req.body.identifier, undefined, 'UPPERCASE');
-    const value = stringFix(req.body.value, undefined, 'UPPERCASE');
-    const details = stringFix(req.body.details, undefined, 'UPPERCASE');
+    const clientId = stringFix(req.body.clientId, undefined);
+    const serviceId = stringFix(req.body.serviceId, undefined);
+    const identifier = stringFix(req.body.identifier, null, 'UPPERCASE');
+    const value = stringFix(req.body.value, undefined);
     const status = stringFix(req.body.status, undefined, 'UPPERCASE');
+    const details = stringFix(req.body.details, undefined, 'UPPERCASE');
     const history = stringFix(req.body.history, undefined, 'UPPERCASE');
 
     try {
-      if(!name) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Client name is null or undefined.' }));
+      if(!clientId) {
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'clientId\' é nulo ou indefinido.', details: null }));
       }
 
-      if(!document) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Client document is null or undefined.' }));
-      }
-
-      if(!service_id) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Work service_id is null or undefined.' }));
-      }
-
-      if(!identifier) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Work identifier is null or undefined.' }));
+      if(!serviceId) {
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'serviceId\' é nulo ou indefinido.', details: null }));
       }
 
       if(!value) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Work value is null or undefined.' }));
-      }
-
-      if(!details) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Work details is null or undefined.' }));
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'value\' é nulo ou indefinido.', details: null }));
       }
 
       if(!status) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Work status is null or undefined.' }));
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'status\' é nulo ou indefinido.', details: null }));
+      }
+
+      if(!details) {
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'details\' é nulo ou indefinido.', details: null }));
       }
 
       if(!history) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Work history is null or undefined.' }));
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'history\' é nulo ou indefinido.', details: null }));
       }
 
-      const work = await this.service.execute({ name, document, group, service_id, identifier, value, details, status, history });
+      if(parseInt(status, 10) < 1 || parseInt(status, 10) > 4) {
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'status\' é inválido.', details: 'O status deve ser entre \'1\',\'2\',\'3\',\'4\'' }));
+      }
+
+      const work = await this.service.execute({ clientId, serviceId, identifier, value, status, details, history });
       return res.status(201).json(work);
     } catch(err) {
-      return errorWork(res, err.message || null);
+      return errorWork(res, err.message);
     }
   }
 }

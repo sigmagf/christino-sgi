@@ -1,9 +1,9 @@
-import { TypeORMVehiclesRepository } from '~/repositories/implementations/TypeORMVehiclesRepository';
+import { SequelizeVehiclesRepository } from '~/repositories/implementations/SequelizeVehiclesRepository';
 
 import { VehiclesListController } from './controller';
 import { VehiclesListService } from './service';
 
-const repository = new TypeORMVehiclesRepository();
+const repository = new SequelizeVehiclesRepository();
 
 const service = new VehiclesListService(repository);
 const controller = new VehiclesListController(service);

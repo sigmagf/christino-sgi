@@ -1,5 +1,4 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import { AxiosResponse } from 'axios';
 import React, { useRef, useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
@@ -7,13 +6,11 @@ import * as yup from 'yup';
 
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
-
 import { Button } from '~/interface/Button';
 import { Input, Select, TextArea } from '~/interface/Form';
 import { Modal } from '~/interface/Modal';
 import { Table } from '~/interface/Table';
 import { IClient, IService, IWork } from '~/interfaces';
-
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatDate } from '~/utils/formatDate';
@@ -21,14 +18,12 @@ import { formatDocument } from '~/utils/formatDocument';
 import { formatMoney } from '~/utils/formatMoney';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
+import { ClientsDetailsModal } from '../ClientsDetailsModal';
 import { WorksDetailsModalForm, WorksDetailsActionButtons, WorksDetailsLoadingContainer } from './styles';
 
 interface IFormData {
-  name: string;
-  document: string;
-  group: string;
-
-  service_id: string;
+  clientId: string;
+  serviceId: string;
   identifier: string;
   value: string;
   status: string;
@@ -41,18 +36,16 @@ interface IWorksDetailsModalProps {
   onClose: () => void;
   work?: IWork;
   workPermission: number;
-  onChangeSuccess: (work: IWork) => void;
 }
 
-export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work, workPermission, onChangeSuccess }) => {
+export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work, workPermission }) => {
   const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);
 
+  const [cadClientModal, setCadClientModal] = useState(false);
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
 
   const [editing, setEditing] = useState(false);
-  const [clientSearched, setClientSearched] = useState(false);
-  const [haveClient, setHaveClient] = useState(true);
 
   const { data: services } = useSWR<IService[]>('/services?noPagination=true');
 
@@ -62,10 +55,14 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       try {
         const client = await api.get<IClient[]>(`/clients?noPagination=true&document=${document}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
-        setHaveClient(client.data.length === 1);
         formRef.current.setFieldValue('name', client.data[0]?.name || '');
         formRef.current.setFieldValue('group', client.data[0]?.group || '');
-        setClientSearched(true);
+        formRef.current.setFieldValue('clientId', client.data[0]?.id || '');
+
+        if(!client.data[0]) {
+          toast.error('Cliente não cadastrado.');
+          setCadClientModal(true);
+        }
       } catch(err) {
         if(err.message === 'Network Error') {
           toast.error('Verifique sua conexão com a internet.');
@@ -74,9 +71,6 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
         } else {
           toast.error('Ocorreu um erro inesperado.');
         }
-
-        setHaveClient(false);
-        setClientSearched(false);
       }
     }
   };
@@ -133,33 +127,28 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
 
     try {
       const scheme = yup.object().shape({
-        name: yup.string().required('Nome é obrigatório'),
-        document: yup.string()
-          .min(11, 'Documento deve ter pelo menos 11 caracteres (CPF).')
-          .max(14, 'Documento deve ter no maximo 14 caracteres (CNPJ).')
-          .test('validate-document', 'Documento inválido.', (el) => validCPForCNPJ(el || ''))
-          .required('Documento é obrigatório.'),
-        service_id: yup.string().required('O serviço é obrigatório.'),
+        clientId: yup.string().required('Erro ao vincular o cliente.'),
+        serviceId: yup.string().required('O serviço é obrigatório.'),
         value: yup.string().required('O valor é obrigatório.'),
         status: yup.string().required('O status é obrigatório.'),
         history: yup.string().required('O historico é obrigatório.'),
       });
 
-      const document = data.document.replace(/\D/g, '');
-      const history = worksStatus.filter((el) => el.value === data.status)[0].label + ' - ' + data.history;
+      const history = `${worksStatus.filter((el) => el.value === data.status)[0].label} - ${data.history}`;
       const value = data.value.replace('.', '').replace(',', '.').trim();
-      await scheme.validate({ ...data, document, value, history }, { abortEarly: false });
-      let response: AxiosResponse<IWork>;
+      await scheme.validate({ ...data, value, history }, { abortEarly: false });
+
       if(work) {
-        response = await api.put<IWork>(`/works/${work.id}`, { ...data, document, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.put<IWork>(`/works/${work.id}`, { ...data, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        response = await api.post<IWork>('/works', { ...data, document, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.post<IWork>('/works', { ...data, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
       setEditing(false);
-      if(work) { onChangeSuccess(response.data); }
+      onClose();
       toast.success(`Ordem de serviço ${work ? 'atualizada' : 'criada'} com sucesso!`);
     } catch(err) {
+      console.log(data);
       if(err instanceof yup.ValidationError) {
         err.inner.forEach((yupError) => toast.error(yupError.message));
       } else if(err.message === 'Network Error') {
@@ -203,109 +192,109 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
     return [];
   };
 
-  const onEditClick = () => {
-    setEditing(true);
-    setClientSearched(false);
-    setHaveClient(true);
-  };
-
   useEffect(() => {
     if(work) {
       setEditing(false);
       setInSubmitProcess(false);
 
       setEditing(false);
-      setClientSearched(false);
-      setHaveClient(true);
     } else {
       setEditing(true);
       setInSubmitProcess(false);
 
       setEditing(true);
-      setClientSearched(false);
-      setHaveClient(true);
     }
   }, [work]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onRequestClose={onClose}
-      haveHeader
-      header={`${work ? 'ALTERAR' : 'CRIAR'} ORDEM DE SERVIÇO`}
-    >
-      <WorksDetailsModalForm
-        ref={formRef}
-        onSubmit={onSubmit}
-        initialData={work && {
-          ...work,
-          ...work.client,
-          document: formatDocument(work.client.document),
-          service_id: services && services.filter((el) => el.id === work.service.id).map((el) => ({ label: el.name, value: el.id }))[0],
-          status: worksStatus.filter((el) => el.value === work.status.toString())[0],
-          sector: work.sector.name,
-        }}
+    <>
+      <Modal
+        isOpen={isOpen}
+        onRequestClose={onClose}
+        haveHeader
+        header={`${work ? 'ALTERAR' : 'CRIAR'} ORDEM DE SERVIÇO`}
       >
-        <Input disabled={!!work || !editing || haveClient} name="name" label="NOME" />
-        <Input disabled={!!work || !editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
-        <Input disabled={!!work || !editing || haveClient} name="group" label="GRUPO" />
+        <WorksDetailsModalForm
+          ref={formRef}
+          onSubmit={onSubmit}
+          initialData={work && {
+            ...work.client,
+            ...work,
+            document: formatDocument(work.client.document),
+            value: formatMoney(work.value),
+            serviceId: services && services.filter((el) => el.id === work.serviceId).map((el) => ({ label: el.name, value: el.id }))[0],
+            status: worksStatus.find((el) => el.value === work.status.toString()),
+          }}
+        >
+          <div className="hidden-input">
+            <Input type="hidden" name="clientId" />
+          </div>
+          <Input disabled name="name" label="NOME" />
+          <Input disabled={!!work || !editing} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
+          <Input disabled name="group" label="GRUPO" />
 
-        <hr />
+          <hr />
 
-        <Select isDisabled={!!work || !editing} name="service_id" label="SERVIÇO" options={handleServiceOptions()} />
-        <Input disabled={!!work || !editing} name="identifier" label="IDENTIFICADOR" />
-        <Input disabled={!!work || !editing} name="value" label="VALOR" onFocus={onValueFocus} onBlur={onValueBlur} />
-        <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
-        <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} />
-        { editing && (
-          <Input name="history" label="NOVA ENTRADA" />
-        )}
+          <Select isDisabled={!!work || !editing} name="serviceId" label="SERVIÇO" options={handleServiceOptions()} />
+          <Input disabled={!!work || !editing} name="identifier" label="IDENTIFICADOR" />
+          <Input disabled={!editing} name="value" label="VALOR" onFocus={onValueFocus} onBlur={onValueBlur} />
+          <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
+          <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} />
+          { editing && <Input name="history" label="NOVA ENTRADA" /> }
 
-        <Table>
-          <thead>
-            <tr>
-              <th>HISTORICO</th>
-              <th>CRIADO EM</th>
-            </tr>
-          </thead>
-          <tbody>
-            {work && work.histories.map((hist) => (
+          <Table>
+            <thead>
               <tr>
-                <td>{ hist.details }</td>
-                <td>{ formatDate(hist.created_at) }</td>
+                <th>HISTORICO</th>
+                <th>CRIADO EM</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
-      </WorksDetailsModalForm>
-      <WorksDetailsActionButtons>
-        {workPermission >= 2 && (
-          <>
-            {editing ? (
-              <>
-                <Button type="submit" variant="success" disabled={inSubmitProcess} onClick={() => formRef.current && formRef.current.submitForm()}>
-                  SALVAR
-                </Button>
-                {work && (
-                  <Button variant="warning" disabled={inSubmitProcess} onClick={() => setEditing(false)}>
-                    CANCELAR
+            </thead>
+            <tbody>
+              {work && work.histories.map((hist) => (
+                <tr key={hist.id}>
+                  <td>{ hist.details }</td>
+                  <td>{ formatDate(hist.createdAt) }</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </WorksDetailsModalForm>
+        <WorksDetailsActionButtons editing={editing}>
+          {workPermission >= 2 && (
+            <>
+              {editing ? (
+                <>
+                  <Button type="submit" variant="success" disabled={inSubmitProcess} onClick={() => formRef.current && formRef.current.submitForm()}>
+                    SALVAR
                   </Button>
-                )}
-              </>
-            ) : (
-              <Button variant="warning" disabled={inSubmitProcess} onClick={onEditClick}>
-                EDITAR
-              </Button>
-            )}
-          </>
-        )}
-      </WorksDetailsActionButtons>
+                  {work && (
+                    <Button variant="warning" disabled={inSubmitProcess} onClick={() => setEditing(false)}>
+                      CANCELAR
+                    </Button>
+                  )}
+                </>
+              ) : (
+                <Button variant="warning" disabled={inSubmitProcess} onClick={() => setEditing(true)}>
+                  EDITAR
+                </Button>
+              )}
+            </>
+          )}
+        </WorksDetailsActionButtons>
 
-      {inSubmitProcess && (
-        <WorksDetailsLoadingContainer>
-          <ReactLoading type="bars" />
-        </WorksDetailsLoadingContainer>
-      )}
-    </Modal>
+        {inSubmitProcess && (
+          <WorksDetailsLoadingContainer>
+            <ReactLoading type="bars" />
+          </WorksDetailsLoadingContainer>
+        )}
+      </Modal>
+
+      <ClientsDetailsModal
+        cliePermission={2}
+        isOpen={cadClientModal}
+        onClose={() => setCadClientModal(false)}
+        onChangeSuccess={onDocumentBlur}
+      />
+    </>
   );
 };

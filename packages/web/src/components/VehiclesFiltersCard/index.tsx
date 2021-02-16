@@ -1,29 +1,26 @@
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useRef, useState } from 'react';
-import { FaLayerGroup, FaPlus, FaFilter, FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { FaPlus, FaFilter, FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
-
 import { Button } from '~/interface/Button';
 import { Select, Input } from '~/interface/Form';
 import { IClient, IVehiclesFilters } from '~/interfaces';
-
 import { api } from '~/utils/api';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders } from './styles';
 
 interface IVehiclesFiltersCardProps {
-  onOpenImportModalClick: () => void;
   onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
   despPermission: number;
 }
 
-export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpenImportModalClick, onCreateClick, onFiltersApplyClick, despPermission }) => {
+export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
 
@@ -76,12 +73,20 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     timer = setTimeout(() => { getClients(name); }, 1000);
   };
 
-  const handleGroups = (gr: string[]) => {
-    const array = gr.map((g) => ({ value: g, label: g }));
+  const handleGroups = () => {
+    if(groups) {
+      const array = groups.map((g) => ({ value: g, label: g }));
+
+      return [
+        { label: 'TODOS', value: '' },
+        { label: 'SEM GRUPO', value: '-1' },
+        ...array,
+      ];
+    }
 
     return [
       { label: 'TODOS', value: '' },
-      ...array,
+      { label: 'SEM GRUPO', value: '-1' },
     ];
   };
 
@@ -89,22 +94,22 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
     <FiltersCard>
       <FiltersContainer open={open}>
         <Form ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
-          <Select label="CLIENTE" name="client_id" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
-          <Select label="GRUPO" name="group" options={handleGroups(groups || [])} defaultValue={{ label: 'TODOS', value: '' }} />
+          <Select label="CLIENTE" name="clientId" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
+          <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
           <Select label="STATUS" name="status" options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
 
           <Input label="PLACA" name="plate" />
           <Input label="RENAVAM" name="renavam" />
           <Input label="CRV" name="crv" />
-          <Input label="MARCA/MODELO" name="brand_model" />
-          <Select label="FINAL DE PLACA" name="plate_end" options={plateEnd} defaultValue={plateEnd[0]} />
-          <Select label="CAMINHOES" name="include_truck" options={includeTruckOptions} defaultValue={includeTruckOptions[1]} />
+          <Input label="MARCA/MODELO" name="brandModel" />
+          <Select label="FINAL DE PLACA" name="plateEnd" options={plateEnd} defaultValue={plateEnd[0]} />
+          <Select label="CAMINHOES" name="includeTruck" options={includeTruckOptions} defaultValue={includeTruckOptions[1]} />
         </Form>
 
         <FiltersHeaders onClick={() => setOpen((old) => !old)}>
           {open ? <FaAngleUp size={12} /> : <FaAngleDown size={12} />}
           &nbsp;&nbsp;
-          Filtros
+          FILTROS
           &nbsp;&nbsp;
           {open ? <FaAngleUp size={12} /> : <FaAngleDown size={12} />}
         </FiltersHeaders>
@@ -112,14 +117,9 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onOpe
 
       <FiltersCardActionButtons>
         {despPermission >= 2 && (
-          <>
-            <Button variant="success" style={{ width: 175.97 }} onClick={onCreateClick}>
-              <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
-            </Button>
-            <Button variant="info" style={{ width: 217.19 }} onClick={onOpenImportModalClick}>
-              <FaLayerGroup />&nbsp;&nbsp;&nbsp;ENVIAR LOTE DE VEICULOS
-            </Button>
-          </>
+          <Button variant="success" style={{ width: 175.97 }} onClick={onCreateClick}>
+            <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
+          </Button>
         )}
         {open && (
           <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>

@@ -1,12 +1,17 @@
+import { IWorksListFilters } from '~/interfaces';
 import { IWorksRepository } from '~/repositories/IWorksRepository';
 
-import { IWorksListRequestDTO } from './dto';
+interface IWorksListRequestDTO {
+  page: number;
+  limit: number;
+  filters: IWorksListFilters;
+}
 
 export class WorksListService {
   constructor(private repository: IWorksRepository) { }
 
   async execute(data: IWorksListRequestDTO) {
-    const works = await this.repository.list(data.page, data.limit, data.filters);
-    return works;
+    const Works = await this.repository.list(data.page, data.limit, data.filters);
+    return Works;
   }
 }

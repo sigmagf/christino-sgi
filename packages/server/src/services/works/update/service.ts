@@ -1,19 +1,15 @@
-import { IClientsRepository } from '~/repositories/IClientsRepository';
+import { IWork } from '~/entities/IWork';
 import { IWorksRepository } from '~/repositories/IWorksRepository';
 
-import { IWorksUpdateRequestDTO } from './dto';
+interface IWorksUpdateRequestDTO extends Pick<IWork, 'id'|'clientId'|'serviceId'|'identifier'|'value'|'status'|'details'> {
+  history: string;
+}
 
 export class WorksUpdateService {
-  constructor(private worksRepo: IWorksRepository, private clientsRepo: IClientsRepository) { }
+  constructor(private repository: IWorksRepository) { }
 
   async execute(data: IWorksUpdateRequestDTO) {
-    const client = await this.clientsRepo.create({
-      name: data.name,
-      document: data.document,
-      group: data.group,
-    });
-
-    const work = await this.worksRepo.update(data.id, { ...data, client_id: client.id });
+    const work = await this.repository.update(data.id, data);
     return work;
   }
 }

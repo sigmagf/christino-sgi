@@ -1,13 +1,11 @@
-import { TypeORMClientsRepository } from '~/repositories/implementations/TypeORMClientsRepository';
-import { TypeORMWorksRepository } from '~/repositories/implementations/TypeORMWorksRepository';
+import { SequelizeWorksRepository } from '~/repositories/implementations/SequelizeWorksRepository';
 
 import { WorksUpdateController } from './controller';
 import { WorksUpdateService } from './service';
 
-const worksRepo = new TypeORMWorksRepository();
-const clientsRepo = new TypeORMClientsRepository();
+const repository = new SequelizeWorksRepository();
 
-const service = new WorksUpdateService(worksRepo, clientsRepo);
+const service = new WorksUpdateService(repository);
 const controller = new WorksUpdateController(service);
 
 export { service as worksUpdateService, controller as worksUpdateController };

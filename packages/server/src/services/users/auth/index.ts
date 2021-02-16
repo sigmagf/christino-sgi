@@ -1,10 +1,9 @@
-import { TypeORMUsersRepository } from '~/repositories/implementations/TypeORMUsersRepository';
+import { SequelizeUsersRepository } from '~/repositories/implementations/SequelizeUsersRepository';
 
 import { UsersAuthController } from './controller';
 import { UsersAuthService } from './service';
 
-const repository = new TypeORMUsersRepository();
-
+const repository = new SequelizeUsersRepository();
 const service = new UsersAuthService(repository);
 const controller = new UsersAuthController(service);
 

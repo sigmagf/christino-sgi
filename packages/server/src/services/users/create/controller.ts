@@ -12,29 +12,29 @@ export class UsersCreateController {
     const name = stringFix(req.body.name, undefined, 'UPPERCASE');
     const email = stringFix(req.body.email, undefined, 'LOWERCASE');
     const password = stringFix(req.body.password, undefined);
-    const desp_permission = stringFix(req.body.desp_permission, undefined);
-    const segu_permission = stringFix(req.body.segu_permission, undefined);
-    const clie_permission = stringFix(req.body.clie_permission, undefined);
-    const user_permission = stringFix(req.body.user_permission, undefined);
-    const work_permission = stringFix(req.body.work_permission, undefined);
+    const despPermission = stringFix(req.body.despPermission, '1');
+    const seguPermission = stringFix(req.body.seguPermission, '1');
+    const cliePermission = stringFix(req.body.cliePermission, '1');
+    const userPermission = stringFix(req.body.userPermission, '1');
+    const workPermission = stringFix(req.body.workPermission, '1');
 
     try {
       if(!name) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Name is null or undefined.' }));
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'name\' é nulo ou indefinido.', details: null }));
       }
 
       if(!email) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Email is null or undefined.' }));
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'email\' é nulo ou indefinido.', details: null }));
       }
 
       if(!password) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Password is null or undefined.' }));
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'password\' é nulo ou indefinido.', details: null }));
       }
 
-      const user = await this.service.execute({ name, email, password, desp_permission, segu_permission, clie_permission, user_permission, work_permission });
+      const user = await this.service.execute({ name, email, password, despPermission, seguPermission, cliePermission, userPermission, workPermission });
       return res.status(201).json(user);
     } catch(err) {
-      return errorWork(res, err.message || null);
+      return errorWork(res, err.message);
     }
   }
 }

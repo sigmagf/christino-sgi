@@ -20,17 +20,17 @@ export class ClientsUpdateController {
 
     try {
       if(!name) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Name is null or undefined.' }));
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'name\' é nulo ou indefinido.', details: null }));
       }
 
       if(!document) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Document is null or undefined.' }));
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'document\' é nulo ou indefinido.', details: null }));
       }
 
-      const user = await this.service.execute({ id, name, document: document.replace(/\D/g, ''), group, email, phone1, phone2 });
-      return res.status(200).json(user);
+      const client = await this.service.execute({ id, name, document: document.replace(/\D/g, ''), group, email, phone1, phone2 });
+      return res.status(200).json(client);
     } catch(err) {
-      return errorWork(res, err.message || null);
+      return errorWork(res, err.message);
     }
   }
 }

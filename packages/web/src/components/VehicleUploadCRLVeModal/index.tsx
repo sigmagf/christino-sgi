@@ -3,10 +3,8 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
 import { useLocalStorage } from '~/hooks';
-
 import { Dropzone } from '~/interface/Dropzone';
 import { Modal } from '~/interface/Modal';
-
 import { api } from '~/utils/api';
 
 interface IImportModalProps {
@@ -16,7 +14,7 @@ interface IImportModalProps {
   vehicleId: string;
 }
 
-export const VehiclesDetailsUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, onClose, onUploadSuccess, vehicleId }) => {
+export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, onClose, onUploadSuccess, vehicleId }) => {
   const storage = useLocalStorage();
 
   const [inLoading, setInLoading] = useState(false);

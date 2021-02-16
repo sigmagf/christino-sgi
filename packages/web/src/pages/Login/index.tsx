@@ -7,14 +7,11 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
 import ChristinoLogo from '~/assets/logo-texto.png';
-
 import { useLocalStorage } from '~/hooks';
-
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Input } from '~/interface/Form';
 import { IUser, IUserAuth } from '~/interfaces';
-
 import { api } from '~/utils/api';
 
 import { LoginContainer } from './styles';
@@ -43,7 +40,7 @@ export const LoginPage: React.FC = () => {
       });
       await schema.validate(data, { abortEarly: false });
 
-      const request = await api.post<IUserAuth>('/users/auth', data);
+      const request = await api.post<IUserAuth>('/users/login', data);
       storage.setItem('token', request.data.token);
       storage.setItem('userName', request.data.user.name);
       navigate('/');

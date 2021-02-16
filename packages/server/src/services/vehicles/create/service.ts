@@ -1,38 +1,19 @@
-import { IClientsRepository } from '~/repositories/IClientsRepository';
+import { IVehicle } from '~/entities/IVehicle';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
-import { convertStatus } from '~/utils/convertStatus';
-
-import { IVehiclesCreateRequestDTO } from './dto';
 
 export class VehiclesCreateService {
-  constructor(private vehiclesRepo: IVehiclesRepository, private clientsRepo: IClientsRepository) { }
+  constructor(private vehiclesRepo: IVehiclesRepository) { }
 
-  async execute(data: IVehiclesCreateRequestDTO) {
-    const client = await this.clientsRepo.create({
-      name: data.name,
-      document: data.document,
-      group: data.group,
-    });
-
-    if(await this.vehiclesRepo.findByClientPlate(client.id, data.plate)) {
-      throw new Error(JSON.stringify({ code: 400, message: 'Vehicle already exists for this client.' }));
+  async execute(data: Pick<IVehicle, 'clientId'|'plate'|'renavam'|'crv'|'brandModel'|'type'|'details'|'status'>) {
+    if(await this.vehiclesRepo.findByClientPlate(data.clientId, data.plate)) {
+      throw new Error(JSON.stringify({ code: 400, message: 'Um veiculo com esta placa já existe para este cliente.', details: null }));
     }
 
-    if(await this.vehiclesRepo.findByClientRenavam(client.id, data.renavam)) {
-      throw new Error(JSON.stringify({ code: 400, message: 'Vehicle already exists for this client.' }));
+    if(await this.vehiclesRepo.findByClientRenavam(data.clientId, data.renavam)) {
+      throw new Error(JSON.stringify({ code: 400, message: 'Um veiculo com este renavam já existe para este cliente.', details: null }));
     }
 
-    const vehicle = await this.vehiclesRepo.create({
-      client_id: client.id,
-      plate: data.plate,
-      renavam: data.renavam,
-      crv: data.crv || null,
-      brand_model: data.brand_model,
-      type: data.type,
-      details: data.details || null,
-      status: convertStatus(data.status),
-    });
-
+    const vehicle = await this.vehiclesRepo.create(data);
     return vehicle;
   }
 }

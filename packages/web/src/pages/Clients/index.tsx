@@ -5,14 +5,11 @@ import { toast } from 'react-toastify';
 
 import { ClientsDataTable } from '~/components/ClientsDataTable';
 import { Layout } from '~/components/Layout';
-
 import { useLocalStorage } from '~/hooks';
-
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Pagination } from '~/interface/Pagination';
 import { IClient, IClientsFilters, IPagination } from '~/interfaces';
-
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/queryStringConverter';
 
@@ -22,7 +19,7 @@ export const ClientsPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
   const storage = useLocalStorage();
 
-  const [clie_permission, setClie_permission] = useState(-1);
+  const [cliePermission, setCliePermission] = useState(-1);
 
   const [clients, setClients] = useState<IPagination<IClient>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
   const [filters, setFilters] = useState<IClientsFilters>({ page: 1, limit: 10 });
@@ -88,12 +85,12 @@ export const ClientsPage: React.FC = () => {
   useEffect(() => { getData(); }, []); // eslint-disable-line
   useEffect(() => { getData(); }, [filters]); // eslint-disable-line
 
-  if(clie_permission === 0) {
+  if(cliePermission === 0) {
     return <Navigate to="/" replace />;
   }
 
   return (
-    <Layout setPermissions={(perms) => setClie_permission(perms.clie_permission)}>
+    <Layout setPermissions={(perms) => setCliePermission(perms.cliePermission)}>
       <ClientsDataTable inLoading={inLoading} data={clients.data} onDetailsClick={onDetailsClick} />
 
       <Card style={{ margin: '15px 0' }}>

@@ -1,14 +1,13 @@
-import { User } from '~/entities/User';
-
+import { IUser } from '~/entities/IUser';
 import { IPagination } from '~/interfaces';
 
 export interface IUsersRepository {
-  list(page: number, limit: number): Promise<IPagination<User>>;
-  findById(id: string): Promise<User>;
-  findByEmail(email: string): Promise<User>;
+  list(page: number, maxResults: number, withPassword?: boolean): Promise<IPagination<IUser>>;
+  findById(id: string, withPassword?: boolean): Promise<IUser>;
+  findByEmail(email: string, withPassword?: boolean): Promise<IUser>;
 
-  create(data: Omit<User, 'id'|'created_at'|'updated_at'>): Promise<User>;
-  update(id: string, data: Omit<User, 'id'|'created_at'|'updated_at'>): Promise<User>;
+  create(data: Omit<IUser, 'id'|'createdAt'|'updatedAt'>, withPassword?: boolean): Promise<IUser>;
+  update(id: string, data: Omit<IUser, 'id'|'createdAt'|'updatedAt'>, withPassword?: boolean): Promise<IUser>;
 
   delete(id: string): Promise<void>;
 }

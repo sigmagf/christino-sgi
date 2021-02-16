@@ -14,7 +14,7 @@ export class ClientsFindController {
       const client = await this.service.execute({ id });
       return res.status(200).json(client);
     } catch(err) {
-      return errorWork(res, err.message || null);
+      return errorWork(res, err.message);
     }
   }
 }

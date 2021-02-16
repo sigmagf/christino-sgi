@@ -5,14 +5,12 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 
 import { useLocalStorage } from '~/hooks';
-
 import { Button } from '~/interface/Button';
 import { Dropzone } from '~/interface/Dropzone';
 import { Modal } from '~/interface/Modal';
 import { Pagination } from '~/interface/Pagination';
 import { Table } from '~/interface/Table';
 import { IVehicle, IVehiclesImportCSV } from '~/interfaces';
-
 import { api } from '~/utils/api';
 import { withPagination } from '~/utils/withPagination';
 
@@ -64,7 +62,7 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
           plate: (el.plate || '').toUpperCase(),
           renavam: el.renavam || '',
           crv: el.crv || null,
-          brand_model: (el.brand_model || '').toUpperCase(),
+          brandModel: (el.brandModel || '').toUpperCase(),
           type: (el.type || '').toUpperCase(),
           details: (el.details || '').toUpperCase(),
           status: (el.status || '').toUpperCase(),
@@ -178,7 +176,7 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                       <td style={{ textAlign: 'center' }}>{ vehicle.plate }</td>
                       <td style={{ textAlign: 'center' }}>{ vehicle.renavam }</td>
                       <td style={{ textAlign: 'center' }}>{ vehicle.crv }</td>
-                      <td style={{ textAlign: 'center' }}>{ vehicle.brand_model }</td>
+                      <td style={{ textAlign: 'center' }}>{ vehicle.brandModel }</td>
                       <td style={{ textAlign: 'center' }}>{ vehicle.type }</td>
                       <td style={{ textAlign: 'center' }}>{ vehicle.details }</td>
                       <td style={{ textAlign: 'center' }}>{ vehicle.status }</td>

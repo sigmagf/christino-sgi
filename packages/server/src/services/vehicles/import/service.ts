@@ -1,9 +1,27 @@
+import { IVehicle } from '~/entities/IVehicle';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
-import { convertStatus } from '~/utils/convertStatus';
 import { stringFix } from '~/utils/stringFix';
 
-import { IImportError, IVehiclesImportRequestDTO } from './dto';
+interface IImportError extends Partial<Omit<IVehicle, 'id'|'client'|'status'|'created_at'|'updated_at'>> {
+  status: number | string;
+  error: string;
+}
+
+interface IVehiclesImportRequestDTO {
+  data: {
+    name: string;
+    document: string;
+    group: string;
+    plate: string;
+    renavam: string;
+    crv: string;
+    brandModel: string;
+    type: string;
+    details: string;
+    status: string;
+  }[];
+}
 
 export class VehiclesImportService {
   constructor(
@@ -16,12 +34,17 @@ export class VehiclesImportService {
 
     const vehicles = await Promise.all(data.map(async (vehicle) => {
       if(!vehicle.name || !vehicle.document) {
-        errors.push({ ...vehicle, error: 'Client name or document are null or invalid.' });
+        errors.push({ ...vehicle, error: 'O nome e/ou documento do cliente é inválido.' });
         return null;
       }
 
-      if(!vehicle.plate || !vehicle.renavam || !vehicle.brand_model || !vehicle.type) {
-        errors.push({ ...vehicle, error: 'Vehicle plate, renavam, brand_model or type are null or invalid.' });
+      if(!vehicle.plate || !vehicle.renavam || !vehicle.brandModel || !vehicle.type) {
+        errors.push({ ...vehicle, error: 'A placa, renavam, marca, modelo e/ou tipo é inválido.' });
+        return null;
+      }
+
+      if(parseInt(vehicle.status, 10) < 1 || parseInt(vehicle.status, 10) > 4) {
+        errors.push({ ...vehicle, error: 'O status deve ser entre \'1\',\'2\',\'3\',\'4\'' });
         return null;
       }
 
@@ -33,46 +56,46 @@ export class VehiclesImportService {
         });
 
         return {
-          client_id: client.id,
+          clientId: client.id,
           plate: stringFix(vehicle.plate, undefined, 'UPPERCASE'),
           renavam: stringFix(vehicle.renavam, undefined, 'UPPERCASE'),
           crv: stringFix(vehicle.crv, undefined, 'UPPERCASE'),
-          brand_model: stringFix(vehicle.brand_model, undefined, 'UPPERCASE'),
+          brandModel: stringFix(vehicle.brandModel, undefined, 'UPPERCASE'),
           type: stringFix(vehicle.type, undefined, 'UPPERCASE'),
           details: stringFix(vehicle.details, undefined, 'UPPERCASE'),
-          status: convertStatus(stringFix(vehicle.status, undefined, 'LOWERCASE')),
+          status: parseInt(vehicle.status, 10),
         };
       } catch(err) {
-        errors.push({ ...vehicle, error: err.message || 'Unexprected error' });
+        errors.push({ ...vehicle, error: err.message || 'Erro inesperado.' });
         return null;
       }
     }));
 
     await Promise.all(vehicles.filter((el) => el !== null).map(async (vehicle) => {
-      if(!vehicle.client_id) {
-        errors.push({ ...vehicle, error: 'Client not found.' });
+      if(!vehicle.clientId) {
+        errors.push({ ...vehicle, error: 'Cliente não encontrado.' });
         return;
       }
 
-      if(await this.vehiclesRepo.findByClientPlate(vehicle.client_id, vehicle.plate)) {
-        errors.push({ ...vehicle, error: 'Vehicle already exists for this client.' });
+      if(await this.vehiclesRepo.findByClientPlate(vehicle.clientId, vehicle.plate)) {
+        errors.push({ ...vehicle, error: 'Um veiculo com esta placa já existe para este cliente.' });
         return;
       }
 
-      if(await this.vehiclesRepo.findByClientRenavam(vehicle.client_id, vehicle.renavam)) {
-        errors.push({ ...vehicle, error: 'Vehicle already exists for this client.' });
+      if(await this.vehiclesRepo.findByClientRenavam(vehicle.clientId, vehicle.renavam)) {
+        errors.push({ ...vehicle, error: 'Um veiculo com este renavam já existe para este cliente.' });
         return;
       }
 
       try {
         await this.vehiclesRepo.create(vehicle);
       } catch(err) {
-        errors.push({ ...vehicle, error: err.message || 'Unexpected error' });
+        errors.push({ ...vehicle, error: err.message || 'Erro inesperado.' });
       }
     }));
 
     if(errors.length > 0) {
-      throw new Error(JSON.stringify({ code: 400, message: 'Partial data invalid', details: errors }));
+      throw new Error(JSON.stringify({ code: 400, message: 'Nem todos os dados foram enviados', details: errors }));
     }
   }
 }

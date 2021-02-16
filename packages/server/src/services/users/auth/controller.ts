@@ -14,17 +14,17 @@ export class UsersAuthController {
 
     try {
       if(!email) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Email is null or undefined.' }));
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'email\' é nulo ou indefinido.', details: null }));
       }
 
       if(!password) {
-        throw new Error(JSON.stringify({ code: 400, message: 'Password is null or undefined.' }));
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'password\' é nulo ou indefinido.', details: null }));
       }
 
-      const user = await this.service.execute({ email, password });
-      return res.status(201).json(user);
+      const userWithToken = await this.service.execute({ email, password });
+      return res.status(201).json(userWithToken);
     } catch(err) {
-      return errorWork(res, err.message || null);
+      return errorWork(res, err.message);
     }
   }
 }
