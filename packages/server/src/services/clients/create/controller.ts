@@ -11,10 +11,10 @@ export class ClientsCreateController {
   async handle(req: Request, res: Response) {
     const name = stringFix(req.body.name, undefined, 'UPPERCASE');
     const document = stringFix(req.body.document, '', 'UPPERCASE');
-    const group = stringFix(req.body.group, undefined, 'UPPERCASE');
-    const email = stringFix(req.body.email, undefined, 'UPPERCASE');
-    const phone1 = stringFix(req.body.phone1, undefined, 'UPPERCASE');
-    const phone2 = stringFix(req.body.phone2, undefined, 'UPPERCASE');
+    const group = stringFix(req.body.group, null, 'UPPERCASE');
+    const email = stringFix(req.body.email, null, 'UPPERCASE');
+    const phone1 = stringFix(req.body.phone1, null, 'UPPERCASE');
+    const phone2 = stringFix(req.body.phone2, null, 'UPPERCASE');
 
     try {
       if(!name) {

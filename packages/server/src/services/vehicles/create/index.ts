@@ -3,9 +3,9 @@ import { SequelizeVehiclesRepository } from '~/repositories/implementations/Sequ
 import { VehiclesCreateController } from './controller';
 import { VehiclesCreateService } from './service';
 
-const vehiclesRepo = new SequelizeVehiclesRepository();
+const repository = new SequelizeVehiclesRepository();
 
-const service = new VehiclesCreateService(vehiclesRepo);
+const service = new VehiclesCreateService(repository);
 const controller = new VehiclesCreateController(service);
 
 export { service as vehiclesCreateService, controller as vehiclesCreateController };

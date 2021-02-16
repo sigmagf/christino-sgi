@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -7,7 +7,6 @@ import { Layout } from '~/components/Layout';
 import { VehiclesDataTable } from '~/components/VehiclesDataTable';
 import { VehiclesDetailsModal } from '~/components/VehiclesDetailsModal';
 import { VehiclesFiltersCard } from '~/components/VehiclesFiltersCard';
-import { VehiclesImportModal } from '~/components/VehiclesImportModal';
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
@@ -29,13 +28,11 @@ export const VehiclesPage: React.FC = () => {
   const [vehicleIdToDetails, setVehicleIdToDetails] = useState<string>();
   const [inLoadingPrint, setInLoadingPrint] = useState(false);
 
-  const [importModalOpen, setImportModalOpen] = useState(false);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
-  const { data: vehicles, revalidate, mutate, isValidating: inLoading } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
+  const { data: vehicles, revalidate, mutate, isValidating: inLoading, error: getVehicleError } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
 
   const onModalsClose = () => {
-    setImportModalOpen(false);
     setDetailsModalOpen(false);
     revalidate();
   };
@@ -91,6 +88,18 @@ export const VehiclesPage: React.FC = () => {
     setInLoadingPrint(false);
   };
 
+  useEffect(() => {
+    if(getVehicleError) {
+      if(getVehicleError.message === 'Network Error') {
+        toast.error('Verifique sua conexão com a internet.');
+      } else if(getVehicleError.response && getVehicleError.response.data && getVehicleError.response.data.message) {
+        toast.error(getVehicleError.response.data.message);
+      } else {
+        toast.error('Ocorreu um erro inesperado.');
+      }
+    }
+  }, [getVehicleError]);
+
   if(despPermission === 0) {
     return <Navigate to="/" replace />;
   }
@@ -105,7 +114,6 @@ export const VehiclesPage: React.FC = () => {
     <>
       <Layout setPermissions={(perms) => setDespPermission(perms.despPermission)}>
         <VehiclesFiltersCard
-          onOpenImportModalClick={() => setImportModalOpen(true)}
           onCreateClick={onCreateVehicleClick}
           onFiltersApplyClick={(data) => setFilters((old) => ({ ...old, ...data, page: 1 }))}
           despPermission={despPermission}
@@ -123,7 +131,6 @@ export const VehiclesPage: React.FC = () => {
         </Card>
       </Layout>
 
-      <VehiclesImportModal isOpen={importModalOpen} onClose={onModalsClose} />
       <VehiclesDetailsModal
         isOpen={detailsModalOpen}
         despPermission={despPermission}

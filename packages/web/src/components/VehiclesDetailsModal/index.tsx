@@ -5,7 +5,7 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
-import { VehiclesDetailsUploadCRLVeModal } from '~/components/VehicleUploadCRLVeModal';
+import { VehiclesUploadCRLVeModal } from '~/components/VehicleUploadCRLVeModal';
 import { useLocalStorage } from '~/hooks';
 import { Button } from '~/interface/Button';
 import { Input, Select } from '~/interface/Form';
@@ -16,16 +16,16 @@ import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { formatDocument } from '~/utils/formatDocument';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
+import { ClientsDetailsModal } from '../ClientsDetailsModal';
+import { VehiclesDownModal } from '../VehiclesDownModal';
 import { DetailsModalForm, VehicleDetailsActionButtons, VehicleDetailsLoadingContainer } from './styles';
 
 interface IFormData {
-  name: string;
-  document: string;
-  group: string;
+  clientId: string;
   plate: string;
   renavam: string;
   crv: string;
-  brand_model: string;
+  brandmodel: string;
   type: string;
   status: string;
   details: string;
@@ -47,8 +47,8 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
 
   const [editing, setEditing] = useState(false);
-  const [clientSearched, setClientSearched] = useState(false);
-  const [haveClient, setHaveClient] = useState(true);
+  const [cadClientModal, setCadClientModal] = useState(false);
+  const [downModal, setDwonModal] = useState(false);
 
   const [uploadCrlveModalOpen, setUploadCrlveModalOpen] = useState(false);
 
@@ -84,14 +84,17 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   /* - SEARCH CLIENT IN DATABASE - */
   const getClient = async (document: string) => {
     if(formRef.current) {
-      setClientSearched(true);
-
       try {
         const client = await api.get<IClient[]>(`/clients?noPagination=true&document=${document}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
-        setHaveClient(client.data.length === 1);
         formRef.current.setFieldValue('name', client.data[0]?.name || '');
         formRef.current.setFieldValue('group', client.data[0]?.group || '');
+        formRef.current.setFieldValue('clientId', client.data[0]?.id || '');
+
+        if(!client.data[0]) {
+          toast.error('Cliente não cadastrado.');
+          setCadClientModal(true);
+        }
       } catch(err) {
         if(err.message === 'Network Error') {
           toast.error('Verifique sua conexão com a internet.');
@@ -100,9 +103,6 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         } else {
           toast.error('Ocorreu um erro inesperado.');
         }
-
-        setHaveClient(false);
-        setClientSearched(false);
       }
     }
   };
@@ -112,7 +112,10 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   const onBlurMaxLengths = (inputName: string, maxLength: number, fillString: string) => {
     if(formRef.current) {
       const inputVal: string = formRef.current.getFieldValue(inputName).replace(/\D/g, '');
-      formRef.current.setFieldValue(inputName, inputVal.padStart(maxLength, fillString));
+
+      if(inputVal) {
+        formRef.current.setFieldValue(inputName, inputVal.padStart(maxLength, fillString));
+      }
     }
   };
   /* END SET MAX LENGTH */
@@ -154,18 +157,38 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   };
   /* END ON CRLVe CHANGE */
 
+  /* - HANDLE DOWN VEHICLE - */
+  const handleDownVehicle = async () => {
+    setDwonModal(false);
+
+    if(vehicle) {
+      try {
+        await api.put<IVehicle>(`/vehicles/${vehicle.id}`, { ...vehicle, status: 1 }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+
+        onClose();
+        toast.success('Veículo baixado com sucesso!');
+      } catch(err) {
+        if(err instanceof yup.ValidationError) {
+          err.inner.forEach((yupError) => toast.error(yupError.message));
+        } else if(err.message === 'Network Error') {
+          toast.error('Verifique sua conexão com a internet.');
+        } else if(err.response && err.response.data && err.response.data.message) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error('Ocorreu um erro inesperado.');
+        }
+      }
+    }
+  };
+  /* END HANDLE DOWN VEHICLE */
+
   /* - SAVE OR UPDATE VEHICLE - */
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     setInSubmitProcess(true);
 
     try {
       const scheme = yup.object().shape({
-        name: yup.string().required('Nome é obrigatório'),
-        document: yup.string()
-          .min(11, 'Documento deve ter pelo menos 11 caracteres (CPF).')
-          .max(14, 'Documento deve ter no maximo 14 caracteres (CNPJ).')
-          .test('validate-document', 'Documento inválido.', (el) => validCPForCNPJ(el || ''))
-          .required('Documento é obrigatório.'),
+        clientId: yup.string().required('Erro ao vincular o cliente.'),
         plate: yup.string()
           .min(7, 'Placa inválida.')
           .max(7, 'Placa inválida.')
@@ -177,17 +200,16 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         type: yup.string().required('O tipo é obrigatória.'),
       });
 
-      const document = data.document.replace(/\D/g, '');
-      await scheme.validate({ ...data, document }, { abortEarly: false });
+      await scheme.validate(data, { abortEarly: false });
 
       if(vehicle) {
-        await api.put<IVehicle>(`/vehicles/${vehicle.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.put<IVehicle>(`/vehicles/${vehicle.id}`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        await api.post<IVehicle>('/vehicles', { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.post<IVehicle>('/vehicles', data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
-      setEditing(false);
-      toast.success('Veículo atualizado com sucesso!');
+      onClose();
+      toast.success(`Veículo ${vehicle ? 'atualizado' : 'cadastrado'} com sucesso!`);
     } catch(err) {
       if(err instanceof yup.ValidationError) {
         err.inner.forEach((yupError) => toast.error(yupError.message));
@@ -204,32 +226,44 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   };
   /* END SAVE OR UPDATE VEHICLE */
 
-  const onEditClick = () => {
-    setEditing(true);
-    setClientSearched(false);
-    setHaveClient(true);
+  const handleVehicleExclude = async () => {
+    if(vehicle) {
+      setInSubmitProcess(true);
+
+      try {
+        if(window.confirm('Deseja realmente excluir este veículo?')) {
+          await api.delete(`/vehicles/${vehicle.id}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+          toast.success('Veículo excluido com sucesso!');
+          onClose();
+        }
+      } catch(err) {
+        if(err.message === 'Network Error') {
+          toast.error('Verifique sua conexão com a internet.');
+        } else if(err.response && err.response.data && err.response.data.message) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error('Ocorreu um erro inesperado.');
+        }
+      }
+
+      setInSubmitProcess(false);
+    }
   };
 
   useEffect(() => {
     if(vehicle) {
       setInLoadingCRLVe(false);
       setInSubmitProcess(false);
-
       setEditing(false);
-      setClientSearched(false);
-      setHaveClient(true);
-
       setUploadCrlveModalOpen(false);
     } else {
       setInLoadingCRLVe(false);
       setInSubmitProcess(false);
-
       setEditing(true);
-      setClientSearched(false);
-      setHaveClient(true);
-
       setUploadCrlveModalOpen(false);
     }
+
+    setCadClientModal(false);
   }, [vehicle]);
 
   return (
@@ -245,16 +279,19 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           onSubmit={onSubmit}
           initialData={
             vehicle && {
-              ...vehicle,
               ...vehicle.client,
+              ...vehicle,
               document: formatDocument(vehicle.client.document),
-              status: status.filter((el) => el.value === vehicle.status.toString()),
+              status: status.find((el) => el.value === vehicle?.status.toString()),
             }
           }
         >
-          <Input disabled={!editing || haveClient} name="name" label="NOME" />
-          <Input disabled={!editing || clientSearched} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
-          <Input disabled={!editing || haveClient} name="group" label="GRUPO" />
+          <div className="inputs-hidden">
+            <Input type="hidden" name="clientId" />
+          </div>
+          <Input disabled name="name" label="NOME" />
+          <Input disabled={!editing} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
+          <Input disabled name="group" label="GRUPO" />
 
           <hr />
 
@@ -263,12 +300,12 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           <Input disabled={!editing} name="crv" label="CRV" maxLength={12} onBlur={() => onBlurMaxLengths('crv', 12, '0')} />
           <Input disabled={!editing} name="brandModel" label="MARCA/MODELO" />
           <Input disabled={!editing} name="type" label="TIPO" />
-          <Select isDisabled={!editing} name="status" label="STATUS" options={status} />
+          <Select isDisabled={!editing} name="status" label="STATUS" options={status.filter((el) => el.value > '1')} />
           <Input disabled={!editing} name="details" label="DETALHES" />
         </DetailsModalForm>
         <VehicleDetailsActionButtons>
           {(!editing && vehicle && vehicle.crlveIncluded) && (
-            <Button variant="secondary" disabled={inLoadingCRLVe} style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }} onClick={handleGetCRLVe}>
+            <Button type="button" variant="secondary" disabled={inLoadingCRLVe} style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }} onClick={handleGetCRLVe}>
               <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
             </Button>
           )}
@@ -276,7 +313,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           {despPermission >= 2 && (
             <>
               {(vehicle && !editing) && (
-                <Button variant="info" disabled={inSubmitProcess} onClick={() => setUploadCrlveModalOpen(true)}>
+                <Button type="button" variant="info" disabled={inSubmitProcess} onClick={() => setUploadCrlveModalOpen(true)} title="ENVIAR CRLVe">
                   <FaUpload />&nbsp;&nbsp;&nbsp; CRLVe
                 </Button>
               )}
@@ -284,16 +321,29 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
               {editing ? (
                 <>
                   <Button type="submit" variant="success" disabled={inSubmitProcess} onClick={() => formRef.current && formRef.current.submitForm()}>
-                    SALVAR
+                    {vehicle ? 'SALVAR' : 'INCLUIR'}
                   </Button>
+
                   {vehicle && (
-                    <Button variant="warning" disabled={inSubmitProcess} onClick={() => setEditing(false)}>
-                      CANCELAR
-                    </Button>
+                    <>
+                      <Button type="button" variant="error" disabled={inSubmitProcess} onClick={() => setDwonModal(true)}>
+                        BAIXAR VEÍCULO
+                      </Button>
+
+                      {despPermission >= 3 && (
+                        <Button type="button" variant="error" disabled={inSubmitProcess} onClick={handleVehicleExclude}>
+                          EXCLUIR
+                        </Button>
+                      )}
+
+                      <Button type="button" variant="warning" disabled={inSubmitProcess} onClick={() => setEditing(false)}>
+                        CANCELAR
+                      </Button>
+                    </>
                   )}
                 </>
               ) : (
-                <Button variant="warning" disabled={inSubmitProcess} onClick={onEditClick}>
+                <Button variant="warning" disabled={inSubmitProcess} onClick={() => setEditing(true)}>
                   EDITAR
                 </Button>
               )}
@@ -307,11 +357,23 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           </VehicleDetailsLoadingContainer>
         )}
       </Modal>
-      <VehiclesDetailsUploadCRLVeModal
+      <VehiclesUploadCRLVeModal
         isOpen={uploadCrlveModalOpen}
         onClose={() => setUploadCrlveModalOpen(false)}
         vehicleId={vehicle?.id || ''}
         onUploadSuccess={onCRLVeUploadSuccess}
+      />
+      <ClientsDetailsModal
+        cliePermission={2}
+        isOpen={cadClientModal}
+        onClose={() => setCadClientModal(false)}
+        onChangeSuccess={onDocumentBlur}
+      />
+      <VehiclesDownModal
+        isOpen={downModal}
+        onClose={() => setDwonModal(false)}
+        onDownSuccess={handleDownVehicle}
+        vehicle={vehicle}
       />
     </>
   );

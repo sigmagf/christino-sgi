@@ -14,7 +14,7 @@ interface IImportModalProps {
   vehicleId: string;
 }
 
-export const VehiclesDetailsUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, onClose, onUploadSuccess, vehicleId }) => {
+export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, onClose, onUploadSuccess, vehicleId }) => {
   const storage = useLocalStorage();
 
   const [inLoading, setInLoading] = useState(false);

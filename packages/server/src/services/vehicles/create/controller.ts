@@ -10,6 +10,7 @@ export class VehiclesCreateController {
 
   async handle(req: Request, res: Response) {
     const clientId = stringFix(req.body.clientId, undefined);
+
     const plate = stringFix(req.body.plate, undefined, 'UPPERCASE');
     const renavam = stringFix(req.body.renavam, undefined, 'UPPERCASE');
     const crv = stringFix(req.body.crv, undefined, 'UPPERCASE');

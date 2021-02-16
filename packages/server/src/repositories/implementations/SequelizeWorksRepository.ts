@@ -59,7 +59,7 @@ export class SequelizeWorksRepository implements IWorksRepository {
     const fixedData: IWork[] = [];
 
     await Promise.all(data.map(async (el) => {
-      const histories = await WorkHistory.findAll({ where: { workId: el.work_id }, order: [['createdAt', 'DESC']] });
+      const histories = await WorkHistory.findAll({ where: { workId: el.workId }, order: [['createdAt', 'DESC']] });
 
       fixedData.push({
         id: el.workId,
@@ -121,7 +121,7 @@ export class SequelizeWorksRepository implements IWorksRepository {
       };
     }
 
-    const dbData = await Work.findAll({ include: { all: true, nested: true } });
+    const dbData = await sequelize.query(this.selectQuery(), { type: QueryTypes.SELECT });
     return this.fixData(dbData);
   }
 
@@ -131,7 +131,7 @@ export class SequelizeWorksRepository implements IWorksRepository {
   }
 
   async create(data: IWorkCreateOrUpdate): Promise<IWork> {
-    const entry = await Work.create({ data, history: undefined });
+    const entry = await Work.create({ ...data, history: undefined });
 
     await WorkHistory.create({
       workId: entry.id,
@@ -142,8 +142,13 @@ export class SequelizeWorksRepository implements IWorksRepository {
     return this.fixData(dbData)[0];
   }
 
-  async update(id: string, data: Partial<Omit<IWorkCreateOrUpdate, 'id'>>): Promise<IWork> {
-    await Work.update(data, { where: { id } });
+  async update(id: string, data: Partial<IWorkCreateOrUpdate>): Promise<IWork> {
+    await Work.update({ ...data, id: undefined, history: undefined }, { where: { id } });
+
+    await WorkHistory.create({
+      workId: id,
+      details: data.history,
+    });
 
     const dbData = await sequelize.query(this.selectQuery(`wk.id = '${id}'`), { type: QueryTypes.SELECT });
     return this.fixData(dbData)[0];
