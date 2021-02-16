@@ -9,6 +9,33 @@ import { IWorksListFilters, IPagination } from '~/interfaces';
 import { IWorkCreateOrUpdate, IWorksRepository } from '../IWorksRepository';
 
 export class SequelizeWorksRepository implements IWorksRepository {
+  private makeSpecialWhereString(filters: IWorksListFilters) {
+    const filtersPart: string[] = [];
+
+    filtersPart.push(filters.clientId ? `cl.id = '${filters.clientId}'` : null);
+    filtersPart.push(filters.serviceId ? `sv.id = '${filters.serviceId}'` : null);
+    filtersPart.push(filters.sectorId ? `sc.id = '${filters.sectorId}'` : null);
+
+    if(filters.group === '-1') {
+      filtersPart.push('cl.group IS NULL');
+    } else {
+      filtersPart.push(filters.group ? `cl.group LIKE '%${filters.group}%'` : null);
+    }
+
+    filtersPart.push(filters.identifier ? `wk.identifier LIKE '%${filters.identifier}%'` : null);
+    filtersPart.push(filters.value ? `wk.value = ${filters.value}` : null);
+
+    if(Array.isArray(filters.status)) {
+      const statusPart: string[] = [];
+      filters.status.forEach((el) => statusPart.push(el ? `v.status = ${el}` : null));
+      filtersPart.push(`(${statusPart.filter((el) => el !== null).join(' OR ')})`);
+    } else {
+      filtersPart.push(filters.status ? `v.status = ${filters.status}` : null);
+    }
+
+    return filtersPart.filter((el) => el !== null).join(' AND ');
+  }
+
   private selectQuery(where?: string, limit?: number, offset?: number) {
     return `
       SELECT
@@ -103,13 +130,14 @@ export class SequelizeWorksRepository implements IWorksRepository {
   }
 
   async list(page: number, maxResults: number, filters: IWorksListFilters): Promise<IPagination<IWork> | IWork[]> {
+    const where = this.makeSpecialWhereString(filters);
     const limit = maxResults > 100 ? 100 : maxResults;
 
     if(filters.pagination) {
       const maxRows = await Work.count();
       const pages = Math.ceil(maxRows / limit);
       const offset = (page - 1) * limit;
-      const dbPageData = await sequelize.query(this.selectQuery(undefined, limit, offset), { type: QueryTypes.SELECT });
+      const dbPageData = await sequelize.query(this.selectQuery(where, limit, offset), { type: QueryTypes.SELECT });
 
       return {
         page: {
@@ -121,7 +149,7 @@ export class SequelizeWorksRepository implements IWorksRepository {
       };
     }
 
-    const dbData = await sequelize.query(this.selectQuery(), { type: QueryTypes.SELECT });
+    const dbData = await sequelize.query(this.selectQuery(where), { type: QueryTypes.SELECT });
     return this.fixData(dbData);
   }
 

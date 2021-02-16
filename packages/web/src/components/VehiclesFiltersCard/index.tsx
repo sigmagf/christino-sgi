@@ -1,7 +1,6 @@
 import { FormHandles } from '@unform/core';
-import { Form } from '@unform/web';
 import React, { useRef, useState } from 'react';
-import { FaPlus, FaFilter, FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import { FaPlus, FaFilter } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 import { useLocalStorage } from '~/hooks';
@@ -12,7 +11,7 @@ import { IClient, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
 
-import { FiltersCard, FiltersCardActionButtons, FiltersContainer, FiltersHeaders } from './styles';
+import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IVehiclesFiltersCardProps {
   onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
@@ -24,11 +23,10 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
 
-  const { data: groups } = useSWR<string[]>('/clients/groups?pagination=false');
+  const { data: groups } = useSWR<string[]>('/clients/groups');
 
   let timer: any;
 
-  const [open, setOpen] = useState(true);
   const [clients, setClients] = useState([{ label: 'TODOS', value: '' }]);
 
   const includeTruckOptions = [
@@ -92,28 +90,18 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
 
   return (
     <FiltersCard>
-      <FiltersContainer open={open}>
-        <Form ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
-          <Select label="CLIENTE" name="clientId" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
-          <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
-          <Select label="STATUS" name="status" options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
+      <FiltersCardForm ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
+        <Select label="CLIENTE" name="clientId" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
+        <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
+        <Select label="STATUS" name="status" options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
 
-          <Input label="PLACA" name="plate" />
-          <Input label="RENAVAM" name="renavam" />
-          <Input label="CRV" name="crv" />
-          <Input label="MARCA/MODELO" name="brandModel" />
-          <Select label="FINAL DE PLACA" name="plateEnd" options={plateEnd} defaultValue={plateEnd[0]} />
-          <Select label="CAMINHOES" name="includeTruck" options={includeTruckOptions} defaultValue={includeTruckOptions[1]} />
-        </Form>
-
-        <FiltersHeaders onClick={() => setOpen((old) => !old)}>
-          {open ? <FaAngleUp size={12} /> : <FaAngleDown size={12} />}
-          &nbsp;&nbsp;
-          FILTROS
-          &nbsp;&nbsp;
-          {open ? <FaAngleUp size={12} /> : <FaAngleDown size={12} />}
-        </FiltersHeaders>
-      </FiltersContainer>
+        <Input label="PLACA" name="plate" />
+        <Input label="RENAVAM" name="renavam" />
+        <Input label="CRV" name="crv" />
+        <Input label="MARCA/MODELO" name="brandModel" />
+        <Select label="FINAL DE PLACA" name="plateEnd" options={plateEnd} defaultValue={plateEnd[0]} />
+        <Select label="CAMINHOES" name="includeTruck" options={includeTruckOptions} defaultValue={includeTruckOptions[1]} />
+      </FiltersCardForm>
 
       <FiltersCardActionButtons>
         {despPermission >= 2 && (
@@ -121,11 +109,9 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
             <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
           </Button>
         )}
-        {open && (
-          <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>
-            <FaFilter />&nbsp;&nbsp;&nbsp;FILTRAR
-          </Button>
-        )}
+        <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>
+          <FaFilter />&nbsp;&nbsp;&nbsp;FILTRAR
+        </Button>
       </FiltersCardActionButtons>
     </FiltersCard>
   );

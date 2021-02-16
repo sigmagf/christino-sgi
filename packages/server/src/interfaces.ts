@@ -15,14 +15,11 @@ export interface IClientsListFilters extends Partial<Pick<IClient, 'name'|'docum
   pagination: boolean;
 }
 
-export interface IWorksListFilters extends Partial<Pick<IWork, 'identifier'|'value'|'details'|'status'>> {
+export interface IWorksListFilters extends Partial<Pick<IWork, 'clientId'|'serviceId'|'identifier'|'value'|'status'>> {
   pagination: boolean;
 
-  name?: string;
-  document?: string;
   group?: string;
-  service?: string;
-  sector?: string;
+  sectorId?: string;
 }
 
 export interface IVehiclesListFilters extends Partial<Omit<IVehicle, 'id'|'client'|'type'|'details'|'status'|'createdAt'|'updatedAt'>> {

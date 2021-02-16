@@ -34,7 +34,9 @@ export class SequelizeClientsRepository implements IClientsRepository {
   }
 
   async listGroups(): Promise<string[]> {
-    const dbData = await sequelize.query<Pick<IClient, 'group'>>('SELECT DISTINCT c.group FROM clients as c WHERE c.group IS NOT NULL', { type: QueryTypes.SELECT });
+    const dbData = await sequelize.query<Pick<IClient, 'group'>>('SELECT DISTINCT c.group FROM clients as c WHERE c.group IS NOT NULL ORDER BY c.group ASC', {
+      type: QueryTypes.SELECT,
+    });
     return dbData.map((el) => el.group);
   }
 

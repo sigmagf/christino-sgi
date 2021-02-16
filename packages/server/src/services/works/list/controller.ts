@@ -13,14 +13,16 @@ export class WorksListController {
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
-    const name = stringFix(req.query.name, undefined, 'UPPERCASE');
-    const document = stringFix(req.query.document, undefined, 'UPPERCASE');
+    const clientId = stringFix(req.query.clientId, undefined);
     const group = stringFix(req.query.group, undefined, 'UPPERCASE');
-    const service = stringFix(req.query.service, undefined);
-    const sector = stringFix(req.query.sector, undefined);
+    const identifier = stringFix(req.query.identifier, undefined, 'UPPERCASE');
+    const value = stringFix(req.query.value, undefined, 'UPPERCASE');
+    const serviceId = stringFix(req.query.serviceId, undefined);
+    const sectorId = stringFix(req.query.sectorId, undefined);
+    const status = stringFix(req.query.status, undefined, 'UPPERCASE');
 
     try {
-      const Works = await this.service.execute({ page, limit, filters: { pagination, name, document, group, service, sector } });
+      const Works = await this.service.execute({ page, limit, filters: { pagination, clientId, serviceId, sectorId, group, identifier, value, status } });
       return res.json(Works);
     } catch(err) {
       console.log(err);

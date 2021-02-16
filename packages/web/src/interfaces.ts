@@ -29,28 +29,29 @@ export interface IVehiclesImportCSV {
 /* END IMPORT VEHICLES */
 
 /* BACKEND */
-export interface IVehiclesFilters {
+export interface IVehiclesFilters extends Partial<Pick<IVehicle, 'clientId'|'plate'|'renavam'|'crv'|'brandModel'>> {
   page: number;
   limit: number;
 
-  clientId?: string;
   group?: string;
-  plate?: string;
-  renavam?: string;
-  crv?: string;
-  brandModel?: string;
   plateEnd?: string;
   status: number|number[];
   includeTruck?: boolean;
 }
 
-export interface IClientsFilters {
+export interface IClientsFilters extends Partial<Pick<IClient, 'name'|'document'|'group'>> {
+  page: number;
+  limit: number;
+}
+
+export interface IWorksFilters extends Partial<Pick<IWork, 'clientId'|'serviceId'|'identifier'>> {
   page: number;
   limit: number;
 
-  name?: string;
-  document?: string;
+  value?: string;
+  status?: string | string[];
   group?: string;
+  sectorId?: string;
 }
 
 export interface IPagination<T> {
@@ -129,6 +130,7 @@ export interface IUser {
 
 export interface IVehicle {
   id: string;
+  clientId: string;
   client: IClient;
   plate: string;
   renavam: string;

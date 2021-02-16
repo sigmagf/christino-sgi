@@ -136,6 +136,8 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
         filtersPart.push('(v.type = \'CAMINHAO\' OR v.type = \'C. TRATOR\')');
         break;
       default:
+        filtersPart.push(null);
+        break;
     }
 
     return filtersPart.filter((el) => el !== null).join(' AND ');

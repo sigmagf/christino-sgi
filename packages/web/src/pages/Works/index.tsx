@@ -5,18 +5,18 @@ import { toast } from 'react-toastify';
 import { Layout } from '~/components/Layout';
 import { WorksDataTable } from '~/components/WorksDataTable';
 import { WorksDetailsModal } from '~/components/WorksDetailsModal';
+import { WorksFiltersCard } from '~/components/WorksFiltersCard';
 import { useSWR } from '~/hooks/useSWR';
-import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Pagination } from '~/interface/Pagination';
-import { IPagination, IWork } from '~/interfaces';
+import { IPagination, IWork, IWorksFilters } from '~/interfaces';
 import { qsConverter } from '~/utils/queryStringConverter';
 
 export const WorksPage: React.FC = () => {
   document.title = 'Ordem de Serviço | Christino';
 
   const [workPermission, setWorkPermission] = useState(-1);
-  const [filters, setFilters] = useState({ page: 1, limit: 10 });
+  const [filters, setFilters] = useState<IWorksFilters>({ page: 1, limit: 10 });
 
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
   const { data: works, revalidate, isValidating: inLoading, error: getWorkError } = useSWR<IPagination<IWork>>(`/works${qsConverter(filters)}`);
@@ -60,11 +60,12 @@ export const WorksPage: React.FC = () => {
   return (
     <>
       <Layout setPermissions={(perms) => setWorkPermission(perms.workPermission)}>
-        <Card style={{ marginBottom: 15 }}>
-          <Button onClick={onCreateVehicleClick}>
-            ADICIONAR O.S.
-          </Button>
-        </Card>
+        <WorksFiltersCard
+          onCreateClick={onCreateVehicleClick}
+          onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
+          workPermission={workPermission}
+        />
+
         <WorksDataTable
           inLoading={inLoading}
           works={works?.data || []}
