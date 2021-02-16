@@ -1,7 +1,6 @@
 import { IVehicle } from '~/entities/IVehicle';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
-import { convertStatus } from '~/utils/convertStatus';
 import { stringFix } from '~/utils/stringFix';
 
 interface IImportError extends Partial<Omit<IVehicle, 'id'|'client'|'status'|'created_at'|'updated_at'>> {
@@ -44,6 +43,11 @@ export class VehiclesImportService {
         return null;
       }
 
+      if(parseInt(vehicle.status, 10) < 1 || parseInt(vehicle.status, 10) > 4) {
+        errors.push({ ...vehicle, error: 'O status deve ser entre \'1\',\'2\',\'3\',\'4\'' });
+        return null;
+      }
+
       try {
         const client = await this.clientsRepo.create({
           name: stringFix(vehicle.name, undefined, 'UPPERCASE'),
@@ -59,7 +63,7 @@ export class VehiclesImportService {
           brandModel: stringFix(vehicle.brandModel, undefined, 'UPPERCASE'),
           type: stringFix(vehicle.type, undefined, 'UPPERCASE'),
           details: stringFix(vehicle.details, undefined, 'UPPERCASE'),
-          status: convertStatus(stringFix(vehicle.status, undefined, 'LOWERCASE')),
+          status: parseInt(vehicle.status, 10),
         };
       } catch(err) {
         errors.push({ ...vehicle, error: err.message || 'Erro inesperado.' });

@@ -102,29 +102,27 @@ export class SequelizeWorksRepository implements IWorksRepository {
     return fixedData;
   }
 
-  async list(page: number, limit: number, filters: IWorksListFilters): Promise<IPagination<IWork> | IWork[]> {
-    const effectiveLimit = limit > 100 ? 100 : limit;
+  async list(page: number, maxResults: number, filters: IWorksListFilters): Promise<IPagination<IWork> | IWork[]> {
+    const limit = maxResults > 100 ? 100 : maxResults;
 
     if(filters.pagination) {
       const maxRows = await Work.count();
-      const pages = Math.ceil(maxRows / effectiveLimit);
-      const offset = (page - 1) * effectiveLimit;
-      const dbPageData = await sequelize.query(this.selectQuery(undefined, effectiveLimit, offset), { type: QueryTypes.SELECT });
-      const dbPageDataFixed = await this.fixData(dbPageData);
+      const pages = Math.ceil(maxRows / limit);
+      const offset = (page - 1) * limit;
+      const dbPageData = await sequelize.query(this.selectQuery(undefined, limit, offset), { type: QueryTypes.SELECT });
 
       return {
         page: {
-          total: pages < 1 ? 1 : pages,
-          limit: effectiveLimit,
+          total: pages || 1,
+          limit,
           current: page,
         },
-        data: dbPageDataFixed,
+        data: await this.fixData(dbPageData),
       };
     }
 
     const dbData = await Work.findAll({ include: { all: true, nested: true } });
-    const dbDataFixed = await this.fixData(dbData);
-    return dbDataFixed;
+    return this.fixData(dbData);
   }
 
   async findById(id: string): Promise<IWork> {

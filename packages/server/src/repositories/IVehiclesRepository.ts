@@ -2,7 +2,7 @@ import { IVehicle } from '~/entities/IVehicle';
 import { IPagination, IVehiclesListFilters } from '~/interfaces';
 
 export interface IVehiclesRepository {
-  list(page: number, limit: number, filters: IVehiclesListFilters): Promise<IPagination<IVehicle> | IVehicle[]>;
+  list(page: number, maxResults: number, filters: IVehiclesListFilters): Promise<IPagination<IVehicle> | IVehicle[]>;
   findById(id: string): Promise<IVehicle>;
   findByClientPlate(clientId: string, plate: string): Promise<IVehicle>;
   findByClientRenavam(clientId: string, renavam: string): Promise<IVehicle>;

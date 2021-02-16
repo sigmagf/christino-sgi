@@ -6,7 +6,7 @@ export interface IWorkCreateOrUpdate extends Pick<IWork, 'id'|'clientId'|'servic
 }
 
 export interface IWorksRepository {
-  list(page: number, limit: number, filters: IWorksListFilters): Promise<IPagination<IWork> | IWork[]>;
+  list(page: number, maxResults: number, filters: IWorksListFilters): Promise<IPagination<IWork> | IWork[]>;
   findById(id: string): Promise<IWork>;
 
   create(data: IWorkCreateOrUpdate): Promise<IWork>;

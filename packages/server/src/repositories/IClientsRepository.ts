@@ -2,7 +2,7 @@ import { IClient } from '~/entities/IClient';
 import { IClientsListFilters, IPagination } from '~/interfaces';
 
 export interface IClientsRepository {
-  list(page: number, limit: number, filters: IClientsListFilters): Promise<IPagination<IClient> | IClient[]>;
+  list(page: number, maxResults: number, filters: IClientsListFilters): Promise<IPagination<IClient> | IClient[]>;
   listGroups(): Promise<string[]>;
   findById(id: string): Promise<IClient>;
   findByDocument(document: string): Promise<IClient>;

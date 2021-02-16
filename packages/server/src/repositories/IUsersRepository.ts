@@ -2,7 +2,7 @@ import { IUser } from '~/entities/IUser';
 import { IPagination } from '~/interfaces';
 
 export interface IUsersRepository {
-  list(page: number, limit: number, withPassword?: boolean): Promise<IPagination<IUser>>;
+  list(page: number, maxResults: number, withPassword?: boolean): Promise<IPagination<IUser>>;
   findById(id: string, withPassword?: boolean): Promise<IUser>;
   findByEmail(email: string, withPassword?: boolean): Promise<IUser>;
 

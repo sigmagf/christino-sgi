@@ -9,20 +9,20 @@ import { sequelizeWhere } from '~/utils/sequelizeWhere';
 import { IClientsRepository } from '../IClientsRepository';
 
 export class SequelizeClientsRepository implements IClientsRepository {
-  async list(page = 1, limit = 10, filters: IClientsListFilters): Promise<IPagination<IClient> | IClient[]> {
+  async list(page = 1, maxResults = 10, filters: IClientsListFilters): Promise<IPagination<IClient> | IClient[]> {
     const where = sequelizeWhere({ ...filters, pagination: undefined });
-    const effectiveLimit = limit > 100 ? 100 : limit;
+    const limit = maxResults > 100 ? 100 : maxResults;
 
     if(filters.pagination) {
       const maxRows = await Client.count();
-      const pages = Math.ceil(maxRows / effectiveLimit);
-      const startIndex = (page - 1) * effectiveLimit;
+      const pages = Math.ceil(maxRows / limit);
+      const offset = (page - 1) * limit;
 
-      const dbPageData = await Client.findAll({ limit: effectiveLimit, offset: startIndex, order: [['name', 'ASC']], where });
+      const dbPageData = await Client.findAll({ limit, offset, order: [['name', 'ASC']], where });
       return {
         page: {
-          total: pages < 1 ? 1 : pages,
-          limit: effectiveLimit,
+          total: pages || 1,
+          limit,
           current: page,
         },
         data: dbPageData,

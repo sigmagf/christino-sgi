@@ -136,35 +136,32 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
         filtersPart.push('(v.type = \'CAMINHAO\' OR v.type = \'C. TRATOR\')');
         break;
       default:
-      case '1':
-        filtersPart.push(null);
-        break;
     }
 
     return filtersPart.filter((el) => el !== null).join(' AND ');
   }
 
-  async list(page = 1, limit = 10, filters: IVehiclesListFilters): Promise<IPagination<IVehicle> | IVehicle[]> {
-    const whereString = this.makeSpecialWhereString(filters);
-    const effectiveLimit = limit > 100 ? 100 : limit;
+  async list(page = 1, maxResults = 10, filters: IVehiclesListFilters): Promise<IPagination<IVehicle> | IVehicle[]> {
+    const where = this.makeSpecialWhereString(filters);
+    const limit = maxResults > 100 ? 100 : maxResults;
 
     if(filters.pagination) {
-      const maxRows = await Vehicle.count();
-      const pages = Math.ceil(maxRows / effectiveLimit);
-      const offset = (page - 1) * effectiveLimit;
-      const dbPageData = await sequelize.query(this.selectQuery(whereString, effectiveLimit, offset), { type: QueryTypes.SELECT });
+      const maxRows = (await sequelize.query(this.selectQuery(where), { type: QueryTypes.SELECT })).length;
+      const pages = Math.ceil(maxRows / limit);
+      const offset = (page - 1) * limit;
+      const dbPageData = await sequelize.query(this.selectQuery(where, limit, offset), { type: QueryTypes.SELECT });
 
       return {
         page: {
-          total: pages < 1 ? 1 : pages,
-          limit: effectiveLimit,
+          total: pages || 1,
+          limit,
           current: page,
         },
         data: this.fixData(dbPageData) as IVehicle[],
       };
     }
 
-    const dbData = await sequelize.query(this.selectQuery(whereString), { type: QueryTypes.SELECT });
+    const dbData = await sequelize.query(this.selectQuery(where), { type: QueryTypes.SELECT });
     return this.fixData(dbData) as IVehicle[];
   }
 

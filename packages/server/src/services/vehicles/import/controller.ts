@@ -12,7 +12,7 @@ export class VehiclesImportController {
 
     try {
       if(!Array.isArray(data)) {
-        return res.status(400).json({ code: 400, message: 'Dados enviados inválidos.', details: 'Os dados enviados não sao um array.' });
+        throw new Error(JSON.stringify({ code: 400, message: 'Dados enviados inválidos.', details: 'Os dados enviados não sao um array.' }));
       }
 
       await this.service.execute({ data });

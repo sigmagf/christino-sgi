@@ -9,7 +9,7 @@ import { Button } from '~/interface/Button';
 import { Table } from '~/interface/Table';
 import { IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
-import { statusConverter } from '~/utils/statusConverter';
+import { vehicleStatus } from '~/utils/commonSelectOptions';
 
 import { DataTableCardContainer, VehiclesStatusBadge } from './styles';
 
@@ -86,7 +86,7 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
           {!inLoading && vehicles.map((vehicle) => (
             <tr key={vehicle.id}>
               <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <VehiclesStatusBadge status={vehicle.status} title={statusConverter(vehicle.status)} />
+                <VehiclesStatusBadge status={vehicle.status} title={vehicleStatus.find((el) => el.value === vehicle.status.toString())?.label} />
               </td>
               <td>
                 { vehicle.client.group && (

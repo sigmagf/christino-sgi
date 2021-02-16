@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 
-import { convertStatus } from '~/utils/convertStatus';
 import { errorWork } from '~/utils/errorWork';
 import { stringFix } from '~/utils/stringFix';
 
@@ -46,7 +45,11 @@ export class VehiclesUpdateController {
         throw new Error(JSON.stringify({ code: 400, message: 'O item \'status\' é nulo ou indefinido.', details: null }));
       }
 
-      const user = await this.service.execute({ id, clientId, plate, renavam, crv, brandModel, type, details, status: convertStatus(status) });
+      if(parseInt(status, 10) < 1 || parseInt(status, 10) > 4) {
+        return res.status(400).json({ code: 400, message: 'O item \'status\' é inválido.', details: 'O status deve ser entre \'1\',\'2\',\'3\',\'4\'' });
+      }
+
+      const user = await this.service.execute({ id, clientId, plate, renavam, crv, brandModel, type, details, status });
       return res.status(200).json(user);
     } catch(err) {
       return errorWork(res, err.message);

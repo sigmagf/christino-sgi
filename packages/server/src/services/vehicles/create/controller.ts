@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 
-import { convertStatus } from '~/utils/convertStatus';
 import { errorWork } from '~/utils/errorWork';
 import { stringFix } from '~/utils/stringFix';
 
@@ -21,30 +20,34 @@ export class VehiclesCreateController {
 
     try {
       if(!clientId) {
-        return res.status(400).json({ code: 400, message: 'O item \'clientId\' é nulo ou indefinido.', details: null });
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'clientId\' é nulo ou indefinido.', details: null }));
       }
 
       if(!plate) {
-        return res.status(400).json({ code: 400, message: 'O item \'plate\' é nulo ou indefinido.', details: null });
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'plate\' é nulo ou indefinido.', details: null }));
       }
 
       if(!renavam) {
-        return res.status(400).json({ code: 400, message: 'O item \'renavam\' é nulo ou indefinido.', details: null });
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'renavam\' é nulo ou indefinido.', details: null }));
       }
 
       if(!brandModel) {
-        return res.status(400).json({ code: 400, message: 'O item \'brandModel\' é nulo ou indefinido.', details: null });
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'brandModel\' é nulo ou indefinido.', details: null }));
       }
 
       if(!type) {
-        return res.status(400).json({ code: 400, message: 'O item \'type\' é nulo ou indefinido.', details: null });
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'type\' é nulo ou indefinido.', details: null }));
       }
 
       if(!status) {
-        return res.status(400).json({ code: 400, message: 'O item \'status\' é nulo ou indefinido.', details: null });
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'status\' é nulo ou indefinido.', details: null }));
       }
 
-      const vehicle = await this.service.execute({ clientId, plate, renavam, crv, brandModel, type, details, status: convertStatus(status) });
+      if(parseInt(status, 10) < 1 || parseInt(status, 10) > 4) {
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'status\' é inválido.', details: 'O status deve ser entre \'1\',\'2\',\'3\',\'4\'' }));
+      }
+
+      const vehicle = await this.service.execute({ clientId, plate, renavam, crv, brandModel, type, details, status });
       return res.status(201).json(vehicle);
     } catch(err) {
       return errorWork(res, err.message);

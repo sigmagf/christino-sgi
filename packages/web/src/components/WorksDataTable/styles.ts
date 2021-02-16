@@ -15,13 +15,13 @@ export const WorksStatusBadge = styled.div<IStatusBadgeStyledProps>`
   ${({ theme, status }) => {
     switch(status) {
       default:
-      case 0:
-        return css`background: ${theme.warning.main};`;
       case 1:
-        return css`background: ${theme.error.main};`;
+        return css`background: ${theme.warning.main};`;
       case 2:
-        return css`background: ${theme.info.main};`;
+        return css`background: ${theme.error.main};`;
       case 3:
+        return css`background: ${theme.info.main};`;
+      case 4:
         return css`background: ${theme.success.main};`;
     }
   }}

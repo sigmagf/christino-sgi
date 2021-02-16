@@ -1,5 +1,5 @@
 import { IVehicle } from '~/interfaces';
-import { statusConverter } from '~/utils/statusConverter';
+import { vehicleStatus } from '~/utils/commonSelectOptions';
 
 export function VehiclesPrintScreen(vehicles: IVehicle[]) {
   return `
@@ -37,7 +37,7 @@ export function VehiclesPrintScreen(vehicles: IVehicle[]) {
           <td style="text-align: center">${v.brandModel}</td>
           <td style="text-align: center">${v.type}</td>
           <td style="text-align: center">${v.details || ''}</td>
-          <td style="text-align: center">${statusConverter(v.status)}</td>
+          <td style="text-align: center">${vehicleStatus.find((el) => el.value === v.status.toString())?.label}</td>
         </tr>
       `).join('')}
       </tbody>

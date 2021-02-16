@@ -7,24 +7,19 @@ import { IPagination } from '~/interfaces';
 import { IUsersRepository } from '../IUsersRepository';
 
 export class SequelizeUsersRepository implements IUsersRepository {
-  async list(page = 1, limit = 10, withPassword = false): Promise<IPagination<IUser>> {
-    const effectiveLimit = limit > 100 ? 100 : limit;
+  async list(page = 1, maxResults = 10, withPassword = false): Promise<IPagination<IUser>> {
+    const limit = maxResults > 100 ? 100 : maxResults;
 
     const maxRows = await User.count();
-    const pages = Math.ceil(maxRows / effectiveLimit);
-    const startIndex = (page - 1) * effectiveLimit;
+    const pages = Math.ceil(maxRows / limit);
+    const offset = (page - 1) * limit;
 
-    const dbPageData = await User.findAll({
-      limit: effectiveLimit,
-      offset: startIndex,
-      order: [['name', 'ASC']],
-      attributes: { exclude: withPassword ? undefined : ['password'] },
-    });
+    const dbPageData = await User.findAll({ limit, offset, order: [['name', 'ASC']], attributes: { exclude: withPassword ? undefined : ['password'] } });
 
     return {
       page: {
-        total: pages,
-        limit: effectiveLimit,
+        total: pages || 1,
+        limit,
         current: page,
       },
       data: dbPageData,
