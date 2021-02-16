@@ -32,6 +32,6 @@ app.get('/services', async (req, res) => {
   return res.json(service);
 });
 
-app.use('*', (req, res) => res.json({ message: 'Hello World!' }));
+app.use('*', (req, res) => res.status(404).json({ code: 404, message: 'Route not found', details: null }));
 
 export { app };

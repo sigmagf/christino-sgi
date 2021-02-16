@@ -7,18 +7,15 @@ import { WorksDetailsModal } from '~/components/WorksDetailsModal';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
-import { Pagination } from '~/interface/Pagination';
-import { IPagination, IWork } from '~/interfaces';
-import { qsConverter } from '~/utils/queryStringConverter';
+import { IWork } from '~/interfaces';
 
 export const WorksPage: React.FC = () => {
   document.title = 'Ordem de Serviço | Christino';
 
   const [workPermission, setWorkPermission] = useState(-1);
-  const [filters, setFilters] = useState({ page: 1, limit: 10 });
 
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
-  const { data: works, revalidate, isValidating: inLoading } = useSWR<IPagination<IWork>>(`/works${qsConverter(filters)}`);
+  const { data: works, revalidate, isValidating: inLoading } = useSWR<IWork[]>('/works?noPagination=true');
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
@@ -54,23 +51,15 @@ export const WorksPage: React.FC = () => {
         </Card>
         <WorksDataTable
           inLoading={inLoading}
-          works={works?.data || []}
+          works={works || []}
           onDetailsClick={onDetailsWorkClick}
         />
-        <Card style={{ marginTop: 15 }}>
-          <Pagination
-            currentPage={works?.page.current || 1}
-            totalPages={works?.page.total || 1}
-            inLoading={inLoading}
-            onNumberClick={(pg) => setFilters((old) => ({ ...old, page: pg }))}
-          />
-        </Card>
       </Layout>
       <WorksDetailsModal
         isOpen={detailsModalOpen}
         onClose={onModalsClose}
         workPermission={workPermission}
-        work={works?.data.filter((el) => el.id === workIdToDetails)[0]}
+        work={works?.filter((el) => el.id === workIdToDetails)[0]}
       />
     </>
   );

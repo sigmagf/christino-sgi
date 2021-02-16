@@ -12,44 +12,38 @@ export class SequelizeWorksRepository implements IWorksRepository {
   private selectQuery(where?: string, limit?: number, offset?: number) {
     return `
       SELECT
-      wk.id as "work_id",
-      wk.identifier as "work_identifier",
-      wk.value as "work_value",
-      wk.details as "work_details",
-      wk.status as "work_status",
-      wk.created_at as "work_created_at",
-      wk.updated_at as "work_updated_at",
+      wk.id as "workId",
+      wk.identifier as "workIdentifier",
+      wk.value as "workValue",
+      wk.details as "workDetails",
+      wk.status as "workStatus",
+      wk.created_at as "workCreatedAt",
+      wk.updated_at as "workUpdatedAt",
       
-      cl.id AS "client_id",
-      cl.name AS "client_name",
-      cl.document AS "client_document",
-      cl.group AS "client_group",
-      cl.email AS "client_email",
-      cl.phone1 AS "client_phone1",
-      cl.phone2 AS "client_phone2",
-      cl.created_at AS "client_created_at",
-      cl.updated_at AS "client_updated_at",
+      cl.id AS "clientId",
+      cl.name AS "clientName",
+      cl.document AS "clientDocument",
+      cl.group AS "clientGroup",
+      cl.email AS "clientEmail",
+      cl.phone1 AS "clientPhone1",
+      cl.phone2 AS "clientPhone2",
+      cl.created_at AS "clientCreatedAt",
+      cl.updated_at AS "clientUpdatedAt",
       
-      sv.id AS "service_id",
-      sv.name AS "service_name",
-      sv.created_at AS "service_created_at",
-      sv.updated_at AS "service_updated_at",
+      sv.id AS "serviceId",
+      sv.name AS "serviceName",
+      sv.created_at AS "serviceCreatedAt",
+      sv.updated_at AS "serviceUpdatedAt",
       
-      sc.id AS "sector_id",
-      sc.name AS "sector_name",
-      sc.created_at AS "sector_created_at",
-      sc.updated_at AS "sector_updated_at",
-      
-      wh.id AS "history_id",
-      wh.details AS "history_details",
-      wh.created_at AS "history_created_at",
-      wh.updated_at AS "history_updated_at"
+      sc.id AS "sectorId",
+      sc.name AS "sectorName",
+      sc.created_at AS "sectorCreatedAt",
+      sc.updated_at AS "sectorUpdatedAt"
       
       FROM works as wk
-      LEFT OUTER JOIN clients AS cl ON wk.client_id = cl.id
-      LEFT OUTER JOIN services AS sv ON wk.service_id = sv.id
-      LEFT OUTER JOIN sectors AS sc ON sv.sector_id = sc.id
-      LEFT OUTER JOIN work_histories AS wh ON wk.id = wh.work_id
+      LEFT JOIN clients AS cl ON wk.client_id = cl.id
+      LEFT JOIN services AS sv ON wk.service_id = sv.id
+      LEFT JOIN sectors AS sc ON sv.sector_id = sc.id
       ${where ? `WHERE ${where}` : ''}
       ORDER BY wk.created_at DESC
       ${offset ? `OFFSET ${offset}` : ''}
@@ -57,69 +51,53 @@ export class SequelizeWorksRepository implements IWorksRepository {
     `;
   }
 
-  private fixData(data: any[]) {
+  private async fixData(data: any[]) {
     if(!data) {
       return null;
     }
 
     const fixedData: IWork[] = [];
 
-    data.forEach((el) => {
-      const index = fixedData.findIndex((dt) => dt.id === el.work_id);
+    await Promise.all(data.map(async (el) => {
+      const histories = await WorkHistory.findAll({ where: { workId: el.work_id }, order: [['createdAt', 'DESC']] });
 
-      if(index === -1) {
-        fixedData.push({
-          id: el.work_id,
-          clientId: el.client_id,
-          serviceId: el.service_id,
-          identifier: el.work_identifier,
-          value: el.work_value,
-          details: el.work_details,
-          status: el.work_status,
-          createdAt: el.work_created_at,
-          updatedAt: el.work_updated_at,
-          client: {
-            id: el.client_id,
-            name: el.client_name,
-            document: el.client_document,
-            group: el.client_group,
-            email: el.client_email,
-            phone1: el.client_phone1,
-            phone2: el.client_phone2,
-            createdAt: el.client_created_at,
-            updatedAt: el.client_updated_at,
+      fixedData.push({
+        id: el.workId,
+        clientId: el.clientId,
+        client: {
+          id: el.clientId,
+          name: el.clientName,
+          document: el.clientDocument,
+          group: el.clientGroup,
+          email: el.clientEmail,
+          phone1: el.clientPhone1,
+          phone2: el.clientPhone2,
+          createdAt: el.clientCreatedAt,
+          updatedAt: el.clientUpdatedAt,
+        },
+        serviceId: el.serviceId,
+        service: {
+          id: el.serviceId,
+          name: el.serviceName,
+          sectorId: el.sectorId,
+          sector: {
+            id: el.sectorId,
+            name: el.sectorName,
+            createdAt: el.sectorCreatedAt,
+            updatedAt: el.sectorUpdatedAt,
           },
-          service: {
-            id: el.service_id,
-            name: el.service_name,
-            sectorId: el.sector_id,
-            sector: {
-              id: el.sector_id,
-              name: el.sector_name,
-              createdAt: el.sector_created_at,
-              updatedAt: el.sector_updated_at,
-            },
-            createdAt: el.service_created_at,
-            updatedAt: el.service_updated_at,
-          },
-          histories: [{
-            id: el.history_id,
-            workId: el.work_id,
-            details: el.history_details,
-            createdAt: el.history_created_at,
-            updatedAt: el.history_updated_at,
-          }],
-        });
-      } else {
-        fixedData[index].histories.push({
-          id: el.history_id,
-          workId: el.work_id,
-          details: el.history_details,
-          createdAt: el.history_created_at,
-          updatedAt: el.history_updated_at,
-        });
-      }
-    });
+          createdAt: el.serviceCreatedAt,
+          updatedAt: el.serviceUpdatedAt,
+        },
+        identifier: el.workIdentifier,
+        value: el.workValue,
+        details: el.workDetails,
+        status: el.workStatus,
+        histories,
+        createdAt: el.workCreatedAt,
+        updatedAt: el.workUpdatedAt,
+      });
+    }));
 
     return fixedData;
   }
@@ -132,6 +110,7 @@ export class SequelizeWorksRepository implements IWorksRepository {
       const pages = Math.ceil(maxRows / effectiveLimit);
       const offset = (page - 1) * effectiveLimit;
       const dbPageData = await sequelize.query(this.selectQuery(undefined, effectiveLimit, offset), { type: QueryTypes.SELECT });
+      const dbPageDataFixed = await this.fixData(dbPageData);
 
       return {
         page: {
@@ -139,12 +118,13 @@ export class SequelizeWorksRepository implements IWorksRepository {
           limit: effectiveLimit,
           current: page,
         },
-        data: this.fixData(dbPageData),
+        data: dbPageDataFixed,
       };
     }
 
     const dbData = await Work.findAll({ include: { all: true, nested: true } });
-    return this.fixData(dbData);
+    const dbDataFixed = await this.fixData(dbData);
+    return dbDataFixed;
   }
 
   async findById(id: string): Promise<IWork> {

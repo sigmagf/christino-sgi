@@ -1,7 +1,6 @@
 import { v4 } from 'uuid';
 
 import { IUser } from '~/entities/IUser';
-import { InvalidToken } from '~/entities/sequelize/InvalidToken';
 import { User } from '~/entities/sequelize/User';
 import { IPagination } from '~/interfaces';
 
