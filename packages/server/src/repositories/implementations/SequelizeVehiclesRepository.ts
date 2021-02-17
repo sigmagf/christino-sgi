@@ -169,17 +169,17 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
 
   async findById(id: string): Promise<IVehicle> {
     const dbData = await sequelize.query(this.selectQuery(`v.id = '${id}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData[0]) as IVehicle;
+    return this.fixData(dbData)[0] as IVehicle;
   }
 
   async findByClientPlate(clientId: string, plate: string): Promise<IVehicle> {
     const dbData = await sequelize.query(this.selectQuery(`c.id = '${clientId}' AND v.plate ='${plate}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData[0]) as IVehicle;
+    return this.fixData(dbData)[0] as IVehicle;
   }
 
   async findByClientRenavam(clientId: string, renavam: string): Promise<IVehicle> {
     const dbData = await sequelize.query(this.selectQuery(`c.id = '${clientId}' AND v.renavam ='${renavam}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData[0]) as IVehicle;
+    return this.fixData(dbData)[0] as IVehicle;
   }
 
   async create(data: Omit<IVehicle, 'id'|'createdAt'|'updatedAt'>): Promise<IVehicle> {
