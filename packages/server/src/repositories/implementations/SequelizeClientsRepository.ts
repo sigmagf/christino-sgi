@@ -1,5 +1,5 @@
 import { QueryTypes } from 'sequelize';
-
+import { v4 } from 'uuid';
 import { sequelize } from '~/config/sequelize';
 import { IClient } from '~/entities/IClient';
 import { Client } from '~/entities/sequelize/Client';
@@ -51,7 +51,7 @@ export class SequelizeClientsRepository implements IClientsRepository {
   }
 
   async create(data: Omit<IClient, 'id'|'createdAt'|'updatedAt'>): Promise<IClient> {
-    const dbData = Client.create(data);
+    const dbData = Client.create({ ...data, id: v4() });
     return dbData;
   }
 
