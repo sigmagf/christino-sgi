@@ -80,7 +80,7 @@ export const VehiclesDownModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen
             onClose();
 
             onDownSuccess();
-          }, 500);
+          }, 1000);
         }
       } catch(err) {
         if(err instanceof yup.ValidationError) {
