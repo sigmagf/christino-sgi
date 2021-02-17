@@ -131,6 +131,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
         serviceId: yup.string().required('O serviço é obrigatório.'),
         value: yup.string().required('O valor é obrigatório.'),
         status: yup.string().required('O status é obrigatório.'),
+        identifier: yup.string().required('O identificador é obrigatório.'),
         history: yup.string().required('O historico é obrigatório.'),
       });
 
