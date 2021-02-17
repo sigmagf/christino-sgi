@@ -221,7 +221,7 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
           </section>
 
           <section class="withdrawal-text">
-            Eu ${withdrawnBy.name.toUpperCase()} estou retirando o Certificado de Registro de Veículo (CRV) do veículo acima descrito.
+            Eu ${withdrawnBy.name.toUpperCase()} estou retirando o Certificado de Registro do Veículo (CRV) do veículo acima descrito.
           </section>
           <div class="signatures">
             <div class="withdrawn-by-signature">${withdrawnBy.name}</div>
