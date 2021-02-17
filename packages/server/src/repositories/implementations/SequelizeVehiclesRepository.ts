@@ -1,5 +1,5 @@
 import { QueryTypes } from 'sequelize';
-
+import { v4 } from 'uuid';
 import { sequelize } from '~/config/sequelize';
 import { IVehicle } from '~/entities/IVehicle';
 import { Vehicle } from '~/entities/sequelize/Vehicle';
@@ -183,7 +183,7 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
   }
 
   async create(data: Omit<IVehicle, 'id'|'createdAt'|'updatedAt'>): Promise<IVehicle> {
-    const entry = await Vehicle.create(data);
+    const entry = await Vehicle.create({ ...data, id: v4() });
 
     const dbData = await sequelize.query(this.selectQuery(`v.id = '${entry.id}'`), { type: QueryTypes.SELECT });
     return this.fixData(dbData) as IVehicle;
