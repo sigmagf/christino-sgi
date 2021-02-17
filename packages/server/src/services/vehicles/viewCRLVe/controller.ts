@@ -33,6 +33,7 @@ export class VehiclesViewCRLVeController {
       s3Stream.on('error', (err) => res.status(400).json({ message: err.message || 'Erro inesperado.' }));
       s3Stream.pipe(fileTemp).on('error', (err) => res.status(400).json({ message: err.message || 'Erro inesperado.' })).on('close', () => res.sendFile(s3TempPath));
     } else {
+      console.log(err);
       return res.status(404).json({ message: 'CRLVe não encontrado.' });
     }
   }
