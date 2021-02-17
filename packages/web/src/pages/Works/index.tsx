@@ -10,7 +10,7 @@ import { useSWR } from '~/hooks/useSWR';
 import { Card } from '~/interface/Card';
 import { Pagination } from '~/interface/Pagination';
 import { IPagination, IWork, IWorksFilters } from '~/interfaces';
-import { qsConverter } from '~/utils/queryStringConverter';
+import { qsConverter } from '~/utils/qsConverter';
 
 export const WorksPage: React.FC = () => {
   document.title = 'Ordem de Serviço | Christino';

@@ -37,9 +37,10 @@ interface IVehiclesDetailsModalProps {
   vehicle?: IVehicle;
   despPermission: number;
   onChangeSuccess: (vehicle: IVehicle) => void;
+  onCRLVeViewClick: (id: string) => Promise<void>;
 }
 
-export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, despPermission, onChangeSuccess }) => {
+export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, despPermission, onChangeSuccess, onCRLVeViewClick }) => {
   const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);
 
@@ -57,24 +58,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
     setInLoadingCRLVe(true);
 
     if(vehicle) {
-      try {
-        const response = await api.get(`/vehicles/crlve/view/${vehicle.id}`, {
-          headers: { authorization: `Bearer ${storage.getItem('token')}` },
-          responseType: 'blob',
-        });
-
-        const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-        // eslint-disable-next-line no-restricted-globals
-        window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
-      } catch(err) {
-        if(err.message === 'Network Error') {
-          toast.error('Verifique sua conexão com a internet.');
-        } else if(err.response && err.response.data && err.response.data.message) {
-          toast.error(err.response.data.message);
-        } else {
-          toast.error('Ocorreu um erro inesperado.');
-        }
-      }
+      await onCRLVeViewClick(vehicle.id);
     }
 
     setInLoadingCRLVe(false);

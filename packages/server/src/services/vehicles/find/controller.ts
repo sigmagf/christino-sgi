@@ -12,7 +12,7 @@ export class VehiclesFindController {
 
     try {
       const vehicle = await this.service.execute({ id });
-      return res.status(200).json(vehicle);
+      return res.json(vehicle);
     } catch(err) {
       return errorWork(res, err.message);
     }

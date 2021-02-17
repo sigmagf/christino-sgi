@@ -1,5 +1,6 @@
 import { QueryTypes } from 'sequelize';
 import { v4 } from 'uuid';
+
 import { sequelize } from '~/config/sequelize';
 import { IVehicle } from '~/entities/IVehicle';
 import { Vehicle } from '~/entities/sequelize/Vehicle';
@@ -11,27 +12,27 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
   private selectQuery(where?: string, limit?: number, offset?: number) {
     return `
       SELECT
-      v.id as vehicle_id,
-      v.plate as vehicle_plate,
-      v.renavam as vehicle_renavam,
-      v.crv as vehicle_crv,
-      v.brand_model as vehicle_brand_model,
-      v.type as vehicle_type,
-      v.details as vehicle_details,
-      v.status as vehicle_status,
-      v.crlve_included as vehicle_crlve_included,
-      v.created_at as vehicle_created_at,
-      v.updated_at as vehicle_updated_at,
+      v.id as "vehicleId",
+      v.plate as "vehiclePlate",
+      v.renavam as "vehicleRenavam",
+      v.crv as "vehicleCrv",
+      v.brand_model as "vehicleBrandModel",
+      v.type as "vehicleType",
+      v.details as "vehicleDetails",
+      v.status as "vehicleStatus",
+      v.crlve_included as "vehicleCrlveIncluded",
+      v.created_at as "vehicleCreatedAt",
+      v.updated_at as "vehicleUpdatedAt",
 
-      c.id as client_id,
-      c.name as client_name,
-      c.document as client_document,
-      c.group as client_group,
-      c.email as client_email,
-      c.phone1 as client_phone1,
-      c.phone2 as client_phone2,
-      c.created_at as client_created_at,
-      c.updated_at as client_updated_at
+      c.id as "clientId",
+      c.name as "clientName",
+      c.document as "clientDocument",
+      c.group as "clientGroup",
+      c.email as "clientEmail",
+      c.phone1 as "clientPhone1",
+      c.phone2 as "clientPhone2",
+      c.created_at as "clientCreatedAt",
+      c.updated_at as "clientUpdatedAt"
 
       FROM vehicles as v
       LEFT JOIN clients as c ON v.client_id = c.id
@@ -42,64 +43,36 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
     `;
   }
 
-  private fixData(entry: any): IVehicle | IVehicle[] {
+  private fixData(entry: any[]): IVehicle[] {
     if(!entry) {
       return null;
     }
 
-    if(Array.isArray(entry)) {
-      return entry.map((el) => ({
-        id: el.vehicle_id,
-        clientId: el.client_id,
-        client: {
-          id: el.client_id,
-          name: el.client_name,
-          document: el.client_document,
-          group: el.client_group,
-          email: el.client_email,
-          phone1: el.client_phone1,
-          phone2: el.client_phone2,
-          createdAt: el.client_created_at,
-          updatedAt: el.client_updated_at,
-        },
-        plate: el.vehicle_plate,
-        renavam: el.vehicle_renavam,
-        crv: el.vehicle_crv,
-        brandModel: el.vehicle_brand_model,
-        type: el.vehicle_type,
-        details: el.vehicle_details,
-        status: el.vehicle_status,
-        crlveIncluded: el.vehicle_crlve_included,
-        createdAt: el.vehicle_created_at,
-        updatedAt: el.vehicle_updated_at,
-      }));
-    }
-
-    return {
-      id: entry.v_id,
-      clientId: entry.c_id,
+    return entry.map((el) => ({
+      id: el.vehicleId,
+      clientId: el.clientId,
       client: {
-        id: entry.c_id,
-        name: entry.c_name,
-        document: entry.c_document,
-        group: entry.c_group,
-        email: entry.c_email,
-        phone1: entry.c_phone1,
-        phone2: entry.c_phone2,
-        createdAt: entry.c_created_at,
-        updatedAt: entry.c_updated_at,
+        id: el.clientId,
+        name: el.clientName,
+        document: el.clientDocument,
+        group: el.clientGroup,
+        email: el.clientEmail,
+        phone1: el.clientPhone1,
+        phone2: el.clientPhone2,
+        createdAt: el.clientCreatedAt,
+        updatedAt: el.clientUpdatedAt,
       },
-      plate: entry.v_plate,
-      renavam: entry.v_renavam,
-      crv: entry.v_crv,
-      brandModel: entry.v_brand_model,
-      type: entry.v_type,
-      details: entry.v_details,
-      status: entry.v_status,
-      crlveIncluded: entry.v_crlve_included,
-      createdAt: entry.v_created_at,
-      updatedAt: entry.v_updated_at,
-    };
+      plate: el.vehiclePlate,
+      renavam: el.vehicleRenavam,
+      crv: el.vehicleCrv,
+      brandModel: el.vehicleBrandModel,
+      type: el.vehicleType,
+      details: el.vehicleDetails,
+      status: el.vehicleStatus,
+      crlveIncluded: el.vehicleCrlveIncluded,
+      createdAt: el.vehicleCreatedAt,
+      updatedAt: el.vehicleUpdatedAt,
+    }));
   }
 
   private makeSpecialWhereString(filters: IVehiclesListFilters): string {
@@ -159,41 +132,41 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
           limit,
           current: page,
         },
-        data: this.fixData(dbPageData) as IVehicle[],
+        data: this.fixData(dbPageData),
       };
     }
 
     const dbData = await sequelize.query(this.selectQuery(where), { type: QueryTypes.SELECT });
-    return this.fixData(dbData) as IVehicle[];
+    return this.fixData(dbData);
   }
 
   async findById(id: string): Promise<IVehicle> {
-    const dbData = await sequelize.query(this.selectQuery(`v.id = '${id}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData)[0] as IVehicle;
+    const dbData = await Vehicle.findByPk(id, { include: { all: true } });
+    return dbData;
   }
 
   async findByClientPlate(clientId: string, plate: string): Promise<IVehicle> {
-    const dbData = await sequelize.query(this.selectQuery(`c.id = '${clientId}' AND v.plate ='${plate}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData)[0] as IVehicle;
+    const dbData = await Vehicle.findOne({ where: { clientId, plate }, include: { all: true } });
+    return dbData;
   }
 
   async findByClientRenavam(clientId: string, renavam: string): Promise<IVehicle> {
-    const dbData = await sequelize.query(this.selectQuery(`c.id = '${clientId}' AND v.renavam ='${renavam}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData)[0] as IVehicle;
+    const dbData = await Vehicle.findOne({ where: { clientId, renavam }, include: { all: true } });
+    return dbData;
   }
 
   async create(data: Omit<IVehicle, 'id'|'createdAt'|'updatedAt'>): Promise<IVehicle> {
     const entry = await Vehicle.create({ ...data, id: v4() });
 
-    const dbData = await sequelize.query(this.selectQuery(`v.id = '${entry.id}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData) as IVehicle;
+    const dbData = await Vehicle.findByPk(entry.id, { include: { all: true } });
+    return dbData;
   }
 
   async update(id: string, data: Omit<IVehicle, 'id'|'createdAt'|'updatedAt'>): Promise<IVehicle> {
     await Vehicle.update(data, { where: { id } });
 
-    const dbData = await sequelize.query(this.selectQuery(`v.id = '${id}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData) as IVehicle;
+    const dbData = await Vehicle.findByPk(id, { include: { all: true } });
+    return dbData;
   }
 
   async delete(id: string): Promise<void> {

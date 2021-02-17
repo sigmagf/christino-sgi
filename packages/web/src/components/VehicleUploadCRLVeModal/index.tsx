@@ -23,10 +23,7 @@ export const VehiclesUploadCRLVeModal: React.FC<IImportModalProps> = ({ isOpen, 
     setInLoading(true);
 
     try {
-      const data = new FormData();
-      data.append('file', files[0]);
-
-      await api.post(`/vehicles/crlve/upload/${vehicleId}`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+      await api.post(`/vehicles/${vehicleId}/crlve`, { file: files[0] }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       onUploadSuccess();
     } catch(err) {
       if(err.message === 'Network Error') {

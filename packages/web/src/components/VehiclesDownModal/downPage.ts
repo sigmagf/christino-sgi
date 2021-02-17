@@ -190,7 +190,7 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
             </div>
             <div class="text-container vehicle-crv">
               <div class="label">CRV</div>
-              <div>${vehicle.crv}</div>
+              <div>${vehicle?.crv || ''}</div>
             </div>
             <div class="text-container vehicle-brand-model">
               <div class="label">MARCA/MODELO</div>

@@ -9,7 +9,7 @@ import { Work } from '~/entities/sequelize/Work';
 import { WorkHistory } from '~/entities/sequelize/WorkHistory';
 
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
-  logging: true,
+  logging: false,
   define: {
     timestamps: true,
     underscored: true,

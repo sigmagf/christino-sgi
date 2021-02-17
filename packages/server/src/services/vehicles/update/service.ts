@@ -2,14 +2,14 @@ import { IVehicle } from '~/entities/IVehicle';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
 export class VehiclesUpdateService {
-  constructor(private vehiclesRepo: IVehiclesRepository) { }
+  constructor(private repository: IVehiclesRepository) { }
 
   async execute(data: Partial<Omit<IVehicle, 'client'|'createdAt'|'updatedAt'>>) {
-    if(!await this.vehiclesRepo.findById(data.id)) {
+    if(!await this.repository.findById(data.id)) {
       throw new Error(JSON.stringify({ code: 404, message: 'Veículo não encontrado.', details: null }));
     }
 
-    const vehicle = await this.vehiclesRepo.update(data.id, data);
+    const vehicle = await this.repository.update(data.id, data);
     return vehicle;
   }
 }

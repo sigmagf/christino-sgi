@@ -11,7 +11,7 @@ import { Card } from '~/interface/Card';
 import { Pagination } from '~/interface/Pagination';
 import { IClient, IClientsFilters, IPagination } from '~/interfaces';
 import { api } from '~/utils/api';
-import { qsConverter } from '~/utils/queryStringConverter';
+import { qsConverter } from '~/utils/qsConverter';
 
 import { ClientsPrintScreen } from './printScreen';
 

@@ -1,5 +1,6 @@
 import { QueryTypes } from 'sequelize';
 import { v4 } from 'uuid';
+
 import { sequelize } from '~/config/sequelize';
 import { IWork } from '~/entities/IWork';
 import { Work } from '~/entities/sequelize/Work';

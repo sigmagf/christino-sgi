@@ -1,7 +1,7 @@
 import { IVehicle } from '~/interfaces';
 import { vehicleStatus } from '~/utils/commonSelectOptions';
 
-export function VehiclesPrintScreen(vehicles: IVehicle[]) {
+export function vehiclesPrintScreen(vehicles: IVehicle[]) {
   return `
     <head>
       <title>IMPRESSAO DOS VEÍCULOS</title>

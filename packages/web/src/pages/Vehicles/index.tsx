@@ -14,9 +14,9 @@ import { Card } from '~/interface/Card';
 import { Pagination } from '~/interface/Pagination';
 import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
-import { qsConverter } from '~/utils/queryStringConverter';
+import { qsConverter } from '~/utils/qsConverter';
 
-import { VehiclesPrintScreen } from './printScreen';
+import { vehiclesPrintScreen } from './printScreen';
 
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
@@ -51,11 +51,26 @@ export const VehiclesPage: React.FC = () => {
 
   const onVehicleChange = (vehicle: IVehicle) => {
     if(vehicles) {
+      mutate({ page: vehicles.page, data: [...vehicles.data.filter((el) => el.id !== vehicle.id), vehicle] }, true);
       setVehicleIdToDetails(vehicle.id);
-      mutate({
-        ...vehicles,
-        data: [...vehicles.data.filter((el) => el.id !== vehicle.id), vehicle],
-      }, true);
+    }
+  };
+
+  const handleGetCRLVe = async (id: string) => {
+    try {
+      const response = await api.get(`/vehicles/${id}/crlve`, { headers: { authorization: `Bearer ${storage.getItem('token')}` }, responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+
+      // eslint-disable-next-line no-restricted-globals
+      window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+    } catch(err) {
+      if(err.message === 'Network Error') {
+        toast.error('Verifique sua conexão com a internet.');
+      } else if(err.response && err.response.data && err.response.data.message) {
+        toast.error(err.response.data.message);
+      } else {
+        toast.error('Ocorreu um erro inesperado.');
+      }
     }
   };
 
@@ -71,7 +86,7 @@ export const VehiclesPage: React.FC = () => {
       const win = window.open('', 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
 
       if(win) {
-        win.document.body.innerHTML = VehiclesPrintScreen(response.data);
+        win.document.body.innerHTML = vehiclesPrintScreen(response.data);
         win.print();
         win.close();
       }
@@ -118,7 +133,13 @@ export const VehiclesPage: React.FC = () => {
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
           despPermission={despPermission}
         />
-        <VehiclesDataTable inLoading={inLoading} vehicles={vehicles?.data || []} onDetailsClick={onDetailsVehicleClick} />
+
+        <VehiclesDataTable
+          inLoading={inLoading}
+          vehicles={vehicles?.data || []}
+          onDetailsClick={onDetailsVehicleClick}
+          onCRLVeViewClick={handleGetCRLVe}
+        />
 
         <Card style={{ margin: '15px 0' }}>
           <Pagination
@@ -135,8 +156,9 @@ export const VehiclesPage: React.FC = () => {
         isOpen={detailsModalOpen}
         despPermission={despPermission}
         onClose={onModalsClose}
-        vehicle={vehicles?.data.filter((el) => el.id === vehicleIdToDetails)[0]}
+        vehicle={vehicles?.data.find((el) => el.id === vehicleIdToDetails)}
         onChangeSuccess={onVehicleChange}
+        onCRLVeViewClick={handleGetCRLVe}
       />
     </>
   );

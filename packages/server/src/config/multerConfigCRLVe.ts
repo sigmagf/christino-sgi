@@ -7,7 +7,7 @@ import path from 'path';
 const storageTypes = {
   local: multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, path.resolve(__dirname, '..', '..', 'tmp'));
+      cb(null, path.resolve(__dirname, '..', '..', 'tmp', 'crlve'));
     },
     filename: (req, file, cb) => {
       cb(null, `${req.params.id}.pdf`);
@@ -23,7 +23,7 @@ const storageTypes = {
   }),
 };
 
-export const multerConfig: multer.Options = {
+export const multerConfigCRLVe: multer.Options = {
   storage: storageTypes[process.env.MULTER_STORAGE],
   limits: { fileSize: 1 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
@@ -32,7 +32,7 @@ export const multerConfig: multer.Options = {
     if(allowedMimes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error(JSON.stringify({ code: 400, message: 'Invalid file type.' })));
+      cb(new Error(JSON.stringify({ code: 400, message: 'Tipo do arquivo inválido', details: null })));
     }
   },
 };

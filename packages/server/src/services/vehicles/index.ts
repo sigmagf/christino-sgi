@@ -1,19 +1,29 @@
-import { Router } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 import multer from 'multer';
 
-import { multerConfig } from '~/config/multer';
+import { multerConfigCRLVe } from '~/config/multerConfigCRLVe';
 import { authMiddleware } from '~/middlewares/auth.middleware';
+import { errorWork } from '~/utils/errorWork';
 
 import { vehiclesCreateController } from './create';
 import { vehiclesDeleteController } from './delete';
-import { vehiclesFindController } from './find';
-import { vehiclesImportController } from './import';
+import { vehiclesFindController, vehiclesFindService } from './find';
 import { vehiclesListController } from './list';
 import { vehiclesUpdateController } from './update';
 import { vehiclesUploadCRLVeController } from './uploadCRLVe';
 import { vehiclesViewCRLVeController } from './viewCRLVe';
 
 const vehiclesRouter = Router();
+
+const verifyVehicle = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await vehiclesFindService.execute({ id: req.params.id });
+
+    return next();
+  } catch(err) {
+    return errorWork(res, err.message);
+  }
+};
 
 vehiclesRouter.use(authMiddleware);
 
@@ -23,9 +33,9 @@ vehiclesRouter.post('/vehicles', (req, res) => vehiclesCreateController.handle(r
 vehiclesRouter.put('/vehicles/:id', (req, res) => vehiclesUpdateController.handle(req, res));
 vehiclesRouter.delete('/vehicles/:id', (req, res) => vehiclesDeleteController.handle(req, res));
 
-vehiclesRouter.post('/vehicles/import', (req, res) => vehiclesImportController.handle(req, res));
+// vehiclesRouter.post('/vehicles/import', (req, res) => vehiclesImportController.handle(req, res));
 
-vehiclesRouter.get('/vehicles/crlve/view/:id', (req, res) => vehiclesViewCRLVeController.handle(req, res));
-vehiclesRouter.post('/vehicles/crlve/upload/:id', multer(multerConfig).single('file'), (req, res) => vehiclesUploadCRLVeController.handle(req, res));
+vehiclesRouter.get('/vehicles/:id/crlve', (req, res) => vehiclesViewCRLVeController.handle(req, res));
+vehiclesRouter.post('/vehicles/:id/crlve', verifyVehicle, multer(multerConfigCRLVe).single('file'), (req, res) => vehiclesUploadCRLVeController.handle(req, res));
 
 export { vehiclesRouter };

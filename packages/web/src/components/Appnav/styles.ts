@@ -21,6 +21,7 @@ const appnavExpandedItemLabel = css`
 `;
 
 const appnavCollapseItemLabel = css`
+  z-index: 999;
   display: none;
   position: fixed;
   left: 80px;
