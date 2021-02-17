@@ -75,7 +75,7 @@ export const VehiclesDownModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen
           win.document.body.innerHTML = downPrintPage(vehicle, data, baseURL);
 
           window.setTimeout(() => {
-            win.print();
+            // win.print();
             win.close();
             onClose();
 
