@@ -4,11 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { Appnav } from '~/components/Appnav';
 import { UserBar } from '~/components/UserBar';
-
 import { useLocalStorage } from '~/hooks';
-
 import { IUser } from '~/interfaces';
-
 import { api } from '~/utils/api';
 
 import { AppContent, AppMain } from './styles';
@@ -58,7 +55,7 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
         <AppContent>
           { children }
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50 }}>
-            CHRISTINO SISTEMA DE GESTAO INTERNO v0.0.21 (06/02/2020)
+            CHRISTINO SISTEMA DE GESTAO INTERNO v0.0.22 (16/02/2020)
           </div>
         </AppContent>
       </AppMain>
