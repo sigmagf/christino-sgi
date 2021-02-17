@@ -159,9 +159,10 @@ export class SequelizeWorksRepository implements IWorksRepository {
   }
 
   async create(data: IWorkCreateOrUpdate): Promise<IWork> {
-    const entry = await Work.create({ ...data, history: undefined });
+    const entry = await Work.create({ ...data, id: v4(), history: undefined });
 
     await WorkHistory.create({
+      id: v4(),
       workId: entry.id,
       details: data.history,
     });
