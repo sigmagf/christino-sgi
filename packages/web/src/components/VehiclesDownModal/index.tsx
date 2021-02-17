@@ -76,7 +76,7 @@ export const VehiclesDownModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen
 
           window.setTimeout(() => {
             // win.print();
-            win.close();
+            // win.close();
             onClose();
 
             onDownSuccess();
