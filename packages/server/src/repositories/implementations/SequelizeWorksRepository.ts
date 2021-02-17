@@ -1,5 +1,5 @@
 import { QueryTypes } from 'sequelize';
-
+import { v4 } from 'uuid';
 import { sequelize } from '~/config/sequelize';
 import { IWork } from '~/entities/IWork';
 import { Work } from '~/entities/sequelize/Work';
@@ -174,6 +174,7 @@ export class SequelizeWorksRepository implements IWorksRepository {
     await Work.update({ ...data, id: undefined, history: undefined }, { where: { id } });
 
     await WorkHistory.create({
+      id: v4(),
       workId: id,
       details: data.history,
     });
