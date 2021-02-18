@@ -15,9 +15,10 @@ export interface IClientsListFilters extends Partial<Pick<IClient, 'name'|'docum
   pagination: boolean;
 }
 
-export interface IWorksListFilters extends Partial<Pick<IWork, 'clientId'|'serviceId'|'identifier'|'value'|'status'>> {
+export interface IWorksListFilters extends Partial<Pick<IWork, 'clientId'|'serviceId'|'identifier'|'value'>> {
   pagination: boolean;
 
+  status?: string|string[];
   group?: string;
   sectorId?: string;
 }

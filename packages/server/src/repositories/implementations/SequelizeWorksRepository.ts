@@ -28,10 +28,10 @@ export class SequelizeWorksRepository implements IWorksRepository {
 
     if(Array.isArray(filters.status)) {
       const statusPart: string[] = [];
-      filters.status.forEach((el) => statusPart.push(el ? `v.status = ${el}` : null));
+      filters.status.forEach((el) => statusPart.push(el ? `wk.status = ${el}` : null));
       filtersPart.push(`(${statusPart.filter((el) => el !== null).join(' OR ')})`);
     } else {
-      filtersPart.push(filters.status ? `v.status = ${filters.status}` : null);
+      filtersPart.push(filters.status ? `wk.status = ${filters.status}` : null);
     }
 
     return filtersPart.filter((el) => el !== null).join(' AND ');

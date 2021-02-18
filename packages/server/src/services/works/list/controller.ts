@@ -22,8 +22,8 @@ export class WorksListController {
     const status = stringFix(req.query.status, undefined, 'UPPERCASE');
 
     try {
-      const Works = await this.service.execute({ page, limit, filters: { pagination, clientId, serviceId, sectorId, group, identifier, value, status } });
-      return res.json(Works);
+      const works = await this.service.execute({ page, limit, filters: { pagination, clientId, serviceId, sectorId, group, identifier, value, status } });
+      return res.json(works);
     } catch(err) {
       console.log(err);
       return errorWork(res, err.message);

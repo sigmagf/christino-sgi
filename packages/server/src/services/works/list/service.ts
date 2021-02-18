@@ -11,7 +11,7 @@ export class WorksListService {
   constructor(private repository: IWorksRepository) { }
 
   async execute(data: IWorksListRequestDTO) {
-    const Works = await this.repository.list(data.page, data.limit, data.filters);
-    return Works;
+    const works = await this.repository.list(data.page, data.limit, data.filters);
+    return works;
   }
 }
