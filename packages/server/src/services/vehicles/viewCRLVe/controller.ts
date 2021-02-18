@@ -22,7 +22,7 @@ export class VehiclesViewCRLVeController {
       }
       console.log(`${process.env.AWS_S3_FOLDER_CRLVE}/${req.params.id}.pdf`);
       const s3 = new AWS.S3();
-      const s3Stream = await s3.getObject({ Bucket: process.env.AWS_BUCKET, Key: `${process.env.AWS_S3_FOLDER_CRLVE}/${req.params.id}.pdf` }).promise();
+      const s3Stream = await s3.getObject({ Bucket: process.env.AWS_S3_BUCKET, Key: `${process.env.AWS_S3_FOLDER_CRLVE}/${req.params.id}.pdf` }).promise();
       return res.contentType(s3Stream.ContentType).send(s3Stream.Body);
     } catch(err) {
       console.log(err);

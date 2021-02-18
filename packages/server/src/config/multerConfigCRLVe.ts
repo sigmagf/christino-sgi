@@ -15,7 +15,7 @@ const storageTypes = {
   }),
   s3: multerS3({
     s3: new AWS.S3(),
-    bucket: process.env.AWS_BUCKET,
+    bucket: process.env.AWS_S3_BUCKET,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, cb) => {
       cb(null, `${process.env.AWS_S3_FOLDER_CRLVE}/${(req as Request).params.id}.pdf`);
