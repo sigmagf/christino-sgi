@@ -41,8 +41,8 @@ export const WorksDataTable: React.FC<IWorksDataTableProps> = ({ works, inLoadin
         <tbody>
           {(works.length === 0 || !works) && (
             <>
-              <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && 'SEM DADOS PARA INFORMAR'}</td></tr>
-              <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && '- NENHUMA O.S. ENCONTRADO -'}</td></tr>
+              <tr><td colSpan={7} style={{ textAlign: 'center' }}>{!inLoading && 'SEM DADOS PARA INFORMAR'}</td></tr>
+              <tr><td colSpan={7} style={{ textAlign: 'center' }}>{!inLoading && '- NENHUMA O.S. ENCONTRADO -'}</td></tr>
             </>
           )}
 
