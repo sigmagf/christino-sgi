@@ -13,13 +13,13 @@ export class VehiclesListController {
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
-    const clientId = req.body.clientId || undefined;
+    const clientId = stringFix(req.query.clientId, undefined);
     const group = stringFix(req.query.group, undefined, 'UPPERCASE');
-    const plate = stringFix(req.body.plate, undefined, 'UPPERCASE');
-    const renavam = req.body.renavam || undefined;
-    const crv = req.body.crv || undefined;
-    const brandModel = stringFix(req.body.brandModel, undefined, 'UPPERCASE');
-    const status = req.body.status || undefined;
+    const plate = stringFix(req.query.plate, undefined, 'UPPERCASE');
+    const renavam = stringFix(req.query.renavam, undefined);
+    const crv = stringFix(req.query.crv, undefined);
+    const brandModel = stringFix(req.query.brandModel, undefined, 'UPPERCASE');
+    const status = stringFix(req.query.status, undefined);
     const plateEnd = stringFix(req.query.plateEnd, undefined, 'UPPERCASE');
     const includeTruck = stringFix(req.query.includeTruck, undefined, 'UPPERCASE');
 

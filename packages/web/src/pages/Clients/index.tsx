@@ -8,7 +8,7 @@ import { Layout } from '~/components/Layout';
 import { useLocalStorage } from '~/hooks';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
-import { Pagination } from '~/interface/Pagination';
+import { Paginator } from '~/interface/Paginator';
 import { IClient, IClientsFilters, IPagination } from '~/interfaces';
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/qsConverter';
@@ -94,7 +94,7 @@ export const ClientsPage: React.FC = () => {
       <ClientsDataTable inLoading={inLoading} data={clients.data} onDetailsClick={onDetailsClick} />
 
       <Card style={{ margin: '15px 0' }}>
-        <Pagination
+        <Paginator
           currentPage={clients.page.current}
           totalPages={clients.page.total}
           inLoading={inLoading}

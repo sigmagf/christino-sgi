@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaAngleLeft, FaAngleDoubleLeft, FaAngleRight, FaAngleDoubleRight } from 'react-icons/fa';
 
-import { Paginator, PaginatorNumbers } from './styles';
+import { PaginatorContainer, PaginatorNumbers } from './styles';
 
 interface IPaginationProps {
   currentPage: number;
@@ -11,7 +11,7 @@ interface IPaginationProps {
   leftContent?: JSX.Element;
 }
 
-export const Pagination: React.FC<IPaginationProps> = ({ currentPage, totalPages, inLoading, onNumberClick, leftContent: overrideMaxResultsBy }) => {
+export const Paginator: React.FC<IPaginationProps> = ({ currentPage, totalPages, inLoading, onNumberClick, leftContent }) => {
   const pages: number[] = [];
 
   for(let i = 0; i < totalPages; i++) {
@@ -57,56 +57,34 @@ export const Pagination: React.FC<IPaginationProps> = ({ currentPage, totalPages
   const pagesToShow = calcPagesToShow();
 
   return (
-    <Paginator>
+    <PaginatorContainer>
       <PaginatorNumbers>
-        <button
-          type="button"
-          onClick={() => onNumberClick(1)}
-          disabled={currentPage < 2 || inLoading}
-        >
+        <button type="button" onClick={() => onNumberClick(1)} disabled={currentPage < 2 || inLoading}>
           <FaAngleDoubleLeft size={20} />
         </button>
-        <button
-          type="button"
-          onClick={() => onNumberClick(currentPage - 1)}
-          disabled={currentPage < 2 || inLoading}
-        >
+        <button type="button" onClick={() => onNumberClick(currentPage - 1)} disabled={currentPage < 2 || inLoading}>
           <FaAngleLeft size={20} />
         </button>
 
         {pagesToShow.map((e) => (
-          <button
-            key={e}
-            type="button"
-            className={e === currentPage ? 'current' : ''}
-            disabled={e === currentPage || inLoading}
-            onClick={() => onNumberClick(e)}
-          >
+          <button key={e} type="button" className={e === currentPage ? 'current' : ''} disabled={e === currentPage || inLoading} onClick={() => onNumberClick(e)}>
             { e }
           </button>
         ))}
 
-        <button
-          type="button"
-          onClick={() => onNumberClick(currentPage + 1)}
-          disabled={currentPage >= totalPages || inLoading}
-        >
+        <button type="button" onClick={() => onNumberClick(currentPage + 1)} disabled={currentPage >= totalPages || inLoading}>
           <FaAngleRight size={20} />
         </button>
-        <button
-          type="button"
-          onClick={() => onNumberClick(totalPages)}
-          disabled={currentPage >= totalPages || inLoading}
-        >
+        <button type="button" onClick={() => onNumberClick(totalPages)} disabled={currentPage >= totalPages || inLoading}>
           <FaAngleDoubleRight size={20} />
         </button>
       </PaginatorNumbers>
 
-      {overrideMaxResultsBy && (
+      {leftContent && (
         <div className="right-content">
-          {overrideMaxResultsBy}
+          {leftContent}
         </div>
       )}
-    </Paginator>
+    </PaginatorContainer>
   );
 };

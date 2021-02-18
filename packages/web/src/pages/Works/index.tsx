@@ -8,7 +8,7 @@ import { WorksDetailsModal } from '~/components/WorksDetailsModal';
 import { WorksFiltersCard } from '~/components/WorksFiltersCard';
 import { useSWR } from '~/hooks/useSWR';
 import { Card } from '~/interface/Card';
-import { Pagination } from '~/interface/Pagination';
+import { Paginator } from '~/interface/Paginator';
 import { IPagination, IWork, IWorksFilters } from '~/interfaces';
 import { qsConverter } from '~/utils/qsConverter';
 
@@ -72,7 +72,7 @@ export const WorksPage: React.FC = () => {
           onDetailsClick={onDetailsWorkClick}
         />
         <Card style={{ marginTop: 15 }}>
-          <Pagination
+          <Paginator
             totalPages={works?.page.total || 1}
             currentPage={works?.page.current || 1}
             inLoading={inLoading}

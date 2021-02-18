@@ -1,7 +1,7 @@
 import { shade } from 'polished';
 import styled from 'styled-components';
 
-export const Paginator = styled.div`
+export const PaginatorContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;

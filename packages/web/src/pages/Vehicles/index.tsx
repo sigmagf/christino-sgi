@@ -11,7 +11,7 @@ import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
-import { Pagination } from '~/interface/Pagination';
+import { Paginator } from '~/interface/Paginator';
 import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { qsConverter } from '~/utils/qsConverter';
@@ -142,7 +142,7 @@ export const VehiclesPage: React.FC = () => {
         />
 
         <Card style={{ margin: '15px 0' }}>
-          <Pagination
+          <Paginator
             currentPage={vehicles?.page.current || 1}
             totalPages={vehicles?.page.total || 1}
             inLoading={inLoading}

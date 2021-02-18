@@ -11,7 +11,7 @@ import { api } from '~/utils/api';
 import { AppContent, AppMain } from './styles';
 
 interface ILayoutProps {
-  setPermissions?: (perms: Omit<IUser, 'id'|'name'|'email'|'password'|'created_at'|'updated_at'>) => void;
+  setPermissions?: (perms: Omit<IUser, 'id'|'name'|'email'|'password'|'createdAt'|'updatedAt'>) => void;
 }
 
 export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => {

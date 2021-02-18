@@ -8,7 +8,7 @@ import { useLocalStorage } from '~/hooks';
 import { Button } from '~/interface/Button';
 import { Dropzone } from '~/interface/Dropzone';
 import { Modal } from '~/interface/Modal';
-import { Pagination } from '~/interface/Pagination';
+import { Paginator } from '~/interface/Paginator';
 import { Table } from '~/interface/Table';
 import { IVehicle, IVehiclesImportCSV } from '~/interfaces';
 import { api } from '~/utils/api';
@@ -193,7 +193,7 @@ export const VehiclesImportModal: React.FC<IImportModalProps> = ({ isOpen, onClo
                   ))}
                 </tbody>
               </Table>
-              <Pagination
+              <Paginator
                 inLoading={inLoading}
                 currentPage={vehiclesToImportTablePage}
                 totalPages={vehiclesPagination.page.total}

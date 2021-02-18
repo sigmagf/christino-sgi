@@ -9,15 +9,15 @@ export class VehiclesCreateController {
   constructor(private service: VehiclesCreateService) { }
 
   async handle(req: Request, res: Response) {
-    const clientId = req.body.clientId || undefined;
+    const clientId = stringFix(req.body.clientId, undefined);
     const plate = stringFix(req.body.plate, undefined, 'UPPERCASE');
-    const renavam = req.body.renavam || undefined;
-    const crv = req.body.crv || null;
+    const renavam = stringFix(req.body.renavam, undefined);
+    const crv = stringFix(req.body.crv, null);
     const brandModel = stringFix(req.body.brandModel, undefined, 'UPPERCASE');
     const type = stringFix(req.body.type, undefined, 'UPPERCASE');
     const details = stringFix(req.body.details, null, 'UPPERCASE');
-    const status = req.body.status || undefined;
-    const crlveIncluded = req.body.crlveIncluded || undefined;
+    const status = stringFix(req.body.status, undefined);
+    const crlveIncluded = stringFix(req.body.crlveIncluded, undefined);
 
     try {
       if(!clientId) {
