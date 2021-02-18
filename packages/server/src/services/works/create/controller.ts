@@ -49,7 +49,6 @@ export class WorksCreateController {
       const work = await this.service.execute({ clientId, serviceId, identifier, value, status, details, history });
       return res.status(201).json(work);
     } catch(err) {
-      console.log(err)
       return errorWork(res, err.message);
     }
   }

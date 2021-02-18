@@ -25,7 +25,6 @@ export class WorksListController {
       const works = await this.service.execute({ page, limit, filters: { pagination, clientId, serviceId, sectorId, group, identifier, value, status } });
       return res.json(works);
     } catch(err) {
-      console.log(err);
       return errorWork(res, err.message);
     }
   }

@@ -13,19 +13,32 @@ export class VehiclesListController {
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
-    const clientId = stringFix(req.query.clientId, undefined);
+    const clientId = req.body.clientId || undefined;
     const group = stringFix(req.query.group, undefined, 'UPPERCASE');
-    const plate = stringFix(req.query.plate, undefined, 'UPPERCASE');
-    const renavam = stringFix(req.query.renavam, undefined, 'UPPERCASE');
-    const crv = stringFix(req.query.crv, undefined, 'UPPERCASE');
-    const brandModel = stringFix(req.query.brandModel, undefined, 'UPPERCASE');
-    const status = stringFix(req.query.status, undefined, 'UPPERCASE');
+    const plate = stringFix(req.body.plate, undefined, 'UPPERCASE');
+    const renavam = req.body.renavam || undefined;
+    const crv = req.body.crv || undefined;
+    const brandModel = stringFix(req.body.brandModel, undefined, 'UPPERCASE');
+    const status = req.body.status || undefined;
     const plateEnd = stringFix(req.query.plateEnd, undefined, 'UPPERCASE');
     const includeTruck = stringFix(req.query.includeTruck, undefined, 'UPPERCASE');
 
     try {
       const vehicles = await this.service.execute({
-        page, limit, filters: { pagination, plateEnd, clientId, status, group, plate, renavam, crv, brandModel, includeTruck },
+        page,
+        limit,
+        filters: {
+          pagination,
+          plateEnd,
+          clientId,
+          status,
+          group,
+          plate,
+          renavam: renavam?.replace(/\D/g, '') || null,
+          crv: crv?.replace(/\D/g, '') || null,
+          brandModel,
+          includeTruck,
+        },
       });
       return res.json(vehicles);
     } catch(err) {
