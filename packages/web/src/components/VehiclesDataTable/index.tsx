@@ -29,9 +29,9 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
   return (
     <DataTableCardContainer style={{ position: 'relative' }}>
       { inLoading && (
-      <div style={{ position: 'absolute', marginTop: 25, top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <ReactLoading type="bars" />
-      </div>
+        <div style={{ position: 'absolute', marginTop: 25, top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+          <ReactLoading type="bars" />
+        </div>
       )}
 
       <Table style={{ tableLayout: 'fixed' }}>
@@ -46,21 +46,14 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
           </tr>
         </thead>
         <tbody>
-          {inLoading && (
+          {(vehicles.length === 0 || !vehicles) && (
             <>
-              <tr><td colSpan={6} /></tr>
-              <tr><td colSpan={6} /></tr>
+              <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && 'SEM DADOS PARA INFORMAR'}</td></tr>
+              <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && '- NENHUM VEICULO ENCONTRADO -'}</td></tr>
             </>
           )}
 
-          {(!inLoading && vehicles.length === 0) && (
-            <>
-              <tr><td colSpan={6} style={{ textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
-              <tr><td colSpan={6} style={{ textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
-            </>
-          )}
-
-          {!inLoading && vehicles.map((vehicle) => (
+          {vehicles.map((vehicle) => (
             <tr key={vehicle.id}>
               <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <VehiclesStatusBadge status={vehicle.status} title={vehicleStatus.find((el) => el.value === vehicle.status.toString())?.label} />

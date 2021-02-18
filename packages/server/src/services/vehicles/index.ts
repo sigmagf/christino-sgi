@@ -17,7 +17,9 @@ const vehiclesRouter = Router();
 
 const verifyVehicle = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    await vehiclesFindService.execute({ id: req.params.id });
+    if(!await vehiclesFindService.execute({ id: req.params.id })) {
+      throw new Error(JSON.stringify({ code: 404, message: 'Veículo não encontrado.', details: null }));
+    }
 
     return next();
   } catch(err) {

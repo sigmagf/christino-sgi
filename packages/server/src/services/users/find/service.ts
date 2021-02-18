@@ -6,11 +6,6 @@ export class UsersFindService {
 
   async execute(data: Pick<IClient, 'id'>) {
     const user = await this.repository.findById(data.id);
-
-    if(!user) {
-      throw new Error(JSON.stringify({ code: 404, message: 'Usuário não encontrado.', details: null }));
-    }
-
     return user;
   }
 }

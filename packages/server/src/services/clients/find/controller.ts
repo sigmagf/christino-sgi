@@ -12,6 +12,11 @@ export class ClientsFindController {
 
     try {
       const client = await this.service.execute({ id });
+
+      if(!client) {
+        throw new Error(JSON.stringify({ code: 400, message: 'Cliente não encontrado.', details: null }));
+      }
+
       return res.status(200).json(client);
     } catch(err) {
       return errorWork(res, err.message);

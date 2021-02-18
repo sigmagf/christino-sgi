@@ -142,7 +142,7 @@ module.exports = {
     /* Defines max row length */
     'max-len': [
       'warn',
-      { code: 170 },
+      { code: 175 },
     ],
 
     /* Disable forced space between functions/methods and parentheses */

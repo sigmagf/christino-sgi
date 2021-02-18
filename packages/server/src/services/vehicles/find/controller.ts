@@ -12,6 +12,11 @@ export class VehiclesFindController {
 
     try {
       const vehicle = await this.service.execute({ id });
+
+      if(!vehicle) {
+        throw new Error(JSON.stringify({ code: 404, message: 'Veículo não encontrado.', details: null }));
+      }
+
       return res.json(vehicle);
     } catch(err) {
       return errorWork(res, err.message);

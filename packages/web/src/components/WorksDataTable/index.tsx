@@ -21,9 +21,9 @@ export const WorksDataTable: React.FC<IWorksDataTableProps> = ({ works, inLoadin
   return (
     <DataTableCardContainer style={{ position: 'relative' }}>
       { inLoading && (
-      <div style={{ position: 'absolute', marginTop: 25, top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-        <ReactLoading type="bars" />
-      </div>
+        <div style={{ position: 'absolute', marginTop: 25, top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
+          <ReactLoading type="bars" />
+        </div>
       )}
 
       <Table style={{ tableLayout: 'fixed' }}>
@@ -39,21 +39,14 @@ export const WorksDataTable: React.FC<IWorksDataTableProps> = ({ works, inLoadin
           </tr>
         </thead>
         <tbody>
-          {inLoading && (
+          {(works.length === 0 || !works) && (
             <>
-              <tr><td colSpan={7} /></tr>
-              <tr><td colSpan={7} /></tr>
+              <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && 'SEM DADOS PARA INFORMAR'}</td></tr>
+              <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && '- NENHUMA O.S. ENCONTRADO -'}</td></tr>
             </>
           )}
 
-          {(!inLoading && works.length === 0) && (
-            <>
-              <tr><td colSpan={7} style={{ textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
-              <tr><td colSpan={7} style={{ textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
-            </>
-          )}
-
-          {!inLoading && works.map((el) => (
+          {works.map((el) => (
             <tr key={el.id}>
               <td><WorksStatusBadge status={el.status} title={worksStatus.find((st) => st.value === el.status.toString())?.label} /></td>
               <td>

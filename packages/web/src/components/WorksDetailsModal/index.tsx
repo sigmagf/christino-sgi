@@ -16,7 +16,8 @@ import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatDate } from '~/utils/formatDate';
 import { formatDocument } from '~/utils/formatDocument';
 import { formatMoney } from '~/utils/formatMoney';
-import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
+import { onDocumentBlur, onDocumentFocus } from '~/utils/handleDocumentInputFormat';
+import { onValueBlur, onValueFocus } from '~/utils/handleMoneyInputFormat';
 
 import { ClientsDetailsModal } from '../ClientsDetailsModal';
 import { WorksDetailsModalForm, WorksDetailsActionButtons, WorksDetailsLoadingContainer } from './styles';
@@ -76,51 +77,6 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
   };
   /* END SEARCH CLIENT IN DATABASE */
 
-  /* - HANDLE VALUE FORMAT - */
-  const onValueFocus = () => {
-    if(formRef.current) {
-      const value = formRef.current.getFieldValue('value').replace('.', '');
-      formRef.current.setFieldValue('value', value);
-    }
-  };
-
-  const onValueBlur = () => {
-    if(formRef.current) {
-      const value = formRef.current.getFieldValue('value').replace(',', '.');
-      formRef.current.setFieldValue('value', formatMoney(value));
-    }
-  };
-  /* END HANDLE VALUE FORMAT */
-
-  /* - HANDLE DOCUMENT FORMAT - */
-  const onDocumentFocus = () => {
-    if(formRef.current) {
-      const document = formRef.current.getFieldValue('document').replace(/\D/g, '');
-      formRef.current.setFieldValue('document', document);
-    }
-  };
-
-  const onDocumentBlur = () => {
-    if(formRef.current) {
-      const document: string = formRef.current.getFieldValue('document').replace(/\D/g, '');
-
-      if(document.length !== 11 && document.length !== 14) {
-        toast.error('CPF/CNPJ inválido.');
-        return;
-      }
-
-      formRef.current.setFieldValue('document', formatDocument(document));
-
-      if(!validCPForCNPJ(document)) {
-        toast.error('CPF/CNPJ inválido.');
-        return;
-      }
-
-      getClient(document);
-    }
-  };
-  /* END HANDLE DOCUMENT FORMAT */
-
   /* - SAVE OR UPDATE VEHICLE - */
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
     setInSubmitProcess(true);
@@ -149,7 +105,6 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       onClose();
       toast.success(`Ordem de serviço ${work ? 'atualizada' : 'criada'} com sucesso!`);
     } catch(err) {
-      console.log(data);
       if(err instanceof yup.ValidationError) {
         err.inner.forEach((yupError) => toast.error(yupError.message));
       } else if(err.message === 'Network Error') {
@@ -209,12 +164,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
 
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={onClose}
-        haveHeader
-        header={`${work ? 'ALTERAR' : 'CRIAR'} ORDEM DE SERVIÇO`}
-      >
+      <Modal isOpen={isOpen} onRequestClose={onClose} haveHeader header={`${work ? 'ALTERAR' : 'CRIAR'} ORDEM DE SERVIÇO`}>
         <WorksDetailsModalForm
           ref={formRef}
           onSubmit={onSubmit}
@@ -231,14 +181,14 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
             <Input type="hidden" name="clientId" />
           </div>
           <Input disabled name="name" label="NOME" />
-          <Input disabled={!!work || !editing} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
+          <Input disabled={!!work || !editing} name="document" label="DOCUMENTO" onFocus={() => onDocumentFocus(formRef)} onBlur={() => onDocumentBlur(formRef, getClient)} />
           <Input disabled name="group" label="GRUPO" />
 
           <hr />
 
           <Select isDisabled={!!work || !editing} name="serviceId" label="SERVIÇO" options={handleServiceOptions()} />
           <Input disabled={!!work || !editing} name="identifier" label="IDENTIFICADOR" />
-          <Input disabled={!editing} name="value" label="VALOR" onFocus={onValueFocus} onBlur={onValueBlur} />
+          <Input disabled={!editing} name="value" label="VALOR" onFocus={() => onValueFocus(formRef)} onBlur={() => onValueBlur(formRef)} />
           <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
           <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} />
           { editing && <Input name="history" label="NOVA ENTRADA" /> }
@@ -294,7 +244,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
         cliePermission={2}
         isOpen={cadClientModal}
         onClose={() => setCadClientModal(false)}
-        onChangeSuccess={onDocumentBlur}
+        onChangeSuccess={() => onDocumentBlur(formRef, getClient)}
       />
     </>
   );

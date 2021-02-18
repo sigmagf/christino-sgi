@@ -30,7 +30,7 @@ export const VehiclesPage: React.FC = () => {
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
-  const { data: vehicles, revalidate, mutate, isValidating: inLoading, error: getVehicleError } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
+  const { data: vehicles, revalidate, mutate, isValidating: inLoading, error: getVehiclesError } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
 
   const onModalsClose = () => {
     setDetailsModalOpen(false);
@@ -104,16 +104,16 @@ export const VehiclesPage: React.FC = () => {
   };
 
   useEffect(() => {
-    if(getVehicleError) {
-      if(getVehicleError.message === 'Network Error') {
+    if(getVehiclesError) {
+      if(getVehiclesError.message === 'Network Error') {
         toast.error('Verifique sua conexão com a internet.');
-      } else if(getVehicleError.response && getVehicleError.response.data && getVehicleError.response.data.message) {
-        toast.error(getVehicleError.response.data.message);
+      } else if(getVehiclesError.response && getVehiclesError.response.data && getVehiclesError.response.data.message) {
+        toast.error(getVehiclesError.response.data.message);
       } else {
         toast.error('Ocorreu um erro inesperado.');
       }
     }
-  }, [getVehicleError]);
+  }, [getVehiclesError]);
 
   if(despPermission === 0) {
     return <Navigate to="/" replace />;

@@ -5,16 +5,16 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
-import { VehiclesUploadCRLVeModal } from '~/components/VehicleUploadCRLVeModal';
 import { useLocalStorage } from '~/hooks';
 import { Button } from '~/interface/Button';
+import { Dropzone } from '~/interface/Dropzone';
 import { Input, Select } from '~/interface/Form';
 import { Modal } from '~/interface/Modal';
 import { IClient, IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { formatDocument } from '~/utils/formatDocument';
-import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
+import { onDocumentBlur, onDocumentFocus } from '~/utils/handleDocumentInputFormat';
 
 import { ClientsDetailsModal } from '../ClientsDetailsModal';
 import { VehiclesDownModal } from '../VehiclesDownModal';
@@ -49,19 +49,17 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
   const [editing, setEditing] = useState(false);
   const [cadClientModal, setCadClientModal] = useState(false);
-  const [downModal, setDwonModal] = useState(false);
+  const [downModal, setDownModal] = useState(false);
 
   const [uploadCrlveModalOpen, setUploadCrlveModalOpen] = useState(false);
 
   /* - HANDLE GET CRLVe PDF FILE - */
   const handleGetCRLVe = async () => {
-    setInLoadingCRLVe(true);
-
     if(vehicle) {
+      setInLoadingCRLVe(true);
       await onCRLVeViewClick(vehicle.id);
+      setInLoadingCRLVe(false);
     }
-
-    setInLoadingCRLVe(false);
   };
   /* END HANDLE GET CRLVe PDF FILE */
 
@@ -104,46 +102,35 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   };
   /* END SET MAX LENGTH */
 
-  /* - HANDLE DOCUMENT FORMAT - */
-  const onDocumentFocus = () => {
-    if(formRef.current) {
-      const document = formRef.current.getFieldValue('document').replace(/\D/g, '');
-      formRef.current.setFieldValue('document', document);
-    }
-  };
-
-  const onDocumentBlur = () => {
-    if(formRef.current) {
-      const document: string = formRef.current.getFieldValue('document').replace(/\D/g, '');
-
-      if(document.length !== 11 && document.length !== 14) {
-        toast.error('CPF/CNPJ inválido.');
-        return;
-      }
-
-      formRef.current.setFieldValue('document', formatDocument(document));
-
-      if(!validCPForCNPJ(document)) {
-        toast.error('CPF/CNPJ inválido.');
-        return;
-      }
-
-      getClient(document);
-    }
-  };
-  /* END HANDLE DOCUMENT FORMAT */
-
-  /* - ON CRLVe CHANGE - */
-  const onCRLVeUploadSuccess = () => {
+  /* - UPLOAD CRLVE - */
+  const onCRLVeUpload = async (files: File[]) => {
     if(vehicle) {
-      onChangeSuccess({ ...vehicle, crlveIncluded: true });
+      setInLoadingCRLVe(true);
+
+      const data = new FormData();
+      data.append('file', files[0], files[0].name);
+
+      try {
+        await api.post(`/vehicles/${vehicle.id}/crlve`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        onChangeSuccess({ ...vehicle, crlveIncluded: true });
+      } catch(err) {
+        if(err.message === 'Network Error') {
+          toast.error('Verifique sua conexão com a internet.');
+        } else if(err.response && err.response.data && err.response.data.message) {
+          toast.error(err.response.data.message);
+        } else {
+          toast.error('Ocorreu um erro inesperado.');
+        }
+      }
+
+      setInLoadingCRLVe(false);
     }
   };
-  /* END ON CRLVe CHANGE */
+  /* END UPLOAD CRLVE */
 
   /* - HANDLE DOWN VEHICLE - */
   const handleDownVehicle = async () => {
-    setDwonModal(false);
+    setDownModal(false);
 
     if(vehicle) {
       try {
@@ -274,7 +261,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
             <Input type="hidden" name="clientId" />
           </div>
           <Input disabled name="name" label="NOME" />
-          <Input disabled={!editing} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
+          <Input disabled={!editing} name="document" label="DOCUMENTO" onFocus={() => onDocumentFocus(formRef)} onBlur={() => onDocumentBlur(formRef, getClient)} />
           <Input disabled name="group" label="GRUPO" />
 
           <hr />
@@ -310,9 +297,11 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
                   {vehicle && (
                     <>
-                      <Button type="button" variant="error" disabled={inSubmitProcess} onClick={() => setDwonModal(true)}>
-                        BAIXAR VEÍCULO
-                      </Button>
+                      {vehicle.status > 1 && (
+                        <Button type="button" variant="error" disabled={inSubmitProcess} onClick={() => setDownModal(true)}>
+                          BAIXAR VEÍCULO
+                        </Button>
+                      )}
 
                       {despPermission >= 3 && (
                         <Button type="button" variant="error" disabled={inSubmitProcess} onClick={handleVehicleExclude}>
@@ -341,21 +330,25 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           </VehicleDetailsLoadingContainer>
         )}
       </Modal>
-      <VehiclesUploadCRLVeModal
-        isOpen={uploadCrlveModalOpen}
-        onClose={() => setUploadCrlveModalOpen(false)}
-        vehicleId={vehicle?.id || ''}
-        onUploadSuccess={onCRLVeUploadSuccess}
-      />
+
+      <Modal isOpen={uploadCrlveModalOpen} onRequestClose={onClose} haveHeader={false}>
+        {inLoadingCRLVe ? (
+          <ReactLoading type="bars" />
+        ) : (
+          <Dropzone maxFiles={1} accept="application/pdf" onDropAccepted={onCRLVeUpload} />
+        )}
+      </Modal>
+
       <ClientsDetailsModal
         cliePermission={2}
         isOpen={cadClientModal}
         onClose={() => setCadClientModal(false)}
-        onChangeSuccess={onDocumentBlur}
+        onChangeSuccess={() => onDocumentBlur(formRef, getClient)}
       />
+
       <VehiclesDownModal
         isOpen={downModal}
-        onClose={() => setDwonModal(false)}
+        onClose={() => setDownModal(false)}
         onDownSuccess={handleDownVehicle}
         vehicle={vehicle}
       />
