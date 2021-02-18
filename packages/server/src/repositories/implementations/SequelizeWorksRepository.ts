@@ -84,12 +84,10 @@ export class SequelizeWorksRepository implements IWorksRepository {
       return null;
     }
 
-    const fixedData: IWork[] = [];
-
-    await Promise.all(data.map(async (el) => {
+    const fixedData: IWork[] = await Promise.all(data.map(async (el) => {
       const histories = await WorkHistory.findAll({ where: { workId: el.workId }, order: [['createdAt', 'DESC']] });
 
-      fixedData.push({
+      return {
         id: el.workId,
         clientId: el.clientId,
         client: {
@@ -124,7 +122,7 @@ export class SequelizeWorksRepository implements IWorksRepository {
         histories,
         createdAt: el.workCreatedAt,
         updatedAt: el.workUpdatedAt,
-      });
+      };
     }));
 
     return fixedData;
