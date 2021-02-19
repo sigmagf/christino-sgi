@@ -97,21 +97,27 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
 
     try {
       const scheme = yup.object().shape({
-        name: yup.string().required('Nome é obrigatório'),
+        name: yup.string().max(128, 'O nome deve ter no máximo 128 caracteres).required('Nome é obrigatório'),
         document: yup.string()
           .min(11, 'Documento deve ter pelo menos 11 caracteres (CPF).')
           .max(14, 'Documento deve ter no maximo 14 caracteres (CNPJ).')
           .test('validate-document', 'Documento inválido.', (el) => validCPForCNPJ(el || ''))
           .required('Documento é obrigatório.'),
+        group: yup.string().max(32, 'O grupo deve ter no máximo 32 caracteres),
+        email: yup.string().max(128, 'O email deve ter no máximo 128 caracteres),
+        phone1: yup.string().max(11, 'O telefone 1 deve ter no máximo 11 caracteres),
+        phone2: yup.string().max(11, 'O telefone 2 deve ter no máximo 11 caracteres)
       });
 
       const document = data.document.replace(/\D/g, '');
-      await scheme.validate({ ...data, document }, { abortEarly: false });
+      const phone1 = data.phone1.replace(/\D/g, '');
+      const phone2 = data.phone2.replace(/\D/g, '');
+      await scheme.validate({ ...data, document, phone1, phone2 }, { abortEarly: false });
 
       if(client) {
-        await api.put<IVehicle>(`/clients/${client.id}`, { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.put<IVehicle>(`/clients/${client.id}`, { ...data, document, phone1, phone2 }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        await api.post<IVehicle>('/clients', { ...data, document }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        await api.post<IVehicle>('/clients', { ...data, document, phone1, phone2 }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
       onClose();
