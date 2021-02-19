@@ -104,7 +104,7 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
     
           /* - VEHICLE DATA - */
           .vehicle {
-            margin-top: 15px;
+            margin-top: 10px;
     
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
@@ -128,7 +128,7 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
     
           /* - WITHDRAWN BY DATA - */
           .withdrawn-by {
-            margin-top: 15px;
+            margin-top: 10px;
             display: grid;
     
             grid-template-columns: 1fr 200px;
@@ -221,7 +221,7 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
             </div>
             <div class="text-container withdrawn-by-time">
               <div class="label">DATA E HORA</div>
-              <div>${formatDate(new Date(Date.now()))}</div>
+              <div>${formatDate(new Date(Date.now()), true)}</div>
             </div>
           </section>
 
