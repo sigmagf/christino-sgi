@@ -191,8 +191,8 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
           <Input disabled={!!work || !editing} name="identifier" label="IDENTIFICADOR" />
           <Input disabled={!editing} name="value" label="VALOR" onFocus={() => onValueFocus(formRef)} onBlur={() => onValueBlur(formRef)} />
           <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
-          <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} maxlength={256} />
-          { editing && <Input name="history" label="NOVA ENTRADA" maxlength={115} /> }
+          <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} maxLength={256} />
+          { editing && <Input name="history" label="NOVA ENTRADA" maxLength={115} /> }
 
           <Table>
             <thead>
