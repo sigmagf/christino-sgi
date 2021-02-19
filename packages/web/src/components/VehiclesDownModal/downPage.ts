@@ -1,6 +1,7 @@
 import christinoLogo from '~/assets/logo-color.png';
 import { useLocalStorage } from '~/hooks';
 import { IVehicle } from '~/interfaces';
+import { formatDate } from '~/utils/formatDate';
 import { formatDocument } from '~/utils/formatDocument';
 
 interface IWithdrawnBy {
@@ -110,8 +111,8 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
             gap: 15px;
             grid-template-rows: 20px 40px 40px;
             grid-template-areas: 'TL TL TL TL TL TL TL TL TL TL TL TL'
-                                'CN CN CN CN CN CN CN CD CD CD CG CG'
-                                'VP VR VR VC VC VM VM VM VM VM VT VT';
+                                 'CN CN CN CN CN CN CN CD CD CD CG CG'
+                                 'VP VR VR VC VC VM VM VM VM VM VT VT';
           }
     
           .vehicle-title { grid-area: TL; text-align: center; }
@@ -134,8 +135,8 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
             gap: 15px;
             grid-template-rows: 20px 40px 40px;
             grid-template-areas: 'WT WT'
-                                'WN WD'
-                                'WO WO';
+                                 'WN WD'
+                                 'WO WI';
           }
           .withdrawn-by-title { grid-area: WT; text-align: center; }
           .withdrawn-by-name { grid-area: WN; }
@@ -217,6 +218,10 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
             <div class="text-container withdrawn-by-details">
               <div class="label">DETALHES</div>
               <div>${withdrawnBy.details ? withdrawnBy.details.toUpperCase() : ''}</div>
+            </div>
+            <div class="text-container withdrawn-by-time">
+              <div class="label">DATA E HORA</div>
+              <div>${formatDate(new Date(Date.now()))}</div>
             </div>
           </section>
 
