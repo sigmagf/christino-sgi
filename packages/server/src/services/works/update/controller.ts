@@ -51,6 +51,7 @@ export class WorksUpdateController {
       const work = await this.service.execute({ id, clientId, serviceId, identifier, value, status, details, history });
       return res.json(work);
     } catch(err) {
+      console.log(err);
       return errorWork(res, err.message);
     }
   }
