@@ -47,7 +47,8 @@ const Select: React.FC<ISelectProps> = ({ name, label, style, id, placeholder, .
         defaultValue={defaultValue}
         ref={selectRef}
         classNamePrefix="react-select"
-        id={name}
+        id={`${name}-select`}
+        inputId={name}
         placeholder={placeholder || ''}
         {...rest}
       />
