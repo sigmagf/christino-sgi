@@ -178,7 +178,7 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
             </div>
             <div class="text-container vehicle-group">
               <div class="label">GRUPO</div>
-              <div>${vehicle.client.group}</div>
+              <div>${vehicle.client?.group || ''}</div>
             </div>
             <div class="text-container vehicle-plate">
               <div class="label">PLACA</div>
