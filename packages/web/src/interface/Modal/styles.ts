@@ -6,6 +6,8 @@ export const ModalHeader = styled.div`
   align-items: center;
   margin-bottom: 15px;
 
+  width: 100%;
+
   > button {
     height: 34px;
     width: 34px;

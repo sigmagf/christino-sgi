@@ -22,13 +22,19 @@ const dragReject = css`
 `;
 
 export const DropContainer = styled.div<IDropContainerStyledProps>`
-  min-width: 500px;
   border: 2px dashed ${({ theme }) => theme.secondary.main};
   background: ${({ theme }) => transparentize(0.95, theme.secondary.main)};
   border-radius: 5px;
   cursor: pointer;
 
-  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 100px;
+  height: 100%;
+  min-width: 500px;
+  width: 100%;
 
   transition: height 200ms ease;
 
@@ -37,10 +43,6 @@ export const DropContainer = styled.div<IDropContainerStyledProps>`
 `;
 
 export const UploadMessage = styled.p<IUploadMessageStyledProps>`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
   font-weight: bold;
   color: ${({ theme, type }) => theme[type || 'primary'].contrastText};
 `;

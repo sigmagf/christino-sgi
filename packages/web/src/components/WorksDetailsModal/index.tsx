@@ -1,5 +1,6 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
+import { FaPlus } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
@@ -10,16 +11,18 @@ import { Button } from '~/interface/Button';
 import { Input, Select, TextArea } from '~/interface/Form';
 import { Modal } from '~/interface/Modal';
 import { Table } from '~/interface/Table';
-import { IClient, IService, IWork } from '~/interfaces';
+import { IService, IWork } from '~/interfaces';
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatDate } from '~/utils/formatDate';
-import { formatDocument } from '~/utils/formatDocument';
 import { formatMoney } from '~/utils/formatMoney';
-import { onDocumentBlur, onDocumentFocus } from '~/utils/handleDocumentInputFormat';
+import { onDocumentInputBlur } from '~/utils/handleDocumentInputFormat';
+import { handleGetClientsToSelect } from '~/utils/handleGetClientsToSelect';
+import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { onValueBlur, onValueFocus } from '~/utils/handleMoneyInputFormat';
 
 import { ClientsDetailsModal } from '../ClientsDetailsModal';
+import { UserPermissionsContext } from '../Layout';
 import { WorksDetailsModalForm, WorksDetailsActionButtons, WorksDetailsLoadingContainer } from './styles';
 
 interface IFormData {
@@ -36,46 +39,27 @@ interface IWorksDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   work?: IWork;
-  workPermission: number;
 }
 
-export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work, workPermission }) => {
+export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work }) => {
+  const { workPermission } = useContext(UserPermissionsContext);
   const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);
+  let timer: NodeJS.Timeout;
 
   const [cadClientModal, setCadClientModal] = useState(false);
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
+
+  const [clients, setClients] = useState<{ label: string; value: string }[]>([]);
 
   const [editing, setEditing] = useState(false);
 
   const { data: services } = useSWR<IService[]>('/services?noPagination=true');
 
-  /* - SEARCH CLIENT IN DATABASE - */
-  const getClient = async (document: string) => {
-    if(formRef.current) {
-      try {
-        const client = await api.get<IClient[]>(`/clients?noPagination=true&document=${document}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-        formRef.current.setFieldValue('name', client.data[0]?.name || '');
-        formRef.current.setFieldValue('group', client.data[0]?.group || '');
-        formRef.current.setFieldValue('clientId', client.data[0]?.id || '');
-
-        if(!client.data[0]) {
-          toast.error('Cliente não cadastrado.');
-          setCadClientModal(true);
-        }
-      } catch(err) {
-        if(err.message === 'Network Error') {
-          toast.error('Verifique sua conexão com a internet.');
-        } else if(err.response && err.response.data && err.response.data.message) {
-          toast.error(err.response.data.message);
-        } else {
-          toast.error('Ocorreu um erro inesperado.');
-        }
-      }
-    }
+  const onClientsInputChange = (param: string) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { handleGetClientsToSelect(param, setClients); }, 1000);
   };
-  /* END SEARCH CLIENT IN DATABASE */
 
   /* - SAVE OR UPDATE VEHICLE - */
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
@@ -108,12 +92,8 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
     } catch(err) {
       if(err instanceof yup.ValidationError) {
         err.inner.forEach((yupError) => toast.error(yupError.message));
-      } else if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
       } else {
-        toast.error('Ocorreu um erro inesperado.');
+        handleHTTPRequestError(err);
       }
     }
 
@@ -170,20 +150,15 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
           ref={formRef}
           onSubmit={onSubmit}
           initialData={work && {
-            ...work.client,
             ...work,
-            document: formatDocument(work.client.document),
+            clientId: { value: work.clientId, label: `${work.client.document.padStart(14, '*')} - ${work.client.name}` },
             value: formatMoney(work.value),
             serviceId: services && services.filter((el) => el.id === work.serviceId).map((el) => ({ label: el.name, value: el.id }))[0],
             status: worksStatus.find((el) => el.value === work.status.toString()),
           }}
         >
-          <div className="hidden-input">
-            <Input type="hidden" name="clientId" />
-          </div>
-          <Input disabled name="name" label="NOME" />
-          <Input disabled={!!work || !editing} name="document" label="DOCUMENTO" onFocus={() => onDocumentFocus(formRef)} onBlur={() => onDocumentBlur(formRef, getClient)} />
-          <Input disabled name="group" label="GRUPO" />
+          <Select name="clientId" label="CLIENTE" options={clients} onInputChange={onClientsInputChange} />
+          <Button type="button" variant="info" style={{ maxHeight: 40, marginTop: 20 }} onClick={() => setCadClientModal(true)}><FaPlus /></Button>
 
           <hr />
 
@@ -242,10 +217,9 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       </Modal>
 
       <ClientsDetailsModal
-        cliePermission={2}
         isOpen={cadClientModal}
         onClose={() => setCadClientModal(false)}
-        onChangeSuccess={() => onDocumentBlur(formRef, getClient)}
+        onChangeSuccess={() => onDocumentInputBlur(formRef, (e) => handleGetClientsToSelect(e, setClients))}
       />
     </>
   );

@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
-import { Layout } from '~/components/Layout';
+import { Layout, UserPermissionsContext } from '~/components/Layout';
 import { VehiclesDataTable } from '~/components/VehiclesDataTable';
 import { VehiclesDetailsModal } from '~/components/VehiclesDetailsModal';
 import { VehiclesFiltersCard } from '~/components/VehiclesFiltersCard';
@@ -14,6 +13,7 @@ import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
 import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
+import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';
 
 import { vehiclesPrintScreen } from './printScreen';
@@ -21,8 +21,8 @@ import { vehiclesPrintScreen } from './printScreen';
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
 
+  const { despPermission } = useContext(UserPermissionsContext);
   const storage = useLocalStorage();
-  const [despPermission, setDespPermission] = useState(-1);
 
   const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
   const [vehicleIdToDetails, setVehicleIdToDetails] = useState<string>();
@@ -64,13 +64,7 @@ export const VehiclesPage: React.FC = () => {
       // eslint-disable-next-line no-restricted-globals
       window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
     } catch(err) {
-      if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-      }
+      handleHTTPRequestError(err);
     }
   };
 
@@ -91,13 +85,7 @@ export const VehiclesPage: React.FC = () => {
         win.close();
       }
     } catch(err) {
-      if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-      }
+      handleHTTPRequestError(err);
     }
 
     setInLoadingPrint(false);
@@ -105,13 +93,7 @@ export const VehiclesPage: React.FC = () => {
 
   useEffect(() => {
     if(getVehiclesError) {
-      if(getVehiclesError.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(getVehiclesError.response && getVehiclesError.response.data && getVehiclesError.response.data.message) {
-        toast.error(getVehiclesError.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-      }
+      handleHTTPRequestError(getVehiclesError);
     }
   }, [getVehiclesError]);
 
@@ -127,11 +109,10 @@ export const VehiclesPage: React.FC = () => {
 
   return (
     <>
-      <Layout setPermissions={(perms) => setDespPermission(perms.despPermission)}>
+      <Layout>
         <VehiclesFiltersCard
           onCreateClick={onCreateVehicleClick}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
-          despPermission={despPermission}
         />
 
         <VehiclesDataTable
@@ -154,7 +135,6 @@ export const VehiclesPage: React.FC = () => {
 
       <VehiclesDetailsModal
         isOpen={detailsModalOpen}
-        despPermission={despPermission}
         onClose={onModalsClose}
         vehicle={vehicles?.data.find((el) => el.id === vehicleIdToDetails)}
         onChangeSuccess={onVehicleChange}

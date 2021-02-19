@@ -6,7 +6,6 @@ import { Badge } from '~/interface/Badge';
 import { Button } from '~/interface/Button';
 import { Table } from '~/interface/Table';
 import { IClient } from '~/interfaces';
-
 import { formatDocument } from '~/utils/formatDocument';
 
 import { DataTableCardContainer } from './styles';

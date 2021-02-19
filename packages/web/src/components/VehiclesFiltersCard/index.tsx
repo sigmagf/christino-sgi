@@ -1,7 +1,6 @@
 import { FormHandles } from '@unform/core';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
-import { toast } from 'react-toastify';
 
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
@@ -10,16 +9,18 @@ import { Select, Input } from '~/interface/Form';
 import { IClient, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
+import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 
+import { UserPermissionsContext } from '../Layout';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IVehiclesFiltersCardProps {
   onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
-  despPermission: number;
 }
 
-export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
+export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick }) => {
+  const { despPermission } = useContext(UserPermissionsContext);
   const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
 
@@ -42,22 +43,21 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
     },
   ];
 
-  const getClients = async (name: string) => {
+  const getClients = async (param: string) => {
     try {
-      const response = await api.get<IClient[]>(`/clients?noPagination=true${name ? `&name=${name}` : ''}`, {
-        headers: { authorization: `Bearer ${storage.getItem('token')}` },
-      });
+      if(param.length === 11 || param.length === 14) {
+        const response = await api.get<IClient>(`/clients/${param}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
-      const data = response.data.map((client) => ({ value: client.id, label: `${client.document.padStart(14, '*')} - ${client.name}` }));
-      setClients([{ label: 'TODOS', value: '' }, ...data]);
-    } catch(err) {
-      if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
+        const data = { value: response.data.id, label: `${response.data.document.padStart(14, '*')} - ${response.data.name}` };
+        setClients([{ label: 'TODOS', value: '' }, data]);
       } else {
-        toast.error('Ocorreu um erro inesperado.');
+        const response = await api.get<IClient[]>(`/clients?noPagination=true&name=${param}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+
+        const data = response.data.map((client) => ({ value: client.id, label: `${client.document.padStart(14, '*')} - ${client.name}` }));
+        setClients([{ label: 'TODOS', value: '' }, ...data]);
       }
+    } catch(err) {
+      handleHTTPRequestError(err);
     }
   };
 

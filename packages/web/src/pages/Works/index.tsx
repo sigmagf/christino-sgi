@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Navigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
-import { Layout } from '~/components/Layout';
+import { Layout, UserPermissionsContext } from '~/components/Layout';
 import { WorksDataTable } from '~/components/WorksDataTable';
 import { WorksDetailsModal } from '~/components/WorksDetailsModal';
 import { WorksFiltersCard } from '~/components/WorksFiltersCard';
@@ -10,12 +9,13 @@ import { useSWR } from '~/hooks/useSWR';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
 import { IPagination, IWork, IWorksFilters } from '~/interfaces';
+import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';
 
 export const WorksPage: React.FC = () => {
   document.title = 'Ordem de Serviço | Christino';
 
-  const [workPermission, setWorkPermission] = useState(-1);
+  const { workPermission } = useContext(UserPermissionsContext);
   const [filters, setFilters] = useState<IWorksFilters>({ page: 1, limit: 10 });
 
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
@@ -43,13 +43,7 @@ export const WorksPage: React.FC = () => {
 
   useEffect(() => {
     if(getWorkError) {
-      if(getWorkError.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(getWorkError.response && getWorkError.response.data && getWorkError.response.data.message) {
-        toast.error(getWorkError.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-      }
+      handleHTTPRequestError(getWorkError);
     }
   }, [getWorkError]);
 
@@ -59,11 +53,10 @@ export const WorksPage: React.FC = () => {
 
   return (
     <>
-      <Layout setPermissions={(perms) => setWorkPermission(perms.workPermission)}>
+      <Layout>
         <WorksFiltersCard
           onCreateClick={onCreateVehicleClick}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
-          workPermission={workPermission}
         />
 
         <WorksDataTable
@@ -83,7 +76,6 @@ export const WorksPage: React.FC = () => {
       <WorksDetailsModal
         isOpen={detailsModalOpen}
         onClose={onModalsClose}
-        workPermission={workPermission}
         work={works?.data.filter((el) => el.id === workIdToDetails)[0]}
       />
     </>

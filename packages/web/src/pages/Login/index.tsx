@@ -13,6 +13,7 @@ import { Card } from '~/interface/Card';
 import { Input } from '~/interface/Form';
 import { IUser, IUserAuth } from '~/interfaces';
 import { api } from '~/utils/api';
+import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 
 import { LoginContainer } from './styles';
 
@@ -49,12 +50,8 @@ export const LoginPage: React.FC = () => {
         err.inner.forEach((error) => {
           toast.error(error.message);
         });
-      } else if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
       } else {
-        toast.error('Ocorreu um erro inesperado');
+        handleHTTPRequestError(err);
       }
     }
 

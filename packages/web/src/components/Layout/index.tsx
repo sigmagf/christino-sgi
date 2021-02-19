@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, createContext } from 'react';
 import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,15 +10,26 @@ import { api } from '~/utils/api';
 
 import { AppContent, AppMain } from './styles';
 
-interface ILayoutProps {
-  setPermissions?: (perms: Omit<IUser, 'id'|'name'|'email'|'password'|'createdAt'|'updatedAt'>) => void;
-}
+export const UserPermissionsContext = createContext<Omit<IUser, 'id'|'name'|'email'|'password'|'createdAt'|'updatedAt'>>({
+  cliePermission: 0,
+  despPermission: 0,
+  seguPermission: 0,
+  userPermission: 0,
+  workPermission: 0,
+});
 
-export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => {
+export const Layout: React.FC = ({ children }) => {
   const storage = useLocalStorage();
   const navigate = useNavigate();
 
   const [validFinished, setValidFinished] = useState(false);
+  const [permissions, setPermissions] = useState<Omit<IUser, 'id'|'name'|'email'|'password'|'createdAt'|'updatedAt'>>({
+    cliePermission: -1,
+    despPermission: -1,
+    seguPermission: -1,
+    userPermission: -1,
+    workPermission: -1,
+  });
 
   const validate = useCallback(async () => {
     try {
@@ -48,7 +59,7 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
   }
 
   return (
-    <>
+    <UserPermissionsContext.Provider value={permissions}>
       <Appnav />
       <AppMain>
         <UserBar />
@@ -59,6 +70,6 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
           </div>
         </AppContent>
       </AppMain>
-    </>
+    </UserPermissionsContext.Provider>
   );
 };

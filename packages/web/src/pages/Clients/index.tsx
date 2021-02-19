@@ -1,25 +1,25 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 import { ClientsDataTable } from '~/components/ClientsDataTable';
-import { Layout } from '~/components/Layout';
+import { Layout, UserPermissionsContext } from '~/components/Layout';
 import { useLocalStorage } from '~/hooks';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
 import { IClient, IClientsFilters, IPagination } from '~/interfaces';
 import { api } from '~/utils/api';
+import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';
 
 import { ClientsPrintScreen } from './printScreen';
 
 export const ClientsPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
-  const storage = useLocalStorage();
 
-  const [cliePermission, setCliePermission] = useState(-1);
+  const { cliePermission } = useContext(UserPermissionsContext);
+  const storage = useLocalStorage();
 
   const [clients, setClients] = useState<IPagination<IClient>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
   const [filters, setFilters] = useState<IClientsFilters>({ page: 1, limit: 10 });
@@ -39,23 +39,13 @@ export const ClientsPage: React.FC = () => {
 
       setClients(response.data);
     } catch(err) {
-      if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-      }
+      handleHTTPRequestError(err);
 
       setClients({ page: { total: 1, current: 1, limit: 10 }, data: [] });
     }
 
     setInLoading(false);
   }, [filters, storage]);
-
-  const onDetailsClick = (clientId: string) => {
-    console.log(clients.data.filter((el) => el.id === clientId)[0]);
-  };
 
   const onPrintClick = async () => {
     try {
@@ -72,13 +62,7 @@ export const ClientsPage: React.FC = () => {
         win.close();
       }
     } catch(err) {
-      if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
-      } else {
-        toast.error('Ocorreu um erro inesperado.');
-      }
+      handleHTTPRequestError(err);
     }
   };
 
@@ -90,8 +74,8 @@ export const ClientsPage: React.FC = () => {
   }
 
   return (
-    <Layout setPermissions={(perms) => setCliePermission(perms.cliePermission)}>
-      <ClientsDataTable inLoading={inLoading} data={clients.data} onDetailsClick={onDetailsClick} />
+    <Layout>
+      <ClientsDataTable inLoading={inLoading} data={clients.data} onDetailsClick={() => console.log('bla')} />
 
       <Card style={{ margin: '15px 0' }}>
         <Paginator

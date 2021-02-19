@@ -5,14 +5,14 @@ import { toast } from 'react-toastify';
 import { formatDocument } from './formatDocument';
 import { validCPForCNPJ } from './validCPForCNPJ';
 
-export const onDocumentFocus = (formRef: RefObject<FormHandles>, inputName = 'document') => {
+export const onDocumentInputFocus = (formRef: RefObject<FormHandles>, inputName = 'document') => {
   if(formRef.current) {
     const document = formRef.current.getFieldValue(inputName).replace(/\D/g, '');
     formRef.current.setFieldValue(inputName, document);
   }
 };
 
-export const onDocumentBlur = (formRef: RefObject<FormHandles>, cb: (document: string) => void, inputName = 'document') => {
+export const onDocumentInputBlur = (formRef: RefObject<FormHandles>, cb?: (document: string) => void, inputName = 'document') => {
   if(formRef.current) {
     const document: string = formRef.current.getFieldValue(inputName).replace(/\D/g, '');
 
@@ -28,6 +28,8 @@ export const onDocumentBlur = (formRef: RefObject<FormHandles>, cb: (document: s
       return;
     }
 
-    cb(document);
+    if(cb) {
+      cb(document);
+    }
   }
 };

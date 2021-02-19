@@ -11,20 +11,27 @@ import { ModalHeader } from './styles';
 interface IModalProps extends Props {
   haveHeader?: boolean;
   header?: JSX.Element|string;
+  fullCover?: boolean;
+  centeredContent?: boolean;
 }
 
 ReactModal.setAppElement('#root');
-export const Modal: React.FC<IModalProps> = ({ children, haveHeader = true, header, onRequestClose, ...props }) => {
+export const Modal: React.FC<IModalProps> = ({ children, haveHeader = true, header, onRequestClose, fullCover, centeredContent, ...props }) => {
   const theme = useTheme();
 
   const customStyles: ReactModal.Styles = {
     content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
+      top: fullCover ? '5px' : '50%',
+      left: fullCover ? '5px' : '50%',
+      right: fullCover ? '5px' : 'auto',
+      bottom: fullCover ? '5px' : 'auto',
+      margin: 'none',
+      transform: fullCover ? 'unset' : 'translate(-50%, -50%)',
+
+      display: centeredContent ? 'flex' : 'unset',
+      justifyContent: centeredContent ? 'center' : 'unset',
+      alignItems: centeredContent ? 'center' : 'unset',
+      flexDirection: centeredContent ? 'column' : 'unset',
 
       borderColor: theme.primary.main,
       borderRadius: 10,

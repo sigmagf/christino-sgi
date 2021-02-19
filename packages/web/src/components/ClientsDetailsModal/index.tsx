@@ -1,5 +1,5 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
@@ -11,8 +11,10 @@ import { Modal } from '~/interface/Modal';
 import { IClient, IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
 import { formatDocument } from '~/utils/formatDocument';
+import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
+import { UserPermissionsContext } from '../Layout';
 import { DetailsModalForm, VehicleDetailsActionButtons, VehicleDetailsLoadingContainer } from './styles';
 
 interface IFormData {
@@ -28,11 +30,11 @@ interface IVehiclesDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   client?: IClient;
-  cliePermission: number;
   onChangeSuccess: () => void;
 }
 
-export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, client, cliePermission, onChangeSuccess }) => {
+export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, client, onChangeSuccess }) => {
+  const { cliePermission } = useContext(UserPermissionsContext);
   const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);
 
@@ -106,7 +108,7 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
         group: yup.string().max(32, 'O grupo deve ter no máximo 32 caracteres'),
         email: yup.string().max(128, 'O email deve ter no máximo 128 caracteres'),
         phone1: yup.string().max(11, 'O telefone 1 deve ter no máximo 11 caracteres'),
-        phone2: yup.string().max(11, 'O telefone 2 deve ter no máximo 11 caracteres')
+        phone2: yup.string().max(11, 'O telefone 2 deve ter no máximo 11 caracteres'),
       });
 
       const document = data.document.replace(/\D/g, '');
@@ -126,12 +128,8 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
     } catch(err) {
       if(err instanceof yup.ValidationError) {
         err.inner.forEach((yupError) => toast.error(yupError.message));
-      } else if(err.message === 'Network Error') {
-        toast.error('Verifique sua conexão com a internet.');
-      } else if(err.response && err.response.data && err.response.data.message) {
-        toast.error(err.response.data.message);
       } else {
-        toast.error('Ocorreu um erro inesperado.');
+        handleHTTPRequestError(err);
       }
     }
 
@@ -170,7 +168,7 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
           }}
         >
           <Input disabled={!editing} name="name" label="NOME" />
-          <Input disabled={!editing} name="document" label="DOCUMENTO" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
+          <Input disabled={!editing} name="document" label="CPF/CNPJ" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
           <Input disabled={!editing} name="group" label="GRUPO" />
 
           <Input disabled={!editing} name="email" label="E-MAIL" />

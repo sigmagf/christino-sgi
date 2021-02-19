@@ -3,7 +3,6 @@ import { FaCog, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 import { useLocalStorage } from '~/hooks';
-
 import { Button } from '~/interface/Button';
 
 import { UserBarContainer } from './styles';
