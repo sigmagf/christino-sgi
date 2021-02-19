@@ -89,12 +89,12 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
         status: yup.string().required('O status é obrigatório.'),
         details: yup.string().max(256, 'Os detalhes devem ter no máximo 256 caracteres'),
         identifier: yup.string().max(16, 'O identifier devem ter no máximo 16 caracteres').required('O identificador é obrigatório.'),
-        history: yup.string().max(128, 'O histórico devem ter no máximo 115 caracteres').required('O historico é obrigatório.'),
+        history: yup.string().max(115, 'O histórico devem ter no máximo 115 caracteres').required('O historico é obrigatório.'),
       });
 
       const history = `${worksStatus.filter((el) => el.value === data.status)[0].label} - ${data.history}`;
       const value = data.value.replace('.', '').replace(',', '.').trim();
-      await scheme.validate({ ...data, value, history }, { abortEarly: false });
+      await scheme.validate({ ...data, value }, { abortEarly: false });
 
       if(work) {
         await api.put<IWork>(`/works/${work.id}`, { ...data, value, history }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
