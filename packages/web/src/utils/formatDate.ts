@@ -5,9 +5,15 @@ export function formatDate(date?: string|Date, withTime = false) {
 
   const dt = new Date(date);
 
+  const year = dt.getFullYear();
+  const month = (dt.getMonth() + 1).toString().padStart(2, '0');
+  const day = dt.getDate().toString().padStart(2, '0');
+  const hour = dt.getHours().toString().padStart(2, '0');
+  const minute = dt.getMinutes().toString().padStart(2, '0');
+
   if(withTime) {
-    return `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}-${dt.getHours()}:${dt.getMinutes()}`;
+    return `${day}/${month}/${year}-${hour}:${minute}`;
   }
 
-  return `${dt.getDate().toString().padStart(2, '0')}/${(dt.getMonth() + 1).toString().padStart(2, '0')}/${dt.getFullYear()}`;
+  return `${day}/${month}/${year}`;
 }
