@@ -188,7 +188,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
           <hr />
 
           <Select isDisabled={!!work || !editing} name="serviceId" label="SERVIÇO" options={handleServiceOptions()} />
-          <Input disabled={!!work || !editing} name="identifier" label="IDENTIFICADOR" />
+          <Input disabled={!editing} name="identifier" label="IDENTIFICADOR" />
           <Input disabled={!editing} name="value" label="VALOR" onFocus={() => onValueFocus(formRef)} onBlur={() => onValueBlur(formRef)} />
           <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
           <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} maxLength={256} />
