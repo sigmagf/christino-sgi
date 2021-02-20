@@ -133,7 +133,7 @@ export class SequelizeWorksRepository implements IWorksRepository {
     const limit = maxResults > 100 ? 100 : maxResults;
 
     if(filters.pagination) {
-      const maxRows = await Work.count();
+      const maxRows = (await sequelize.query(this.selectQuery(where), { type: QueryTypes.SELECT })).length;
       const pages = Math.ceil(maxRows / limit);
       const offset = (page - 1) * limit;
       const dbPageData = await sequelize.query(this.selectQuery(where, limit, offset), { type: QueryTypes.SELECT });

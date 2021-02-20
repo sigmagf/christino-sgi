@@ -9,7 +9,7 @@ export class UsersAuthController {
   constructor(private service: UsersAuthService) { }
 
   async handle(req: Request, res: Response) {
-    const email = stringFix(req.body.email, undefined, 'LOWERCASE');
+    const email = stringFix(req.body.email, undefined, 'LOWERCASE', 'STRING');
     const password = stringFix(req.body.password, undefined);
 
     try {

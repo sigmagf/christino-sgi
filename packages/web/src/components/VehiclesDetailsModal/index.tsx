@@ -1,5 +1,5 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState, useEffect, useContext } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FaEye, FaPlus, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
@@ -19,7 +19,6 @@ import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { onInputBlurMaxLength } from '~/utils/onInputBlurMaxLength';
 
 import { ClientsDetailsModal } from '../ClientsDetailsModal';
-import { UserPermissionsContext } from '../Layout';
 import { downPrintPage } from './downPage';
 import { VehiclesDetailsForm, VehiclesDetailsActionButtons, VehiclesDetailsLoadingContainer, VehiclesDetailsDownForm } from './styles';
 
@@ -49,8 +48,9 @@ interface IVehiclesDetailsModalProps {
 }
 
 export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, onChangeSuccess, onCRLVeViewClick }) => {
-  const { despPermission } = useContext(UserPermissionsContext);
   const storage = useLocalStorage();
+  const permissions = storage.getItem('permissions');
+
   const formDetailsRef = useRef<FormHandles>(null);
   const formDownRef = useRef<FormHandles>(null);
   let timer: NodeJS.Timeout;
@@ -200,6 +200,11 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
     setCadClientModal(false);
   }, [vehicle]);
 
+  if(!permissions) {
+    onClose();
+    return <>ERRO AO BUSCAR AS PERMISSÕES</>;
+  }
+
   return (
     <>
       <Modal
@@ -239,7 +244,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
             </Button>
           )}
 
-          {despPermission >= 2 && (
+          {permissions!.despPermission >= 2 && (
             <>
               {(vehicle && !editing) && (
                 <Button type="button" variant="info" disabled={inSubmitProcess} onClick={() => setUploadCRLVeModal(true)} title="ENVIAR CRLVe">
@@ -261,7 +266,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
                         </Button>
                       )}
 
-                      {despPermission >= 3 && (
+                      {permissions!.despPermission >= 3 && (
                         <Button type="button" variant="error" disabled={inSubmitProcess} onClick={onVehicleExclude}>
                           EXCLUIR
                         </Button>

@@ -20,8 +20,9 @@ import { LoginContainer } from './styles';
 export const LoginPage: React.FC = () => {
   document.title = 'Login | Christino';
 
-  const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
+
+  const formRef = useRef<FormHandles>(null);
   const [inLoading, setInLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -47,9 +48,7 @@ export const LoginPage: React.FC = () => {
       navigate('/');
     } catch(err) {
       if(err instanceof yup.ValidationError) {
-        err.inner.forEach((error) => {
-          toast.error(error.message);
-        });
+        err.inner.forEach((error) => toast.error(error.message));
       } else {
         handleHTTPRequestError(err);
       }

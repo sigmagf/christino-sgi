@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 
-import { Layout, UserPermissionsContext } from '~/components/Layout';
+import { Layout } from '~/components/Layout';
 import { VehiclesDataTable } from '~/components/VehiclesDataTable';
 import { VehiclesDetailsModal } from '~/components/VehiclesDetailsModal';
 import { VehiclesFiltersCard } from '~/components/VehiclesFiltersCard';
@@ -21,8 +21,8 @@ import { vehiclesPrintScreen } from './printScreen';
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
 
-  const { despPermission } = useContext(UserPermissionsContext);
   const storage = useLocalStorage();
+  const permissions = storage.getItem('permissions');
 
   const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
   const [vehicleIdToDetails, setVehicleIdToDetails] = useState<string>();
@@ -97,7 +97,7 @@ export const VehiclesPage: React.FC = () => {
     }
   }, [getVehiclesError]);
 
-  if(despPermission === 0) {
+  if(!permissions || permissions.despPermission === 0) {
     return <Navigate to="/" replace />;
   }
 

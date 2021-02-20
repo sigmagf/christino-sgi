@@ -12,12 +12,12 @@ export class VehiclesUpdateController {
     const { id } = req.params;
 
     const clientId = stringFix(req.body.clientId, undefined);
-    const plate = stringFix(req.body.plate, undefined, 'UPPERCASE');
-    const renavam = stringFix(req.body.renavam, undefined);
-    const crv = stringFix(req.body.crv, null);
-    const brandModel = stringFix(req.body.brandModel, undefined, 'UPPERCASE');
-    const type = stringFix(req.body.type, undefined, 'UPPERCASE');
-    const details = stringFix(req.body.details, null, 'UPPERCASE');
+    const plate = stringFix(req.body.plate, undefined, 'UPPERCASE', 'STRING');
+    const renavam = stringFix(req.body.renavam, undefined, 'UPPERCASE', 'NUMBER');
+    const crv = stringFix(req.body.crv, null, 'UPPERCASE', 'NUMBER');
+    const brandModel = stringFix(req.body.brandModel, undefined, 'UPPERCASE', 'STRING');
+    const type = stringFix(req.body.type, undefined, 'UPPERCASE', 'STRING');
+    const details = stringFix(req.body.details, null, 'UPPERCASE', 'STRING');
     const status = stringFix(req.body.status, undefined);
     const crlveIncluded = stringFix(req.body.crlveIncluded, undefined);
 
@@ -50,18 +50,7 @@ export class VehiclesUpdateController {
         return res.status(400).json({ code: 400, message: 'O item \'status\' é inválido.', details: 'O status deve ser entre \'1\',\'2\',\'3\',\'4\'' });
       }
 
-      const vehicle = await this.service.execute({
-        id,
-        clientId,
-        plate,
-        renavam: renavam.replace(/\D/g, ''),
-        crv: crv?.replace(/\D/g, '') || null,
-        brandModel,
-        type,
-        details,
-        status,
-        crlveIncluded,
-      });
+      const vehicle = await this.service.execute({ id, clientId, plate, renavam, crv, brandModel, type, details, status, crlveIncluded });
 
       return res.json(vehicle);
     } catch(err) {

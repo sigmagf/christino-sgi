@@ -1,5 +1,5 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState, useEffect, useContext } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
@@ -14,7 +14,6 @@ import { formatDocument } from '~/utils/formatDocument';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
-import { UserPermissionsContext } from '../Layout';
 import { DetailsModalForm, VehicleDetailsActionButtons, VehicleDetailsLoadingContainer } from './styles';
 
 interface IFormData {
@@ -34,8 +33,9 @@ interface IVehiclesDetailsModalProps {
 }
 
 export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, client, onChangeSuccess }) => {
-  const { cliePermission } = useContext(UserPermissionsContext);
   const storage = useLocalStorage();
+  const permissions = storage.getItem('permissions');
+
   const formRef = useRef<FormHandles>(null);
 
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
@@ -151,6 +151,10 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
     }
   }, [client]);
 
+  if(!permissions) {
+    return <>ERRO AO BUSCAR AS PERMISSÕES</>;
+  }
+
   return (
     <>
       <Modal
@@ -176,7 +180,7 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
           <Input disabled={!editing} name="phone2" label="TELEFONE 2" maxLength={11} onFocus={() => onPhoneFocus('phone2')} onBlur={() => onPhoneBlur('phone2')} />
         </DetailsModalForm>
         <VehicleDetailsActionButtons>
-          {cliePermission >= 2 && (
+          {permissions!.cliePermission >= 2 && (
             <>
               {editing ? (
                 <>

@@ -1,15 +1,36 @@
-export function stringFix(string: any, returnIfFalse: null|string|number, stringCase?: 'UPPERCASE'|'LOWERCASE') {
-  if(!string) {
-    return returnIfFalse;
+type StringCase = 'UPPERCASE'|'LOWERCASE';
+type Normalize = 'NUMBER'|'STRING';
+
+export function stringFix(value: any, undefinedReturn: undefined|null|string|number, stringCase?: StringCase, normalize?: Normalize): any {
+  if(!value) {
+    return undefinedReturn;
   }
 
-  if(Array.isArray(string)) {
-    return string;
+  if(Array.isArray(value)) {
+    return value;
   }
+
+  let stringCased = '';
 
   switch(stringCase) {
-    case 'UPPERCASE': return string.toString().trim().toUpperCase();
-    case 'LOWERCASE': return string.toString().trim().toLowerCase();
-    default: return string.toString().trim();
+    case 'UPPERCASE':
+      stringCased = value.toString().trim().toUpperCase();
+      break;
+    case 'LOWERCASE':
+      stringCased = value.toString().trim().toLowerCase();
+      break;
+    default:
+      stringCased = value.toString().trim();
+      break;
   }
+
+  if(normalize === 'NUMBER') {
+    return stringCased.replace(/\D/g, '');
+  }
+
+  if(normalize === 'STRING') {
+    return stringCased.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  return stringCased;
 }

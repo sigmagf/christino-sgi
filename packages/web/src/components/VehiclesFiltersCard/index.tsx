@@ -1,5 +1,5 @@
 import { FormHandles } from '@unform/core';
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
 
 import { useLocalStorage } from '~/hooks';
@@ -11,7 +11,6 @@ import { api } from '~/utils/api';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 
-import { UserPermissionsContext } from '../Layout';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IVehiclesFiltersCardProps {
@@ -20,9 +19,10 @@ interface IVehiclesFiltersCardProps {
 }
 
 export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick }) => {
-  const { despPermission } = useContext(UserPermissionsContext);
-  const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
+  const permissions = storage.getItem('permissions');
+
+  const formRef = useRef<FormHandles>(null);
 
   const { data: groups } = useSWR<string[]>('/clients/groups');
 
@@ -88,6 +88,10 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
     ];
   };
 
+  if(!permissions) {
+    return <>ERRO AO BUSCAR AS PERMISSÕES</>;
+  }
+
   return (
     <FiltersCard>
       <FiltersCardForm ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
@@ -104,7 +108,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
       </FiltersCardForm>
 
       <FiltersCardActionButtons>
-        {despPermission >= 2 && (
+        {permissions!.despPermission >= 2 && (
           <Button variant="success" style={{ width: 175.97 }} onClick={onCreateClick}>
             <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
           </Button>

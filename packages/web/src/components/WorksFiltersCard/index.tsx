@@ -1,5 +1,5 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
 
 import { useLocalStorage } from '~/hooks';
@@ -12,7 +12,6 @@ import { worksStatus as status } from '~/utils/commonSelectOptions';
 import { formatMoney } from '~/utils/formatMoney';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 
-import { UserPermissionsContext } from '../Layout';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IWorksFiltersCardProps {
@@ -21,9 +20,10 @@ interface IWorksFiltersCardProps {
 }
 
 export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick }) => {
-  const { workPermission } = useContext(UserPermissionsContext);
-  const formRef = useRef<FormHandles>(null);
   const storage = useLocalStorage();
+  const permissions = storage.getItem('permissions');
+
+  const formRef = useRef<FormHandles>(null);
   let timer: any;
 
   const { data: groups } = useSWR<string[]>('/clients/groups');
@@ -136,6 +136,10 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
     return [{ label: 'TODOS', value: '' }];
   };
 
+  if(!permissions) {
+    return <>ERRO AO BUSCAR AS PERMISSÕES</>;
+  }
+
   return (
     <FiltersCard>
       <FiltersCardForm ref={formRef} onSubmit={onSubmit}>
@@ -150,7 +154,7 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
       </FiltersCardForm>
 
       <FiltersCardActionButtons>
-        {workPermission >= 2 && (
+        {permissions!.workPermission >= 2 && (
           <Button variant="success" style={{ width: 175.97 }} onClick={onCreateClick}>
             <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR O.S.
           </Button>

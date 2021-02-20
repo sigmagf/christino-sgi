@@ -11,11 +11,11 @@ export class WorksCreateController {
   async handle(req: Request, res: Response) {
     const clientId = stringFix(req.body.clientId, undefined);
     const serviceId = stringFix(req.body.serviceId, undefined);
-    const identifier = stringFix(req.body.identifier, null, 'UPPERCASE');
-    const value = stringFix(req.body.value, undefined);
-    const status = stringFix(req.body.status, undefined, 'UPPERCASE');
-    const details = stringFix(req.body.details, undefined, 'UPPERCASE');
-    const history = stringFix(req.body.history, undefined, 'UPPERCASE');
+    const identifier = stringFix(req.body.identifier, null, 'UPPERCASE', 'STRING');
+    const value = stringFix(req.body.value, undefined, 'UPPERCASE', 'NUMBER');
+    const status = stringFix(req.body.status, undefined);
+    const details = stringFix(req.body.details, undefined, 'UPPERCASE', 'STRING');
+    const history = stringFix(req.body.history, undefined, 'UPPERCASE', 'STRING');
 
     try {
       if(!clientId) {

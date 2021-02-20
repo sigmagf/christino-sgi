@@ -9,14 +9,14 @@ export class UsersCreateController {
   constructor(private service: UsersCreateService) { }
 
   async handle(req: Request, res: Response) {
-    const name = stringFix(req.body.name, undefined, 'UPPERCASE');
-    const email = stringFix(req.body.email, undefined, 'LOWERCASE');
+    const name = stringFix(req.body.name, undefined, 'UPPERCASE', 'STRING');
+    const email = stringFix(req.body.email, undefined, 'LOWERCASE', 'STRING');
     const password = stringFix(req.body.password, undefined);
-    const despPermission = stringFix(req.body.despPermission, '1');
-    const seguPermission = stringFix(req.body.seguPermission, '1');
-    const cliePermission = stringFix(req.body.cliePermission, '1');
-    const userPermission = stringFix(req.body.userPermission, '1');
-    const workPermission = stringFix(req.body.workPermission, '1');
+    const despPermission = stringFix(req.body.despPermission, '1', 'UPPERCASE', 'NUMBER');
+    const seguPermission = stringFix(req.body.seguPermission, '1', 'UPPERCASE', 'NUMBER');
+    const cliePermission = stringFix(req.body.cliePermission, '1', 'UPPERCASE', 'NUMBER');
+    const userPermission = stringFix(req.body.userPermission, '1', 'UPPERCASE', 'NUMBER');
+    const workPermission = stringFix(req.body.workPermission, '1', 'UPPERCASE', 'NUMBER');
 
     try {
       if(!name) {

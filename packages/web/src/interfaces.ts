@@ -9,6 +9,7 @@ export interface IStorage {
   token: string;
   userName: string;
   appBarExpanded: boolean;
+  permissions: IUserPermissions;
 }
 /* END STIRAGE */
 
@@ -148,4 +149,6 @@ export interface IUserAuth {
   user: IUser;
   token: string;
 }
+
+export type IUserPermissions = Omit<IUser, 'id'|'name'|'email'|'password'|'createdAt'|'updatedAt'>;
 /* END BACKEND */

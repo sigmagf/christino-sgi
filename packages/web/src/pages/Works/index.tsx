@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { Layout, UserPermissionsContext } from '~/components/Layout';
+import { Layout } from '~/components/Layout';
 import { WorksDataTable } from '~/components/WorksDataTable';
 import { WorksDetailsModal } from '~/components/WorksDetailsModal';
 import { WorksFiltersCard } from '~/components/WorksFiltersCard';
+import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
@@ -15,7 +16,9 @@ import { qsConverter } from '~/utils/qsConverter';
 export const WorksPage: React.FC = () => {
   document.title = 'Ordem de Serviço | Christino';
 
-  const { workPermission } = useContext(UserPermissionsContext);
+  const storage = useLocalStorage();
+  const permissions = storage.getItem('permissions');
+
   const [filters, setFilters] = useState<IWorksFilters>({ page: 1, limit: 10 });
 
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
@@ -47,7 +50,7 @@ export const WorksPage: React.FC = () => {
     }
   }, [getWorkError]);
 
-  if(workPermission === 0) {
+  if(!permissions || permissions.workPermission === 0) {
     return <Navigate to="/" replace />;
   }
 

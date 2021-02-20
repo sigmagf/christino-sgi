@@ -1,5 +1,5 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState, useEffect, useContext } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
@@ -22,7 +22,6 @@ import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { onValueBlur, onValueFocus } from '~/utils/handleMoneyInputFormat';
 
 import { ClientsDetailsModal } from '../ClientsDetailsModal';
-import { UserPermissionsContext } from '../Layout';
 import { WorksDetailsModalForm, WorksDetailsActionButtons, WorksDetailsLoadingContainer } from './styles';
 
 interface IFormData {
@@ -42,8 +41,9 @@ interface IWorksDetailsModalProps {
 }
 
 export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work }) => {
-  const { workPermission } = useContext(UserPermissionsContext);
   const storage = useLocalStorage();
+  const permissions = storage.getItem('permissions');
+
   const formRef = useRef<FormHandles>(null);
   let timer: NodeJS.Timeout;
 
@@ -143,6 +143,10 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
     }
   }, [work]);
 
+  if(!permissions) {
+    return <>ERRO AO BUSCAR AS PERMISSÕES</>;
+  }
+
   return (
     <>
       <Modal isOpen={isOpen} onRequestClose={onClose} haveHeader header={`${work ? 'ALTERAR' : 'CRIAR'} ORDEM DE SERVIÇO`}>
@@ -187,7 +191,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
           </Table>
         </WorksDetailsModalForm>
         <WorksDetailsActionButtons editing={editing}>
-          {workPermission >= 2 && (
+          {permissions!.workPermission >= 2 && (
             <>
               {editing ? (
                 <>

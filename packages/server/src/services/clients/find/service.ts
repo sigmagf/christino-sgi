@@ -1,16 +1,15 @@
-import { IClient } from '~/entities/IClient';
 import { IClientsRepository } from '~/repositories/IClientsRepository';
 
 export class ClientsFindService {
   constructor(private repository: IClientsRepository) { }
 
-  async execute(data: Pick<IClient, 'id'>) {
-    if(data.id.length === 11 || data.id.length === 14) {
-      const client = await this.repository.findByDocument(data.id);
+  async execute(data: { param: string }) {
+    if(data.param.length === 11 || data.param.length === 14) {
+      const client = await this.repository.findByDocument(data.param);
       return client;
     }
 
-    const client = await this.repository.findById(data.id);
+    const client = await this.repository.findById(data.param);
     return client;
   }
 }

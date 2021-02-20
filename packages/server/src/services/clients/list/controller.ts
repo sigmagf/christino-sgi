@@ -13,9 +13,9 @@ export class ClientsListController {
     const limit = parseInt(req.query.limit as string, 10) || 10;
 
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
-    const name = stringFix(req.query.name, undefined, 'UPPERCASE');
-    const document = stringFix(req.query.document, undefined, 'UPPERCASE');
-    const group = stringFix(req.query.group, undefined, 'UPPERCASE');
+    const name = stringFix(req.query.name, undefined, 'UPPERCASE', 'STRING');
+    const document = stringFix(req.query.document, undefined, 'UPPERCASE', 'NUMBER');
+    const group = stringFix(req.query.group, undefined, 'UPPERCASE', 'STRING');
 
     try {
       const clients = await this.service.execute({ page, limit, filters: { pagination, name, document, group } });

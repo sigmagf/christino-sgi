@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useEffect, useContext } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 
 import { ClientsDataTable } from '~/components/ClientsDataTable';
-import { Layout, UserPermissionsContext } from '~/components/Layout';
+import { Layout } from '~/components/Layout';
 import { useLocalStorage } from '~/hooks';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
@@ -18,8 +18,8 @@ import { ClientsPrintScreen } from './printScreen';
 export const ClientsPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
 
-  const { cliePermission } = useContext(UserPermissionsContext);
   const storage = useLocalStorage();
+  const permissions = storage.getItem('permissions');
 
   const [clients, setClients] = useState<IPagination<IClient>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
   const [filters, setFilters] = useState<IClientsFilters>({ page: 1, limit: 10 });
@@ -69,7 +69,7 @@ export const ClientsPage: React.FC = () => {
   useEffect(() => { getData(); }, []); // eslint-disable-line
   useEffect(() => { getData(); }, [filters]); // eslint-disable-line
 
-  if(cliePermission === 0) {
+  if(!permissions || permissions.cliePermission === 0) {
     return <Navigate to="/" replace />;
   }
 

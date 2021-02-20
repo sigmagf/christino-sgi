@@ -11,14 +11,14 @@ export class UsersUpdateController {
   async handle(req: Request, res: Response) {
     const { id } = req.params;
 
-    const name = stringFix(req.body.name, undefined, 'UPPERCASE');
-    const email = stringFix(req.body.email, undefined, 'LOWERCASE');
+    const name = stringFix(req.body.name, undefined, 'UPPERCASE', 'STRING');
+    const email = stringFix(req.body.email, undefined, 'LOWERCASE', 'STRING');
     const password = stringFix(req.body.password, undefined);
-    const despPermission = stringFix(req.body.despPermission, undefined);
-    const seguPermission = stringFix(req.body.seguPermission, undefined);
-    const cliePermission = stringFix(req.body.cliePermission, undefined);
-    const userPermission = stringFix(req.body.userPermission, undefined);
-    const workPermission = stringFix(req.body.workPermission, undefined);
+    const despPermission = stringFix(req.body.despPermission, undefined, 'UPPERCASE', 'NUMBER');
+    const seguPermission = stringFix(req.body.seguPermission, undefined, 'UPPERCASE', 'NUMBER');
+    const cliePermission = stringFix(req.body.cliePermission, undefined, 'UPPERCASE', 'NUMBER');
+    const userPermission = stringFix(req.body.userPermission, undefined, 'UPPERCASE', 'NUMBER');
+    const workPermission = stringFix(req.body.workPermission, undefined, 'UPPERCASE', 'NUMBER');
 
     try {
       const user = this.service.execute({ id, name, email, password, despPermission, seguPermission, cliePermission, userPermission, workPermission });

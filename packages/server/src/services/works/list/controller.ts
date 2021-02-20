@@ -14,14 +14,18 @@ export class WorksListController {
 
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
     const clientId = stringFix(req.query.clientId, undefined);
-    const group = stringFix(req.query.group, undefined, 'UPPERCASE');
-    const identifier = stringFix(req.query.identifier, undefined, 'UPPERCASE');
-    const value = stringFix(req.query.value, undefined, 'UPPERCASE');
     const serviceId = stringFix(req.query.serviceId, undefined);
     const sectorId = stringFix(req.query.sectorId, undefined);
-    const status = stringFix(req.query.status, undefined, 'UPPERCASE');
+    const group = stringFix(req.query.group, undefined, 'UPPERCASE', 'STRING');
+    const identifier = stringFix(req.query.identifier, undefined, 'UPPERCASE', 'STRING');
+    const value = stringFix(req.query.value, undefined, 'UPPERCASE', 'NUMBER');
+    const status = stringFix(req.query.status, undefined);
 
     try {
+      if(status && (parseInt(status, 10) < 1 || parseInt(status, 10) > 4)) {
+        throw new Error(JSON.stringify({ code: 400, message: 'O item \'status\' é inválido.', details: 'O status deve ser entre \'1\',\'2\',\'3\',\'4\'' }));
+      }
+
       const works = await this.service.execute({ page, limit, filters: { pagination, clientId, serviceId, sectorId, group, identifier, value, status } });
       return res.json(works);
     } catch(err) {
