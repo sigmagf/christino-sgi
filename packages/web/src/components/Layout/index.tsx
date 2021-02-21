@@ -1,34 +1,45 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { FaSignOutAlt, FaCog } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
 
 import { Appnav } from '~/components/Appnav';
-import { UserBar } from '~/components/UserBar';
 import { useLocalStorage } from '~/hooks';
-import { IUser } from '~/interfaces';
+import { Button } from '~/interface/Button';
+import { IUser, IUserPermissions } from '~/interfaces';
 import { api } from '~/utils/api';
 
-import { AppContent, AppMain } from './styles';
+import { AppContent, AppMain, UserBarContainer } from './styles';
 
-export const Layout: React.FC = ({ children }) => {
+interface ILayoutProps {
+  setPermissions?: (perms: IUserPermissions) => void;
+}
+
+export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => {
   const storage = useLocalStorage();
   const navigate = useNavigate();
 
   const [validFinished, setValidFinished] = useState(false);
 
+  const onLogout = () => {
+    navigate('/login');
+    storage.setItem('token', null);
+  };
+
   const validate = useCallback(async () => {
     try {
       const response = await api.get<IUser>('/users/valid', { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
-      const data: any = { ...response.data, id: undefined, name: undefined, email: undefined, password: undefined, createdAt: undefined, updatedAt: undefined };
-      storage.setItem('permissions', data);
+      if(setPermissions) {
+        setPermissions(response.data);
+      }
     } catch(err) {
       storage.setItem('token', null);
       navigate('/login');
     }
 
     setValidFinished(true);
-  }, [navigate, storage]);
+  }, [navigate, setPermissions, storage]);
 
   useEffect(() => {
     validate();
@@ -46,7 +57,18 @@ export const Layout: React.FC = ({ children }) => {
     <>
       <Appnav />
       <AppMain>
-        <UserBar />
+        <UserBarContainer>
+          <div className="user-name">
+            Olá, <strong style={{ fontWeight: 'bold' }}>{ storage.getItem('userName') }</strong>
+          </div>
+
+          <div className="user-actions">
+            <Button variant="error" onClick={onLogout}><FaSignOutAlt size={17} /></Button>
+            <Button variant="secondary"><FaCog size={17} /></Button>
+            <img src={`http://www.gravatar.com/avatar/${storage.getItem('userPicture')}`} alt="" />
+          </div>
+        </UserBarContainer>
+
         <AppContent>
           { children }
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50 }}>

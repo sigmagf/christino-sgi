@@ -10,8 +10,9 @@ import { Input } from '~/interface/Form';
 import { Modal } from '~/interface/Modal';
 import { IClient, IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
-import { formatDocument } from '~/utils/formatDocument';
+import { formatDocument } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
+import { onDocumentInputBlur, onDocumentInputFocus, onPhoneInputBlur, onPhoneInputFocus } from '~/utils/handleInputFormat';
 import { validCPForCNPJ } from '~/utils/validCPForCNPJ';
 
 import { DetailsModalForm, VehicleDetailsActionButtons, VehicleDetailsLoadingContainer } from './styles';
@@ -27,71 +28,19 @@ interface IFormData {
 
 interface IVehiclesDetailsModalProps {
   isOpen: boolean;
-  onClose: () => void;
   client?: IClient;
-  onChangeSuccess: () => void;
+  onClose: () => void;
+  onChange: (client: IClient) => void;
+  cliePermission: number;
 }
 
-export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, client, onChangeSuccess }) => {
+export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, client, cliePermission }) => {
   const storage = useLocalStorage();
-  const permissions = storage.getItem('permissions');
 
   const formRef = useRef<FormHandles>(null);
 
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
   const [editing, setEditing] = useState(false);
-
-  /* - HANDLE DOCUMENT FORMAT - */
-  const onDocumentFocus = () => {
-    if(formRef.current) {
-      const document = formRef.current.getFieldValue('document').replace(/\D/g, '');
-      formRef.current.setFieldValue('document', document);
-    }
-  };
-
-  const onDocumentBlur = () => {
-    if(formRef.current) {
-      const document = formRef.current.getFieldValue('document').replace(/\D/g, '');
-
-      if(document.length !== 11 && document.length !== 14) {
-        toast.error('CPF/CNPJ inválido.');
-        return;
-      }
-
-      formRef.current.setFieldValue('document', formatDocument(document));
-
-      if(!validCPForCNPJ(document)) {
-        toast.error('CPF/CNPJ inválido.');
-      }
-    }
-  };
-  /* END HANDLE DOCUMENT FORMAT */
-
-  /* - HANDLE PHONE FORMAT - */
-  const onPhoneFocus = (field: string) => {
-    if(formRef.current) {
-      const phone = formRef.current.getFieldValue(field);
-      formRef.current.setFieldValue(field, phone.replace(/\D/g, ''));
-    }
-  };
-
-  const onPhoneBlur = (field: string) => {
-    if(formRef.current) {
-      const phone = formRef.current.getFieldValue(field).replace(/\D/g, '');
-      let formatedPhone = phone;
-
-      if(phone.length === 10) {
-        formatedPhone = `(${phone.slice(0, 2)}) ${phone.slice(2, 6)}-${phone.slice(6, 10)}`;
-      }
-
-      if(phone.length === 11) {
-        formatedPhone = `(${phone.slice(0, 2)}) ${phone.slice(2, 7)}-${phone.slice(7, 11)}`;
-      }
-
-      formRef.current.setFieldValue(field, formatedPhone);
-    }
-  };
-  /* END HANDLE PHONE FORMAT */
 
   /* - SAVE OR UPDATE CLIENT - */
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
@@ -101,10 +50,10 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
       const scheme = yup.object().shape({
         name: yup.string().max(128, 'O nome deve ter no máximo 128 caracteres').required('Nome é obrigatório'),
         document: yup.string()
-          .min(11, 'Documento deve ter pelo menos 11 caracteres (CPF).')
-          .max(14, 'Documento deve ter no maximo 14 caracteres (CNPJ).')
-          .test('validate-document', 'Documento inválido.', (el) => validCPForCNPJ(el || ''))
-          .required('Documento é obrigatório.'),
+          .min(11, 'CPF/CNPJ deve ter pelo menos 11 caracteres.')
+          .max(14, 'CPF/CNPJ  deve ter no maximo 14 caracteres.')
+          .test('CPF/CNPJ inválido.', (el) => validCPForCNPJ(el || ''))
+          .required('CPF/CNPJ é obrigatório.'),
         group: yup.string().max(32, 'O grupo deve ter no máximo 32 caracteres'),
         email: yup.string().max(128, 'O email deve ter no máximo 128 caracteres'),
         phone1: yup.string().max(11, 'O telefone 1 deve ter no máximo 11 caracteres'),
@@ -123,7 +72,6 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
       }
 
       onClose();
-      onChangeSuccess();
       toast.success(`Cliente ${client ? 'atualizado' : 'cadastrado'} com sucesso!`);
     } catch(err) {
       if(err instanceof yup.ValidationError) {
@@ -151,36 +99,42 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
     }
   }, [client]);
 
-  if(!permissions) {
-    return <>ERRO AO BUSCAR AS PERMISSÕES</>;
-  }
-
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={onClose}
-        haveHeader
-        header={`${client ? 'ALTERAR' : 'CRIAR'} CLIENTE`}
-      >
-        <DetailsModalForm
-          ref={formRef}
-          onSubmit={onSubmit}
-          initialData={client && {
-            ...client,
-            document: formatDocument(client.document),
-          }}
-        >
+      <Modal isOpen={isOpen} onRequestClose={onClose} haveHeader header={`${client ? 'ALTERAR' : 'CRIAR'} CLIENTE`}>
+        <DetailsModalForm ref={formRef} onSubmit={onSubmit} initialData={client && { ...client, document: formatDocument(client.document) }}>
           <Input disabled={!editing} name="name" label="NOME" />
-          <Input disabled={!editing} name="document" label="CPF/CNPJ" maxLength={14} onFocus={onDocumentFocus} onBlur={onDocumentBlur} />
+          <Input
+            disabled={!editing}
+            name="document"
+            label="CPF/CNPJ"
+            maxLength={14}
+            onFocus={() => onDocumentInputFocus(formRef)}
+            onBlur={() => onDocumentInputBlur(formRef)}
+          />
           <Input disabled={!editing} name="group" label="GRUPO" />
 
           <Input disabled={!editing} name="email" label="E-MAIL" />
-          <Input disabled={!editing} name="phone1" label="TELEFONE 1" maxLength={11} onFocus={() => onPhoneFocus('phone1')} onBlur={() => onPhoneBlur('phone1')} />
-          <Input disabled={!editing} name="phone2" label="TELEFONE 2" maxLength={11} onFocus={() => onPhoneFocus('phone2')} onBlur={() => onPhoneBlur('phone2')} />
+          <Input
+            disabled={!editing}
+            name="phone1"
+            label="TELEFONE 1"
+            maxLength={11}
+            onFocus={() => onPhoneInputFocus(formRef, 'phone1')}
+            onBlur={() => onPhoneInputBlur(formRef, 'phone1')}
+          />
+          <Input
+            disabled={!editing}
+            name="phone2"
+            label="TELEFONE 2"
+            maxLength={11}
+            onFocus={() => onPhoneInputFocus(formRef, 'phone2')}
+            onBlur={() => onPhoneInputBlur(formRef, 'phone2')}
+          />
         </DetailsModalForm>
+
         <VehicleDetailsActionButtons>
-          {permissions!.cliePermission >= 2 && (
+          {cliePermission >= 2 && (
             <>
               {editing ? (
                 <>

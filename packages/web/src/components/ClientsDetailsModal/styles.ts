@@ -11,10 +11,6 @@ export const DetailsModalForm = styled(Form)`
   grid-template-areas: 'NM NM NM NM NM NM NM DC DC GP GP GP'
                        'CE CE CE CE CE CE CE CE P1 P1 P2 P2';
 
-  input {
-    text-transform: uppercase;
-  }
-
   > :nth-child(1) { grid-area: NM; } /* NAME */
   > :nth-child(2) { grid-area: DC; } /* DOCUMENT */
   > :nth-child(3) { grid-area: GP; } /* GROUP */

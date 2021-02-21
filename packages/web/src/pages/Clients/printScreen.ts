@@ -17,7 +17,7 @@ export function ClientsPrintScreen(clients: IClient[]) {
     <thead>
       <tr>
         <th style="text-align: left">Nome</th>
-        <th>DOCUMENTO</th>
+        <th>CPF/CNPJ</th>
         <th>GRUPO</th>
         <th>EMAIL</th>
         <th>TELEFONES</th>

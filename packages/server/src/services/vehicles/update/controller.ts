@@ -17,7 +17,7 @@ export class VehiclesUpdateController {
     const crv = stringFix(req.body.crv, null, 'UPPERCASE', 'NUMBER');
     const brandModel = stringFix(req.body.brandModel, undefined, 'UPPERCASE', 'STRING');
     const type = stringFix(req.body.type, undefined, 'UPPERCASE', 'STRING');
-    const details = stringFix(req.body.details, null, 'UPPERCASE', 'STRING');
+    const details = stringFix(req.body.details, null, 'NONE', 'STRING');
     const status = stringFix(req.body.status, undefined);
     const crlveIncluded = stringFix(req.body.crlveIncluded, undefined);
 

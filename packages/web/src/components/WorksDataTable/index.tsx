@@ -7,12 +7,12 @@ import { Button } from '~/interface/Button';
 import { Table } from '~/interface/Table';
 import { IWork } from '~/interfaces';
 import { worksStatus } from '~/utils/commonSelectOptions';
-import { formatDate } from '~/utils/formatDate';
+import { formatDate } from '~/utils/formatString';
 
 import { WorksStatusBadge, DataTableCardContainer } from './styles';
 
 interface IWorksDataTableProps {
-  works: IWork[];
+  works: IWork[] | undefined;
   inLoading: boolean;
   onDetailsClick: (id: string) => void;
 }
@@ -39,14 +39,14 @@ export const WorksDataTable: React.FC<IWorksDataTableProps> = ({ works, inLoadin
           </tr>
         </thead>
         <tbody>
-          {(works.length === 0 || !works) && (
+          {(!works || works.length === 0) && (
             <>
               <tr><td colSpan={7} style={{ textAlign: 'center' }}>{!inLoading && 'SEM DADOS PARA INFORMAR'}</td></tr>
               <tr><td colSpan={7} style={{ textAlign: 'center' }}>{!inLoading && '- NENHUMA O.S. ENCONTRADO -'}</td></tr>
             </>
           )}
 
-          {works.map((el) => (
+          {works && works.map((el) => (
             <tr key={el.id}>
               <td><WorksStatusBadge status={el.status} title={worksStatus.find((st) => st.value === el.status.toString())?.label} /></td>
               <td>

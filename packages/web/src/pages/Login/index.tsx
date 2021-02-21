@@ -1,5 +1,6 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
+import crypto from 'crypto';
 import React, { useEffect, useState, useRef } from 'react';
 import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
@@ -20,17 +21,18 @@ import { LoginContainer } from './styles';
 export const LoginPage: React.FC = () => {
   document.title = 'Login | Christino';
 
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
-
-  const formRef = useRef<FormHandles>(null);
-  const [inLoading, setInLoading] = useState(false);
   const navigate = useNavigate();
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
-  useEffect(() => {
-    if(storage.getItem('token')) {
-      navigate('/');
-    }
-  }, [navigate, storage]);
+  /* - DATA STATE AND REFS - */
+  const formRef = useRef<FormHandles>(null);
+  /* END DATA STATE AND REFS */
+
+  /* - BOOLEAN STATES - */
+  const [inLoading, setInLoading] = useState(false);
+  /* END BOOLEAN STATES */
 
   const onSubmit: SubmitHandler<IUser> = async (data) => {
     setInLoading(true);
@@ -45,6 +47,7 @@ export const LoginPage: React.FC = () => {
       const request = await api.post<IUserAuth>('/users/login', data);
       storage.setItem('token', request.data.token);
       storage.setItem('userName', request.data.user.name);
+      storage.setItem('userPicture', crypto.createHash('md5').update(request.data.user.email).digest('hex'));
       navigate('/');
     } catch(err) {
       if(err instanceof yup.ValidationError) {
@@ -56,6 +59,12 @@ export const LoginPage: React.FC = () => {
 
     setInLoading(false);
   };
+
+  useEffect(() => {
+    if(storage.getItem('token')) {
+      navigate('/');
+    }
+  }, [navigate, storage]);
 
   return (
     <LoginContainer>

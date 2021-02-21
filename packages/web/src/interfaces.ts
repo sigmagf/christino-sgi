@@ -8,8 +8,8 @@ export interface IUseLocalStorage {
 export interface IStorage {
   token: string;
   userName: string;
+  userPicture: string;
   appBarExpanded: boolean;
-  permissions: IUserPermissions;
 }
 /* END STIRAGE */
 

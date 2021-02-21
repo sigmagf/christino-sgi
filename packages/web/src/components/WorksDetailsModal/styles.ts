@@ -16,10 +16,6 @@ export const WorksDetailsModalForm = styled(Form)`
                        'HS HS HS HS HS HS HS HS HS HS HS HS'
                        'HT HT HT HT HT HT HT HT HT HT HT HT';
 
-  input {
-    text-transform: uppercase;
-  }
-
   table {
     table-layout: fixed;
     width: 1080px;

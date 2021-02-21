@@ -28,6 +28,7 @@ const appnavCollapseItemLabel = css`
   background: ${({ theme }) => theme.primary.main};
   padding: 10px;
   border-radius: 5px;
+  box-shadow: ${({ theme }) => theme.shadow};
 `;
 
 /* STYLED COMPONENTS */

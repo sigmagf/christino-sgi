@@ -12,11 +12,11 @@ export class UsersCreateController {
     const name = stringFix(req.body.name, undefined, 'UPPERCASE', 'STRING');
     const email = stringFix(req.body.email, undefined, 'LOWERCASE', 'STRING');
     const password = stringFix(req.body.password, undefined);
-    const despPermission = stringFix(req.body.despPermission, '1', 'UPPERCASE', 'NUMBER');
-    const seguPermission = stringFix(req.body.seguPermission, '1', 'UPPERCASE', 'NUMBER');
-    const cliePermission = stringFix(req.body.cliePermission, '1', 'UPPERCASE', 'NUMBER');
-    const userPermission = stringFix(req.body.userPermission, '1', 'UPPERCASE', 'NUMBER');
-    const workPermission = stringFix(req.body.workPermission, '1', 'UPPERCASE', 'NUMBER');
+    const despPermission = stringFix(req.body.despPermission, '1', 'NONE', 'NUMBER');
+    const seguPermission = stringFix(req.body.seguPermission, '1', 'NONE', 'NUMBER');
+    const cliePermission = stringFix(req.body.cliePermission, '1', 'NONE', 'NUMBER');
+    const userPermission = stringFix(req.body.userPermission, '1', 'NONE', 'NUMBER');
+    const workPermission = stringFix(req.body.workPermission, '1', 'NONE', 'NUMBER');
 
     try {
       if(!name) {

@@ -9,7 +9,8 @@ export class ClientsUpdateService {
       throw new Error(JSON.stringify({ code: 404, message: 'Cliente não encontrado.', details: null }));
     }
 
-    if(await this.repository.findByDocument(data.document)) {
+    const dbClient = await this.repository.findByDocument(data.document);
+    if(dbClient && dbClient.id !== data.id) {
       throw new Error(JSON.stringify({ code: 400, message: 'Cliente já cadastrado.', details: null }));
     }
 

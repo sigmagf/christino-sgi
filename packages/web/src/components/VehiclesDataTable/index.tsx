@@ -11,7 +11,7 @@ import { vehicleStatus } from '~/utils/commonSelectOptions';
 import { DataTableCardContainer, VehiclesStatusBadge } from './styles';
 
 interface IVehicleDataTableProps {
-  vehicles: IVehicle[];
+  vehicles: IVehicle[] | undefined;
   inLoading: boolean;
   onDetailsClick: (id: string) => void;
   onCRLVeViewClick: (id: string) => Promise<void>;
@@ -46,14 +46,14 @@ export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, 
           </tr>
         </thead>
         <tbody>
-          {(vehicles.length === 0 || !vehicles) && (
+          {(!vehicles || vehicles.length === 0) && (
             <>
               <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && 'SEM DADOS PARA INFORMAR'}</td></tr>
               <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && '- NENHUM VEICULO ENCONTRADO -'}</td></tr>
             </>
           )}
 
-          {vehicles.map((vehicle) => (
+          {vehicles && vehicles.map((vehicle) => (
             <tr key={vehicle.id}>
               <td style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <VehiclesStatusBadge status={vehicle.status} title={vehicleStatus.find((el) => el.value === vehicle.status.toString())?.label} />

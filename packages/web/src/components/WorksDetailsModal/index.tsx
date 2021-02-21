@@ -14,12 +14,10 @@ import { Table } from '~/interface/Table';
 import { IService, IWork } from '~/interfaces';
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
-import { formatDate } from '~/utils/formatDate';
-import { formatMoney } from '~/utils/formatMoney';
-import { onDocumentInputBlur } from '~/utils/handleDocumentInputFormat';
+import { formatMoney, formatDate } from '~/utils/formatString';
 import { handleGetClientsToSelect } from '~/utils/handleGetClientsToSelect';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
-import { onValueBlur, onValueFocus } from '~/utils/handleMoneyInputFormat';
+import { onDocumentInputBlur, onValueBlur, onValueFocus } from '~/utils/handleInputFormat';
 
 import { ClientsDetailsModal } from '../ClientsDetailsModal';
 import { WorksDetailsModalForm, WorksDetailsActionButtons, WorksDetailsLoadingContainer } from './styles';
@@ -38,11 +36,12 @@ interface IWorksDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   work?: IWork;
+  workPermission: number;
+  cliePermission: number;
 }
 
-export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work }) => {
+export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work, workPermission, cliePermission }) => {
   const storage = useLocalStorage();
-  const permissions = storage.getItem('permissions');
 
   const formRef = useRef<FormHandles>(null);
   let timer: NodeJS.Timeout;
@@ -143,10 +142,6 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
     }
   }, [work]);
 
-  if(!permissions) {
-    return <>ERRO AO BUSCAR AS PERMISSÕES</>;
-  }
-
   return (
     <>
       <Modal isOpen={isOpen} onRequestClose={onClose} haveHeader header={`${work ? 'ALTERAR' : 'CRIAR'} ORDEM DE SERVIÇO`}>
@@ -191,7 +186,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
           </Table>
         </WorksDetailsModalForm>
         <WorksDetailsActionButtons editing={editing}>
-          {permissions!.workPermission >= 2 && (
+          {workPermission >= 2 && (
             <>
               {editing ? (
                 <>
@@ -223,7 +218,8 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       <ClientsDetailsModal
         isOpen={cadClientModal}
         onClose={() => setCadClientModal(false)}
-        onChangeSuccess={() => onDocumentInputBlur(formRef, (e) => handleGetClientsToSelect(e, setClients))}
+        onChange={() => onDocumentInputBlur(formRef, (e) => handleGetClientsToSelect(e, setClients))}
+        cliePermission={cliePermission}
       />
     </>
   );

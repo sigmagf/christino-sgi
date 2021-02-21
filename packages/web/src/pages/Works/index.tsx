@@ -5,7 +5,6 @@ import { Layout } from '~/components/Layout';
 import { WorksDataTable } from '~/components/WorksDataTable';
 import { WorksDetailsModal } from '~/components/WorksDetailsModal';
 import { WorksFiltersCard } from '~/components/WorksFiltersCard';
-import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
@@ -16,33 +15,26 @@ import { qsConverter } from '~/utils/qsConverter';
 export const WorksPage: React.FC = () => {
   document.title = 'Ordem de Serviço | Christino';
 
-  const storage = useLocalStorage();
-  const permissions = storage.getItem('permissions');
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
+  const [workPermission, setWorkPermission] = useState(-1);
+  const [cliePermission, setCliePermission] = useState(-1);
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
+  /* - DATA STATE AND REFS - */
   const [filters, setFilters] = useState<IWorksFilters>({ page: 1, limit: 10 });
-
-  const [workIdToDetails, setWorkIdToDetails] = useState<string>();
   const { data: works, revalidate, isValidating: inLoading, error: getWorkError } = useSWR<IPagination<IWork>>(`/works${qsConverter(filters)}`);
+  const [workIdToDetails, setWorkIdToDetails] = useState<string>();
+  /* END DATA STATE AND REFS */
 
-  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
+  /* - BOOLEAN STATES - */
+  const [detailsModal, setDetailsModal] = useState(false);
+  /* END BOOLEAN STATES */
 
-  const onCreateVehicleClick = () => {
-    setWorkIdToDetails(undefined);
-    setDetailsModalOpen(true);
-  };
-
-  const onDetailsWorkClick = (id: string) => {
-    if(works) {
-      setWorkIdToDetails(id);
-      setDetailsModalOpen(true);
-    }
-  };
-
-  const onModalsClose = () => {
-    setDetailsModalOpen(false);
-    setWorkIdToDetails(undefined);
-    revalidate();
-  };
+  /* - HANDLE DETAILS MODAL - */
+  const onDetailsModalClose = () => { setDetailsModal(false); revalidate(); };
+  const onCreateClick = () => { setDetailsModal(true); setWorkIdToDetails(undefined); };
+  const onDetailsClick = (id: string) => { setDetailsModal(true); setWorkIdToDetails(id); };
+  /* END HANDLE DETAILS MODAL */
 
   useEffect(() => {
     if(getWorkError) {
@@ -50,23 +42,25 @@ export const WorksPage: React.FC = () => {
     }
   }, [getWorkError]);
 
-  if(!permissions || permissions.workPermission === 0) {
+  if(workPermission === 0) {
     return <Navigate to="/" replace />;
   }
 
   return (
     <>
-      <Layout>
+      <Layout setPermissions={(perms) => { setWorkPermission(perms.workPermission); setCliePermission(perms.cliePermission); }}>
         <WorksFiltersCard
-          onCreateClick={onCreateVehicleClick}
+          onCreateClick={onCreateClick}
+          workPermission={workPermission}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
         />
 
         <WorksDataTable
           inLoading={inLoading}
-          works={works?.data || []}
-          onDetailsClick={onDetailsWorkClick}
+          works={works?.data}
+          onDetailsClick={onDetailsClick}
         />
+
         <Card style={{ marginTop: 15 }}>
           <Paginator
             totalPages={works?.page.total || 1}
@@ -76,10 +70,13 @@ export const WorksPage: React.FC = () => {
           />
         </Card>
       </Layout>
+
       <WorksDetailsModal
-        isOpen={detailsModalOpen}
-        onClose={onModalsClose}
-        work={works?.data.filter((el) => el.id === workIdToDetails)[0]}
+        isOpen={detailsModal}
+        onClose={onDetailsModalClose}
+        work={works?.data.find((el) => el.id === workIdToDetails)}
+        workPermission={workPermission}
+        cliePermission={cliePermission}
       />
     </>
   );

@@ -14,9 +14,6 @@ export const FiltersCardForm = styled(Form)`
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-areas: 'CN CN CN CN CN CN CG CG CG VS VS VS'
                        'VP VR VR VC VC VM VM VM VF VF VT VT';
-  input, select {
-    text-transform: uppercase;
-  }
 
   > :nth-child(1) { grid-area: CN };
   > :nth-child(2) { grid-area: CG };

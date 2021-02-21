@@ -12,11 +12,11 @@ export class ClientsUpdateController {
     const { id } = req.params;
 
     const name = stringFix(req.body.name, undefined, 'UPPERCASE', 'STRING');
-    const document = stringFix(req.body.document, undefined, 'UPPERCASE', 'NUMBER');
+    const document = stringFix(req.body.document, undefined, 'NONE', 'NUMBER');
     const group = stringFix(req.body.group, null, 'UPPERCASE', 'STRING');
     const email = stringFix(req.body.email, null, 'LOWERCASE', 'STRING');
-    const phone1 = stringFix(req.body.phone1, null, 'UPPERCASE', 'NUMBER');
-    const phone2 = stringFix(req.body.phone2, null, 'UPPERCASE', 'NUMBER');
+    const phone1 = stringFix(req.body.phone1, null, 'NONE', 'NUMBER');
+    const phone2 = stringFix(req.body.phone2, null, 'NONE', 'NUMBER');
 
     try {
       if(!name) {

@@ -14,7 +14,7 @@ export class ClientsListController {
 
     const pagination = (req.query.noPagination as string || 'false').toLowerCase() !== 'true';
     const name = stringFix(req.query.name, undefined, 'UPPERCASE', 'STRING');
-    const document = stringFix(req.query.document, undefined, 'UPPERCASE', 'NUMBER');
+    const document = stringFix(req.query.document, undefined, 'NONE', 'NUMBER');
     const group = stringFix(req.query.group, undefined, 'UPPERCASE', 'STRING');
 
     try {

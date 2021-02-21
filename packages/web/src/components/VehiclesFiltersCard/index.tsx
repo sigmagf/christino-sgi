@@ -16,11 +16,11 @@ import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles
 interface IVehiclesFiltersCardProps {
   onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
+  despPermission: number;
 }
 
-export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick }) => {
+export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
   const storage = useLocalStorage();
-  const permissions = storage.getItem('permissions');
 
   const formRef = useRef<FormHandles>(null);
 
@@ -88,10 +88,6 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
     ];
   };
 
-  if(!permissions) {
-    return <>ERRO AO BUSCAR AS PERMISSÕES</>;
-  }
-
   return (
     <FiltersCard>
       <FiltersCardForm ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
@@ -108,11 +104,12 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
       </FiltersCardForm>
 
       <FiltersCardActionButtons>
-        {permissions!.despPermission >= 2 && (
+        {despPermission >= 2 && (
           <Button variant="success" style={{ width: 175.97 }} onClick={onCreateClick}>
             <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
           </Button>
         )}
+
         <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>
           <FaFilter />&nbsp;&nbsp;&nbsp;FILTRAR
         </Button>

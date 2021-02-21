@@ -14,10 +14,6 @@ export const VehiclesDetailsForm = styled(Form)`
                        'VP VR VR VC VC VM VM VM VT VT VS VS'
                        'VD VD VD VD VD VD VD VD VD VD VD VD';
 
-  input {
-    text-transform: uppercase;
-  }
-
   > :nth-child(1) { grid-area: CL; } /* CLIENTID */
   > :nth-child(2) { grid-area: CA; } /* CLIENTID */
 
@@ -66,10 +62,6 @@ export const VehiclesDetailsDownForm = styled(Form)`
   grid-template-areas: 'CN CN'
                        'CD CG'
                        'SM SM';
-
-  input {
-    text-transform: uppercase;
-  }
 
   > :nth-child(1) { grid-area: CN; } /* NAME */
   > :nth-child(2) { grid-area: CD; } /* DOCUMENT */

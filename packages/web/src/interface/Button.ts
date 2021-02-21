@@ -21,10 +21,12 @@ export const Button = styled.button<IButtonStyledProps>`
   ${({ theme, variant }) => css`
     background: ${theme[variant || 'primary'].main};
     color: ${theme[variant || 'primary'].contrastText};
+    box-shadow: ${theme.shadow};
 
     :hover {
       background: ${shade(0.2, theme[variant || 'primary'].main)};
     }
+
     :disabled {
       cursor: not-allowed;
       background: ${shade(0.25, theme[variant || 'primary'].main)};

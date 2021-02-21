@@ -1,4 +1,4 @@
-type StringCase = 'UPPERCASE'|'LOWERCASE';
+type StringCase = 'NONE'|'UPPERCASE'|'LOWERCASE';
 type Normalize = 'NUMBER'|'STRING';
 
 export function stringFix(value: any, undefinedReturn: undefined|null|string|number, stringCase?: StringCase, normalize?: Normalize): any {

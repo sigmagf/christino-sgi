@@ -83,13 +83,13 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
     if(filters.group === '-1') {
       filtersPart.push('c.group IS NULL');
     } else {
-      filtersPart.push(filters.group ? `c.group LIKE '%${filters.group}%'` : null);
+      filtersPart.push(filters.group ? `c.group ILIKE '%${filters.group}%'` : null);
     }
 
-    filtersPart.push(filters.plate ? `v.plate LIKE '%${filters.plate}%'` : null);
-    filtersPart.push(filters.renavam ? `v.renavam LIKE '%${filters.renavam}%'` : null);
-    filtersPart.push(filters.crv ? `v.crv LIKE '%${filters.crv}%'` : null);
-    filtersPart.push(filters.brandModel ? `v.brand_model LIKE '%${filters.brandModel}%'` : null);
+    filtersPart.push(filters.plate ? `v.plate ILIKE '%${filters.plate}%'` : null);
+    filtersPart.push(filters.renavam ? `v.renavam ILIKE '%${filters.renavam}%'` : null);
+    filtersPart.push(filters.crv ? `v.crv ILIKE '%${filters.crv}%'` : null);
+    filtersPart.push(filters.brandModel ? `v.brand_model ILIKE '%${filters.brandModel}%'` : null);
 
     if(Array.isArray(filters.status)) {
       const statusPart: string[] = [];
@@ -99,7 +99,7 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
       filtersPart.push(filters.status ? `v.status = ${filters.status}` : null);
     }
 
-    filtersPart.push(filters.plateEnd ? `v.plate LIKE '%${filters.plateEnd}'` : null);
+    filtersPart.push(filters.plateEnd ? `v.plate ILIKE '%${filters.plateEnd}'` : null);
 
     switch(filters.includeTruck) {
       case '0':

@@ -1,8 +1,7 @@
 import christinoLogo from '~/assets/logo-color.png';
 import { useLocalStorage } from '~/hooks';
 import { IVehicle } from '~/interfaces';
-import { formatDate } from '~/utils/formatDate';
-import { formatDocument } from '~/utils/formatDocument';
+import { formatDate, formatDocument } from '~/utils/formatString';
 
 interface IWithdrawnBy {
   name: string;
@@ -174,7 +173,7 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
               <div>${vehicle.client.name}</div>
             </div>
             <div class="text-container vehicle-document">
-              <div class="label">DOCUMENTO</div>
+              <div class="label">CPF/CNPJ</div>
               <div>${formatDocument(vehicle.client.document)}</div>
             </div>
             <div class="text-container vehicle-group">
@@ -212,7 +211,7 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
               <div>${withdrawnBy.name.toUpperCase()}</div>
             </div>
             <div class="text-container withdrawn-by-document">
-              <div class="label">DOCUMENTO</div>
+              <div class="label">CPF/CNPJ</div>
               <div>${formatDocument(withdrawnBy.document)}</div>
             </div>
             <div class="text-container withdrawn-by-details">

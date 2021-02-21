@@ -13,10 +13,9 @@ import { Modal } from '~/interface/Modal';
 import { IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
-import { onDocumentInputBlur, onDocumentInputFocus } from '~/utils/handleDocumentInputFormat';
 import { handleGetClientsToSelect } from '~/utils/handleGetClientsToSelect';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
-import { onInputBlurMaxLength } from '~/utils/onInputBlurMaxLength';
+import { onDocumentInputBlur, onDocumentInputFocus, onInputBlurMaxLength } from '~/utils/handleInputFormat';
 
 import { ClientsDetailsModal } from '../ClientsDetailsModal';
 import { downPrintPage } from './downPage';
@@ -43,13 +42,14 @@ interface IVehiclesDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   vehicle?: IVehicle;
-  onChangeSuccess: (vehicle: IVehicle) => void;
+  onChange: (vehicle: IVehicle) => void;
   onCRLVeViewClick: (id: string) => Promise<void>;
+  despPermission: number;
+  cliePermission: number;
 }
 
-export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, onChangeSuccess, onCRLVeViewClick }) => {
+export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, onChange, onCRLVeViewClick, despPermission, cliePermission }) => {
   const storage = useLocalStorage();
-  const permissions = storage.getItem('permissions');
 
   const formDetailsRef = useRef<FormHandles>(null);
   const formDownRef = useRef<FormHandles>(null);
@@ -90,7 +90,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
       try {
         await api.post(`/vehicles/${vehicle.id}/crlve`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-        onChangeSuccess({ ...vehicle, crlveIncluded: true });
+        onChange({ ...vehicle, crlveIncluded: true });
       } catch(err) {
         handleHTTPRequestError(err);
       }
@@ -108,7 +108,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         await scheme.validate(data, { abortEarly: false });
 
         // eslint-disable-next-line no-restricted-globals
-        const win = window.open('', 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+        const win = window.open('', '', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
         const baseURL = `${window.location.protocol}//${window.location.host}`;
 
         if(win) {
@@ -200,19 +200,9 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
     setCadClientModal(false);
   }, [vehicle]);
 
-  if(!permissions) {
-    onClose();
-    return <>ERRO AO BUSCAR AS PERMISSÕES</>;
-  }
-
   return (
     <>
-      <Modal
-        isOpen={isOpen}
-        onRequestClose={onClose}
-        haveHeader
-        header={`${vehicle ? 'ALTERAR' : 'CRIAR'} VEÍCULO`}
-      >
+      <Modal isOpen={isOpen} onRequestClose={onClose} haveHeader header={`${vehicle ? 'ALTERAR' : 'CRIAR'} VEÍCULO`}>
         <VehiclesDetailsForm
           ref={formDetailsRef}
           onSubmit={onSubmit}
@@ -224,8 +214,8 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
             }
           }
         >
-          <Select name="clientId" label="CLIENTE" options={clients} onInputChange={onClientsInputChange} />
-          <Button type="button" variant="info" style={{ maxHeight: 40, marginTop: 20 }} onClick={() => setCadClientModal(true)}><FaPlus /></Button>
+          <Select name="clientId" isDisabled={!editing} label="CLIENTE" options={clients} onInputChange={onClientsInputChange} />
+          <Button type="button" disabled={!editing} variant="info" style={{ maxHeight: 40, marginTop: 20 }} onClick={() => setCadClientModal(true)}><FaPlus /></Button>
 
           <hr />
 
@@ -244,7 +234,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
             </Button>
           )}
 
-          {permissions!.despPermission >= 2 && (
+          {despPermission >= 2 && (
             <>
               {(vehicle && !editing) && (
                 <Button type="button" variant="info" disabled={inSubmitProcess} onClick={() => setUploadCRLVeModal(true)} title="ENVIAR CRLVe">
@@ -266,7 +256,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
                         </Button>
                       )}
 
-                      {permissions!.despPermission >= 3 && (
+                      {despPermission >= 3 && (
                         <Button type="button" variant="error" disabled={inSubmitProcess} onClick={onVehicleExclude}>
                           EXCLUIR
                         </Button>
@@ -307,8 +297,9 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
       <ClientsDetailsModal
         isOpen={cadClientModal}
+        cliePermission={cliePermission}
         onClose={() => setCadClientModal(false)}
-        onChangeSuccess={() => onDocumentInputBlur(formDetailsRef, (e) => handleGetClientsToSelect(e, setClients))}
+        onChange={() => onDocumentInputBlur(formDetailsRef, (e) => handleGetClientsToSelect(e, setClients))}
       />
     </>
   );

@@ -20,10 +20,10 @@ export class SequelizeWorksRepository implements IWorksRepository {
     if(filters.group === '-1') {
       filtersPart.push('cl.group IS NULL');
     } else {
-      filtersPart.push(filters.group ? `cl.group LIKE '%${filters.group}%'` : null);
+      filtersPart.push(filters.group ? `cl.group ILIKE '%${filters.group}%'` : null);
     }
 
-    filtersPart.push(filters.identifier ? `wk.identifier LIKE '%${filters.identifier}%'` : null);
+    filtersPart.push(filters.identifier ? `wk.identifier ILIKE '%${filters.identifier}%'` : null);
     filtersPart.push(filters.value ? `wk.value = ${filters.value}` : null);
 
     if(Array.isArray(filters.status)) {

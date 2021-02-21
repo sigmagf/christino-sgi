@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { Layout } from '~/components/Layout';
 import { VehiclesDataTable } from '~/components/VehiclesDataTable';
@@ -21,48 +22,50 @@ import { vehiclesPrintScreen } from './printScreen';
 export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
 
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
-  const permissions = storage.getItem('permissions');
+  const [despPermission, setDespPermission] = useState(-1);
+  const [cliePermission, setCliePermission] = useState(-1);
+  let winCRLVe: Window | null;
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
+  /* - DATA STATE AND REFS - */
   const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
+  const { data: vehicles, isValidating: inLoading, error: getVehiclesError, mutate, revalidate } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
   const [vehicleIdToDetails, setVehicleIdToDetails] = useState<string>();
+  /* END DATA STATE AND REFS */
+
+  /* - BOOLEAN STATES - */
   const [inLoadingPrint, setInLoadingPrint] = useState(false);
+  const [detailsModal, setDetailsModal] = useState(false);
+  /* END BOOLEAN STATES */
 
-  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
-
-  const { data: vehicles, revalidate, mutate, isValidating: inLoading, error: getVehiclesError } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
-
-  const onModalsClose = () => {
-    setDetailsModalOpen(false);
-    revalidate();
-  };
-
-  const onCreateVehicleClick = () => {
-    setVehicleIdToDetails(undefined);
-    setDetailsModalOpen(true);
-  };
-
-  const onDetailsVehicleClick = (id: string) => {
-    if(vehicles) {
-      setVehicleIdToDetails(id);
-      setDetailsModalOpen(true);
-    }
-  };
+  /* - HANDLE DETAILS MODAL - */
+  const onDetailsModalClose = () => { setDetailsModal(false); revalidate(); };
+  const onCreateClick = () => { setDetailsModal(true); setVehicleIdToDetails(undefined); };
+  const onDetailsClick = (id: string) => { setDetailsModal(true); setVehicleIdToDetails(id); };
+  /* END HANDLE DETAILS MODAL */
 
   const onVehicleChange = (vehicle: IVehicle) => {
-    if(vehicles) {
-      mutate({ page: vehicles.page, data: [...vehicles.data.filter((el) => el.id !== vehicle.id), vehicle] }, true);
-      setVehicleIdToDetails(vehicle.id);
-    }
+    mutate((e) => e && ({ page: e.page, data: [...e.data.filter((el) => el.id !== vehicle.id), vehicle] }), true);
+    setVehicleIdToDetails(vehicle.id);
   };
 
-  const handleGetCRLVe = async (id: string) => {
+  const onCRLVeViewClick = async (id: string) => {
     try {
       const response = await api.get(`/vehicles/${id}/crlve`, { headers: { authorization: `Bearer ${storage.getItem('token')}` }, responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
 
+      if(winCRLVe) {
+        winCRLVe.close();
+      }
+
       // eslint-disable-next-line no-restricted-globals
-      window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+      winCRLVe = window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+
+      if(!winCRLVe) {
+        toast.error('Ative o popup em seu navegador.');
+      }
     } catch(err) {
       handleHTTPRequestError(err);
     }
@@ -72,9 +75,7 @@ export const VehiclesPage: React.FC = () => {
     setInLoadingPrint(true);
 
     try {
-      const response = await api.get<IVehicle[]>(`/vehicles?noPagination=true&${qsConverter(filters)}`, {
-        headers: { authorization: `Bearer ${storage.getItem('token')}` },
-      });
+      const response = await api.get<IVehicle[]>(`/vehicles?noPagination=true&${qsConverter(filters)}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
       // eslint-disable-next-line
       const win = window.open('', 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
@@ -83,6 +84,8 @@ export const VehiclesPage: React.FC = () => {
         win.document.body.innerHTML = vehiclesPrintScreen(response.data);
         win.print();
         win.close();
+      } else {
+        toast.error('Ative o popup em seu navegador.');
       }
     } catch(err) {
       handleHTTPRequestError(err);
@@ -97,7 +100,7 @@ export const VehiclesPage: React.FC = () => {
     }
   }, [getVehiclesError]);
 
-  if(!permissions || permissions.despPermission === 0) {
+  if(despPermission === 0) {
     return <Navigate to="/" replace />;
   }
 
@@ -109,17 +112,18 @@ export const VehiclesPage: React.FC = () => {
 
   return (
     <>
-      <Layout>
+      <Layout setPermissions={(perms) => { setDespPermission(perms.despPermission); setCliePermission(perms.cliePermission); }}>
         <VehiclesFiltersCard
-          onCreateClick={onCreateVehicleClick}
+          onCreateClick={onCreateClick}
+          despPermission={despPermission}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
         />
 
         <VehiclesDataTable
           inLoading={inLoading}
-          vehicles={vehicles?.data || []}
-          onDetailsClick={onDetailsVehicleClick}
-          onCRLVeViewClick={handleGetCRLVe}
+          vehicles={vehicles?.data}
+          onDetailsClick={onDetailsClick}
+          onCRLVeViewClick={onCRLVeViewClick}
         />
 
         <Card style={{ margin: '15px 0' }}>
@@ -134,11 +138,13 @@ export const VehiclesPage: React.FC = () => {
       </Layout>
 
       <VehiclesDetailsModal
-        isOpen={detailsModalOpen}
-        onClose={onModalsClose}
+        isOpen={detailsModal}
+        onClose={onDetailsModalClose}
         vehicle={vehicles?.data.find((el) => el.id === vehicleIdToDetails)}
-        onChangeSuccess={onVehicleChange}
-        onCRLVeViewClick={handleGetCRLVe}
+        onChange={onVehicleChange}
+        onCRLVeViewClick={onCRLVeViewClick}
+        despPermission={despPermission}
+        cliePermission={cliePermission}
       />
     </>
   );

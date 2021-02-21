@@ -6,17 +6,17 @@ import { Badge } from '~/interface/Badge';
 import { Button } from '~/interface/Button';
 import { Table } from '~/interface/Table';
 import { IClient } from '~/interfaces';
-import { formatDocument } from '~/utils/formatDocument';
+import { formatDocument } from '~/utils/formatString';
 
 import { DataTableCardContainer } from './styles';
 
 interface IClientsDataTableProps {
-  data: IClient[];
+  clients: IClient[] | undefined;
   inLoading: boolean;
   onDetailsClick: (id: string) => void;
 }
 
-export const ClientsDataTable: React.FC<IClientsDataTableProps> = ({ data, inLoading, onDetailsClick }) => {
+export const ClientsDataTable: React.FC<IClientsDataTableProps> = ({ clients, inLoading, onDetailsClick }) => {
   return (
     <DataTableCardContainer style={{ position: 'relative' }}>
       { inLoading && (
@@ -29,7 +29,7 @@ export const ClientsDataTable: React.FC<IClientsDataTableProps> = ({ data, inLoa
         <thead>
           <tr>
             <th style={{ textAlign: 'left' }}>NOME</th>
-            <th style={{ width: 100 }}>DOCUMENTO</th>
+            <th style={{ width: 100 }}>CPF/CNPJ</th>
             <th style={{ width: 250 }}>E-MAIL</th>
             <th style={{ width: 250 }}>TELEFONE 1</th>
             <th style={{ width: 250 }}>TELEFONE 2</th>
@@ -37,36 +37,29 @@ export const ClientsDataTable: React.FC<IClientsDataTableProps> = ({ data, inLoa
           </tr>
         </thead>
         <tbody>
-          {inLoading && (
-            <>
-              <tr><td colSpan={6} /></tr>
-              <tr><td colSpan={6} /></tr>
-            </>
+          {(!clients || clients.length === 0) && (
+          <>
+            <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && 'SEM DADOS PARA INFORMAR'}</td></tr>
+            <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && '- NENHUM VEICULO ENCONTRADO -'}</td></tr>
+          </>
           )}
 
-          {(!inLoading && data.length === 0) && (
-            <>
-              <tr><td colSpan={6} style={{ textAlign: 'center' }}>SEM DADOS PARA INFORMAR</td></tr>
-              <tr><td colSpan={6} style={{ textAlign: 'center' }}>- NENHUM VEICULO ENCONTRADO -</td></tr>
-            </>
-          )}
-
-          {!inLoading && data.map((el) => (
+          {clients && clients.map((el) => (
             <tr key={el.id}>
               <td>
-                { el.name }
                 {el.group && (
                   <Badge>
                     { el.group }
                   </Badge>
                 )}
+                { el.name }
               </td>
               <td style={{ textAlign: 'center' }}>{ formatDocument(el.document) }</td>
               <td style={{ textAlign: 'center' }}>{ el.email }</td>
               <td style={{ textAlign: 'center' }}>{ el.phone1 }</td>
               <td style={{ textAlign: 'center' }}>{ el.phone2 }</td>
               <td style={{ textAlign: 'center' }}>
-                <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(el.id)} disabled={inLoading || true}>
+                <Button variant="secondary" style={{ height: 34 }} onClick={() => onDetailsClick(el.id)} disabled={inLoading}>
                   <SearchIcon />
                 </Button>
               </td>

@@ -9,7 +9,7 @@ import { Select, Input } from '~/interface/Form';
 import { IClient, ISector, IService, IWorksFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { worksStatus as status } from '~/utils/commonSelectOptions';
-import { formatMoney } from '~/utils/formatMoney';
+import { formatMoney } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
@@ -17,11 +17,11 @@ import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles
 interface IWorksFiltersCardProps {
   onFiltersApplyClick: (data: Omit<IWorksFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
+  workPermission: number;
 }
 
-export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick }) => {
+export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, workPermission }) => {
   const storage = useLocalStorage();
-  const permissions = storage.getItem('permissions');
 
   const formRef = useRef<FormHandles>(null);
   let timer: any;
@@ -136,10 +136,6 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
     return [{ label: 'TODOS', value: '' }];
   };
 
-  if(!permissions) {
-    return <>ERRO AO BUSCAR AS PERMISSÕES</>;
-  }
-
   return (
     <FiltersCard>
       <FiltersCardForm ref={formRef} onSubmit={onSubmit}>
@@ -154,11 +150,12 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
       </FiltersCardForm>
 
       <FiltersCardActionButtons>
-        {permissions!.workPermission >= 2 && (
+        {workPermission >= 2 && (
           <Button variant="success" style={{ width: 175.97 }} onClick={onCreateClick}>
             <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR O.S.
           </Button>
         )}
+
         <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>
           <FaFilter />&nbsp;&nbsp;&nbsp;FILTRAR
         </Button>

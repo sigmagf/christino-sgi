@@ -18,7 +18,7 @@ export class VehiclesViewCRLVeController {
       }
 
       if(process.env.MULTER_STORAGE === 'local') {
-        return res.sendFile(path.resolve(__dirname, '..', '..', '..', '..', 'tmp', `${req.params.id}.pdf`));
+        return res.sendFile(path.resolve(__dirname, '..', '..', '..', '..', 'tmp', 'crlve', `${req.params.id}.pdf`));
       }
 
       const s3 = new AWS.S3();

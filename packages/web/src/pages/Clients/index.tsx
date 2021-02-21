@@ -1,10 +1,13 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { ClientsDataTable } from '~/components/ClientsDataTable';
+import { ClientsDetailsModal } from '~/components/ClientsDetailsModal';
 import { Layout } from '~/components/Layout';
 import { useLocalStorage } from '~/hooks';
+import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
@@ -18,34 +21,32 @@ import { ClientsPrintScreen } from './printScreen';
 export const ClientsPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
 
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
-  const permissions = storage.getItem('permissions');
+  const [cliePermission, setCliePermission] = useState(-1);
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
-  const [clients, setClients] = useState<IPagination<IClient>>({ page: { total: 1, current: 1, limit: 10 }, data: [] });
+  /* - DATA STATE AND REFS - */
   const [filters, setFilters] = useState<IClientsFilters>({ page: 1, limit: 10 });
-  const [inLoading, setInLoading] = useState(false);
+  const { data: clients, isValidating: inLoading, error: getClientsError, mutate, revalidate } = useSWR<IPagination<IClient>>(`/clients${qsConverter(filters)}`);
+  const [clientIdToDetails, setClientIdToDetails] = useState<string>();
+  /* END DATA STATE AND REFS */
 
-  const getData = useCallback(async () => {
-    setInLoading(true);
+  /* - BOOLEAN STATES - */
+  const [inLoadingPrint] = useState(false);
+  const [detailsModal, setDetailsModal] = useState(false);
+  /* END BOOLEAN STATES */
 
-    try {
-      const response = await api.get<IPagination<IClient>>(`/clients${qsConverter(filters)}`, {
-        headers: { authorization: `Bearer ${storage.getItem('token')}` },
-      });
+  /* - HANDLE DETAILS MODAL - */
+  const onDetailsModalClose = () => { setDetailsModal(false); revalidate(); };
+  const onCreateClick = () => { setDetailsModal(true); setClientIdToDetails(undefined); };
+  const onDetailsClick = (id: string) => { setDetailsModal(true); setClientIdToDetails(id); };
+  /* END HANDLE DETAILS MODAL */
 
-      if(response.data.page.total < filters.page) {
-        setFilters((old) => ({ ...old, page: response.data.page.total }));
-      }
-
-      setClients(response.data);
-    } catch(err) {
-      handleHTTPRequestError(err);
-
-      setClients({ page: { total: 1, current: 1, limit: 10 }, data: [] });
-    }
-
-    setInLoading(false);
-  }, [filters, storage]);
+  const onClientChange = (data: IClient) => {
+    mutate((e) => e && ({ page: e.page, data: [...e.data.filter((el) => el.id !== data.id), data] }), true);
+    setClientIdToDetails(data.id);
+  };
 
   const onPrintClick = async () => {
     try {
@@ -60,32 +61,52 @@ export const ClientsPage: React.FC = () => {
         win.document.body.innerHTML = ClientsPrintScreen(response.data);
         win.print();
         win.close();
+      } else {
+        toast.error('Ative o popup em seu navegador.');
       }
     } catch(err) {
       handleHTTPRequestError(err);
     }
   };
 
-  useEffect(() => { getData(); }, []); // eslint-disable-line
-  useEffect(() => { getData(); }, [filters]); // eslint-disable-line
+  useEffect(() => {
+    if(getClientsError) {
+      handleHTTPRequestError(getClientsError);
+    }
+  }, [getClientsError]);
 
-  if(!permissions || permissions.cliePermission === 0) {
+  if(cliePermission === 0) {
     return <Navigate to="/" replace />;
   }
 
-  return (
-    <Layout>
-      <ClientsDataTable inLoading={inLoading} data={clients.data} onDetailsClick={() => console.log('bla')} />
+  const printButton = (
+    <Button variant="info" disabled={inLoadingPrint} style={{ cursor: inLoadingPrint ? 'progress' : 'pointer' }} onClick={onPrintClick}>
+      <FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR
+    </Button>
+  );
 
-      <Card style={{ margin: '15px 0' }}>
-        <Paginator
-          currentPage={clients.page.current}
-          totalPages={clients.page.total}
-          inLoading={inLoading}
-          onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
-          leftContent={<Button variant="info" onClick={onPrintClick}><FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR</Button>}
-        />
-      </Card>
-    </Layout>
+  return (
+    <>
+      <Layout setPermissions={(perms) => setCliePermission(perms.cliePermission)}>
+        <ClientsDataTable inLoading={inLoading} clients={clients?.data} onDetailsClick={onDetailsClick} />
+
+        <Card style={{ margin: '15px 0' }}>
+          <Paginator
+            currentPage={clients?.page.current || 1}
+            totalPages={clients?.page.total || 1}
+            inLoading={inLoading}
+            onNumberClick={(page) => setFilters((old) => ({ ...old, page }))}
+            leftContent={printButton}
+          />
+        </Card>
+      </Layout>
+      <ClientsDetailsModal
+        isOpen={detailsModal}
+        onClose={onDetailsModalClose}
+        client={clients?.data.find((el) => el.id === clientIdToDetails)}
+        onChange={onClientChange}
+        cliePermission={cliePermission}
+      />
+    </>
   );
 };
