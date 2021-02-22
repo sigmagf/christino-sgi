@@ -18,7 +18,7 @@ export class WorksListController {
     const sectorId = stringFix(req.query.sectorId, undefined);
     const group = stringFix(req.query.group, undefined, 'UPPERCASE', 'STRING');
     const identifier = stringFix(req.query.identifier, undefined, 'NONE', 'STRING');
-    const value = stringFix(req.query.value, undefined, 'NONE', 'NUMBER');
+    const value = stringFix(req.query.value, undefined, 'NONE', 'MONEY');
     const status = stringFix(req.query.status, undefined);
 
     try {

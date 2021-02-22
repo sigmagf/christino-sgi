@@ -1,5 +1,5 @@
 type StringCase = 'NONE'|'UPPERCASE'|'LOWERCASE';
-type Normalize = 'NUMBER'|'STRING';
+type Normalize = 'NUMBER'|'STRING'|'MONEY';
 
 export function stringFix(value: any, undefinedReturn: undefined|null|string|number, stringCase?: StringCase, normalize?: Normalize): any {
   if(!value) {
@@ -22,6 +22,10 @@ export function stringFix(value: any, undefinedReturn: undefined|null|string|num
     default:
       stringCased = value.toString().trim();
       break;
+  }
+
+  if(normalize === 'MONEY') {
+    return parseInt(stringCased, 10);
   }
 
   if(normalize === 'NUMBER') {
