@@ -120,7 +120,7 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
         }),
       }));
 
-      return serviceGroups;
+      return [{ label: 'TODOS', value: '' }, ...serviceGroups];
     }
 
     return [];
