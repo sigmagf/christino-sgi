@@ -14,16 +14,16 @@ export const VehiclesDetailsForm = styled(Form)`
                        'VP VR VR VC VC VM VM VM VT VT VS VS'
                        'VD VD VD VD VD VD VD VD VD VD VD VD';
 
-  > :nth-child(1) { grid-area: CL; } /* CLIENTID */
-  > :nth-child(2) { grid-area: CA; } /* CLIENTID */
+  > :nth-child(1) { grid-area: CL; input { text-transform: uppercase; } } /* CLIENTID */
+  > :nth-child(2) { grid-area: CA; } /* CLIENT ADD  */
 
   > :nth-child(3) { grid-area: HR; } /* HR */
 
-  > :nth-child(4) { grid-area: VP; } /* PLATE */
+  > :nth-child(4) { grid-area: VP; input { text-transform: uppercase; } } /* PLATE */
   > :nth-child(5) { grid-area: VR; } /* RENAVAM */
   > :nth-child(6) { grid-area: VC; } /* CRV */
-  > :nth-child(7) { grid-area: VM; } /* BRAND/MODEL */
-  > :nth-child(8) { grid-area: VT; } /* TYPE */
+  > :nth-child(7) { grid-area: VM; input { text-transform: uppercase; } } /* BRAND/MODEL */
+  > :nth-child(8) { grid-area: VT; input { text-transform: uppercase; } } /* TYPE */
   > :nth-child(9) { grid-area: VS; } /* STATUS */
   > :nth-child(10) { grid-area: VD; } /* DETAILS */
 `;

@@ -112,9 +112,16 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
             onFocus={() => onDocumentInputFocus(formRef)}
             onBlur={() => onDocumentInputBlur(formRef)}
           />
-          <Input disabled={!editing} name="group" label="GRUPO" />
-
-          <Input disabled={!editing} name="email" label="E-MAIL" />
+          <Input
+            disabled={!editing}
+            name="group"
+            label="GRUPO"
+          />
+          <Input
+            disabled={!editing}
+            name="email"
+            label="E-MAIL"
+          />
           <Input
             disabled={!editing}
             name="phone1"

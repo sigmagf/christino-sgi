@@ -156,7 +156,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
             status: worksStatus.find((el) => el.value === work.status.toString()),
           }}
         >
-          <Select name="clientId" label="CLIENTE" options={clients} onInputChange={onClientsInputChange} />
+          <Select isDisabled={!!work || !editing} name="clientId" label="CLIENTE" options={clients} onInputChange={onClientsInputChange} />
           <Button type="button" variant="info" style={{ maxHeight: 40, marginTop: 20 }} onClick={() => setCadClientModal(true)}><FaPlus /></Button>
 
           <hr />
