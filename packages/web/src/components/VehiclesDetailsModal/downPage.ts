@@ -140,7 +140,7 @@ export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, curr
           .withdrawn-by-title { grid-area: WT; text-align: center; }
           .withdrawn-by-name { grid-area: WN; }
           .withdrawn-by-document { grid-area: WD; }
-          .withdrawn-by-details { grid-area: WO; }
+          .withdrawn-by-details { grid-area: WO; white-space: normal; text-overflow: ellipsis; }
           /* END WITHDRAWN BY DATA */
     
           .withdrawal-text { margin-top: 15px; font-size: 14px; }
