@@ -39,7 +39,7 @@ export const ClientsPage: React.FC = () => {
 
   /* - HANDLE DETAILS MODAL - */
   const onDetailsModalClose = () => { setDetailsModal(false); revalidate(); };
-  const onCreateClick = () => { setDetailsModal(true); setClientIdToDetails(undefined); };
+  // const onCreateClick = () => { setDetailsModal(true); setClientIdToDetails(undefined); };
   const onDetailsClick = (id: string) => { setDetailsModal(true); setClientIdToDetails(id); };
   /* END HANDLE DETAILS MODAL */
 
