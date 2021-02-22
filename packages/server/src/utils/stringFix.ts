@@ -25,7 +25,7 @@ export function stringFix(value: any, undefinedReturn: undefined|null|string|num
   }
 
   if(normalize === 'MONEY') {
-    return parseInt(stringCased, 10);
+    return parseFloat(stringCased);
   }
 
   if(normalize === 'NUMBER') {
