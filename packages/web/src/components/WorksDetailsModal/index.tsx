@@ -76,7 +76,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       });
 
       const history = `${worksStatus.filter((el) => el.value === data.status)[0].label} - ${data.history}`;
-      const value = data.value.replace('.', '').replace(',', '.').trim();
+      const value = data.value.replace('.', '').replace('.', '').replace(',', '.').trim();
       await scheme.validate({ ...data, value }, { abortEarly: false });
 
       if(work) {
