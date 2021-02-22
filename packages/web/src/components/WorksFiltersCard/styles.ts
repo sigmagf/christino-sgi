@@ -15,15 +15,13 @@ export const FiltersCardForm = styled(Form)`
   grid-template-areas: 'CN CN CN CN CN CN CG CG CG ST ST ST'
                        'ID ID ID VL VL SV SV SV SV SC SC SC';
 
-  > :nth-child(1) { grid-area: CN }; /* CLIENT */
-  > :nth-child(2) { grid-area: CG }; /* GROUP */
-  > :nth-child(3) { grid-area: ST }; /* STATUS */
-  > :nth-child(4) { grid-area: ID }; /* IDENTIFIER */
-  > :nth-child(5) { grid-area: VL }; /* VALUE */
-  > :nth-child(6) { grid-area: SV }; /* SERVICE */
-  > :nth-child(7) { grid-area: SC }; /* SECTOR */
-  > :nth-child(8) { grid-area: VF };
-  > :nth-child(9) { grid-area: VT };
+  > :nth-child(1) { grid-area: CN; }; /* CLIENT */
+  > :nth-child(2) { grid-area: CG; }; /* GROUP */
+  > :nth-child(3) { grid-area: ST; }; /* STATUS */
+  > :nth-child(4) { grid-area: ID; input { text-transform: uppercase; } }; /* IDENTIFIER */
+  > :nth-child(5) { grid-area: VL; }; /* VALUE */
+  > :nth-child(6) { grid-area: SV; }; /* SERVICE */
+  > :nth-child(7) { grid-area: SC; }; /* SECTOR */
 `;
 
 export const FiltersCardActionButtons = styled.div`
