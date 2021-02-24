@@ -5,7 +5,6 @@ import { Layout } from '~/components/Layout';
 import { WorksDataTable } from '~/components/WorksDataTable';
 import { WorksDetailsModal } from '~/components/WorksDetailsModal';
 import { WorksFiltersCard } from '~/components/WorksFiltersCard';
-import { usePersistedState } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
@@ -22,7 +21,7 @@ export const WorksPage: React.FC = () => {
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
-  const { value: filters, setValue: setFilters } = usePersistedState('worksFilters', { page: 1, limit: 10 });
+  const [filters, setFilters] = useState({ page: 1, limit: 10 });
   const { data: works, revalidate, isValidating: inLoading, error: getWorkError } = useSWR<IPagination<IWork>>(`/works${qsConverter(filters)}`);
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
   /* END DATA STATE AND REFS */
@@ -51,7 +50,6 @@ export const WorksPage: React.FC = () => {
     <>
       <Layout setPermissions={(perms) => { setWorkPermission(perms.workPermission); setCliePermission(perms.cliePermission); }}>
         <WorksFiltersCard
-          filters={filters}
           onCreateClick={onCreateClick}
           workPermission={workPermission}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}

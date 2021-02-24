@@ -7,12 +7,12 @@ import { Layout } from '~/components/Layout';
 import { VehiclesDataTable } from '~/components/VehiclesDataTable';
 import { VehiclesDetailsModal } from '~/components/VehiclesDetailsModal';
 import { VehiclesFiltersCard } from '~/components/VehiclesFiltersCard';
-import { useLocalStorage, usePersistedState } from '~/hooks';
+import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
-import { IPagination, IVehicle } from '~/interfaces';
+import { IPagination, IVehicle, IVehiclesFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';
@@ -30,7 +30,7 @@ export const VehiclesPage: React.FC = () => {
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
-  const { value: filters, setValue: setFilters } = usePersistedState('vehiclesFilters', { page: 1, limit: 10, status: [1, 2, 3] });
+  const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
   const { data: vehicles, isValidating: inLoading, error: getVehiclesError, mutate, revalidate } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
   const [vehicleIdToDetails, setVehicleIdToDetails] = useState<string>();
   /* END DATA STATE AND REFS */
@@ -114,7 +114,6 @@ export const VehiclesPage: React.FC = () => {
     <>
       <Layout setPermissions={(perms) => { setDespPermission(perms.despPermission); setCliePermission(perms.cliePermission); }}>
         <VehiclesFiltersCard
-          filters={filters}
           onCreateClick={onCreateClick}
           despPermission={despPermission}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}

@@ -15,13 +15,12 @@ import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IWorksFiltersCardProps {
-  filters: Omit<IWorksFilters, 'page'|'limit'>;
   onFiltersApplyClick: (data: Omit<IWorksFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
   workPermission: number;
 }
 
-export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ filters, onCreateClick, onFiltersApplyClick, workPermission }) => {
+export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, workPermission }) => {
   const storage = useLocalStorage();
 
   const formRef = useRef<FormHandles>(null);
@@ -139,15 +138,15 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ filters, on
 
   return (
     <FiltersCard>
-      <FiltersCardForm ref={formRef} onSubmit={onSubmit} initialData={filters}>
-        <Select label="CLIENTE" name="clientId" options={clients} onInputChange={onClientsInputChange} />
-        <Select label="GRUPO" name="group" options={handleGroups()} />
+      <FiltersCardForm ref={formRef} onSubmit={onSubmit}>
+        <Select label="CLIENTE" name="clientId" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
+        <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
         <Select label="STATUS" name="status" options={status} isMulti />
 
         <Input label="IDENTIFICADOR" name="identifier" />
         <Input label="VALOR" name="value" onFocus={onValueFocus} onBlur={onValueBlur} />
-        <Select label="SERVIÇO" name="serviceId" options={handleServiceOptions()} />
-        <Select label="SETOR" name="sectorId" options={handleSectorOptions()} />
+        <Select label="SERVIÇO" name="serviceId" options={handleServiceOptions()} defaultValue={{ label: 'TODOS', value: '' }} />
+        <Select label="SETOR" name="sectorId" options={handleSectorOptions()} defaultValue={{ label: 'TODOS', value: '' }} />
       </FiltersCardForm>
 
       <FiltersCardActionButtons>
