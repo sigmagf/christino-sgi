@@ -14,21 +14,38 @@ export interface IStorage {
 }
 /* END STIRAGE */
 
-/* IMPORT VEHICLES */
-export interface IVehiclesImportCSV {
-  name: string;
-  document: string;
-  group: string | null;
-
-  plate: string;
-  renavam: string;
-  crv: string | null;
-  brandModel: string;
-  type: string;
-  details: string;
-  status: string;
+/* - INFOSIMPLES API - */
+export interface IBaseResponse {
+  'code': number;
+  'code_message': string;
+  'header': {
+    'api_version': string;
+    'service': string;
+    'parameters': any;
+    'client': string;
+    'client_name': string;
+    'token': string;
+    'token_name': string;
+    'billable': boolean;
+    'credits': number;
+    'has_limit': boolean;
+    'limit': number;
+    'used': number;
+    'cache_hit': boolean;
+    'cached_at': Date|null;
+    'requested_at': Date;
+    'elapsed_time_in_milliseconds': number;
+  };
+  'data_count': number;
+  'errors': any;
+  'receipt': {
+    'url': string;
+    'id': string;
+    'key': string;
+    'sites_urls': string[];
+  };
 }
-/* END IMPORT VEHICLES */
+/* END INFOSIMPLES API */
 
 /* BACKEND */
 export interface IVehiclesFilters extends Partial<Pick<IVehicle, 'clientId'|'plate'|'renavam'|'crv'|'brandModel'>> {
