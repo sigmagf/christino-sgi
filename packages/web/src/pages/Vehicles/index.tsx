@@ -114,6 +114,7 @@ export const VehiclesPage: React.FC = () => {
     <>
       <Layout setPermissions={(perms) => { setDespPermission(perms.despPermission); setCliePermission(perms.cliePermission); }}>
         <VehiclesFiltersCard
+          filters={filters}
           onCreateClick={onCreateClick}
           despPermission={despPermission}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}

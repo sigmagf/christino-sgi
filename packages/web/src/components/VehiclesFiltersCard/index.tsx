@@ -14,12 +14,13 @@ import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IVehiclesFiltersCardProps {
+  filters: Omit<IVehiclesFilters, 'page'|'limit'>;
   onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
   despPermission: number;
 }
 
-export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
+export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ filters, onCreateClick, onFiltersApplyClick, despPermission }) => {
   const storage = useLocalStorage();
 
   const formRef = useRef<FormHandles>(null);
@@ -90,17 +91,17 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
 
   return (
     <FiltersCard>
-      <FiltersCardForm ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
-        <Select label="CLIENTE" name="clientId" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
-        <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
-        <Select label="STATUS" name="status" options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
+      <FiltersCardForm ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)} initialData={filters}>
+        <Select label="CLIENTE" name="clientId" options={clients} onInputChange={onClientsInputChange} />
+        <Select label="GRUPO" name="group" options={handleGroups()} />
+        <Select label="STATUS" name="status" options={status} isMulti />
 
         <Input label="PLACA" name="plate" />
         <Input label="RENAVAM" name="renavam" />
         <Input label="CRV" name="crv" />
         <Input label="MARCA/MODELO" name="brandModel" />
-        <Select label="FINAL DE PLACA" name="plateEnd" options={plateEnd} defaultValue={plateEnd[0]} />
-        <Select label="CAMINHOES" name="includeTruck" options={includeTruckOptions} defaultValue={includeTruckOptions[1]} />
+        <Select label="FINAL DE PLACA" name="plateEnd" options={plateEnd} />
+        <Select label="CAMINHOES" name="includeTruck" options={includeTruckOptions} />
       </FiltersCardForm>
 
       <FiltersCardActionButtons>

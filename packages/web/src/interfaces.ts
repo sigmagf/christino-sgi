@@ -15,7 +15,7 @@ export interface IStorage {
 /* END STIRAGE */
 
 /* - INFOSIMPLES API - */
-export interface IBaseResponse {
+export interface IISBaseResponse {
   'code': number;
   'code_message': string;
   'header': {
@@ -44,6 +44,116 @@ export interface IBaseResponse {
     'key': string;
     'sites_urls': string[];
   };
+}
+
+export interface ISServices {
+  debitoVeiculoSP: {
+    params: {
+      plate: string;
+      renavam: string;
+    };
+    response: IISBaseResponse & {
+      data: IISDebitoVeiculoSPResponse;
+    };
+  };
+  consultaCNPJ: {
+    params: {
+      cnpj: string;
+    };
+    response: IISBaseResponse & {
+      data: IISConsultaCNPJResponse;
+    };
+  };
+}
+
+export interface IISConsultaCNPJResponse {
+  'abertura_data': string;
+  'atividade_economica': string;
+  'atividade_economica_secundaria': string;
+  'atividade_economica_secundaria_lista': string[];
+  'capital_social': string;
+  'cnpj': string;
+  'consulta_datahora': string;
+  'efr': string;
+  'email': string;
+  'endereco_bairro': string;
+  'endereco_cep': string;
+  'endereco_complemento': string;
+  'endereco_logradouro': string;
+  'endereco_municipio': string;
+  'endereco_numero': string;
+  'endereco_uf': string;
+  'licenciamento_dispensado': any[];
+  'matriz_filial': string;
+  'natureza_juridica': string;
+  'nome_fantasia': string;
+  'normalizado_abertura_data': string;
+  'normalizado_capital_social': number;
+  'normalizado_cnpj': string;
+  'normalizado_consulta_datahora': string;
+  'normalizado_endereco_cep': string;
+  'normalizado_situacao_cadastral_data': string;
+  'normalizado_situacao_especial_data': string;
+  'origem': string;
+  'porte': string;
+  'qsa': any[];
+  'razao_social': string;
+  'situacao_cadastral': string;
+  'situacao_cadastral_data': string;
+  'situacao_cadastral_observacoes': string;
+  'situacao_especial': string;
+  'situacao_especial_data': string;
+  'telefone': string;
+}
+
+export interface IISDebitoVeiculoSPResponse {
+  'ano_fabricacao': string;
+  'carroceria': string;
+  'categoria': string;
+  'combustivel': string;
+  'dpvats': any[];
+  'especie': string;
+  'faixa_ipva': string;
+  'ipva': {
+    'competencia': string;
+    'base_calculo': string;
+    'aliquota': string;
+    'apurado': string;
+    'credito_nfp': string;
+    'devido': string;
+    'pagamento_efetuado': string;
+    'descontos': string;
+    'saldo_devido': string;
+    'acrescimos': string;
+    'valor': string;
+    'normalizado_base_calculo': number;
+    'normalizado_aliquota': number;
+    'normalizado_apurado': number;
+    'normalizado_credito_nfp': number;
+    'normalizado_devido': number;
+    'normalizado_pagamento_efetuado': number;
+    'normalizado_descontos': number;
+    'normalizado_saldo_devido': number;
+    'normalizado_acrescimos': number;
+    'normalizado_valor': number;
+    'pagamento_debitos': any[];
+    'boleto': string;
+  };
+  'ipva_divida_ativa': boolean;
+  'ipva_nao_inscritos': any[];
+  'licenciamentos': any[];
+  'marca': string;
+  'multas': {
+    'valor': string;
+    'normalizado_valor': number;
+    'lista': any[];
+  };
+  'municipio': string;
+  'passageiros': string;
+  'placa': string;
+  'renavam': string;
+  'tipo': string;
+  'ultimo_lancamento': string;
 }
 /* END INFOSIMPLES API */
 

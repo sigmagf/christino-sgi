@@ -51,6 +51,7 @@ export const WorksPage: React.FC = () => {
     <>
       <Layout setPermissions={(perms) => { setWorkPermission(perms.workPermission); setCliePermission(perms.cliePermission); }}>
         <WorksFiltersCard
+          filters={filters}
           onCreateClick={onCreateClick}
           workPermission={workPermission}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
