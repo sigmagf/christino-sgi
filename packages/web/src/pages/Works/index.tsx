@@ -9,7 +9,7 @@ import { usePersistedState } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
-import { IPagination, IWork, IWorksFilters } from '~/interfaces';
+import { IPagination, IWork } from '~/interfaces';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';
 

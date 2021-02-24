@@ -65,7 +65,7 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
           <div className="user-actions">
             <Button variant="error" onClick={onLogout}><FaSignOutAlt size={17} /></Button>
             <Button variant="secondary"><FaCog size={17} /></Button>
-            <img src={`http://www.gravatar.com/avatar/${storage.getItem('userPicture')}`} alt="" />
+            <img src={`https://www.codeapi.io/initials/${storage.getItem('userName')?.replaceAll(' ', '%20')}`} alt="" />
           </div>
         </UserBarContainer>
 

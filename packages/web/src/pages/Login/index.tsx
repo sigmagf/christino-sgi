@@ -1,6 +1,5 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
-import crypto from 'crypto';
 import React, { useEffect, useState, useRef } from 'react';
 import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
@@ -47,7 +46,6 @@ export const LoginPage: React.FC = () => {
       const request = await api.post<IUserAuth>('/users/login', data);
       storage.setItem('token', request.data.token);
       storage.setItem('userName', request.data.user.name);
-      storage.setItem('userPicture', crypto.createHash('md5').update(request.data.user.email).digest('hex'));
       navigate('/');
     } catch(err) {
       if(err instanceof yup.ValidationError) {
