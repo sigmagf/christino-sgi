@@ -5,6 +5,7 @@ import { Layout } from '~/components/Layout';
 import { WorksDataTable } from '~/components/WorksDataTable';
 import { WorksDetailsModal } from '~/components/WorksDetailsModal';
 import { WorksFiltersCard } from '~/components/WorksFiltersCard';
+import { usePersistedState } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
@@ -21,7 +22,7 @@ export const WorksPage: React.FC = () => {
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
-  const [filters, setFilters] = useState<IWorksFilters>({ page: 1, limit: 10 });
+  const { value: filters, setValue: setFilters } = usePersistedState('worksFilters', { page: 1, limit: 10 });
   const { data: works, revalidate, isValidating: inLoading, error: getWorkError } = useSWR<IPagination<IWork>>(`/works${qsConverter(filters)}`);
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
   /* END DATA STATE AND REFS */

@@ -9,6 +9,8 @@ export interface IStorage {
   token: string;
   userName: string;
   userPicture: string;
+  vehiclesFilters: IVehiclesFilters;
+  worksFilters: IWorksFilters;
   appBarExpanded: boolean;
 }
 /* END STIRAGE */
