@@ -7,6 +7,7 @@ import { Layout } from '~/components/Layout';
 import { WorksDataTable } from '~/components/WorksDataTable';
 import { WorksDetailsModal } from '~/components/WorksDetailsModal';
 import { WorksFiltersCard } from '~/components/WorksFiltersCard';
+import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
@@ -24,6 +25,7 @@ export const WorksPage: React.FC = () => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const [workPermission, setWorkPermission] = useState(-1);
   const [cliePermission, setCliePermission] = useState(-1);
+  const storage = useLocalStorage();
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
