@@ -13,7 +13,7 @@ export const FiltersCardForm = styled(Form)`
 
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-areas: 'CN CN CN CN CN CN CG CG CG ST ST ST'
-                       'ID ID ID VL VL SV SV SV SV SC SC SC';
+                       'ID ID VL VL SV SV SV SC SC SC DT DT';
 
   > :nth-child(1) { grid-area: CN; }; /* CLIENT */
   > :nth-child(2) { grid-area: CG; }; /* GROUP */
