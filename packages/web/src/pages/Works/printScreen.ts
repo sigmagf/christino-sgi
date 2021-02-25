@@ -5,11 +5,11 @@ import { formatDate, formatMoney } from '~/utils/formatString';
 export function worksPrintScreen(vehicles: IWork[]) {
   return `
     <head>
-      <title>IMPRESSAO DOS VEÍCULOS</title>
+      <title>IMPRESSAO DAS ORDENS DE SERVIÇO</title>
     </head>
     <body>
       <style>
-        @page { size: portrait; -webkit-print-color-adjust: exact; }
+        @page { size: A4 portrait; -webkit-print-color-adjust: exact; }
         * { font-family: 'Roboto Mono', monospace; font-size: 10px; }
         html, body { margin: 0; padding: 0; }
         table { width: 100%; border-radius: 5px; overflow: hidden; border-collapse: collapse; }
@@ -33,7 +33,7 @@ export function worksPrintScreen(vehicles: IWork[]) {
         <tbody>
         ${vehicles.map((w) => `
           <tr>
-            <td>${w.client.document.padStart(14, '*')} - ${w.client.name}</td>
+            <td>${w.client.name}</td>
             <td style="text-align: center">${w.identifier}</td>
             <td style="text-align: center">${w.service.sector.name}/${w.service.name}</td>
             <td style="text-align: center">${formatMoney(w.value)}</td>
