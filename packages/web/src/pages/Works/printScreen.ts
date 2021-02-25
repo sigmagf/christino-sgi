@@ -9,7 +9,7 @@ export function worksPrintScreen(vehicles: IWork[]) {
     </head>
     <body>
       <style>
-        @page { size: landscape; -webkit-print-color-adjust: exact; }
+        @page { size: portrait; -webkit-print-color-adjust: exact; }
         * { font-family: 'Roboto Mono', monospace; font-size: 10px; }
         html, body { margin: 0; padding: 0; }
         table { width: 100%; border-radius: 5px; overflow: hidden; border-collapse: collapse; }
