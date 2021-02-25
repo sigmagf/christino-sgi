@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { IconType } from 'react-icons';
 import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, FaReceipt } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -22,9 +22,9 @@ export const Appnav: React.FC = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
-  const toggleAppnav = useCallback(() => {
+  const toggleAppnav = () => {
     setExpanded((old) => !old);
-  }, [setExpanded]);
+  };
 
   const menuItems: IMenuItem[] = [
     {

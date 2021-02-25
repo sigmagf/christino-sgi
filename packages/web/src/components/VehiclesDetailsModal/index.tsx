@@ -133,6 +133,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   };
   /* END HANDLE DOWN VEHICLE */
 
+  /* - HANDLE GET VEHICLE INFO */
   const getVehicleInfo = async () => {
     if(formDetailsRef.current) {
       const plate: string = formDetailsRef.current.getFieldValue('plate');
@@ -150,7 +151,9 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
       }
     }
   };
+  /* END HANDLE GET VEHICLE INFO */
 
+  /* - HANDLE VEHICLE EXCLUDE - */
   const onVehicleExclude = async () => {
     if(vehicle) {
       setInSubmitProcess(true);
@@ -168,6 +171,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
       setInSubmitProcess(false);
     }
   };
+  /* END HANDLE VEHICLE EXCLUDE */
 
   /* - SAVE OR UPDATE VEHICLE - */
   const onSubmit: SubmitHandler<IFormDetailsData> = async (data) => {
@@ -240,7 +244,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           <hr />
 
           <Input disabled={!editing} name="plate" label="PLACA" maxLength={7} onBlur={getVehicleInfo} />
-          <Input disabled={!editing} name="renavam" label="RENAVAM" maxLength={11} onBlur={() => { onInputBlurMaxLength(formDetailsRef, 'renavam', 11, '0'); getVehicleInfo(); }} />
+          <Input disabled={!editing} name="renavam" label="RENAVAM" maxLength={11} onBlur={() => { onInputBlurMaxLength(formDetailsRef, 'renavam', 11, '0'); }} />
           <Input disabled={!editing} name="crv" label="CRV" maxLength={12} onBlur={() => onInputBlurMaxLength(formDetailsRef, 'crv', 12, '0')} />
           <Input disabled={!editing} name="brandModel" label="MARCA/MODELO" />
           <Input disabled={!editing} name="type" label="TIPO" />

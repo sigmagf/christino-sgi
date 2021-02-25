@@ -9,7 +9,7 @@ export function useISAPI() {
   });
 
   const debitoVeiculoSP = async <T extends ISServices['debitoVeiculoSP']>({ plate, renavam }: T['params']): Promise<AxiosResponse<T['response']>> => {
-    return api.get<ISServices['debitoVeiculoSP']['response']>(`/sefaz/sp/debitos-veiculo.json?token=${token}&timeout=600&placa=${plate}&renavam=${renavam}`);
+    return api.get<ISServices['debitoVeiculoSP']['response']>(`/sefaz/sp/debitos-veiculo.json?token=${token}&placa=${plate}&renavam=${renavam}`);
   };
 
   const consultaCNPJ = async <T extends ISServices['consultaCNPJ']>({ cnpj }: T['params']): Promise<AxiosResponse<T['response']>> => {

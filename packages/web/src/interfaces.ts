@@ -1,4 +1,4 @@
-/* STORAGE */
+/* - STORAGE - */
 export interface IUseLocalStorage {
   getItem: <T extends keyof IStorage>(path: T) => IStorage[T] | null;
   setItem: <T extends keyof IStorage>(path: T, value: IStorage[T] | null) => void;
@@ -48,21 +48,12 @@ export interface IISBaseResponse {
 
 export interface ISServices {
   debitoVeiculoSP: {
-    params: {
-      plate: string;
-      renavam: string;
-    };
-    response: IISBaseResponse & {
-      data: IISDebitoVeiculoSPResponse;
-    };
+    params: { plate: string; renavam: string };
+    response: IISBaseResponse & { data: IISDebitoVeiculoSPResponse };
   };
   consultaCNPJ: {
-    params: {
-      cnpj: string;
-    };
-    response: IISBaseResponse & {
-      data: IISConsultaCNPJResponse;
-    };
+    params: { cnpj: string };
+    response: IISBaseResponse & { data: IISConsultaCNPJResponse };
   };
 }
 
@@ -157,7 +148,7 @@ export interface IISDebitoVeiculoSPResponse {
 }
 /* END INFOSIMPLES API */
 
-/* BACKEND */
+/* - BACKEND - */
 export interface IVehiclesFilters extends Partial<Pick<IVehicle, 'clientId'|'plate'|'renavam'|'crv'|'brandModel'>> {
   page: number;
   limit: number;

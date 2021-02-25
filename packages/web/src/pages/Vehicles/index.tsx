@@ -42,8 +42,8 @@ export const VehiclesPage: React.FC = () => {
 
   /* - HANDLE DETAILS MODAL - */
   const onDetailsModalClose = () => { setDetailsModal(false); revalidate(); };
-  const onCreateClick = () => { setDetailsModal(true); setVehicleIdToDetails(undefined); };
-  const onDetailsClick = (id: string) => { setDetailsModal(true); setVehicleIdToDetails(id); };
+  const onCreateClick = () => { setVehicleIdToDetails(undefined); setDetailsModal(true); };
+  const onDetailsClick = (id: string) => { setVehicleIdToDetails(id); setDetailsModal(true); };
   /* END HANDLE DETAILS MODAL */
 
   const onVehicleChange = (vehicle: IVehicle) => {
