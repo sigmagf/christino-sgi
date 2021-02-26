@@ -156,8 +156,8 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
         <Select label="SERVIÇO" name="serviceId" options={handleServiceOptions()} defaultValue={{ label: 'TODOS', value: '' }} />
         <Select label="SETOR" name="sectorId" options={handleSectorOptions()} defaultValue={{ label: 'TODOS', value: '' }} />
         <div className="timeCourse">
-          <DatePicker label="DE" name="timeCourseStart" maxDate={new Date(Date.now())} selected={handleStartedMinDate()} />
-          <DatePicker label="ATÉ" name="timeCourseEnd" maxDate={new Date(Date.now())} selected={new Date()} endDate={new Date(Date.now())} />
+          <DatePicker label="DE" name="timeCourseStart" maxDate={new Date(Date.now())} />
+          <DatePicker label="ATÉ" name="timeCourseEnd" maxDate={new Date(Date.now())} />
         </div>
       </FiltersCardForm>
 
