@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
 import { useLocalStorage } from '~/hooks';
-import { useISAPI } from '~/hooks/useInfoSimplesAPI';
 import { Button } from '~/interface/Button';
 import { DropzoneModal } from '~/interface/DropzoneModal';
 import { Input, Select } from '~/interface/Form';
@@ -51,7 +50,6 @@ interface IVehiclesDetailsModalProps {
 
 export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, onChange, onCRLVeViewClick, despPermission, cliePermission }) => {
   const storage = useLocalStorage();
-  const infoSimples = useISAPI();
 
   const formDetailsRef = useRef<FormHandles>(null);
   const formDownRef = useRef<FormHandles>(null);
@@ -132,26 +130,6 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
     }
   };
   /* END HANDLE DOWN VEHICLE */
-
-  /* - HANDLE GET VEHICLE INFO */
-  const getVehicleInfo = async () => {
-    if(formDetailsRef.current) {
-      const plate: string = formDetailsRef.current.getFieldValue('plate');
-      const renavam: string = formDetailsRef.current.getFieldValue('renavam');
-
-      if(plate.length === 7 && renavam.length === 11) {
-        const { data: response } = await infoSimples.debitoVeiculoSP({ plate, renavam });
-
-        if(response.code === 200) {
-          formDetailsRef.current.setFieldValue('brandModel', response.data.marca);
-          formDetailsRef.current.setFieldValue('brandModel', response.data.tipo);
-        } else {
-          toast.error(response.code_message);
-        }
-      }
-    }
-  };
-  /* END HANDLE GET VEHICLE INFO */
 
   /* - HANDLE VEHICLE EXCLUDE - */
   const onVehicleExclude = async () => {
@@ -243,7 +221,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
           <hr />
 
-          <Input disabled={!editing} name="plate" label="PLACA" maxLength={7} onBlur={getVehicleInfo} />
+          <Input disabled={!editing} name="plate" label="PLACA" maxLength={7} />
           <Input disabled={!editing} name="renavam" label="RENAVAM" maxLength={11} onBlur={() => { onInputBlurMaxLength(formDetailsRef, 'renavam', 11, '0'); }} />
           <Input disabled={!editing} name="crv" label="CRV" maxLength={12} onBlur={() => onInputBlurMaxLength(formDetailsRef, 'crv', 12, '0')} />
           <Input disabled={!editing} name="brandModel" label="MARCA/MODELO" />
