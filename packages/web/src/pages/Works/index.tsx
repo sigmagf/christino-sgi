@@ -30,20 +30,7 @@ export const WorksPage: React.FC = () => {
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
-  // eslint-disable-next-line max-len
-  const startDate = () => {
-    const date = new Date();
-    date.setDate(date.getDate() - 30);
-    return date;
-  };
-
-  const [filters, setFilters] = useState<IWorksFilters>({
-    page: 1,
-    limit: 10,
-    status: ['1', '2', '3'],
-    timeCourseStart: formatDatabaseDate(startDate()),
-    timeCourseEnd: formatDatabaseDate(new Date()),
-  });
+  const [filters, setFilters] = useState<IWorksFilters>({ page: 1, limit: 10, status: ['1', '2', '3'] });
   const { data: works, revalidate, isValidating: inLoading, error: getWorkError } = useSWR<IPagination<IWork>>(`/works${qsConverter(filters)}`);
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
   /* END DATA STATE AND REFS */
