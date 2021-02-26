@@ -34,6 +34,14 @@ export class SequelizeWorksRepository implements IWorksRepository {
       filtersPart.push(filters.status ? `wk.status = ${filters.status}` : null);
     }
 
+    if(filters.timeCourseStart) {
+      filtersPart.push(`wk.created_at >= '${filters.timeCourseStart}'`);
+    }
+
+    if(filters.timeCourseEnd) {
+      filtersPart.push(`wk.created_at <= '${filters.timeCourseEnd}'`);
+    }
+
     return filtersPart.filter((el) => el !== null).join(' AND ');
   }
 

@@ -18,6 +18,20 @@ export function formatDate(date?: string|Date, withTime = false) {
   return `${day}/${month}/${year}`;
 }
 
+export function formatDatabaseDate(date?: string|Date) {
+  if(!date) {
+    return '';
+  }
+
+  const dt = new Date(date);
+
+  const year = dt.getFullYear();
+  const month = (dt.getMonth() + 1).toString().padStart(2, '0');
+  const day = dt.getDate().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
 export function formatDocument(document: string) {
   if(!document) {
     return '';

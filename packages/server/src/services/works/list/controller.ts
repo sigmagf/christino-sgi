@@ -20,13 +20,18 @@ export class WorksListController {
     const identifier = stringFix(req.query.identifier, undefined, 'NONE', 'STRING');
     const value = stringFix(req.query.value, undefined, 'NONE', 'MONEY');
     const status = stringFix(req.query.status, undefined);
+    const timeCourseStart = stringFix(req.query.timeCourseStart, undefined);
+    const timeCourseEnd = stringFix(req.query.timeCourseEnd, undefined);
 
     try {
       if(status && (parseInt(status, 10) < 1 || parseInt(status, 10) > 4)) {
         throw new Error(JSON.stringify({ code: 400, message: 'O item \'status\' é inválido.', details: 'O status deve ser entre \'1\',\'2\',\'3\',\'4\'' }));
       }
 
-      const works = await this.service.execute({ page, limit, filters: { pagination, clientId, serviceId, sectorId, group, identifier, value, status } });
+      const works = await this.service.execute({
+        page, limit, filters: { pagination, clientId, serviceId, sectorId, group, identifier, value, status, timeCourseStart, timeCourseEnd },
+      });
+
       return res.json(works);
     } catch(err) {
       console.log(err);

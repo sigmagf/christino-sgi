@@ -22,6 +22,7 @@ export const FiltersCardForm = styled(Form)`
   > :nth-child(5) { grid-area: VL; }; /* VALUE */
   > :nth-child(6) { grid-area: SV; }; /* SERVICE */
   > :nth-child(7) { grid-area: SC; }; /* SECTOR */
+  > :nth-child(8) { grid-area: DT; display: flex; gap: 10px; }; /* TIME COURSE */
 `;
 
 export const FiltersCardActionButtons = styled.div`

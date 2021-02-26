@@ -5,11 +5,11 @@ import { FaPlus, FaFilter } from 'react-icons/fa';
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
-import { Select, Input } from '~/interface/Form';
+import { Select, Input, DatePicker } from '~/interface/Form';
 import { IClient, ISector, IService, IWorksFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { worksStatus as status } from '~/utils/commonSelectOptions';
-import { formatMoney } from '~/utils/formatString';
+import { formatDatabaseDate, formatMoney } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
@@ -77,7 +77,9 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
   /* END HANDLE VALUE FORMAT */
 
   const onSubmit: SubmitHandler<Omit<IWorksFilters, 'page'|'limit'>> = (data) => {
-    onFiltersApplyClick({ ...data, value: data.value?.replace('.', '').replace(',', '.') || '' });
+    const value = data.value?.replace('.', '').replace(',', '.') || '';
+
+    onFiltersApplyClick({ ...data, value, timeCourseStart: formatDatabaseDate(data.timeCourseStart), timeCourseEnd: formatDatabaseDate(data.timeCourseEnd) });
   };
 
   const handleGroups = () => {
@@ -136,6 +138,12 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
     return [{ label: 'TODOS', value: '' }];
   };
 
+  const handleStartedMinDate = () => {
+    const date = new Date(Date.now());
+    date.setDate(date.getDate() - 30);
+    return date;
+  };
+
   return (
     <FiltersCard>
       <FiltersCardForm ref={formRef} onSubmit={onSubmit}>
@@ -147,6 +155,10 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
         <Input label="VALOR" name="value" onFocus={onValueFocus} onBlur={onValueBlur} />
         <Select label="SERVIÇO" name="serviceId" options={handleServiceOptions()} defaultValue={{ label: 'TODOS', value: '' }} />
         <Select label="SETOR" name="sectorId" options={handleSectorOptions()} defaultValue={{ label: 'TODOS', value: '' }} />
+        <div className="timeCourse">
+          <DatePicker label="DE" name="timeCourseStart" maxDate={new Date(Date.now())} selected={handleStartedMinDate()} />
+          <DatePicker label="ATÉ" name="timeCourseEnd" maxDate={new Date(Date.now())} selected={new Date(Date.now())} endDate={new Date(Date.now())} />
+        </div>
       </FiltersCardForm>
 
       <FiltersCardActionButtons>

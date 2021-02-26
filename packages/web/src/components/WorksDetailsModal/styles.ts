@@ -51,7 +51,7 @@ export const WorksDetailsModalForm = styled(Form)`
   > :nth-child(3) { grid-area: HR; } /* HR */
 
   > :nth-child(4) { grid-area: SV; } /* SERVICEid */
-  > :nth-child(5) { grid-area: ID; } /* IDENTIFIER */
+  > :nth-child(5) { grid-area: ID; input { text-transform: uppercase; } } /* IDENTIFIER */
   > :nth-child(6) { grid-area: VL; } /* VALUE */
   > :nth-child(7) { grid-area: ST; } /* STATUS */
   > :nth-child(8) { grid-area: DT; } /* DETAILS */

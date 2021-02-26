@@ -172,6 +172,8 @@ export interface IWorksFilters extends Partial<Pick<IWork, 'clientId'|'serviceId
   status?: string | string[];
   group?: string;
   sectorId?: string;
+  timeCourseStart?: Date|string;
+  timeCourseEnd?: Date|string;
 }
 
 export interface IPagination<T> {

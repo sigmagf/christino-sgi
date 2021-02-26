@@ -21,6 +21,8 @@ export interface IWorksListFilters extends Partial<Pick<IWork, 'clientId'|'servi
   status?: string|string[];
   group?: string;
   sectorId?: string;
+  timeCourseStart?: Date;
+  timeCourseEnd?: Date;
 }
 
 export interface IVehiclesListFilters extends Partial<Omit<IVehicle, 'id'|'client'|'type'|'details'|'status'|'createdAt'|'updatedAt'>> {
