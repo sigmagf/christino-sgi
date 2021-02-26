@@ -139,7 +139,7 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
   };
 
   const handleStartedMinDate = () => {
-    const date = new Date(Date.now());
+    const date = new Date();
     date.setDate(date.getDate() - 30);
     return date;
   };
@@ -149,7 +149,7 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
       <FiltersCardForm ref={formRef} onSubmit={onSubmit}>
         <Select label="CLIENTE" name="clientId" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
         <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
-        <Select label="STATUS" name="status" options={status} isMulti />
+        <Select label="STATUS" name="status" options={status} isMulti defaultValue={status.filter((el) => el.value !== '4')} />
 
         <Input label="IDENTIFICADOR" name="identifier" />
         <Input label="VALOR" name="value" onFocus={onValueFocus} onBlur={onValueBlur} />
@@ -157,7 +157,7 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
         <Select label="SETOR" name="sectorId" options={handleSectorOptions()} defaultValue={{ label: 'TODOS', value: '' }} />
         <div className="timeCourse">
           <DatePicker label="DE" name="timeCourseStart" maxDate={new Date(Date.now())} selected={handleStartedMinDate()} />
-          <DatePicker label="ATÉ" name="timeCourseEnd" maxDate={new Date(Date.now())} selected={new Date(Date.now())} endDate={new Date(Date.now())} />
+          <DatePicker label="ATÉ" name="timeCourseEnd" maxDate={new Date(Date.now())} selected={new Date()} endDate={new Date(Date.now())} />
         </div>
       </FiltersCardForm>
 

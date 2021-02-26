@@ -12,8 +12,9 @@ import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
-import { IPagination, IWork } from '~/interfaces';
+import { IPagination, IWork, IWorksFilters } from '~/interfaces';
 import { api } from '~/utils/api';
+import { formatDatabaseDate } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';
 
@@ -29,7 +30,20 @@ export const WorksPage: React.FC = () => {
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
-  const [filters, setFilters] = useState({ page: 1, limit: 10 });
+  // eslint-disable-next-line max-len
+  const startDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() - 30);
+    return date;
+  };
+
+  const [filters, setFilters] = useState<IWorksFilters>({
+    page: 1,
+    limit: 10,
+    status: ['1', '2', '3'],
+    timeCourseStart: formatDatabaseDate(startDate()),
+    timeCourseEnd: formatDatabaseDate(new Date()),
+  });
   const { data: works, revalidate, isValidating: inLoading, error: getWorkError } = useSWR<IPagination<IWork>>(`/works${qsConverter(filters)}`);
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
   /* END DATA STATE AND REFS */
