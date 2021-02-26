@@ -9,7 +9,7 @@ import { Select, Input, DatePicker } from '~/interface/Form';
 import { IClient, ISector, IService, IWorksFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { worksStatus as status } from '~/utils/commonSelectOptions';
-import { formatMoney } from '~/utils/formatString';
+import { formatDatabaseDate, formatMoney } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
