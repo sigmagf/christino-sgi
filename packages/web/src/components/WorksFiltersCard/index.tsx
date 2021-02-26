@@ -9,7 +9,7 @@ import { Select, Input, DatePicker } from '~/interface/Form';
 import { IClient, ISector, IService, IWorksFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { worksStatus as status } from '~/utils/commonSelectOptions';
-import { formatDatabaseDate, formatMoney } from '~/utils/formatString';
+import { formatMoney } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
@@ -136,12 +136,6 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
     }
 
     return [{ label: 'TODOS', value: '' }];
-  };
-
-  const handleStartedMinDate = () => {
-    const date = new Date();
-    date.setDate(date.getDate() - 30);
-    return date;
   };
 
   return (
