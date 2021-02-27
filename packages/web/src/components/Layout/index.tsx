@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaSignOutAlt, FaCog } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
@@ -16,34 +16,41 @@ interface ILayoutProps {
 }
 
 export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => {
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
   const navigate = useNavigate();
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
+  /* - DATA STATE AND REFS - */
+  /* END DATA STATE AND REFS */
+
+  /* - BOOLEAN STATES - */
   const [validFinished, setValidFinished] = useState(false);
+  /* END BOOLEAN STATES */
 
   const onLogout = () => {
     navigate('/login');
     storage.setItem('token', null);
   };
 
-  const validate = useCallback(async () => {
-    try {
-      const response = await api.get<IUser>('/users/valid', { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-      if(setPermissions) {
-        setPermissions(response.data);
-      }
-    } catch(err) {
-      storage.setItem('token', null);
-      navigate('/login');
-    }
-
-    setValidFinished(true);
-  }, [navigate, setPermissions, storage]);
-
   useEffect(() => {
+    const validate = async () => {
+      try {
+        const response = await api.get<IUser>('/users/valid', { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+
+        if(setPermissions) {
+          setPermissions(response.data);
+        }
+      } catch(err) {
+        storage.setItem('token', null);
+        navigate('/login');
+      }
+
+      setValidFinished(true);
+    };
+
     validate();
-  }, []); // eslint-disable-line
+  }, [navigate, setPermissions, storage]);
 
   if(!validFinished) {
     return (
@@ -72,7 +79,7 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
         <AppContent>
           { children }
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50 }}>
-            CHRISTINO SISTEMA DE GESTAO INTERNO v0.0.24 (25/02/2020)
+            CHRISTINO - SISTEMA DE GESTAO INTERNO v0.0.24 (25/02/2020)
           </div>
         </AppContent>
       </AppMain>

@@ -18,7 +18,15 @@ interface IVehicleDataTableProps {
 }
 
 export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick, onCRLVeViewClick }) => {
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
+
+  /* - DATA STATE AND REFS - */
+  /* END DATA STATE AND REFS */
+
+  /* - BOOLEAN STATES - */
   const [inLoadingCRLVe, setInLoadingCRLVe] = useState(false);
+  /* END BOOLEAN STATES */
 
   const handleOnCRLVeView = async (id: string) => {
     setInLoadingCRLVe(true);

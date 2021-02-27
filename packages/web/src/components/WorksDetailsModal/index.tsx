@@ -17,7 +17,7 @@ import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatMoney, formatDate } from '~/utils/formatString';
 import { handleGetClientsToSelect } from '~/utils/handleGetClientsToSelect';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
-import { onDocumentInputBlur, onValueBlur, onValueFocus } from '~/utils/handleInputFormat';
+import { onDocumentInputBlur, onValueInputBlur, onValueInputFocus } from '~/utils/handleInputFormat';
 
 import { ClientsDetailsModal } from '../ClientsDetailsModal';
 import { WorksDetailsModalForm, WorksDetailsActionButtons, WorksDetailsLoadingContainer } from './styles';
@@ -71,12 +71,12 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
         value: yup.string().required('O valor é obrigatório.'),
         status: yup.string().required('O status é obrigatório.'),
         details: yup.string().max(256, 'Os detalhes devem ter no máximo 256 caracteres'),
-        identifier: yup.string().max(16, 'O identifier devem ter no máximo 16 caracteres').required('O identificador é obrigatório.'),
+        identifier: yup.string().max(16, 'O identificador devem ter no máximo 16 caracteres').required('O identificador é obrigatório.'),
         history: yup.string().max(115, 'O histórico devem ter no máximo 115 caracteres').required('O historico é obrigatório.'),
       });
 
       const history = `${worksStatus.filter((el) => el.value === data.status)[0].label} - ${data.history}`;
-      const value = data.value.replace('.', '').replace('.', '').replace(',', '.').trim();
+      const value = data.value.replace('.', '').replace(',', '.').trim();
       await scheme.validate({ ...data, value }, { abortEarly: false });
 
       if(work) {
@@ -171,10 +171,10 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
 
           <Select isDisabled={!!work || !editing} name="serviceId" label="SERVIÇO" options={handleServiceOptions()} />
           <Input disabled={!editing} name="identifier" label="IDENTIFICADOR" />
-          <Input disabled={!editing} name="value" label="VALOR" onFocus={() => onValueFocus(formRef)} onBlur={() => onValueBlur(formRef)} />
+          <Input disabled={!editing} name="value" label="VALOR" onFocus={() => onValueInputFocus(formRef)} onBlur={() => onValueInputBlur(formRef)} />
           <Select isDisabled={!editing} name="status" label="STATUS" options={worksStatus} />
           <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} maxLength={256} />
-          { editing && <Input name="history" label="NOVA ENTRADA" maxLength={115} /> }
+          { editing && <Input name="history" label="NOVA ENTRADA DO HISTÓRICO" maxLength={115} /> }
 
           <Table>
             <thead>

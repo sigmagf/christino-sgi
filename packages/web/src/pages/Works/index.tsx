@@ -14,7 +14,6 @@ import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
 import { IPagination, IWork, IWorksFilters } from '~/interfaces';
 import { api } from '~/utils/api';
-import { formatDatabaseDate } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';
 
@@ -36,14 +35,14 @@ export const WorksPage: React.FC = () => {
   /* END DATA STATE AND REFS */
 
   /* - BOOLEAN STATES - */
-  const [detailsModal, setDetailsModal] = useState(false);
   const [inLoadingPrint, setInLoadingPrint] = useState(false);
+  const [detailsModal, setDetailsModal] = useState(false);
   /* END BOOLEAN STATES */
 
   /* - HANDLE DETAILS MODAL - */
   const onDetailsModalClose = () => { setDetailsModal(false); revalidate(); };
-  const onCreateClick = () => { setDetailsModal(true); setWorkIdToDetails(undefined); };
-  const onDetailsClick = (id: string) => { setDetailsModal(true); setWorkIdToDetails(id); };
+  const onCreateClick = () => { setWorkIdToDetails(undefined); setDetailsModal(true); };
+  const onDetailsClick = (id: string) => { setWorkIdToDetails(id); setDetailsModal(true); };
   /* END HANDLE DETAILS MODAL */
 
   /* - HANDLE PRINT CLICK - */

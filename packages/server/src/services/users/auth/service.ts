@@ -18,7 +18,16 @@ export class UsersAuthService {
       throw new Error(JSON.stringify({ code: 401, message: 'Senha inválida.', details: null }));
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: 86400 });
+    function secondsUntilMidnight() {
+      const midnight = new Date();
+      midnight.setHours(24);
+      midnight.setMinutes(0);
+      midnight.setSeconds(0);
+      midnight.setMilliseconds(0);
+      return (midnight.getTime() - new Date().getTime()) / 1000;
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: parseInt(secondsUntilMidnight().toString(), 10) });
     user.password = undefined;
     return { user, token };
   }

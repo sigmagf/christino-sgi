@@ -22,8 +22,8 @@ export const ClientsPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
 
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
-  const storage = useLocalStorage();
   const [cliePermission, setCliePermission] = useState(-1);
+  const storage = useLocalStorage();
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */

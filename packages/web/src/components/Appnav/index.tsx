@@ -17,14 +17,17 @@ interface IMenuItem {
 }
 
 export const Appnav: React.FC = () => {
-  const { value: expanded, setValue: setExpanded } = usePersistedState('appBarExpanded', false);
-
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
-  const toggleAppnav = () => {
-    setExpanded((old) => !old);
-  };
+  /* - DATA STATE AND REFS - */
+  /* END DATA STATE AND REFS */
+
+  /* - BOOLEAN STATES - */
+  const { value: expanded, setValue: setExpanded } = usePersistedState('appBarExpanded', false);
+  /* END BOOLEAN STATES */
 
   const menuItems: IMenuItem[] = [
     {
@@ -49,8 +52,8 @@ export const Appnav: React.FC = () => {
   return (
     <AppnavContainer className={expanded ? 'expanded' : 'collapsed'} expanded={expanded}>
       <AppnavControllers>
-        {!expanded && <button type="button" onClick={toggleAppnav} aria-label="Expand"><FaAngleRight size={20} /></button>}
-        {expanded && <button type="button" onClick={toggleAppnav} aria-label="Collapse"><FaAngleLeft size={20} /></button>}
+        {!expanded && <button type="button" onClick={() => setExpanded((old) => !old)} aria-label="Expand"><FaAngleRight size={20} /></button>}
+        {expanded && <button type="button" onClick={() => setExpanded((old) => !old)} aria-label="Collapse"><FaAngleLeft size={20} /></button>}
       </AppnavControllers>
       <AppnavHeader>
         <img src={expanded ? LogoWithText : LogoWithoutText} alt="CHRISTINO-SGI" />

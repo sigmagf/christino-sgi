@@ -8,7 +8,7 @@ import { handleHTTPRequestError } from './handleHTTPRequestError';
 type SetClientsType = (value: React.SetStateAction<{ label: string; value: string }[]>) => void;
 
 export async function handleGetClientsToSelect(param: string, setClients: SetClientsType) {
-  if(!param) {
+  if(!param || !setClients) {
     return;
   }
 

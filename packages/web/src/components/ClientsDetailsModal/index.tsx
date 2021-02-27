@@ -35,12 +35,18 @@ interface IVehiclesDetailsModalProps {
 }
 
 export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, client, cliePermission }) => {
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
-
   const formRef = useRef<FormHandles>(null);
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
+  /* - DATA STATE AND REFS - */
+  /* END DATA STATE AND REFS */
+
+  /* - BOOLEAN STATES - */
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
   const [editing, setEditing] = useState(false);
+  /* END BOOLEAN STATES */
 
   /* - SAVE OR UPDATE CLIENT - */
   const onSubmit: SubmitHandler<IFormData> = async (data) => {

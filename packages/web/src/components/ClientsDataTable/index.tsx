@@ -38,10 +38,10 @@ export const ClientsDataTable: React.FC<IClientsDataTableProps> = ({ clients, in
         </thead>
         <tbody>
           {(!clients || clients.length === 0) && (
-          <>
-            <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && 'SEM DADOS PARA INFORMAR'}</td></tr>
-            <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && '- NENHUM VEICULO ENCONTRADO -'}</td></tr>
-          </>
+            <>
+              <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && 'SEM DADOS PARA INFORMAR'}</td></tr>
+              <tr><td colSpan={6} style={{ textAlign: 'center' }}>{!inLoading && '- NENHUM VEICULO ENCONTRADO -'}</td></tr>
+            </>
           )}
 
           {clients && clients.map((el) => (

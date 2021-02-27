@@ -2,15 +2,14 @@ import { FormHandles, SubmitHandler } from '@unform/core';
 import React, { useRef, useState } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
 
-import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Select, Input, DatePicker } from '~/interface/Form';
-import { IClient, ISector, IService, IWorksFilters } from '~/interfaces';
-import { api } from '~/utils/api';
+import { ISector, IService, IWorksFilters } from '~/interfaces';
 import { worksStatus as status } from '~/utils/commonSelectOptions';
-import { formatDatabaseDate, formatMoney } from '~/utils/formatString';
-import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
+import { formatDatabaseDate } from '~/utils/formatString';
+import { handleGetClientsToSelect } from '~/utils/handleGetClientsToSelect';
+import { onValueInputFocus, onValueInputBlur } from '~/utils/handleInputFormat';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
@@ -21,64 +20,28 @@ interface IWorksFiltersCardProps {
 }
 
 export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, workPermission }) => {
-  const storage = useLocalStorage();
-
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const formRef = useRef<FormHandles>(null);
-  let timer: any;
+  let timer: NodeJS.Timeout;
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
+  /* - DATA STATE AND REFS - */
   const { data: groups } = useSWR<string[]>('/clients/groups');
   const { data: services } = useSWR<IService[]>('/services?noPagination=true');
   const { data: sectors } = useSWR<ISector[]>('/sectors?noPagination=true');
-
   const [clients, setClients] = useState([{ label: 'TODOS', value: '' }]);
+  /* END DATA STATE AND REFS */
 
-  const getClients = async (param: string) => {
-    try {
-      if(param.length === 11 || param.length === 14) {
-        const response = await api.get<IClient>(`/clients/${param}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-        const data = { value: response.data.id, label: `${response.data.document.padStart(14, '*')} - ${response.data.name}` };
-        setClients([{ label: 'TODOS', value: '' }, data]);
-      } else {
-        const response = await api.get<IClient[]>(`/clients?noPagination=true&name=${param}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-        const data = response.data.map((client) => ({ value: client.id, label: `${client.document.padStart(14, '*')} - ${client.name}` }));
-        setClients([{ label: 'TODOS', value: '' }, ...data]);
-      }
-    } catch(err) {
-      handleHTTPRequestError(err);
-    }
-  };
+  /* - BOOLEAN STATES - */
+  /* END BOOLEAN STATES */
 
   const onClientsInputChange = (name: string) => {
-    if(!name) {
-      return;
-    }
-
     clearTimeout(timer);
-
-    timer = setTimeout(() => { getClients(name); }, 1000);
+    timer = setTimeout(() => { handleGetClientsToSelect(name, setClients); }, 1000);
   };
-
-  /* - HANDLE VALUE FORMAT - */
-  const onValueFocus = () => {
-    if(formRef.current) {
-      const value = formRef.current.getFieldValue('value').replace('.', '');
-      formRef.current.setFieldValue('value', value);
-    }
-  };
-
-  const onValueBlur = () => {
-    if(formRef.current) {
-      const value = formRef.current.getFieldValue('value').replace(',', '.');
-      formRef.current.setFieldValue('value', formatMoney(value));
-    }
-  };
-  /* END HANDLE VALUE FORMAT */
 
   const onSubmit: SubmitHandler<Omit<IWorksFilters, 'page'|'limit'>> = (data) => {
     const value = data.value?.replace('.', '').replace(',', '.') || '';
-
     onFiltersApplyClick({ ...data, value, timeCourseStart: formatDatabaseDate(data.timeCourseStart), timeCourseEnd: formatDatabaseDate(data.timeCourseEnd) });
   };
 
@@ -105,7 +68,6 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
 
       services.forEach((option) => {
         if(!serviceGroups.find((gp) => gp.label === option.sector.name)) {
-          // setSectors((old) => [...old, { value: option.sector.id, label: option.sector.name }]);
           serviceGroups.push({ label: option.sector.name, options: [] });
         }
 
@@ -146,7 +108,7 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
         <Select label="STATUS" name="status" options={status} isMulti defaultValue={status.filter((el) => el.value !== '4')} />
 
         <Input label="IDENTIFICADOR" name="identifier" />
-        <Input label="VALOR" name="value" onFocus={onValueFocus} onBlur={onValueBlur} />
+        <Input label="VALOR" name="value" onFocus={() => onValueInputFocus(formRef)} onBlur={() => onValueInputBlur(formRef)} />
         <Select label="SERVIÇO" name="serviceId" options={handleServiceOptions()} defaultValue={{ label: 'TODOS', value: '' }} />
         <Select label="SETOR" name="sectorId" options={handleSectorOptions()} defaultValue={{ label: 'TODOS', value: '' }} />
         <div className="timeCourse">

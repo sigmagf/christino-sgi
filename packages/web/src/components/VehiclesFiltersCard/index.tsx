@@ -2,14 +2,12 @@ import { FormHandles } from '@unform/core';
 import React, { useRef, useState } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
 
-import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Select, Input } from '~/interface/Form';
-import { IClient, IVehiclesFilters } from '~/interfaces';
-import { api } from '~/utils/api';
+import { IVehiclesFilters } from '~/interfaces';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
-import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
+import { handleGetClientsToSelect } from '~/utils/handleGetClientsToSelect';
 
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
@@ -20,13 +18,17 @@ interface IVehiclesFiltersCardProps {
 }
 
 export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
-  const storage = useLocalStorage();
-
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const formRef = useRef<FormHandles>(null);
+  let timer: NodeJS.Timeout;
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
+  /* - DATA STATE AND REFS - */
   const { data: groups } = useSWR<string[]>('/clients/groups');
+  /* END DATA STATE AND REFS */
 
-  let timer: any;
+  /* - BOOLEAN STATES - */
+  /* END BOOLEAN STATES */
 
   const [clients, setClients] = useState([{ label: 'TODOS', value: '' }]);
 
@@ -43,32 +45,9 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
     },
   ];
 
-  const getClients = async (param: string) => {
-    try {
-      if(param.length === 11 || param.length === 14) {
-        const response = await api.get<IClient>(`/clients/${param}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-        const data = { value: response.data.id, label: `${response.data.document.padStart(14, '*')} - ${response.data.name}` };
-        setClients([{ label: 'TODOS', value: '' }, data]);
-      } else {
-        const response = await api.get<IClient[]>(`/clients?noPagination=true&name=${param}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-        const data = response.data.map((client) => ({ value: client.id, label: `${client.document.padStart(14, '*')} - ${client.name}` }));
-        setClients([{ label: 'TODOS', value: '' }, ...data]);
-      }
-    } catch(err) {
-      handleHTTPRequestError(err);
-    }
-  };
-
   const onClientsInputChange = (name: string) => {
-    if(!name) {
-      return;
-    }
-
     clearTimeout(timer);
-
-    timer = setTimeout(() => { getClients(name); }, 1000);
+    timer = setTimeout(() => { handleGetClientsToSelect(name, setClients); }, 1000);
   };
 
   const handleGroups = () => {

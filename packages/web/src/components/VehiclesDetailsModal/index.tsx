@@ -49,21 +49,25 @@ interface IVehiclesDetailsModalProps {
 }
 
 export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, onChange, onCRLVeViewClick, despPermission, cliePermission }) => {
+  /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
-
   const formDetailsRef = useRef<FormHandles>(null);
   const formDownRef = useRef<FormHandles>(null);
   let timer: NodeJS.Timeout;
+  /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
+  /* - DATA STATE AND REFS - */
+  const [clients, setClients] = useState<{ label: string; value: string }[]>([]);
+  /* END DATA STATE AND REFS */
+
+  /* - BOOLEAN STATES - */
   const [inLoadingCRLVe, setInLoadingCRLVe] = useState(false);
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
   const [editing, setEditing] = useState(false);
-
-  const [clients, setClients] = useState<{ label: string; value: string }[]>([]);
-
   const [uploadCRLVeModal, setUploadCRLVeModal] = useState(false);
   const [cadClientModal, setCadClientModal] = useState(false);
   const [downModal, setDownModal] = useState(false);
+  /* END BOOLEAN STATES */
 
   const onClientsInputChange = (param: string) => {
     clearTimeout(timer);

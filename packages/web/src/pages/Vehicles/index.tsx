@@ -23,9 +23,9 @@ export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
 
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
-  const storage = useLocalStorage();
   const [despPermission, setDespPermission] = useState(-1);
   const [cliePermission, setCliePermission] = useState(-1);
+  const storage = useLocalStorage();
   let winCRLVe: Window | null;
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 

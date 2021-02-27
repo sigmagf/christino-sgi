@@ -36,14 +36,14 @@ export const onDocumentInputBlur = (formRef: RefObject<FormHandles>, cb?: (docum
 };
 
 /* MONEY INPUT */
-export const onValueFocus = (formRef: RefObject<FormHandles>, inputName = 'value') => {
+export const onValueInputFocus = (formRef: RefObject<FormHandles>, inputName = 'value') => {
   if(formRef.current) {
     const value = formRef.current.getFieldValue(inputName).replace('.', '');
     formRef.current.setFieldValue(inputName, value);
   }
 };
 
-export const onValueBlur = (formRef: RefObject<FormHandles>, cb?: (value: string) => void, inputName = 'value') => {
+export const onValueInputBlur = (formRef: RefObject<FormHandles>, cb?: (value: string) => void, inputName = 'value') => {
   if(formRef.current) {
     const value = formRef.current.getFieldValue(inputName).replace(',', '.');
     formRef.current.setFieldValue(inputName, formatMoney(value));
