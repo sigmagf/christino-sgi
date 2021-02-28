@@ -142,13 +142,15 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
           onSubmit={onSubmit}
           initialData={work && {
             ...work,
-            clientId: { value: work.clientId, label: `${work.client.document.padStart(14, '*')} - ${work.client.name}` },
             value: formatMoney(work.value),
             serviceId: services && services.filter((el) => el.id === work.serviceId).map((el) => ({ label: el.name, value: el.id }))[0],
             status: worksStatus.find((el) => el.value === work.status.toString()),
           }}
         >
-          <ClientSearchInput disabled={!!work || !editing} />
+          <ClientSearchInput
+            disabled={!!work || !editing}
+            defaultValue={work && { value: work.clientId, label: `${work.client.document.padStart(14, '*')} - ${work.client.name}` }}
+          />
           <Button
             type="button"
             variant="info"

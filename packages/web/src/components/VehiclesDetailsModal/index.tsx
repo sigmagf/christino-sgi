@@ -257,12 +257,14 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           initialData={
             vehicle && {
               ...vehicle,
-              clientId: { value: vehicle.clientId, label: `${vehicle.client.document.padStart(14, '*')} - ${vehicle.client.name}` },
               status: status.find((el) => el.value === vehicle?.status.toString()),
             }
           }
         >
-          <ClientSearchInput disabled={!editing} />
+          <ClientSearchInput
+            disabled={!editing}
+            defaultValue={vehicle && { value: vehicle.clientId, label: `${vehicle.client.document.padStart(14, '*')} - ${vehicle.client.name}` }}
+          />
           <Button type="button" disabled={!editing} variant="info" style={{ maxHeight: 40, marginTop: 20 }} onClick={() => setCadClientModal(true)}><FaPlus /></Button>
 
           <hr />
