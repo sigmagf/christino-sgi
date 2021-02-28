@@ -1,5 +1,5 @@
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
 
 import { useSWR } from '~/hooks/useSWR';
@@ -8,9 +8,9 @@ import { Select, Input, DatePicker } from '~/interface/Form';
 import { ISector, IService, IWorksFilters } from '~/interfaces';
 import { worksStatus as status } from '~/utils/commonSelectOptions';
 import { formatDatabaseDate } from '~/utils/formatString';
-import { handleGetClientsToSelect } from '~/utils/handleGetClientsToSelect';
 import { onValueInputFocus, onValueInputBlur } from '~/utils/handleInputFormat';
 
+import { ClientSearchInput } from '../ClientSearchInput';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IWorksFiltersCardProps {
@@ -22,23 +22,16 @@ interface IWorksFiltersCardProps {
 export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, workPermission }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const formRef = useRef<FormHandles>(null);
-  let timer: NodeJS.Timeout;
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
   const { data: groups } = useSWR<string[]>('/clients/groups');
   const { data: services } = useSWR<IService[]>('/services?noPagination=true');
   const { data: sectors } = useSWR<ISector[]>('/sectors?noPagination=true');
-  const [clients, setClients] = useState([{ label: 'TODOS', value: '' }]);
   /* END DATA STATE AND REFS */
 
   /* - BOOLEAN STATES - */
   /* END BOOLEAN STATES */
-
-  const onClientsInputChange = (name: string) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => { handleGetClientsToSelect(name, setClients); }, 1000);
-  };
 
   const onSubmit: SubmitHandler<Omit<IWorksFilters, 'page'|'limit'>> = (data) => {
     const value = data.value?.replace('.', '').replace(',', '.') || '';
@@ -103,7 +96,7 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
   return (
     <FiltersCard>
       <FiltersCardForm ref={formRef} onSubmit={onSubmit}>
-        <Select label="CLIENTE" name="clientId" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
+        <ClientSearchInput defaultValue={{ label: 'TODOS', value: '' }} includeAll />
         <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
         <Select label="STATUS" name="status" options={status} isMulti defaultValue={status.filter((el) => el.value !== '4')} />
 

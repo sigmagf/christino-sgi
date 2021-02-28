@@ -15,11 +15,11 @@ import { IService, IWork } from '~/interfaces';
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatMoney, formatDate } from '~/utils/formatString';
-import { handleGetClientsToSelect } from '~/utils/handleGetClientsToSelect';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
-import { onDocumentInputBlur, onValueInputBlur, onValueInputFocus } from '~/utils/handleInputFormat';
+import { onValueInputBlur, onValueInputFocus } from '~/utils/handleInputFormat';
 
 import { ClientsDetailsModal } from '../ClientsDetailsModal';
+import { ClientSearchInput } from '../ClientSearchInput';
 import { WorksDetailsModalForm, WorksDetailsActionButtons, WorksDetailsLoadingContainer } from './styles';
 
 interface IFormData {
@@ -44,21 +44,13 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
   const storage = useLocalStorage();
 
   const formRef = useRef<FormHandles>(null);
-  let timer: NodeJS.Timeout;
 
   const [cadClientModal, setCadClientModal] = useState(false);
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
 
-  const [clients, setClients] = useState<{ label: string; value: string }[]>([]);
-
   const [editing, setEditing] = useState(false);
 
   const { data: services } = useSWR<IService[]>('/services?noPagination=true');
-
-  const onClientsInputChange = (param: string) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => { handleGetClientsToSelect(param, setClients); }, 1000);
-  };
 
   /* - SAVE OR UPDATE VEHICLE - */
   const onSubmit: SubmitHandler<IFormData> = async (data) => {
@@ -156,7 +148,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
             status: worksStatus.find((el) => el.value === work.status.toString()),
           }}
         >
-          <Select isDisabled={!!work || !editing} name="clientId" label="CLIENTE" options={clients} onInputChange={onClientsInputChange} />
+          <ClientSearchInput disabled={!!work || !editing} />
           <Button
             type="button"
             variant="info"
@@ -226,7 +218,6 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       <ClientsDetailsModal
         isOpen={cadClientModal}
         onClose={() => setCadClientModal(false)}
-        onChange={() => onDocumentInputBlur(formRef, (e) => handleGetClientsToSelect(e, setClients))}
         cliePermission={cliePermission}
       />
     </>

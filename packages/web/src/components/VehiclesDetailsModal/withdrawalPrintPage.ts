@@ -9,7 +9,7 @@ interface IWithdrawnBy {
   details: string;
 }
 
-export const downPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, currentURL: string) => {
+export const withdrawalPrintPage = (vehicle: IVehicle, withdrawnBy: IWithdrawnBy, currentURL: string) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const storage = useLocalStorage();
 

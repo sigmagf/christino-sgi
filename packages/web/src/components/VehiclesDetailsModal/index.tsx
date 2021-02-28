@@ -13,13 +13,13 @@ import { Modal } from '~/interface/Modal';
 import { IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
-import { handleGetClientsToSelect } from '~/utils/handleGetClientsToSelect';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { onDocumentInputBlur, onDocumentInputFocus, onInputBlurMaxLength } from '~/utils/handleInputFormat';
 
 import { ClientsDetailsModal } from '../ClientsDetailsModal';
-import { downPrintPage } from './downPage';
+import { ClientSearchInput } from '../ClientSearchInput';
 import { VehiclesDetailsForm, VehiclesDetailsActionButtons, VehiclesDetailsLoadingContainer, VehiclesDetailsDownForm } from './styles';
+import { withdrawalPrintPage } from './withdrawalPrintPage';
 
 interface IFormDetailsData {
   clientId: string;
@@ -53,41 +53,59 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   const storage = useLocalStorage();
   const formDetailsRef = useRef<FormHandles>(null);
   const formDownRef = useRef<FormHandles>(null);
-  let timer: NodeJS.Timeout;
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
-  const [clients, setClients] = useState<{ label: string; value: string }[]>([]);
   /* END DATA STATE AND REFS */
 
   /* - BOOLEAN STATES - */
-  const [inLoadingCRLVe, setInLoadingCRLVe] = useState(false);
+  const [inLoadingFile, setInLoadingFile] = useState(false);
   const [inSubmitProcess, setInSubmitProcess] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [uploadWithdrawalModal, setUploadWithdrawalModal] = useState(false);
   const [uploadCRLVeModal, setUploadCRLVeModal] = useState(false);
   const [cadClientModal, setCadClientModal] = useState(false);
   const [downModal, setDownModal] = useState(false);
   /* END BOOLEAN STATES */
 
-  const onClientsInputChange = (param: string) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => { handleGetClientsToSelect(param, setClients); }, 1000);
-  };
-
   /* - HANDLE GET CRLVe - */
   const handleGetCRLVe = async () => {
     if(vehicle) {
-      setInLoadingCRLVe(true);
+      setInLoadingFile(true);
       await onCRLVeViewClick(vehicle.id);
-      setInLoadingCRLVe(false);
+      setInLoadingFile(false);
     }
   };
   /* END HANDLE GET CRLVe */
 
-  /* - HANDLE UPLOAD CRLVe - */
-  const OnUploadCRLVe = async (files: File[]) => {
+  /* - HANDLE GET WITHDRAWAL - */
+  const handleGetWithdrawal = async () => {
     if(vehicle) {
-      setInLoadingCRLVe(true);
+      setInLoadingFile(true);
+
+      try {
+        const response = await api.get(`/vehicles/${vehicle.id}/withdrawal`, { headers: { authorization: `Bearer ${storage.getItem('token')}` }, responseType: 'blob' });
+        const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+
+        // eslint-disable-next-line no-restricted-globals
+        const win = window.open(url, 'popup', `width=${screen.width},height=${screen.height}`);
+
+        if(!win) {
+          toast.error('Ative o popup em seu navegador.');
+        }
+      } catch(err) {
+        handleHTTPRequestError(err);
+      }
+
+      setInLoadingFile(false);
+    }
+  };
+  /* END HANDLE GET WITHDRAWAL */
+
+  /* - HANDLE UPLOAD CRLVe - */
+  const onUploadCRLVe = async (files: File[]) => {
+    if(vehicle) {
+      setInLoadingFile(true);
 
       const data = new FormData();
       data.append('file', files[0], files[0].name);
@@ -95,14 +113,40 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
       try {
         await api.post(`/vehicles/${vehicle.id}/crlve`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
         onChange({ ...vehicle, crlveIncluded: true });
+
+        toast.success('CRLVe enviada com sucesso!');
+        setUploadWithdrawalModal(false);
       } catch(err) {
         handleHTTPRequestError(err);
       }
 
-      setInLoadingCRLVe(false);
+      setInLoadingFile(false);
     }
   };
   /* END HANDLE UPLOAD CRLVe */
+
+  /* - HANDLE UPLOAD WITHDRAWAL - */
+  const onUploadWithdrawal = async (files: File[]) => {
+    if(vehicle) {
+      setInLoadingFile(true);
+
+      const data = new FormData();
+      data.append('file', files[0], files[0].name);
+
+      try {
+        await api.post(`/vehicles/${vehicle.id}/withdrawal`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        onChange({ ...vehicle, withdrawalIncluded: true });
+
+        toast.success('Baixa enviada com sucesso!');
+        setUploadWithdrawalModal(false);
+      } catch(err) {
+        handleHTTPRequestError(err);
+      }
+
+      setInLoadingFile(false);
+    }
+  };
+  /* END HANDLE UPLOAD WITHDRAWAL */
 
   /* - HANDLE DOWN VEHICLE - */
   const onDownVehicle: SubmitHandler<IFormDownData> = async (data) => {
@@ -112,16 +156,16 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         await scheme.validate(data, { abortEarly: false });
 
         // eslint-disable-next-line no-restricted-globals
-        const win = window.open('', '', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+        const win = window.open('', 'popup', `width=${screen.width},height=${screen.height}`);
         const baseURL = `${window.location.protocol}//${window.location.host}`;
 
         if(win) {
-          win.document.body.innerHTML = downPrintPage(vehicle, data, baseURL);
+          win.document.body.innerHTML = withdrawalPrintPage(vehicle, data, baseURL);
 
           await api.put<IVehicle>(`/vehicles/${vehicle.id}`, { ...vehicle, status: 1 }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
           setDownModal(false);
-          onClose();
+          setUploadWithdrawalModal(true);
           toast.success('Veículo baixado com sucesso!');
         }
       } catch(err) {
@@ -193,13 +237,11 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   useEffect(() => {
     if(vehicle) {
       setEditing(false);
-      setClients([{ label: vehicle.client.name, value: vehicle.clientId }]);
     } else {
       setEditing(true);
-      setClients([]);
     }
 
-    setInLoadingCRLVe(false);
+    setInLoadingFile(false);
     setInSubmitProcess(false);
     setUploadCRLVeModal(false);
     setDownModal(false);
@@ -220,7 +262,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
             }
           }
         >
-          <Select name="clientId" isDisabled={!editing} label="CLIENTE" options={clients} onInputChange={onClientsInputChange} />
+          <ClientSearchInput disabled={!editing} />
           <Button type="button" disabled={!editing} variant="info" style={{ maxHeight: 40, marginTop: 20 }} onClick={() => setCadClientModal(true)}><FaPlus /></Button>
 
           <hr />
@@ -234,18 +276,34 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           <Input disabled={!editing} name="details" label="DETALHES" />
         </VehiclesDetailsForm>
         <VehiclesDetailsActionButtons>
-          {(!editing && vehicle && vehicle.crlveIncluded) && (
-            <Button type="button" variant="secondary" disabled={inLoadingCRLVe} style={{ cursor: inLoadingCRLVe ? 'progress' : 'pointer' }} onClick={handleGetCRLVe}>
-              <FaEye />&nbsp;&nbsp;&nbsp;CRLVe
-            </Button>
+          {(!editing && vehicle) && (
+            <>
+              {vehicle.crlveIncluded && (
+                <Button type="button" variant="secondary" disabled={inLoadingFile} onClick={handleGetCRLVe}>
+                  <FaEye />&nbsp;&nbsp;&nbsp;VER CRLVe
+                </Button>
+              )}
+              {vehicle.withdrawalIncluded && (
+                <Button type="button" variant="secondary" disabled={inLoadingFile} onClick={handleGetWithdrawal}>
+                  <FaEye />&nbsp;&nbsp;&nbsp;VER BAIXA
+                </Button>
+              )}
+            </>
           )}
 
           {despPermission >= 2 && (
             <>
               {(vehicle && !editing) && (
-                <Button type="button" variant="info" disabled={inSubmitProcess} onClick={() => setUploadCRLVeModal(true)} title="ENVIAR CRLVe">
-                  <FaUpload />&nbsp;&nbsp;&nbsp; CRLVe
-                </Button>
+                <>
+                  <Button type="button" variant="info" disabled={inSubmitProcess} onClick={() => setUploadCRLVeModal(true)}>
+                    <FaUpload />&nbsp;&nbsp;&nbsp;ENVIAR CRLVe
+                  </Button>
+                  {(vehicle.status === 1 && !vehicle.withdrawalIncluded) && (
+                    <Button type="button" variant="info" disabled={inSubmitProcess} onClick={() => setUploadWithdrawalModal(true)}>
+                      <FaUpload />&nbsp;&nbsp;&nbsp;ENVIAR BAIXA
+                    </Button>
+                  )}
+                </>
               )}
 
               {editing ? (
@@ -299,13 +357,25 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         </VehiclesDetailsDownForm>
       </Modal>
 
-      <DropzoneModal isOpen={uploadCRLVeModal} header="ENVIAR CRLV-E" onClose={() => setUploadCRLVeModal(false)} inLoading={inLoadingCRLVe} onDropAccepted={OnUploadCRLVe} />
+      <DropzoneModal
+        isOpen={uploadCRLVeModal}
+        header="ENVIAR CRLVe"
+        onClose={() => setUploadCRLVeModal(false)}
+        inLoading={inLoadingFile}
+        onDropAccepted={onUploadCRLVe}
+      />
+      <DropzoneModal
+        isOpen={uploadWithdrawalModal}
+        header="ENVIAR BAIXA"
+        onClose={() => setUploadWithdrawalModal(false)}
+        inLoading={inLoadingFile}
+        onDropAccepted={onUploadWithdrawal}
+      />
 
       <ClientsDetailsModal
         isOpen={cadClientModal}
         cliePermission={cliePermission}
         onClose={() => setCadClientModal(false)}
-        onChange={() => onDocumentInputBlur(formDetailsRef, (e) => handleGetClientsToSelect(e, setClients))}
       />
     </>
   );

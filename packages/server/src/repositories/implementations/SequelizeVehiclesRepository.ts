@@ -21,6 +21,7 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
       v.details as "vehicleDetails",
       v.status as "vehicleStatus",
       v.crlve_included as "vehicleCrlveIncluded",
+      v.withdrawal_included as "vehicleWithdrawalIncluded",
       v.created_at as "vehicleCreatedAt",
       v.updated_at as "vehicleUpdatedAt",
 
@@ -70,6 +71,7 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
       details: el.vehicleDetails,
       status: el.vehicleStatus,
       crlveIncluded: el.vehicleCrlveIncluded,
+      withdrawalIncluded: el.vehicleWithdrawalIncluded,
       createdAt: el.vehicleCreatedAt,
       updatedAt: el.vehicleUpdatedAt,
     }));

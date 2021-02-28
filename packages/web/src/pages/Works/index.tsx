@@ -53,7 +53,7 @@ export const WorksPage: React.FC = () => {
       const response = await api.get<IWork[]>(`/works?noPagination=true&${qsConverter(filters)}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
       // eslint-disable-next-line
-      const win = window.open('', 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+      const win = window.open('', 'popup', `width=${screen.width},height=${screen.height}`);
 
       if(win) {
         win.document.body.innerHTML = worksPrintScreen(response.data);
@@ -81,7 +81,7 @@ export const WorksPage: React.FC = () => {
   }
 
   const printButton = (
-    <Button variant="info" disabled={inLoadingPrint} style={{ cursor: inLoadingPrint ? 'progress' : 'pointer' }} onClick={onPrintClick}>
+    <Button variant="info" disabled={inLoadingPrint} onClick={onPrintClick}>
       <FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR
     </Button>
   );

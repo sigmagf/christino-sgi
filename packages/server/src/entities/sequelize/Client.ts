@@ -1,8 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { v4 } from 'uuid';
 
-import { sequelize } from '~/config/sequelize';
-
 import { IClient } from '../IClient';
 
 export class Client extends Model implements IClient {

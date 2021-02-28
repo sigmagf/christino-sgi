@@ -16,6 +16,7 @@ export class Vehicle extends Model implements IVehicle {
   details?: string;
   status: number;
   crlveIncluded?: boolean;
+  withdrawalIncluded?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 
@@ -59,6 +60,12 @@ export class Vehicle extends Model implements IVehicle {
       },
       crlveIncluded: {
         field: 'crlve_included',
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
+      withdrawalIncluded: {
+        field: 'withdrawal_included',
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false,

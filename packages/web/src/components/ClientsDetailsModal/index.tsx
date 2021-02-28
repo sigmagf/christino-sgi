@@ -30,7 +30,6 @@ interface IVehiclesDetailsModalProps {
   isOpen: boolean;
   client?: IClient;
   onClose: () => void;
-  onChange: (client: IClient) => void;
   cliePermission: number;
 }
 

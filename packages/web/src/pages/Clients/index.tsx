@@ -28,7 +28,7 @@ export const ClientsPage: React.FC = () => {
 
   /* - DATA STATE AND REFS - */
   const [filters, setFilters] = useState<IClientsFilters>({ page: 1, limit: 10 });
-  const { data: clients, isValidating: inLoading, error: getClientsError, mutate, revalidate } = useSWR<IPagination<IClient>>(`/clients${qsConverter(filters)}`);
+  const { data: clients, isValidating: inLoading, error: getClientsError, revalidate } = useSWR<IPagination<IClient>>(`/clients${qsConverter(filters)}`);
   const [clientIdToDetails, setClientIdToDetails] = useState<string>();
   /* END DATA STATE AND REFS */
 
@@ -43,19 +43,12 @@ export const ClientsPage: React.FC = () => {
   const onDetailsClick = (id: string) => { setDetailsModal(true); setClientIdToDetails(id); };
   /* END HANDLE DETAILS MODAL */
 
-  const onClientChange = (data: IClient) => {
-    mutate((e) => e && ({ page: e.page, data: [...e.data.filter((el) => el.id !== data.id), data] }), true);
-    setClientIdToDetails(data.id);
-  };
-
   const onPrintClick = async () => {
     try {
-      const response = await api.get<IClient[]>(`/clients?noPagination=true&${qsConverter(filters)}`, {
-        headers: { authorization: `Bearer ${storage.getItem('token')}` },
-      });
+      const response = await api.get<IClient[]>(`/clients?noPagination=true&${qsConverter(filters)}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
       // eslint-disable-next-line
-      const win = window.open('', 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=${screen.width},height=${screen.height}`);
+      const win = window.open('', 'popup', `width=${screen.width},height=${screen.height}`);
 
       if(win) {
         win.document.body.innerHTML = ClientsPrintScreen(response.data);
@@ -80,7 +73,7 @@ export const ClientsPage: React.FC = () => {
   }
 
   const printButton = (
-    <Button variant="info" disabled={inLoadingPrint} style={{ cursor: inLoadingPrint ? 'progress' : 'pointer' }} onClick={onPrintClick}>
+    <Button variant="info" disabled={inLoadingPrint} onClick={onPrintClick}>
       <FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR
     </Button>
   );
@@ -104,7 +97,6 @@ export const ClientsPage: React.FC = () => {
         isOpen={detailsModal}
         onClose={onDetailsModalClose}
         client={clients?.data.find((el) => el.id === clientIdToDetails)}
-        onChange={onClientChange}
         cliePermission={cliePermission}
       />
     </>

@@ -12,6 +12,7 @@ export interface IVehicle {
   details?: string;
   status: number;
   crlveIncluded?: boolean;
+  withdrawalIncluded?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }

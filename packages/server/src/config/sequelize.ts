@@ -1,6 +1,7 @@
 import { Sequelize } from 'sequelize';
 
 import { Client } from '~/entities/sequelize/Client';
+import { LogError } from '~/entities/sequelize/LogError';
 import { Sector } from '~/entities/sequelize/Sector';
 import { Service } from '~/entities/sequelize/Service';
 import { User } from '~/entities/sequelize/User';
@@ -17,6 +18,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 });
 
 Client.init(sequelize);
+LogError.init(sequelize);
 Sector.init(sequelize);
 Service.init(sequelize);
 User.init(sequelize);

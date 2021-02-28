@@ -17,7 +17,9 @@ export const DropzoneModal: React.FC<IDropzoneModal> = ({ header, inLoading, isO
   return (
     <Modal isOpen={isOpen} onRequestClose={onClose} header={header} fullCover centeredContent>
       {inLoading ? (
-        <ReactLoading type="bars" />
+        <div style={{ height: '100%', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <ReactLoading type="bars" />
+        </div>
       ) : (
         <Dropzone maxFiles={1} accept="application/pdf" onDropAccepted={onDropAccepted} />
       )}

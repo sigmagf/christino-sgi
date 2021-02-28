@@ -51,7 +51,7 @@ export class VehiclesCreateController {
       const vehicle = await this.service.execute({ clientId, plate, renavam, crv, brandModel, type, details, status, crlveIncluded });
       return res.status(201).json(vehicle);
     } catch(err) {
-      return errorWork(res, err.message);
+      return errorWork(res, err);
     }
   }
 }

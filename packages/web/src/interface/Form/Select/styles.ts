@@ -30,6 +30,8 @@ export const SelectContainer = styled.div<IInputContainerStyledProps>`
     box-shadow: ${({ theme }) => theme.shadow};
     background: ${({ theme }) => lighten(0.1, theme.primary.main)};
     border: 2px solid ${({ theme }) => lighten(0.1, theme.primary.main)};
+    height: 40px;
+    overflow: hidden;
 
     :hover {
       border: 2px solid ${({ theme }) => lighten(0.1, theme.primary.main)};
@@ -45,11 +47,9 @@ export const SelectContainer = styled.div<IInputContainerStyledProps>`
       background: ${({ theme }) => shade(0.1, theme.primary.main)};
     }
 
+    
     .react-select__value-container {
-      .react-select__single-value {
-        color: ${({ theme }) => theme.primary.contrastText};
-        font-family: 'Roboto Mono', monospace;
-      }
+      height: 36px;
 
       input {
         color: ${({ theme }) => theme.primary.contrastText} !important;
@@ -59,11 +59,25 @@ export const SelectContainer = styled.div<IInputContainerStyledProps>`
           color: rgba(255, 255, 255, .75);
         }
       }
+
+      /* For single value */
+      .react-select__single-value {
+        color: ${({ theme }) => theme.primary.contrastText};
+        font-family: 'Roboto Mono', monospace;
+      }
+
+      /* For multi value */
+      &.react-select__value-container--is-multi {
+        /* flex-direction: column; */
+        /* justify-content: center; */
+        overflow-y: auto;
+
+        ::-webkit-scrollbar { height: 5px; width: 5px; }
+      }
     }
 
-    .react-select__value-container--is-multi {
-      flex-wrap: nowrap;
-      flex-direction: row;
+    .react-select__indicators {
+      height: 36px;
     }
   }
 
@@ -71,26 +85,26 @@ export const SelectContainer = styled.div<IInputContainerStyledProps>`
     background: ${({ theme }) => lighten(0.1, theme.primary.main)};
     border-radius: 5px;
     overflow: hidden;
-  }
 
-  .react-select__menu-list {
-    background: ${({ theme }) => lighten(0.1, theme.primary.main)};
-    color: ${({ theme }) => theme.primary.contrastText};
-    border-radius: 5px;
-    max-height: 113px;
-
-    .react-select__option {
-      font-family: 'Roboto Mono', monospace;
-    }
-
-    .react-select__option--is-focused {
-      background: ${({ theme }) => shade(0.05, theme.primary.main)};
+    .react-select__menu-list {
+      background: ${({ theme }) => lighten(0.1, theme.primary.main)};
       color: ${({ theme }) => theme.primary.contrastText};
-    }
+      border-radius: 5px;
+      max-height: 113px;
 
-    .react-select__option--is-selected {
-      background: ${({ theme }) => shade(0.05, theme.secondary.main)};
-      color: ${({ theme }) => theme.secondary.contrastText};
+      .react-select__option {
+        font-family: 'Roboto Mono', monospace;
+      }
+
+      .react-select__option--is-focused {
+        background: ${({ theme }) => shade(0.05, theme.primary.main)};
+        color: ${({ theme }) => theme.primary.contrastText};
+      }
+
+      .react-select__option--is-selected {
+        background: ${({ theme }) => shade(0.05, theme.secondary.main)};
+        color: ${({ theme }) => theme.secondary.contrastText};
+      }
     }
   }
 `;

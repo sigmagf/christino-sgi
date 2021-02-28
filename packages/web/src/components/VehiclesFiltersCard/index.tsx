@@ -1,5 +1,5 @@
 import { FormHandles } from '@unform/core';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
 
 import { useSWR } from '~/hooks/useSWR';
@@ -7,8 +7,8 @@ import { Button } from '~/interface/Button';
 import { Select, Input } from '~/interface/Form';
 import { IVehiclesFilters } from '~/interfaces';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
-import { handleGetClientsToSelect } from '~/utils/handleGetClientsToSelect';
 
+import { ClientSearchInput } from '../ClientSearchInput';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IVehiclesFiltersCardProps {
@@ -20,7 +20,6 @@ interface IVehiclesFiltersCardProps {
 export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const formRef = useRef<FormHandles>(null);
-  let timer: NodeJS.Timeout;
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
@@ -29,8 +28,6 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
 
   /* - BOOLEAN STATES - */
   /* END BOOLEAN STATES */
-
-  const [clients, setClients] = useState([{ label: 'TODOS', value: '' }]);
 
   const includeTruckOptions = [
     {
@@ -44,11 +41,6 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
       label: 'SÓ CAMINHOES',
     },
   ];
-
-  const onClientsInputChange = (name: string) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => { handleGetClientsToSelect(name, setClients); }, 1000);
-  };
 
   const handleGroups = () => {
     if(groups) {
@@ -70,7 +62,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
   return (
     <FiltersCard>
       <FiltersCardForm ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
-        <Select label="CLIENTE" name="clientId" options={clients} defaultValue={clients[0]} onInputChange={onClientsInputChange} />
+        <ClientSearchInput defaultValue={{ value: '', label: 'TODOS' }} includeAll />
         <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
         <Select label="STATUS" name="status" options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
 

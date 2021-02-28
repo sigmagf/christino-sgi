@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FaSignOutAlt, FaCog } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
@@ -22,11 +22,29 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
+  const [perms, setLocalPerms] = useState<IUserPermissions>();
   /* END DATA STATE AND REFS */
 
   /* - BOOLEAN STATES - */
   const [validFinished, setValidFinished] = useState(false);
   /* END BOOLEAN STATES */
+
+  const validate = useCallback(async () => {
+    try {
+      const response = await api.get<IUser>('/users/valid', { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+
+      setLocalPerms(response.data);
+
+      if(setPermissions) {
+        setPermissions(response.data);
+      }
+    } catch(err) {
+      storage.setItem('token', null);
+      navigate('/login');
+    }
+
+    setValidFinished(true);
+  }, [navigate, setPermissions, storage]);
 
   const onLogout = () => {
     navigate('/login');
@@ -34,23 +52,8 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
   };
 
   useEffect(() => {
-    const validate = async () => {
-      try {
-        const response = await api.get<IUser>('/users/valid', { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-        if(setPermissions) {
-          setPermissions(response.data);
-        }
-      } catch(err) {
-        storage.setItem('token', null);
-        navigate('/login');
-      }
-
-      setValidFinished(true);
-    };
-
     validate();
-  }, [navigate, setPermissions, storage]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if(!validFinished) {
     return (
@@ -62,7 +65,7 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
 
   return (
     <>
-      <Appnav />
+      <Appnav perms={perms} />
       <AppMain>
         <UserBarContainer>
           <div className="user-name">

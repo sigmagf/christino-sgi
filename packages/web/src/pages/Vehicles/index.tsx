@@ -61,7 +61,7 @@ export const VehiclesPage: React.FC = () => {
       }
 
       // eslint-disable-next-line no-restricted-globals
-      winCRLVe = window.open(url, 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+      winCRLVe = window.open(url, 'popup', `width=${screen.width},height=${screen.height}`);
 
       if(!winCRLVe) {
         toast.error('Ative o popup em seu navegador.');
@@ -78,7 +78,7 @@ export const VehiclesPage: React.FC = () => {
       const response = await api.get<IVehicle[]>(`/vehicles?noPagination=true&${qsConverter(filters)}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
       // eslint-disable-next-line
-      const win = window.open('', 'TITULO', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,width=${screen.width},height=${screen.height}`);
+      const win = window.open('', 'popup', `width=${screen.width},height=${screen.height}`);
 
       if(win) {
         win.document.body.innerHTML = vehiclesPrintScreen(response.data);
@@ -105,7 +105,7 @@ export const VehiclesPage: React.FC = () => {
   }
 
   const printButton = (
-    <Button variant="info" disabled={inLoadingPrint} style={{ cursor: inLoadingPrint ? 'progress' : 'pointer' }} onClick={onPrintClick}>
+    <Button variant="info" disabled={inLoadingPrint} onClick={onPrintClick}>
       <FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR
     </Button>
   );

@@ -14,7 +14,7 @@ export class VehiclesDeleteController {
       await this.service.execute({ id });
       return res.status(200).send();
     } catch(err) {
-      return errorWork(res, err.message);
+      return errorWork(res, err);
     }
   }
 }

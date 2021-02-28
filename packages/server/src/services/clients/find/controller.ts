@@ -19,7 +19,7 @@ export class ClientsFindController {
 
       return res.status(200).json(client);
     } catch(err) {
-      return errorWork(res, err.message);
+      return errorWork(res, err);
     }
   }
 }

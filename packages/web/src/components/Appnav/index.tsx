@@ -1,11 +1,12 @@
 import React from 'react';
 import { IconType } from 'react-icons';
-import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, FaReceipt } from 'react-icons/fa';
+import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, FaReceipt, FaUser } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import LogoWithText from '~/assets/logo-texto.png';
 import LogoWithoutText from '~/assets/logo.png';
 import { usePersistedState } from '~/hooks';
+import { IUserPermissions } from '~/interfaces';
 
 import { AppnavContainer, AppnavContent, AppnavControllers, AppnavHeader, AppnavItem } from './styles';
 
@@ -16,7 +17,11 @@ interface IMenuItem {
   path: string;
 }
 
-export const Appnav: React.FC = () => {
+interface IAppnavProps {
+  perms?: IUserPermissions;
+}
+
+export const Appnav: React.FC<IAppnavProps> = ({ perms }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -29,7 +34,7 @@ export const Appnav: React.FC = () => {
   const { value: expanded, setValue: setExpanded } = usePersistedState('appBarExpanded', false);
   /* END BOOLEAN STATES */
 
-  const menuItems: IMenuItem[] = [
+  const menuItems: (IMenuItem|null)[] = [
     {
       icon: FaHome,
       label: 'Início',
@@ -47,6 +52,11 @@ export const Appnav: React.FC = () => {
       label: 'Clientes',
       path: '/clients',
     },
+    (perms && perms.userPermission > 1) ? {
+      icon: FaUser,
+      label: 'Usuários',
+      path: '/users',
+    } : null,
   ];
 
   return (
@@ -59,13 +69,13 @@ export const Appnav: React.FC = () => {
         <img src={expanded ? LogoWithText : LogoWithoutText} alt="CHRISTINO-SGI" />
       </AppnavHeader>
       <AppnavContent>
-        {menuItems.map(({ icon: Icon, label, disabled = false, path }) => (
-          <AppnavItem key={label} selected={pathname === path} type="button" disabled={disabled || pathname === path} onClick={() => navigate(path)}>
+        {menuItems.map((item) => item && (
+          <AppnavItem key={item.label} selected={pathname === item.path} type="button" disabled={item.disabled || pathname === item.path} onClick={() => navigate(item.path)}>
             <div className="appnav-item-icon">
-              <Icon size={20} />
+              <item.icon size={20} />
             </div>
             <div className="appnav-item-label">
-              { label }
+              { item.label }
             </div>
           </AppnavItem>
         ))}
