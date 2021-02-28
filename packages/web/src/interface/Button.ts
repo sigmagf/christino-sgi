@@ -16,11 +16,13 @@ export const Button = styled.button<IButtonStyledProps>`
   border-radius: 5px;
   border: none;
   cursor: pointer;
+  font-weight: bold;
   transition: background-color 250ms ease;
 
   ${({ theme, variant }) => css`
     background: ${theme[variant || 'primary'].main};
     color: ${theme[variant || 'primary'].contrastText};
+    svg { color: ${theme[variant || 'primary'].contrastText}; }
     box-shadow: ${theme.shadow};
 
     :hover {

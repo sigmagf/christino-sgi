@@ -17,9 +17,11 @@ export class VehiclesDeleteService {
 
     if(process.env.MULTER_STORAGE === 'local') {
       fs.unlinkSync(path.resolve(__dirname, '..', '..', '..', '..', 'tmp', 'crlve', `${data.id}.pdf`));
+      fs.unlinkSync(path.resolve(__dirname, '..', '..', '..', '..', 'tmp', 'withdrawal', `${data.id}.pdf`));
     } else {
       const s3 = new AWS.S3();
       await s3.deleteObject({ Bucket: process.env.AWS_S3_BUCKET, Key: `${process.env.AWS_S3_FOLDER_CRLVE}/${data.id}.pdf` }).promise();
+      await s3.deleteObject({ Bucket: process.env.AWS_S3_BUCKET, Key: `${process.env.AWS_S3_FOLDER_WITHDRAWALS}/${data.id}.pdf` }).promise();
     }
   }
 }

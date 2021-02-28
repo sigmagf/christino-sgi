@@ -7,6 +7,7 @@ interface IBadgeStyledPros {
 export const Badge = styled.span<IBadgeStyledPros>`
   background: ${({ theme, variant }) => theme[variant || 'secondary'].main};
   color: ${({ theme, variant }) => theme[variant || 'secondary'].contrastText};
+  font-weight: bold;
   padding: 5px;
   margin: 5px;
   font-size: 10px;

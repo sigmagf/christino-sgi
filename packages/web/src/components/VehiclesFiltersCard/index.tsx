@@ -76,12 +76,12 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
 
       <FiltersCardActionButtons>
         {despPermission >= 2 && (
-          <Button variant="success" style={{ width: 175.97 }} onClick={onCreateClick}>
+          <Button variant="success" onClick={onCreateClick}>
             <FaPlus />&nbsp;&nbsp;&nbsp;ADICIONAR VEICULO
           </Button>
         )}
 
-        <Button variant="secondary" style={{ width: 96.33 }} onClick={() => formRef.current && formRef.current.submitForm()}>
+        <Button variant="secondary" onClick={() => formRef.current && formRef.current.submitForm()}>
           <FaFilter />&nbsp;&nbsp;&nbsp;FILTRAR
         </Button>
       </FiltersCardActionButtons>

@@ -21,7 +21,7 @@ export const Table = styled.table`
       background: ${({ theme }) => theme.secondary.main};
 
       th {
-        font-weight: 800;
+        font-weight: bold;
       }
     }
   }

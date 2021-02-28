@@ -285,7 +285,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
                   <FaEye />&nbsp;&nbsp;&nbsp;VER CRLVe
                 </Button>
               )}
-              {vehicle.withdrawalIncluded && (
+              {(vehicle.status === 1 && vehicle.withdrawalIncluded) && (
                 <Button type="button" variant="secondary" disabled={inLoadingFile} onClick={handleGetWithdrawal}>
                   <FaEye />&nbsp;&nbsp;&nbsp;VER BAIXA
                 </Button>

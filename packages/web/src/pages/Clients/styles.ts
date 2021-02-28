@@ -24,7 +24,7 @@ export const FiltersSummary = styled.div`
   padding: 5px;
 
   text-align: center;
-  font-weight: 800;
+  font-weight: bold;
 
   cursor: pointer;
 `;

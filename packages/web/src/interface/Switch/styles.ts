@@ -19,7 +19,7 @@ export const SwitchContainer = styled.div<IInputContainerStyledProps>`
     padding: 0 5px;
 
     font-size: 10px;
-    font-weight: 800;
+    font-weight: bold;
 
     transition: background-color 250ms ease;
   }

@@ -13,7 +13,7 @@ export function vehiclesPrintScreen(vehicles: IVehicle[]) {
         html, body { margin: 0; padding: 0; }
         table { width: 100%; border-radius: 5px; overflow: hidden; border-collapse: collapse; }
         td, th { padding: 8px; }
-        thead > tr > th{ font-weight: 800; }
+        thead > tr > th{ font-weight: bold; }
         tbody > tr:nth-child(even) { background: white; }
         tbody > tr:nth-child(odd) { background: lightgray; }
       </style>
