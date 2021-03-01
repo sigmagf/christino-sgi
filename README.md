@@ -7,7 +7,9 @@ Utilize os .env.example em `packages/server` e `packages/web` para configurar as
 
 > É recomendável utilizar o `heroku` para deploy do back-end (`packages/server`) utilizando os seguintes buildpacks na ordem:
 > https://github.com/lstoll/heroku-buildpack-monorepo
-> heroku/nodejs
 >
+> heroku/nodejs
+
+---
 > Para o front-end (`packages/web`) é recomendável utilizar a `vercel`.
 > Para configurar o monrepo após a criação do site, va até `settings` e na aba `general` ache `root directory` coloque `packages/web` e lembre-se de marcar, caso não esteja marcado, o item `Include source files outside of the Root Directory in the Build Step.`
