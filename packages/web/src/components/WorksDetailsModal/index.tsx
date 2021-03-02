@@ -63,7 +63,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
         value: yup.string().required('O valor é obrigatório.'),
         status: yup.string().required('O status é obrigatório.'),
         details: yup.string().max(256, 'Os detalhes devem ter no máximo 256 caracteres'),
-        identifier: yup.string().max(16, 'O identificador devem ter no máximo 16 caracteres').required('O identificador é obrigatório.'),
+        identifier: yup.string().max(32, 'O identificador devem ter no máximo 32 caracteres').required('O identificador é obrigatório.'),
         history: yup.string().max(115, 'O histórico devem ter no máximo 115 caracteres').required('O historico é obrigatório.'),
       });
 
