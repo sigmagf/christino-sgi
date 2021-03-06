@@ -1,4 +1,5 @@
-import { IWork } from '~/interfaces';
+import { IWork } from '@christino-sgi/common';
+
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatDate, formatMoney } from '~/utils/formatString';
 

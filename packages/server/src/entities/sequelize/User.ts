@@ -1,10 +1,11 @@
+import { IUser } from '@christino-sgi/common';
 import bcrypt from 'bcryptjs';
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
 import { v4 } from 'uuid';
 
-import { IUser } from '../IUser';
+type CreateUserProps = Optional<IUser, 'id'|'createdAt'|'updatedAt'>;
 
-export class User extends Model implements IUser {
+export class User extends Model<IUser, CreateUserProps> implements IUser {
   id: string;
   name: string;
   email: string;

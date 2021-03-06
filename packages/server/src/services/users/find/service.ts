@@ -1,4 +1,5 @@
-import { IClient } from '~/entities/IClient';
+import { IClient } from '@christino-sgi/common';
+
 import { IUsersRepository } from '~/repositories/IUsersRepository';
 
 export class UsersFindService {

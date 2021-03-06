@@ -1,3 +1,4 @@
+import { IClient } from '@christino-sgi/common';
 import React from 'react';
 import { FaSearch as SearchIcon } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
@@ -5,7 +6,6 @@ import ReactLoading from 'react-loading';
 import { Badge } from '~/interface/Badge';
 import { Button } from '~/interface/Button';
 import { Table } from '~/interface/Table';
-import { IClient } from '~/interfaces';
 import { formatDocument } from '~/utils/formatString';
 
 import { DataTableCardContainer } from './styles';

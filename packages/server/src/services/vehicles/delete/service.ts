@@ -1,8 +1,8 @@
+import { IVehicle } from '@christino-sgi/common';
 import AWS from 'aws-sdk';
 import fs from 'fs';
 import path from 'path';
 
-import { IVehicle } from '~/entities/IVehicle';
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
 export class VehiclesDeleteService {

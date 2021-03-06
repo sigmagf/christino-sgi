@@ -1,3 +1,4 @@
+import { IService, IWork } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import React, { useRef, useState, useEffect } from 'react';
 import { FaPlus } from 'react-icons/fa';
@@ -11,7 +12,6 @@ import { Button } from '~/interface/Button';
 import { Input, Select, TextArea } from '~/interface/Form';
 import { Modal } from '~/interface/Modal';
 import { Table } from '~/interface/Table';
-import { IService, IWork } from '~/interfaces';
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatMoney, formatDate } from '~/utils/formatString';

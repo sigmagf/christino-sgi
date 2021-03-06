@@ -1,12 +1,17 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { ILogError, IUser } from '@christino-sgi/common';
+import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { v4 } from 'uuid';
 
-import { ILogError } from '../ILogError';
+type CreateLogErrorProps = Optional<Omit<ILogError, 'user'>, 'id'|'userId'|'createdAt'|'updatedAt'>;
 
-export class LogError extends Model implements ILogError {
+export class LogError extends Model<ILogError, CreateLogErrorProps> implements ILogError {
   id: string;
+  userId?: string;
+  user?: IUser;
   message: string;
   error: string;
+  createdAt?: string;
+  updatedAt?: string;
 
   static init(connection: Sequelize) {
     super.init({
@@ -24,5 +29,9 @@ export class LogError extends Model implements ILogError {
         allowNull: true,
       },
     }, { sequelize: connection, tableName: 'log_errors' });
+  }
+
+  static associate(models: any) {
+    this.belongsTo(models.User, { foreignKey: { name: 'userId', field: 'user_id' }, as: 'user' });
   }
 }

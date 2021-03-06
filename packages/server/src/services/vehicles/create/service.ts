@@ -1,4 +1,5 @@
-import { IVehicle } from '~/entities/IVehicle';
+import { IVehicle } from '@christino-sgi/common';
+
 import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 
 export class VehiclesCreateService {

@@ -1,8 +1,8 @@
+import { IWork } from '@christino-sgi/common';
 import { QueryTypes } from 'sequelize';
 import { v4 } from 'uuid';
 
 import { sequelize } from '~/config/sequelize';
-import { IWork } from '~/entities/IWork';
 import { Work } from '~/entities/sequelize/Work';
 import { WorkHistory } from '~/entities/sequelize/WorkHistory';
 import { IWorksListFilters, IPagination } from '~/interfaces';
@@ -161,25 +161,27 @@ export class SequelizeWorksRepository implements IWorksRepository {
   }
 
   async findById(id: string): Promise<IWork> {
-    const dbData = await sequelize.query(this.selectQuery(`wk.id = '${id}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData)[0];
+    const dbData = await Work.findByPk(id, { include: { all: true } });
+    return dbData;
   }
 
-  async create(data: IWorkCreateOrUpdate): Promise<IWork> {
-    const entry = await Work.create({ ...data, id: v4(), history: undefined });
+  async create(data: IWorkCreateOrUpdate, history: string): Promise<IWork> {
+    const entryData = { ...data, id: v4(), history: undefined };
+    const entry = await Work.create(entryData);
 
     await WorkHistory.create({
       id: v4(),
       workId: entry.id,
-      details: data.history,
+      details: history,
     });
 
-    const dbData = await sequelize.query(this.selectQuery(`wk.id = '${entry.id}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData)[0];
+    const dbData = await Work.findByPk(entry.id, { include: { all: true } });
+    return dbData;
   }
 
   async update(id: string, data: Partial<IWorkCreateOrUpdate>): Promise<IWork> {
-    await Work.update({ ...data, id: undefined, history: undefined }, { where: { id } });
+    const entryData = { ...data, history: undefined };
+    await Work.update(entryData, { where: { id } });
 
     await WorkHistory.create({
       id: v4(),
@@ -187,8 +189,8 @@ export class SequelizeWorksRepository implements IWorksRepository {
       details: data.history,
     });
 
-    const dbData = await sequelize.query(this.selectQuery(`wk.id = '${id}'`), { type: QueryTypes.SELECT });
-    return this.fixData(dbData)[0];
+    const dbData = await Work.findByPk(id, { include: { all: true } });
+    return dbData;
   }
 
   async delete(id: string): Promise<void> {

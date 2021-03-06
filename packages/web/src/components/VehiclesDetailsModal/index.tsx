@@ -1,3 +1,4 @@
+import { IVehicle } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import React, { useRef, useState, useEffect } from 'react';
 import { FaEye, FaPlus, FaUpload } from 'react-icons/fa';
@@ -10,7 +11,6 @@ import { Button } from '~/interface/Button';
 import { DropzoneModal } from '~/interface/DropzoneModal';
 import { Input, Select } from '~/interface/Form';
 import { Modal } from '~/interface/Modal';
-import { IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';

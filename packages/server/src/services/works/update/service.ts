@@ -1,4 +1,5 @@
-import { IWork } from '~/entities/IWork';
+import { IWork } from '@christino-sgi/common';
+
 import { IWorksRepository } from '~/repositories/IWorksRepository';
 
 interface IWorksUpdateRequestDTO extends Pick<IWork, 'id'|'clientId'|'serviceId'|'identifier'|'value'|'status'|'details'> {

@@ -1,7 +1,7 @@
+import { IUser } from '@christino-sgi/common';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import { IUser } from '~/entities/IUser';
 import { IUsersRepository } from '~/repositories/IUsersRepository';
 
 export class UsersAuthService {

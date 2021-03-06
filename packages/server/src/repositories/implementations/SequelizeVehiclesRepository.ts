@@ -1,8 +1,8 @@
+import { IVehicle } from '@christino-sgi/common';
 import { QueryTypes } from 'sequelize';
 import { v4 } from 'uuid';
 
 import { sequelize } from '~/config/sequelize';
-import { IVehicle } from '~/entities/IVehicle';
 import { Vehicle } from '~/entities/sequelize/Vehicle';
 import { IPagination, IVehiclesListFilters } from '~/interfaces';
 

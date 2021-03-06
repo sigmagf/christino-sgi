@@ -1,4 +1,5 @@
-import { IVehicle } from '~/entities/IVehicle';
+import { IVehicle } from '@christino-sgi/common';
+
 import { IWorksRepository } from '~/repositories/IWorksRepository';
 
 export class WorksFindService {

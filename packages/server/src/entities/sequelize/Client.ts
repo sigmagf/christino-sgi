@@ -1,9 +1,10 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { IClient } from '@christino-sgi/common';
+import { Model, Sequelize, DataTypes, Optional } from 'sequelize';
 import { v4 } from 'uuid';
 
-import { IClient } from '../IClient';
+type CreateClientProps = Optional<IClient, 'id'|'createdAt'|'updatedAt'>;
 
-export class Client extends Model implements IClient {
+export class Client extends Model<IClient, CreateClientProps> implements IClient {
   id: string;
   name: string;
   document: string;
@@ -14,7 +15,7 @@ export class Client extends Model implements IClient {
   createdAt?: Date;
   updatedAt?: Date;
 
-  static init(connection: Sequelize) {
+  static init(sequelize: Sequelize) {
     super.init({
       id: {
         type: DataTypes.UUID,
@@ -46,6 +47,6 @@ export class Client extends Model implements IClient {
         type: DataTypes.STRING,
         allowNull: true,
       },
-    }, { sequelize: connection, tableName: 'clients' });
+    }, { sequelize, tableName: 'clients' });
   }
 }

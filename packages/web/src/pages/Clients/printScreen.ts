@@ -1,4 +1,4 @@
-import { IClient } from '~/interfaces';
+import { IClient } from '@christino-sgi/common';
 
 export function ClientsPrintScreen(clients: IClient[]) {
   return `

@@ -1,3 +1,4 @@
+import { IUser } from '@christino-sgi/common';
 import React, { useState, useEffect, useCallback } from 'react';
 import { FaSignOutAlt, FaCog } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
@@ -6,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Appnav } from '~/components/Appnav';
 import { useLocalStorage } from '~/hooks';
 import { Button } from '~/interface/Button';
-import { IUser, IUserPermissions } from '~/interfaces';
+import { IUserPermissions } from '~/interfaces';
 import { api } from '~/utils/api';
 
 import { AppContent, AppMain, UserBarContainer } from './styles';

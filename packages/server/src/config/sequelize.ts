@@ -28,6 +28,7 @@ WorkHistory.init(sequelize);
 
 User.hooks();
 
+LogError.associate(sequelize.models);
 Service.associate(sequelize.models);
 Vehicle.associate(sequelize.models);
 WorkHistory.associate(sequelize.models);

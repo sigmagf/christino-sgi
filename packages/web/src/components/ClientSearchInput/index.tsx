@@ -1,8 +1,8 @@
+import { IClient } from '@christino-sgi/common';
 import React, { useState } from 'react';
 
 import { useLocalStorage } from '~/hooks';
 import { Select } from '~/interface/Form';
-import { IClient } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 

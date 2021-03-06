@@ -1,10 +1,10 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { IWork, IWorkHistory } from '@christino-sgi/common';
+import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { v4 } from 'uuid';
 
-import { IWork } from '../IWork';
-import { IWorkHistory } from '../IWorkHistory';
+type CreateWorkHistoryProps = Optional<Omit<IWorkHistory, 'work'>, 'id'|'createdAt'|'updatedAt'>;
 
-export class WorkHistory extends Model implements IWorkHistory {
+export class WorkHistory extends Model<IWorkHistory, CreateWorkHistoryProps> implements IWorkHistory {
   id: string;
   workId: string;
   work: IWork;

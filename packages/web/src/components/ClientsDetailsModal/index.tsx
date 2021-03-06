@@ -1,3 +1,4 @@
+import { IClient, IVehicle } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import React, { useRef, useState, useEffect } from 'react';
 import ReactLoading from 'react-loading';
@@ -8,7 +9,6 @@ import { useLocalStorage } from '~/hooks';
 import { Button } from '~/interface/Button';
 import { Input } from '~/interface/Form';
 import { Modal } from '~/interface/Modal';
-import { IClient, IVehicle } from '~/interfaces';
 import { api } from '~/utils/api';
 import { formatDocument } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';

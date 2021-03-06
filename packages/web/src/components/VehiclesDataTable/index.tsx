@@ -1,3 +1,4 @@
+import { IVehicle } from '@christino-sgi/common';
 import React, { useState } from 'react';
 import { FaSearch, FaFilePdf } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
@@ -5,7 +6,6 @@ import ReactLoading from 'react-loading';
 import { Badge } from '~/interface/Badge';
 import { Button } from '~/interface/Button';
 import { Table } from '~/interface/Table';
-import { IVehicle } from '~/interfaces';
 import { vehicleStatus } from '~/utils/commonSelectOptions';
 
 import { DataTableCardContainer, VehiclesStatusBadge } from './styles';

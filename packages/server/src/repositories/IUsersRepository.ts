@@ -1,4 +1,5 @@
-import { IUser } from '~/entities/IUser';
+import { IUser } from '@christino-sgi/common';
+
 import { IPagination } from '~/interfaces';
 
 export interface IUsersRepository {

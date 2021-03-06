@@ -1,6 +1,6 @@
+import { IUser } from '@christino-sgi/common';
 import { v4 } from 'uuid';
 
-import { IUser } from '~/entities/IUser';
 import { User } from '~/entities/sequelize/User';
 import { IPagination } from '~/interfaces';
 

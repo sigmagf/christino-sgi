@@ -1,4 +1,5 @@
-import { IVehicle } from '~/interfaces';
+import { IVehicle } from '@christino-sgi/common';
+
 import { vehicleStatus } from '~/utils/commonSelectOptions';
 
 export function vehiclesPrintScreen(vehicles: IVehicle[]) {

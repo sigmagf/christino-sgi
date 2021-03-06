@@ -1,6 +1,4 @@
-import { IClient } from './entities/IClient';
-import { IVehicle } from './entities/IVehicle';
-import { IWork } from './entities/IWork';
+import { IClient, IVehicle, IWork } from '@christino-sgi/common';
 
 export interface IPagination<T> {
   page: {

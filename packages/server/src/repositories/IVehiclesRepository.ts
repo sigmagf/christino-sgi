@@ -1,4 +1,5 @@
-import { IVehicle } from '~/entities/IVehicle';
+import { IVehicle } from '@christino-sgi/common';
+
 import { IPagination, IVehiclesListFilters } from '~/interfaces';
 
 export interface IVehiclesRepository {

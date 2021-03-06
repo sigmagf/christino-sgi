@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'packages/web/**/*'
+      - 'packages/common/**/*'
 jobs:
   deploy:
     runs-on: ubuntu-latest

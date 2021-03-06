@@ -1,6 +1,7 @@
+import { IVehicle } from '@christino-sgi/common';
+
 import christinoLogo from '~/assets/logo-color.png';
 import { useLocalStorage } from '~/hooks';
-import { IVehicle } from '~/interfaces';
 import { formatDate, formatDocument } from '~/utils/formatString';
 
 interface IWithdrawnBy {

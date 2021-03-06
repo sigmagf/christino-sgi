@@ -1,9 +1,10 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { ISector } from '@christino-sgi/common';
+import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { v4 } from 'uuid';
 
-import { ISector } from '../ISector';
+type CreateSectorProps = Optional<ISector, 'id'|'createdAt'|'updatedAt'>;
 
-export class Sector extends Model implements ISector {
+export class Sector extends Model<ISector, CreateSectorProps> implements ISector {
   id: string;
   name: string;
   createdAt?: Date;

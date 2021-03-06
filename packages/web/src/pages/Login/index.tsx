@@ -1,3 +1,4 @@
+import { IUser } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useEffect, useState, useRef } from 'react';
@@ -11,7 +12,7 @@ import { useLocalStorage } from '~/hooks';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Input } from '~/interface/Form';
-import { IUser, IUserAuth } from '~/interfaces';
+import { IUserAuth } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 

@@ -1,7 +1,8 @@
+import { IClient } from '@christino-sgi/common';
 import { QueryTypes } from 'sequelize';
 import { v4 } from 'uuid';
+
 import { sequelize } from '~/config/sequelize';
-import { IClient } from '~/entities/IClient';
 import { Client } from '~/entities/sequelize/Client';
 import { IClientsListFilters, IPagination } from '~/interfaces';
 import { sequelizeWhere } from '~/utils/sequelizeWhere';
@@ -51,14 +52,14 @@ export class SequelizeClientsRepository implements IClientsRepository {
   }
 
   async create(data: Omit<IClient, 'id'|'createdAt'|'updatedAt'>): Promise<IClient> {
-    const dbData = Client.create({ ...data, id: v4() });
+    const dbData = await Client.create({ ...data, id: v4() });
     return dbData;
   }
 
   async update(id: string, data: Omit<IClient, 'id'|'createdAt'|'updatedAt'>): Promise<IClient> {
     await Client.update(data, { where: { id } });
 
-    const dbData = Client.findByPk(id);
+    const dbData = await Client.findByPk(id);
     return dbData;
   }
 

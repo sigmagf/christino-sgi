@@ -1,3 +1,5 @@
+import { IVehicle, IClient, IWork, IUser } from '@christino-sgi/common';
+
 /* - STORAGE - */
 export interface IStorage {
   token: string;
@@ -41,88 +43,6 @@ export interface IPagination<T> {
     limit: number;
   };
   data: Array<T>;
-}
-
-export interface ISector {
-  id: string;
-  name: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface IService {
-  id: string;
-  sectorId: string;
-  sector: ISector;
-  name: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface IWorkHistory {
-  id: string;
-  workId: string;
-  details: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface IWork {
-  id: string;
-  clientId: string;
-  client: IClient;
-  serviceId: string;
-  service: IService;
-  identifier?: string;
-  value: number;
-  details?: string;
-  status: number;
-  histories: IWorkHistory[];
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface IClient {
-  id: string;
-  name: string;
-  document: string;
-  group: string;
-  email?: string;
-  phone1?: string;
-  phone2?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface IUser {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  despPermission: number;
-  seguPermission: number;
-  cliePermission: number;
-  userPermission: number;
-  workPermission: number;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-export interface IVehicle {
-  id: string;
-  clientId: string;
-  client: IClient;
-  plate: string;
-  renavam: string;
-  crv: string;
-  brandModel: string;
-  type: string;
-  details: string;
-  status: number;
-  crlveIncluded: boolean;
-  withdrawalIncluded: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
 }
 
 export interface IUserAuth {

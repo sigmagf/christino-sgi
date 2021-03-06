@@ -1,10 +1,10 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { ISector, IService } from '@christino-sgi/common';
+import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
 import { v4 } from 'uuid';
 
-import { ISector } from '../ISector';
-import { IService } from '../IService';
+type CreateServiceProps = Optional<Omit<IService, 'sector'>, 'id'|'createdAt'|'updatedAt'>;
 
-export class Service extends Model implements IService {
+export class Service extends Model<IService, CreateServiceProps> implements IService {
   id: string;
   name: string;
   sectorId: string;

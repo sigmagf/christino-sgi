@@ -1,4 +1,5 @@
-import { IUser } from '~/entities/IUser';
+import { IUser } from '@christino-sgi/common';
+
 import { IUsersRepository } from '~/repositories/IUsersRepository';
 
 export class UsersUpdateService {

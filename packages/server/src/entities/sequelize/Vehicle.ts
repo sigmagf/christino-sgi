@@ -1,10 +1,10 @@
-import { Model, DataTypes, Sequelize } from 'sequelize';
+import { IClient, IUser, IVehicle } from '@christino-sgi/common';
+import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
 import { v4 } from 'uuid';
 
-import { IClient } from '../IClient';
-import { IVehicle } from '../IVehicle';
+type CreateVehicleProps = Optional<Omit<IVehicle, 'client'|'createdByUser'|'updatedByUser'>, 'id'|'createdAt'|'createdBy'|'updatedAt'|'updatedBy'>;
 
-export class Vehicle extends Model implements IVehicle {
+export class Vehicle extends Model<IVehicle, CreateVehicleProps> implements IVehicle {
   id: string;
   clientId: string;
   client: IClient;
@@ -18,7 +18,11 @@ export class Vehicle extends Model implements IVehicle {
   crlveIncluded?: boolean;
   withdrawalIncluded?: boolean;
   createdAt?: Date;
+  createdBy?: string;
+  createdByUser?: IUser;
   updatedAt?: Date;
+  updatedBy?: string;
+  updatedByUser?: IUser;
 
   static init(connection: Sequelize) {
     super.init({
@@ -75,5 +79,7 @@ export class Vehicle extends Model implements IVehicle {
 
   static associate(models: any) {
     this.belongsTo(models.Client, { foreignKey: { name: 'clientId', field: 'client_id' }, as: 'client' });
+    this.belongsTo(models.User, { foreignKey: { name: 'craetedBy', field: 'craeted_by' }, as: 'createdByUser' });
+    this.belongsTo(models.User, { foreignKey: { name: 'updatedBy', field: 'updated_by' }, as: 'updatedByUser' });
   }
 }

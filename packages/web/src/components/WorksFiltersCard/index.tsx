@@ -1,3 +1,4 @@
+import { IService, ISector } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import React, { useRef } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
@@ -5,7 +6,7 @@ import { FaPlus, FaFilter } from 'react-icons/fa';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Select, Input, DatePicker } from '~/interface/Form';
-import { ISector, IService, IWorksFilters } from '~/interfaces';
+import { IWorksFilters } from '~/interfaces';
 import { worksStatus as status } from '~/utils/commonSelectOptions';
 import { formatDatabaseDate } from '~/utils/formatString';
 import { onValueInputFocus, onValueInputBlur } from '~/utils/handleInputFormat';
