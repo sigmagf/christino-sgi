@@ -10,8 +10,10 @@ import { theme } from '~/styles/theme';
 import { StyledToastContainer } from './components/StyledToastContainer';
 import { NotFoundErrorPage } from './pages/404';
 import { ClientsPage } from './pages/Clients';
+import { ForgotPasswordPage } from './pages/ForgotPassword';
 import { HomePage } from './pages/Home';
 import { LoginPage } from './pages/Login';
+import { ResetPasswordPage } from './pages/ResetPassword';
 import { VehiclesPage } from './pages/Vehicles';
 import { WorksPage } from './pages/Works';
 import { SecureRoute } from './utils/secureRoute';
@@ -36,6 +38,8 @@ export const App: React.FC = () => {
           <BrowserRouter>
             <Routes>
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
+              <Route path="/resetPassword/:token" element={<ResetPasswordPage />} />
 
               <SecureRoute path="/" element={<HomePage />} />
               <SecureRoute path="/vehicles" element={<VehiclesPage />} />

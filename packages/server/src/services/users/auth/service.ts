@@ -14,6 +14,11 @@ export class UsersAuthService {
       throw new Error(JSON.stringify({ code: 404, message: 'Usuário não encontrado.', details: null }));
     }
 
+    console.log({
+      password: data.password,
+      hash: user.password,
+    });
+
     if(!await bcrypt.compare(data.password, user.password)) {
       throw new Error(JSON.stringify({ code: 401, message: 'Senha inválida.', details: null }));
     }
@@ -29,6 +34,8 @@ export class UsersAuthService {
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: parseInt(secondsUntilMidnight().toString(), 10) });
     user.password = undefined;
+    user.pwdResetToken = undefined;
+    user.pwdResetExpires = undefined;
     return { user, token };
   }
 }

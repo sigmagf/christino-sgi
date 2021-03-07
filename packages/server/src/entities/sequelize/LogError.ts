@@ -10,8 +10,8 @@ export class LogError extends Model<ILogError, CreateLogErrorProps> implements I
   user?: IUser;
   message: string;
   error: string;
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 
   static init(connection: Sequelize) {
     super.init({

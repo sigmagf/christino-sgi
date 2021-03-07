@@ -26,18 +26,9 @@ export const LoginContainer = styled.div`
 
       grid-template-columns: 1fr 1fr;
       grid-template-areas: 'EM EM'
-                           'PW PW'
-                           'SB SB';
+                           'BB SB';
 
       gap: 10px;
-    }
-
-    .forgot-password {
-      margin-top: 10px;
-      
-      button {
-        width: 100%;
-      }
     }
   }
 `;

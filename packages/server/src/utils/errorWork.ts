@@ -11,17 +11,6 @@ type ErrorResponseType = {
 
 export async function errorWork(res: Response, error: any) {
   try {
-    await LogError.create({
-      id: v4(),
-      message: error.message || 'no-content',
-      error: JSON.stringify(error) || 'no-content',
-    });
-  } catch(err) {
-    console.log('Erro ao adicioanr log de erro no banco de dados');
-    console.log(err);
-  }
-
-  try {
     const errorJson: ErrorResponseType = JSON.parse(error.message);
 
     return res.status(errorJson.code || 400).json({
@@ -30,6 +19,13 @@ export async function errorWork(res: Response, error: any) {
       details: errorJson.details || null,
     });
   } catch(err) {
+    await LogError.create({
+      id: v4(),
+      message: error.message || 'no-content',
+      error: JSON.stringify(error) || 'no-content',
+    });
+    console.log(error);
+
     return res.status(500).json({
       code: 500,
       message: 'Erro inesperado.',

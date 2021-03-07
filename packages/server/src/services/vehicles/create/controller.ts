@@ -17,7 +17,6 @@ export class VehiclesCreateController {
     const type = stringFix(req.body.type, undefined, 'UPPERCASE', 'STRING');
     const details = stringFix(req.body.details, null, 'NONE', 'STRING');
     const status = stringFix(req.body.status, undefined);
-    const crlveIncluded = stringFix(req.body.crlveIncluded, undefined);
 
     try {
       if(!clientId) {
@@ -48,7 +47,7 @@ export class VehiclesCreateController {
         throw new Error(JSON.stringify({ code: 400, message: 'O item \'status\' é inválido.', details: 'O status deve ser entre \'1\',\'2\',\'3\',\'4\'' }));
       }
 
-      const vehicle = await this.service.execute({ clientId, plate, renavam, crv, brandModel, type, details, status, crlveIncluded });
+      const vehicle = await this.service.execute({ clientId, plate, renavam, crv, brandModel, type, details, status, createdBy: req.user.id, updatedBy: req.user.id });
       return res.status(201).json(vehicle);
     } catch(err) {
       return errorWork(res, err);

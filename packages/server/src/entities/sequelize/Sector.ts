@@ -7,8 +7,8 @@ type CreateSectorProps = Optional<ISector, 'id'|'createdAt'|'updatedAt'>;
 export class Sector extends Model<ISector, CreateSectorProps> implements ISector {
   id: string;
   name: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 
   static init(connection: Sequelize) {
     super.init({

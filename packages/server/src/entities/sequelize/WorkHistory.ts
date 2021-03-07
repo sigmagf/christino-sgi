@@ -9,8 +9,8 @@ export class WorkHistory extends Model<IWorkHistory, CreateWorkHistoryProps> imp
   workId: string;
   work: IWork;
   details: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 
   static init(connection: Sequelize) {
     super.init({

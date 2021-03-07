@@ -19,8 +19,11 @@ export interface IUser {
   userPermission: number;
   workPermission: number;
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  pwdResetToken?: string;
+  pwdResetExpires?: Date;
+
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ILogError {
@@ -30,8 +33,8 @@ export interface ILogError {
   message: string;
   error: string;
 
-  createdAt?: string;
-  updatedAt?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IClient {
@@ -43,16 +46,16 @@ export interface IClient {
   phone1?: string;
   phone2?: string;
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface ISector {
   id: string;
   name: string;
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IService {
@@ -61,8 +64,8 @@ export interface IService {
   sectorId: string;
   sector: ISector;
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IVehicle {
@@ -79,10 +82,10 @@ export interface IVehicle {
   crlveIncluded?: boolean;
   withdrawalIncluded?: boolean;
 
-  createdAt?: Date;
+  createdAt: Date;
   createdBy?: string;
   createdByUser?: IUser;
-  updatedAt?: Date;
+  updatedAt: Date;
   updatedBy?: string;
   updatedByUser?: IUser;
 }
@@ -99,10 +102,10 @@ export interface IWork {
   status: number;
   histories: IWorkHistory[];
 
-  createdAt?: Date;
+  createdAt: Date;
   createdBy?: string;
   createdByUser?: IUser;
-  updatedAt?: Date;
+  updatedAt: Date;
   updatedBy?: string;
   updatedByUser?: IUser;
 }
@@ -112,6 +115,6 @@ export interface IWorkHistory {
   workId: string;
   details: string;
 
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }

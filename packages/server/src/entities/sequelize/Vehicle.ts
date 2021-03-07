@@ -17,10 +17,10 @@ export class Vehicle extends Model<IVehicle, CreateVehicleProps> implements IVeh
   status: number;
   crlveIncluded?: boolean;
   withdrawalIncluded?: boolean;
-  createdAt?: Date;
+  createdAt: Date;
   createdBy?: string;
   createdByUser?: IUser;
-  updatedAt?: Date;
+  updatedAt: Date;
   updatedBy?: string;
   updatedByUser?: IUser;
 

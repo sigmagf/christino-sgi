@@ -12,8 +12,8 @@ export class Client extends Model<IClient, CreateClientProps> implements IClient
   email?: string;
   phone1?: string;
   phone2?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 
   static init(sequelize: Sequelize) {
     super.init({

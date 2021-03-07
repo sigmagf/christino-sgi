@@ -13,7 +13,12 @@ export class SequelizeUsersRepository implements IUsersRepository {
     const pages = Math.ceil(maxRows / limit);
     const offset = (page - 1) * limit;
 
-    const dbPageData = await User.findAll({ limit, offset, order: [['name', 'ASC']], attributes: { exclude: withPassword ? undefined : ['password'] } });
+    const dbPageData = await User.findAll({
+      limit,
+      offset,
+      order: [['name', 'ASC']],
+      attributes: { exclude: withPassword ? undefined : ['password', 'pwdResetToken', 'pwdResetExpires'] },
+    });
 
     return {
       page: {
@@ -27,7 +32,7 @@ export class SequelizeUsersRepository implements IUsersRepository {
 
   async findById(id: string, withPassword = false): Promise<IUser> {
     const dbData = await User.findByPk(id, {
-      attributes: { exclude: withPassword ? undefined : ['password'] },
+      attributes: { exclude: withPassword ? undefined : ['password', 'pwdResetToken', 'pwdResetExpires'] },
     });
 
     return dbData;
@@ -36,7 +41,7 @@ export class SequelizeUsersRepository implements IUsersRepository {
   async findByEmail(email: string, withPassword = false): Promise<IUser> {
     const dbData = await User.findOne({
       where: { email },
-      attributes: { exclude: withPassword ? undefined : ['password'] },
+      attributes: { exclude: withPassword ? undefined : ['password', 'pwdResetToken', 'pwdResetExpires'] },
     });
 
     return dbData;
@@ -47,6 +52,8 @@ export class SequelizeUsersRepository implements IUsersRepository {
 
     if(!withPassword) {
       dbData.password = undefined;
+      dbData.pwdResetExpires = undefined;
+      dbData.pwdResetToken = undefined;
     }
 
     return dbData;
@@ -54,10 +61,16 @@ export class SequelizeUsersRepository implements IUsersRepository {
 
   async update(id: string, data: Omit<IUser, 'id'|'createdAt'|'updatedAt'>, withPassword = false): Promise<IUser> {
     await User.update(data, { where: { id } });
+    const dbData = await User.findByPk(id);
 
-    const dbData = await User.findByPk(id, {
-      attributes: { exclude: withPassword ? undefined : ['password'] },
-    });
+    await dbData.update(data);
+    await dbData.save();
+
+    if(!withPassword) {
+      dbData.password = undefined;
+      dbData.pwdResetExpires = undefined;
+      dbData.pwdResetToken = undefined;
+    }
 
     return dbData;
   }

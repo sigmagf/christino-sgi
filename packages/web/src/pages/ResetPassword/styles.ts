@@ -24,20 +24,14 @@ export const LoginContainer = styled.div`
     form {
       display: grid;
 
-      grid-template-columns: 1fr 1fr;
-      grid-template-areas: 'EM EM'
-                           'PW PW'
+      grid-template-columns: 145px 145px;
+      grid-template-areas: 'HD HD'
+                           'EM EM'
+                           'P1 P1'
+                           'P2 P2'
                            'SB SB';
 
       gap: 10px;
-    }
-
-    .forgot-password {
-      margin-top: 10px;
-      
-      button {
-        width: 100%;
-      }
     }
   }
 `;

@@ -6,7 +6,7 @@ import { sequelize } from '~/config/sequelize';
 import { Vehicle } from '~/entities/sequelize/Vehicle';
 import { IVehiclesListFilters } from '~/interfaces';
 
-import { IVehiclesRepository } from '../IVehiclesRepository';
+import { IVehiclesRepository, VehiclesCreateOrUpdate } from '../IVehiclesRepository';
 
 export class SequelizeVehiclesRepository implements IVehiclesRepository {
   private selectQuery(where?: string, limit?: number, offset?: number) {
@@ -161,14 +161,14 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
     return dbData;
   }
 
-  async create(data: Omit<IVehicle, 'id'|'createdAt'|'updatedAt'>): Promise<IVehicle> {
+  async create(data: VehiclesCreateOrUpdate): Promise<IVehicle> {
     const entry = await Vehicle.create({ ...data, id: v4() });
 
     const dbData = await Vehicle.findByPk(entry.id, { include: { all: true } });
     return dbData;
   }
 
-  async update(id: string, data: Omit<IVehicle, 'id'|'createdAt'|'updatedAt'>): Promise<IVehicle> {
+  async update(id: string, data: Partial<VehiclesCreateOrUpdate>): Promise<IVehicle> {
     await Vehicle.update(data, { where: { id } });
 
     const dbData = await Vehicle.findByPk(id, { include: { all: true } });

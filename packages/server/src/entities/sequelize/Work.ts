@@ -2,7 +2,7 @@ import { IClient, IService, IUser, IWork, IWorkHistory } from '@christino-sgi/co
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { v4 } from 'uuid';
 
-type CreateWorkProps = Optional<Omit<IWork, 'client'|'service'|'histories'|'createdByUser'|'updatedByUser'>, 'id'|'createdAt'|'updatedAt'>;
+type CreateWorkProps = Optional<Omit<IWork, 'client'|'service'|'histories'|'createdByUser'|'updatedByUser'>, 'id'|'createdAt'|'createdBy'|'updatedAt'|'updatedBy'>;
 
 export class Work extends Model<IWork, CreateWorkProps> implements IWork {
   id: string;
@@ -15,10 +15,10 @@ export class Work extends Model<IWork, CreateWorkProps> implements IWork {
   details: string;
   status: number;
   histories: IWorkHistory[];
-  createdAt?: Date;
+  createdAt: Date;
   createdBy?: string;
   createdByUser?: IUser;
-  updatedAt?: Date;
+  updatedAt: Date;
   updatedBy?: string;
   updatedByUser?: IUser;
 

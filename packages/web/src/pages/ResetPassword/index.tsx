@@ -1,9 +1,9 @@
 import { IUser } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactLoading from 'react-loading';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
@@ -18,10 +18,11 @@ import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 
 import { LoginContainer } from './styles';
 
-export const LoginPage: React.FC = () => {
-  document.title = 'Login | Christino';
+export const ResetPasswordPage: React.FC = () => {
+  document.title = 'Recuperar Senha | Christino';
 
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
+  const { token } = useParams();
   const storage = useLocalStorage();
   const navigate = useNavigate();
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
@@ -34,20 +35,28 @@ export const LoginPage: React.FC = () => {
   const [inLoading, setInLoading] = useState(false);
   /* END BOOLEAN STATES */
 
-  const onSubmit: SubmitHandler<IUser> = async (data) => {
+  const onSubmit: SubmitHandler<{ token: string; email: string; password: string; password2: string }> = async (data) => {
     setInLoading(true);
 
     try {
       const schema = yup.object().shape({
+        token: yup.string().required('Token inválido!'),
         email: yup.string().email('E-mail inválido!').required('O e-mail é obrigatório!'),
         password: yup.string().required('A senha é obrigatória!'),
+        password2: yup.string().required('A confirmação da senha é obrigatória!'),
       });
       await schema.validate(data, { abortEarly: false });
 
-      const request = await api.post<IUserAuth>('/users/login', data);
-      storage.setItem('token', request.data.token);
-      storage.setItem('userName', request.data.user.name);
-      navigate('/');
+      if(data.password !== data.password2) {
+        toast.error('As senhas não coincidem!');
+        return;
+      }
+
+      await api.post<IUserAuth>('/users/resetPassword', data);
+      storage.setItem('token', null);
+      storage.setItem('userName', null);
+      toast.success('Senha recuperada com sucesso!');
+      navigate('/login');
     } catch(err) {
       if(err instanceof yup.ValidationError) {
         err.inner.forEach((error) => toast.error(error.message));
@@ -59,12 +68,6 @@ export const LoginPage: React.FC = () => {
     setInLoading(false);
   };
 
-  useEffect(() => {
-    if(storage.getItem('token')) {
-      navigate('/');
-    }
-  }, [navigate, storage]);
-
   return (
     <LoginContainer>
       {!inLoading ? (
@@ -73,15 +76,14 @@ export const LoginPage: React.FC = () => {
           <div className="divider" />
 
           <Form ref={formRef} onSubmit={onSubmit}>
+            <Input style={{ gridArea: 'HD' }} name="token" label="TOKEN" disabled defaultValue={token} />
             <Input style={{ gridArea: 'EM' }} name="email" label="E-MAIL" />
-            <Input style={{ gridArea: 'PW' }} type="password" name="password" label="SENHA" />
+            <Input type="password" style={{ gridArea: 'P1' }} name="password" label="SENHA" />
+            <Input type="password" style={{ gridArea: 'P2' }} name="password2" label="CONFIRMAÇÃO DA SENHA" />
             <Button style={{ gridArea: 'SB' }} type="submit" variant="success">
-              Entrar
+              Enviar
             </Button>
           </Form>
-          <div className="forgot-password">
-            <Button type="button" onClick={() => navigate('/forgotPassword')}>ESQUECI MINHA SENHA</Button>
-          </div>
         </Card>
       ) : (
         <ReactLoading type="bars" />

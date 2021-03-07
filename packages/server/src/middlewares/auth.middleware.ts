@@ -21,6 +21,10 @@ function userCanAccessRoute(req: Request, path: string, permLevel: number) {
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
 
+  if(req.path === '/users/login' || req.path === '/users/forgotPassword' || req.path === '/users/resetPassword') {
+    return next();
+  }
+
   if(!authHeader) {
     return res.status(401).json({ code: 401, message: 'Nenhum token enviado.', details: null });
   }

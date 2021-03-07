@@ -5,6 +5,7 @@ export const devMiddleware = async (req: Request, res: Response, next: NextFunct
   await delay(1000);
 
   // console.clear();
+  // console.log(`[${req.method}]  ${req.path}`);
 
   next();
 };

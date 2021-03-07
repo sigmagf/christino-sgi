@@ -4,6 +4,7 @@ import morgan from 'morgan';
 
 import { Sector } from './entities/sequelize/Sector';
 import { Service } from './entities/sequelize/Service';
+import { authMiddleware } from './middlewares/auth.middleware';
 import { devMiddleware } from './middlewares/dev.middleware';
 import { routerClients } from './services/clients';
 import { routerUsers } from './services/users';
@@ -20,10 +21,10 @@ app.use(cors({ methods: ['GET', 'POST', 'PUT', 'DELETE'], origin: '*' }));
 if(process.env.NODE_ENV === 'development') {
   app.use(devMiddleware);
 }
+app.use(authMiddleware);
 
-app.use((req, res, next) => { res.set('X-Powered-By', 'Furlan Solutions'); next(); });
-app.use(routerClients);
 app.use(routerUsers);
+app.use(routerClients);
 app.use(routerVehicles);
 app.use(routerWorks);
 

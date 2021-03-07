@@ -13,7 +13,7 @@ export class VehiclesUploadWithdrawalController {
         throw new Error(JSON.stringify({ code: 400, message: 'Arquivo não enviado.', details: null }));
       }
 
-      await vehiclesUpdateService.execute({ id: req.params.id, withdrawalIncluded: true });
+      await vehiclesUpdateService.execute({ id: req.params.id, withdrawalIncluded: true, updatedBy: req.user.id });
       return res.status(200).send();
     } catch(err) {
       return errorWork(res, err);

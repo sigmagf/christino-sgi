@@ -9,8 +9,8 @@ export class Service extends Model<IService, CreateServiceProps> implements ISer
   name: string;
   sectorId: string;
   sector: ISector;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 
   static init(connection: Sequelize) {
     super.init({

@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
 import { v4 } from 'uuid';
 
-type CreateUserProps = Optional<IUser, 'id'|'createdAt'|'updatedAt'>;
+type CreateUserProps = Optional<Omit<IUser, 'pwdResetToken'|'pwdResetExpires'>, 'id'|'createdAt'|'updatedAt'>;
 
 export class User extends Model<IUser, CreateUserProps> implements IUser {
   id: string;
@@ -15,8 +15,10 @@ export class User extends Model<IUser, CreateUserProps> implements IUser {
   cliePermission: number;
   userPermission: number;
   workPermission: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  pwdResetToken?: string;
+  pwdResetExpires?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 
   static init(connection: Sequelize) {
     super.init({
@@ -67,6 +69,19 @@ export class User extends Model<IUser, CreateUserProps> implements IUser {
         type: DataTypes.SMALLINT,
         allowNull: false,
         defaultValue: 1,
+      },
+      pwdResetToken: {
+        field: 'pwd_reset_token',
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: true,
+        defaultValue: null,
+      },
+      pwdResetExpires: {
+        field: 'pwd_reset_expires',
+        type: DataTypes.DATE,
+        allowNull: true,
+        defaultValue: null,
       },
     }, { sequelize: connection, tableName: 'users' });
   }
