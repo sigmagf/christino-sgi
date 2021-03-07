@@ -1,4 +1,4 @@
-import { IVehicle } from '@christino-sgi/common';
+import { IPagination, IVehicle } from '@christino-sgi/common';
 import React, { useEffect, useState } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
@@ -13,7 +13,7 @@ import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
-import { IPagination, IVehiclesRequestFilters } from '~/interfaces';
+import { IVehiclesRequestFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';

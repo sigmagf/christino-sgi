@@ -46,7 +46,7 @@ export const HomePage: React.FC = () => {
 
   const cDesp = (month = 1) => {
     if(works) {
-      const count = works.filter((el) => (new Date(el.createdAt)).getMonth() === month).filter((el) => el.service.sector.name === 'DESPACHANTE');
+      const count = works.filter((el) => (new Date(el.createdAt || '')).getMonth() === month).filter((el) => el.service.sector.name === 'DESPACHANTE');
       return count.length;
     }
 
@@ -55,7 +55,7 @@ export const HomePage: React.FC = () => {
 
   const cSegu = (month = 1) => {
     if(works) {
-      const count = works.filter((el) => (new Date(el.createdAt)).getMonth() === month).filter((el) => el.service.sector.name === 'SEGUROS');
+      const count = works.filter((el) => (new Date(el.createdAt || '')).getMonth() === month).filter((el) => el.service.sector.name === 'SEGUROS');
       return count.length;
     }
 
@@ -64,7 +64,7 @@ export const HomePage: React.FC = () => {
 
   const cEscr = (month = 1) => {
     if(works) {
-      const count = works.filter((el) => (new Date(el.createdAt)).getMonth() === month).filter((el) => el.service.sector.name === 'ESCRITORIO');
+      const count = works.filter((el) => (new Date(el.createdAt || '')).getMonth() === month).filter((el) => el.service.sector.name === 'ESCRITORIO');
       return count.length;
     }
 
