@@ -14,11 +14,6 @@ export class UsersAuthService {
       throw new Error(JSON.stringify({ code: 404, message: 'Usuário não encontrado.', details: null }));
     }
 
-    console.log({
-      password: data.password,
-      hash: user.password,
-    });
-
     if(!await bcrypt.compare(data.password, user.password)) {
       throw new Error(JSON.stringify({ code: 401, message: 'Senha inválida.', details: null }));
     }

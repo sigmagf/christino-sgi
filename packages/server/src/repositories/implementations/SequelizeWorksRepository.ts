@@ -181,7 +181,6 @@ export class SequelizeWorksRepository implements IWorksRepository {
 
   async update(id: string, data: Partial<IWorkCreateOrUpdate>): Promise<IWork> {
     const entryData = { ...data, history: undefined };
-    await Work.update(entryData, { where: { id } });
 
     await WorkHistory.create({
       id: v4(),
@@ -190,6 +189,7 @@ export class SequelizeWorksRepository implements IWorksRepository {
     });
 
     const dbData = await Work.findByPk(id, { include: { all: true } });
+    await dbData.update(entryData);
     return dbData;
   }
 

@@ -57,9 +57,8 @@ export class SequelizeClientsRepository implements IClientsRepository {
   }
 
   async update(id: string, data: Omit<IClient, 'id'|'createdAt'|'updatedAt'>): Promise<IClient> {
-    await Client.update(data, { where: { id } });
-
     const dbData = await Client.findByPk(id);
+    await dbData.update(data);
     return dbData;
   }
 

@@ -20,30 +20,31 @@ export class UsersForgotPasswordService {
 
     await this.repository.update(dbUser.id, { pwdResetToken, pwdResetExpires });
 
-    if(process.env.NODE_ENV !== 'development') {
-      await sendEmail({
-        to: [{
-          name: dbUser.name,
-          address: dbUser.email,
-        }],
-        subject: 'Recuperação de senha.',
-        body: {
-          text: `
+    await sendEmail({
+      to: [{
+        name: dbUser.name,
+        address: dbUser.email,
+      }],
+      subject: 'Recuperação de senha.',
+      body: {
+        text: `
             Olá ${dbUser.name} parece que você solicitou uma recuperação de senha, basta acessar o link abaixo e efetuar a recuperacao.
             \n
             \n
             ${process.env.APP_URL}/resetPassword/${pwdResetToken}
           `,
-          html: `
+        html: `
             Olá ${dbUser.name} parece que você solicitou uma recuperação de senha, basta acessar o link abaixo e efetuar a recuperacao.
             <br />
             <br />
-            <a href="${process.env.APP_URL}/resetPassword/${pwdResetToken}">Clique aqui</a>`,
-        },
-      });
-    }
-
-    console.log({ pwdResetToken, pwdResetExpires });
+            <a href="${process.env.APP_URL}/resetPassword/${pwdResetToken}">Clique aqui</a>
+            <br />
+            Ou acesse o link abaixo:
+            <br />
+            ${process.env.APP_URL}/resetPassword/${pwdResetToken}
+          `,
+      },
+    });
 
     return { pwdResetToken, pwdResetExpires };
   }

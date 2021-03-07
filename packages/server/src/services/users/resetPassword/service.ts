@@ -27,15 +27,13 @@ export class UsersResetPasswordService {
 
     await this.repository.update(dbUser.id, { password: data.password, pwdResetToken: null, pwdResetExpires: null });
 
-    if(process.env.NODE_ENV !== 'development') {
-      await sendEmail({
-        to: [{
-          name: dbUser.name,
-          address: dbUser.email,
-        }],
-        subject: 'Senha recuperada!',
-        body: { text: `Olá ${dbUser.name} sua senha foi redefinida com sucesso!` },
-      });
-    }
+    await sendEmail({
+      to: [{
+        name: dbUser.name,
+        address: dbUser.email,
+      }],
+      subject: 'Senha recuperada!',
+      body: { text: `Olá ${dbUser.name} sua senha foi redefinida com sucesso!` },
+    });
   }
 }

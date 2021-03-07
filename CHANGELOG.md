@@ -12,4 +12,3 @@
 ### SERVER 0.5.13 | WEB 0.0.27 (07/03/2021)
 - **[web]** Adicionado a tela de solicitação e recuperacao de senha;
 - **[server]** Finalizado a recuperação de senha utilizando o SES da AWS;
-- **[server]** Rotas de recuperação e solicitação da senha desabilitados em produção;

@@ -12,10 +12,8 @@ import { usersUpdateController } from './update';
 const routerUsers = Router();
 
 routerUsers.post('/users/login', (req, res) => usersAuthController.handle(req, res));
-if(process.env.NODE_ENV === 'development') {
-  routerUsers.post('/users/forgotPassword', (req, res) => usersForgotPasswordController.handle(req, res));
-  routerUsers.post('/users/resetPassword', (req, res) => usersResetPasswordController.handle(req, res));
-}
+routerUsers.post('/users/forgotPassword', (req, res) => usersForgotPasswordController.handle(req, res));
+routerUsers.post('/users/resetPassword', (req, res) => usersResetPasswordController.handle(req, res));
 routerUsers.use('/users/valid', (req, res) => res.status(200).json(req.user));
 
 routerUsers.get('/users', (req, res) => usersListController.handle(req, res));

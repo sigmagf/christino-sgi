@@ -1,4 +1,5 @@
 import { IPagination, IUser } from '@christino-sgi/common';
+import bcrypt from 'bcryptjs';
 import { v4 } from 'uuid';
 
 import { User } from '~/entities/sequelize/User';
@@ -6,6 +7,17 @@ import { User } from '~/entities/sequelize/User';
 import { IUsersRepository } from '../IUsersRepository';
 
 export class SequelizeUsersRepository implements IUsersRepository {
+  private async cryptPassword(password: string) {
+    if(password) {
+      console.log(password);
+      const hash = await bcrypt.hash(password, 10);
+      console.log(hash);
+      return hash;
+    }
+
+    return undefined;
+  }
+
   async list(page = 1, maxResults = 10, withPassword = false): Promise<IPagination<IUser>> {
     const limit = maxResults > 100 ? 100 : maxResults;
 
@@ -48,7 +60,8 @@ export class SequelizeUsersRepository implements IUsersRepository {
   }
 
   async create(data: Omit<IUser, 'id'|'createdAt'|'updatedAt'>, withPassword = false): Promise<IUser> {
-    const dbData = await User.create({ ...data, id: v4() });
+    const password = await this.cryptPassword(data.password);
+    const dbData = await User.create({ ...data, password, id: v4() });
 
     if(!withPassword) {
       dbData.password = undefined;
@@ -60,11 +73,9 @@ export class SequelizeUsersRepository implements IUsersRepository {
   }
 
   async update(id: string, data: Omit<IUser, 'id'|'createdAt'|'updatedAt'>, withPassword = false): Promise<IUser> {
-    await User.update(data, { where: { id } });
+    const password = await this.cryptPassword(data.password);
     const dbData = await User.findByPk(id);
-
-    await dbData.update(data);
-    await dbData.save();
+    await dbData.update({ ...data, password });
 
     if(!withPassword) {
       dbData.password = undefined;

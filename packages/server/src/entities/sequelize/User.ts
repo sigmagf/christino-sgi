@@ -85,14 +85,4 @@ export class User extends Model<IUser, CreateUserProps> implements IUser {
       },
     }, { sequelize: connection, tableName: 'users' });
   }
-
-  static hooks() {
-    this.addHook('beforeSave', async (user: User) => {
-      if(user.password) {
-        const hash = await bcrypt.hash(user.password, 10);
-        // eslint-disable-next-line no-param-reassign
-        user.password = hash;
-      }
-    });
-  }
 }

@@ -169,9 +169,9 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
   }
 
   async update(id: string, data: Partial<VehiclesCreateOrUpdate>): Promise<IVehicle> {
-    await Vehicle.update(data, { where: { id } });
-
     const dbData = await Vehicle.findByPk(id, { include: { all: true } });
+    await dbData.update(data);
+
     return dbData;
   }
 
