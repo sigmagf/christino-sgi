@@ -9,15 +9,13 @@ import { clientsListController } from './list';
 import { clientsListGroupsController } from './listGroups';
 import { clientsUpdateController } from './update';
 
-const clientsRouter = Router();
+const routerClients = Router();
 
-clientsRouter.use(authMiddleware);
+routerClients.get('/clients', authMiddleware, (req, res) => clientsListController.handle(req, res));
+routerClients.get('/clients/groups', authMiddleware, (req, res) => clientsListGroupsController.handle(req, res));
+routerClients.get('/clients/:param', authMiddleware, (req, res) => clientsFindController.handle(req, res));
+routerClients.post('/clients', authMiddleware, (req, res) => clientsCreateController.handle(req, res));
+routerClients.put('/clients/:id', authMiddleware, (req, res) => clientsUpdateController.handle(req, res));
+routerClients.delete('/clients/:id', authMiddleware, (req, res) => clientsDeleteController.handle(req, res));
 
-clientsRouter.get('/clients', (req, res) => clientsListController.handle(req, res));
-clientsRouter.get('/clients/groups', (req, res) => clientsListGroupsController.handle(req, res));
-clientsRouter.get('/clients/:param', (req, res) => clientsFindController.handle(req, res));
-clientsRouter.post('/clients', (req, res) => clientsCreateController.handle(req, res));
-clientsRouter.put('/clients/:id', (req, res) => clientsUpdateController.handle(req, res));
-clientsRouter.delete('/clients/:id', (req, res) => clientsDeleteController.handle(req, res));
-
-export { clientsRouter };
+export { routerClients };

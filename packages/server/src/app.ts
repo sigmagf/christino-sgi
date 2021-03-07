@@ -2,14 +2,13 @@ import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 
-import { devMiddleware } from '~/middlewares/dev.middleware';
-import { clientsRouter } from '~/services/clients';
-import { usersRouter } from '~/services/users';
-import { vehiclesRouter } from '~/services/vehicles';
-
 import { Sector } from './entities/sequelize/Sector';
 import { Service } from './entities/sequelize/Service';
-import { worksRouter } from './services/works';
+import { devMiddleware } from './middlewares/dev.middleware';
+import { routerClients } from './services/clients';
+import { routerUsers } from './services/users';
+import { routerVehicles } from './services/vehicles';
+import { routerWorks } from './services/works';
 
 const app = express();
 
@@ -23,10 +22,10 @@ if(process.env.NODE_ENV === 'development') {
 }
 
 app.use((req, res, next) => { res.set('X-Powered-By', 'Furlan Solutions'); next(); });
-app.use(usersRouter);
-app.use(clientsRouter);
-app.use(vehiclesRouter);
-app.use(worksRouter);
+app.use(routerClients);
+app.use(routerUsers);
+app.use(routerVehicles);
+app.use(routerWorks);
 
 app.get('/services', async (req, res) => {
   const services = await Service.findAll({ include: { all: true, nested: true } });

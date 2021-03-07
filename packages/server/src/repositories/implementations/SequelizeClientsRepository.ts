@@ -1,10 +1,10 @@
-import { IClient } from '@christino-sgi/common';
+import { IClient, IPagination } from '@christino-sgi/common';
 import { QueryTypes } from 'sequelize';
 import { v4 } from 'uuid';
 
 import { sequelize } from '~/config/sequelize';
 import { Client } from '~/entities/sequelize/Client';
-import { IClientsListFilters, IPagination } from '~/interfaces';
+import { IClientsListFilters } from '~/interfaces';
 import { sequelizeWhere } from '~/utils/sequelizeWhere';
 
 import { IClientsRepository } from '../IClientsRepository';

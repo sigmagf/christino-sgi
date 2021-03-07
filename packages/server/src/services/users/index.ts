@@ -7,17 +7,19 @@ import { usersCreateController } from './create';
 import { usersDeleteController } from './delete';
 import { usersFindController } from './find';
 import { usersListController } from './list';
+import { usersResetPasswordController } from './resetPassword';
 import { usersUpdateController } from './update';
 
-const usersRouter = Router();
+const routerUsers = Router();
 
-usersRouter.use('/users/valid', authMiddleware, (req, res) => res.status(200).json(req.user));
-usersRouter.post('/users/login', (req, res) => usersAuthController.handle(req, res));
+routerUsers.use('/users/valid', authMiddleware, (req, res) => res.status(200).json(req.user));
+routerUsers.post('/users/login', (req, res) => usersAuthController.handle(req, res));
+routerUsers.get('/users/:id/resetPasswordRequest', (req, res) => usersResetPasswordController.handle(req, res));
 
-usersRouter.get('/users', authMiddleware, (req, res) => usersListController.handle(req, res));
-usersRouter.get('/users/:id', authMiddleware, (req, res) => usersFindController.handle(req, res));
-usersRouter.post('/users', authMiddleware, (req, res) => usersCreateController.handle(req, res));
-usersRouter.put('/users/:id', authMiddleware, (req, res) => usersUpdateController.handle(req, res));
-usersRouter.delete('/users/:id', authMiddleware, (req, res) => usersDeleteController.handle(req, res));
+routerUsers.get('/users', authMiddleware, (req, res) => usersListController.handle(req, res));
+routerUsers.get('/users/:id', authMiddleware, (req, res) => usersFindController.handle(req, res));
+routerUsers.post('/users', authMiddleware, (req, res) => usersCreateController.handle(req, res));
+routerUsers.put('/users/:id', authMiddleware, (req, res) => usersUpdateController.handle(req, res));
+routerUsers.delete('/users/:id', authMiddleware, (req, res) => usersDeleteController.handle(req, res));
 
-export { usersRouter };
+export { routerUsers };

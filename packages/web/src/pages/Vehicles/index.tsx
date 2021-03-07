@@ -13,7 +13,7 @@ import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
-import { IPagination, IVehiclesFilters } from '~/interfaces';
+import { IPagination, IVehiclesRequestFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';
@@ -31,7 +31,7 @@ export const VehiclesPage: React.FC = () => {
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
-  const [filters, setFilters] = useState<IVehiclesFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
+  const [filters, setFilters] = useState<IVehiclesRequestFilters>({ page: 1, limit: 10, status: [1, 2, 3] });
   const { data: vehicles, isValidating: inLoading, error: getVehiclesError, mutate, revalidate } = useSWR<IPagination<IVehicle>>(`/vehicles${qsConverter(filters)}`);
   const [vehicleIdToDetails, setVehicleIdToDetails] = useState<string>();
   /* END DATA STATE AND REFS */

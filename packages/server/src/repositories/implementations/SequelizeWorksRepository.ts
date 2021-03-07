@@ -1,11 +1,11 @@
-import { IWork } from '@christino-sgi/common';
+import { IPagination, IWork } from '@christino-sgi/common';
 import { QueryTypes } from 'sequelize';
 import { v4 } from 'uuid';
 
 import { sequelize } from '~/config/sequelize';
 import { Work } from '~/entities/sequelize/Work';
 import { WorkHistory } from '~/entities/sequelize/WorkHistory';
-import { IWorksListFilters, IPagination } from '~/interfaces';
+import { IWorksListFilters } from '~/interfaces';
 
 import { IWorkCreateOrUpdate, IWorksRepository } from '../IWorksRepository';
 
@@ -165,14 +165,14 @@ export class SequelizeWorksRepository implements IWorksRepository {
     return dbData;
   }
 
-  async create(data: IWorkCreateOrUpdate, history: string): Promise<IWork> {
+  async create(data: IWorkCreateOrUpdate): Promise<IWork> {
     const entryData = { ...data, id: v4(), history: undefined };
     const entry = await Work.create(entryData);
 
     await WorkHistory.create({
       id: v4(),
       workId: entry.id,
-      details: history,
+      details: data.history,
     });
 
     const dbData = await Work.findByPk(entry.id, { include: { all: true } });

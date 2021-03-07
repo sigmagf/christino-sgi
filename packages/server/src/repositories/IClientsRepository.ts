@@ -1,6 +1,6 @@
-import { IClient } from '@christino-sgi/common';
+import { IClient, IPagination } from '@christino-sgi/common';
 
-import { IClientsListFilters, IPagination } from '~/interfaces';
+import { IClientsListFilters } from '~/interfaces';
 
 export interface IClientsRepository {
   list(page: number, maxResults: number, filters: IClientsListFilters): Promise<IPagination<IClient> | IClient[]>;

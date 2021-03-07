@@ -1,3 +1,12 @@
+export interface IPagination<T> {
+  page: {
+    total: number;
+    current: number;
+    limit: number;
+  };
+  data: Array<T>;
+}
+
 export interface IUser {
   id: string;
   name: string;
@@ -10,8 +19,8 @@ export interface IUser {
   userPermission: number;
   workPermission: number;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface ILogError {
@@ -21,8 +30,8 @@ export interface ILogError {
   message: string;
   error: string;
 
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface IClient {
@@ -34,16 +43,16 @@ export interface IClient {
   phone1?: string;
   phone2?: string;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface ISector {
   id: string;
   name: string;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IService {
@@ -52,8 +61,8 @@ export interface IService {
   sectorId: string;
   sector: ISector;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IVehicle {
@@ -70,12 +79,12 @@ export interface IVehicle {
   crlveIncluded?: boolean;
   withdrawalIncluded?: boolean;
 
-  createdAt: Date;
-  createdBy: string;
-  createdByUser: IUser;
-  updatedAt: Date;
-  updatedBy: string;
-  updatedByUser: IUser;
+  createdAt?: Date;
+  createdBy?: string;
+  createdByUser?: IUser;
+  updatedAt?: Date;
+  updatedBy?: string;
+  updatedByUser?: IUser;
 }
 
 export interface IWork {
@@ -90,12 +99,12 @@ export interface IWork {
   status: number;
   histories: IWorkHistory[];
 
-  createdAt: Date;
-  createdBy: string;
-  createdByUser: IUser;
-  updatedAt: Date;
-  updatedBy: string;
-  updatedByUser: IUser;
+  createdAt?: Date;
+  createdBy?: string;
+  createdByUser?: IUser;
+  updatedAt?: Date;
+  updatedBy?: string;
+  updatedByUser?: IUser;
 }
 
 export interface IWorkHistory {
@@ -103,6 +112,6 @@ export interface IWorkHistory {
   workId: string;
   details: string;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }

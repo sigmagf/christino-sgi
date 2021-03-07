@@ -9,7 +9,7 @@ export interface IStorage {
 /* END STIRAGE */
 
 /* - BACKEND - */
-export interface IVehiclesFilters extends Partial<Pick<IVehicle, 'clientId'|'plate'|'renavam'|'crv'|'brandModel'>> {
+export interface IVehiclesRequestFilters extends Partial<Pick<IVehicle, 'clientId'|'plate'|'renavam'|'crv'|'brandModel'>> {
   page: number;
   limit: number;
 
@@ -19,12 +19,12 @@ export interface IVehiclesFilters extends Partial<Pick<IVehicle, 'clientId'|'pla
   includeTruck?: boolean;
 }
 
-export interface IClientsFilters extends Partial<Pick<IClient, 'name'|'document'|'group'>> {
+export interface IClientsRequestFilters extends Partial<Pick<IClient, 'name'|'document'|'group'>> {
   page: number;
   limit: number;
 }
 
-export interface IWorksFilters extends Partial<Pick<IWork, 'clientId'|'serviceId'|'identifier'>> {
+export interface IWorksRequestFilters extends Partial<Pick<IWork, 'clientId'|'serviceId'|'identifier'>> {
   page: number;
   limit: number;
 
@@ -34,15 +34,6 @@ export interface IWorksFilters extends Partial<Pick<IWork, 'clientId'|'serviceId
   sectorId?: string;
   timeCourseStart?: Date|string;
   timeCourseEnd?: Date|string;
-}
-
-export interface IPagination<T> {
-  page: {
-    total: number;
-    current: number;
-    limit: number;
-  };
-  data: Array<T>;
 }
 
 export interface IUserAuth {

@@ -1,6 +1,4 @@
-import { IUser } from '@christino-sgi/common';
-
-import { IPagination } from '~/interfaces';
+import { IPagination, IUser } from '@christino-sgi/common';
 
 export interface IUsersRepository {
   list(page: number, maxResults: number, withPassword?: boolean): Promise<IPagination<IUser>>;

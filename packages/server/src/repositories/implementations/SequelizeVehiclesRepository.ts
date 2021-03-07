@@ -1,10 +1,10 @@
-import { IVehicle } from '@christino-sgi/common';
+import { IPagination, IVehicle } from '@christino-sgi/common';
 import { QueryTypes } from 'sequelize';
 import { v4 } from 'uuid';
 
 import { sequelize } from '~/config/sequelize';
 import { Vehicle } from '~/entities/sequelize/Vehicle';
-import { IPagination, IVehiclesListFilters } from '~/interfaces';
+import { IVehiclesListFilters } from '~/interfaces';
 
 import { IVehiclesRepository } from '../IVehiclesRepository';
 
@@ -23,7 +23,9 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
       v.crlve_included as "vehicleCrlveIncluded",
       v.withdrawal_included as "vehicleWithdrawalIncluded",
       v.created_at as "vehicleCreatedAt",
+      v.created_by as "vehicleCreatedBy",
       v.updated_at as "vehicleUpdatedAt",
+      v.updated_by as "vehicleUpdatedBy",
 
       c.id as "clientId",
       c.name as "clientName",
@@ -73,7 +75,9 @@ export class SequelizeVehiclesRepository implements IVehiclesRepository {
       crlveIncluded: el.vehicleCrlveIncluded,
       withdrawalIncluded: el.vehicleWithdrawalIncluded,
       createdAt: el.vehicleCreatedAt,
+      createdBy: el.vehicleCreatedBy,
       updatedAt: el.vehicleUpdatedAt,
+      updatedBy: el.vehicleUpdatedBy,
     }));
   }
 

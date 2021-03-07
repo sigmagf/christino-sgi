@@ -12,7 +12,7 @@ import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
-import { IClientsFilters, IPagination } from '~/interfaces';
+import { IClientsRequestFilters, IPagination } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';
@@ -28,7 +28,7 @@ export const ClientsPage: React.FC = () => {
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
-  const [filters, setFilters] = useState<IClientsFilters>({ page: 1, limit: 10 });
+  const [filters, setFilters] = useState<IClientsRequestFilters>({ page: 1, limit: 10 });
   const { data: clients, isValidating: inLoading, error: getClientsError, revalidate } = useSWR<IPagination<IClient>>(`/clients${qsConverter(filters)}`);
   const [clientIdToDetails, setClientIdToDetails] = useState<string>();
   /* END DATA STATE AND REFS */

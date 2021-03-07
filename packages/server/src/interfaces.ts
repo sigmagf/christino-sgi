@@ -1,14 +1,5 @@
 import { IClient, IVehicle, IWork } from '@christino-sgi/common';
 
-export interface IPagination<T> {
-  page: {
-    total: number;
-    current: number;
-    limit: number;
-  };
-  data: Array<T>;
-}
-
 export interface IClientsListFilters extends Partial<Pick<IClient, 'name'|'document'|'group'>> {
   pagination: boolean;
 }

@@ -16,9 +16,9 @@ import { vehiclesUploadWithdrawalController } from './uploadWithdrawal';
 import { vehiclesViewCRLVeController } from './viewCRLVe';
 import { vehiclesViewWithdrawalController } from './viewWithdrawal';
 
-const vehiclesRouter = Router();
+const routerVehicles = Router();
 
-const checkExists = async (req: Request, res: Response, next: NextFunction) => {
+const check = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if(!await vehiclesFindService.execute({ id: req.params.id })) {
       throw new Error(JSON.stringify({ code: 404, message: 'Veículo não encontrado.', details: null }));
@@ -30,20 +30,16 @@ const checkExists = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-vehiclesRouter.use(authMiddleware);
+routerVehicles.get('/vehicles', authMiddleware, (req, res) => vehiclesListController.handle(req, res));
+routerVehicles.get('/vehicles/:id', authMiddleware, (req, res) => vehiclesFindController.handle(req, res));
+routerVehicles.post('/vehicles', authMiddleware, (req, res) => vehiclesCreateController.handle(req, res));
+routerVehicles.put('/vehicles/:id', authMiddleware, (req, res) => vehiclesUpdateController.handle(req, res));
+routerVehicles.delete('/vehicles/:id', authMiddleware, (req, res) => vehiclesDeleteController.handle(req, res));
 
-vehiclesRouter.get('/vehicles', (req, res) => vehiclesListController.handle(req, res));
-vehiclesRouter.get('/vehicles/:id', (req, res) => vehiclesFindController.handle(req, res));
-vehiclesRouter.post('/vehicles', (req, res) => vehiclesCreateController.handle(req, res));
-vehiclesRouter.put('/vehicles/:id', (req, res) => vehiclesUpdateController.handle(req, res));
-vehiclesRouter.delete('/vehicles/:id', (req, res) => vehiclesDeleteController.handle(req, res));
+routerVehicles.get('/vehicles/:id/crlve', authMiddleware, (req, res) => vehiclesViewCRLVeController.handle(req, res));
+routerVehicles.post('/vehicles/:id/crlve', check, multer(multerConfigCRLVe).single('file'), authMiddleware, (req, res) => vehiclesUploadCRLVeController.handle(req, res));
 
-// vehiclesRouter.post('/vehicles/import', (req, res) => vehiclesImportController.handle(req, res));
+routerVehicles.get('/vehicles/:id/withdrawal', authMiddleware, (req, res) => vehiclesViewWithdrawalController.handle(req, res));
+routerVehicles.post('/vehicles/:id/withdrawal', check, multer(multerConfigWithdrawal).single('file'), authMiddleware, (req, res) => vehiclesUploadWithdrawalController.handle(req, res));
 
-vehiclesRouter.get('/vehicles/:id/crlve', (req, res) => vehiclesViewCRLVeController.handle(req, res));
-vehiclesRouter.post('/vehicles/:id/crlve', checkExists, multer(multerConfigCRLVe).single('file'), (req, res) => vehiclesUploadCRLVeController.handle(req, res));
-
-vehiclesRouter.get('/vehicles/:id/withdrawal', (req, res) => vehiclesViewWithdrawalController.handle(req, res));
-vehiclesRouter.post('/vehicles/:id/withdrawal', checkExists, multer(multerConfigWithdrawal).single('file'), (req, res) => vehiclesUploadWithdrawalController.handle(req, res));
-
-export { vehiclesRouter };
+export { routerVehicles };

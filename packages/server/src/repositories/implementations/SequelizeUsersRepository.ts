@@ -1,8 +1,7 @@
-import { IUser } from '@christino-sgi/common';
+import { IPagination, IUser } from '@christino-sgi/common';
 import { v4 } from 'uuid';
 
 import { User } from '~/entities/sequelize/User';
-import { IPagination } from '~/interfaces';
 
 import { IUsersRepository } from '../IUsersRepository';
 

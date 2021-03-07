@@ -1,6 +1,6 @@
-import { IWork } from '@christino-sgi/common';
+import { IPagination, IWork } from '@christino-sgi/common';
 
-import { IPagination, IWorksListFilters } from '~/interfaces';
+import { IWorksListFilters } from '~/interfaces';
 
 export interface IWorkCreateOrUpdate extends Pick<IWork, 'clientId'|'serviceId'|'identifier'|'value'|'details'|'status'> {
   history: string;

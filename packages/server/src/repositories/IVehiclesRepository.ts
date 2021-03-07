@@ -1,6 +1,6 @@
-import { IVehicle } from '@christino-sgi/common';
+import { IPagination, IVehicle } from '@christino-sgi/common';
 
-import { IPagination, IVehiclesListFilters } from '~/interfaces';
+import { IVehiclesListFilters } from '~/interfaces';
 
 export interface IVehiclesRepository {
   list(page: number, maxResults: number, filters: IVehiclesListFilters): Promise<IPagination<IVehicle> | IVehicle[]>;

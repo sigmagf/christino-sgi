@@ -6,14 +6,12 @@ import { worksCreateController } from './create';
 import { worksListController } from './list';
 import { worksUpdateController } from './update';
 
-const worksRouter = Router();
+const routerWorks = Router();
 
-worksRouter.use(authMiddleware);
+routerWorks.get('/works', authMiddleware, (req, res) => worksListController.handle(req, res));
+// worksRouter.get('/works/:id', authMiddleware, (req, res) => worksFindController.handle(req, res));
+routerWorks.post('/works', authMiddleware, (req, res) => worksCreateController.handle(req, res));
+routerWorks.put('/works/:id', authMiddleware, (req, res) => worksUpdateController.handle(req, res));
+// worksRouter.delete('/works/:id', authMiddleware, (req, res) => worksDeleteController.handle(req, res));
 
-worksRouter.get('/works', (req, res) => worksListController.handle(req, res));
-// worksRouter.get('/works/:id', (req, res) => worksFindController.handle(req, res));
-worksRouter.post('/works', (req, res) => worksCreateController.handle(req, res));
-worksRouter.put('/works/:id', (req, res) => worksUpdateController.handle(req, res));
-// worksRouter.delete('/works/:id', (req, res) => worksDeleteController.handle(req, res));
-
-export { worksRouter };
+export { routerWorks };

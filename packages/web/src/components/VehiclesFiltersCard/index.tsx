@@ -5,14 +5,14 @@ import { FaPlus, FaFilter } from 'react-icons/fa';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Select, Input } from '~/interface/Form';
-import { IVehiclesFilters } from '~/interfaces';
+import { IVehiclesRequestFilters } from '~/interfaces';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
 
 import { ClientSearchInput } from '../ClientSearchInput';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IVehiclesFiltersCardProps {
-  onFiltersApplyClick: (data: Omit<IVehiclesFilters, 'page'|'limit'>) => void;
+  onFiltersApplyClick: (data: Omit<IVehiclesRequestFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
   despPermission: number;
 }

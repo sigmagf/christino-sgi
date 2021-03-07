@@ -13,7 +13,7 @@ import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Card } from '~/interface/Card';
 import { Paginator } from '~/interface/Paginator';
-import { IPagination, IWorksFilters } from '~/interfaces';
+import { IPagination, IWorksRequestFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { qsConverter } from '~/utils/qsConverter';
@@ -30,7 +30,7 @@ export const WorksPage: React.FC = () => {
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
-  const [filters, setFilters] = useState<IWorksFilters>({ page: 1, limit: 10, status: ['1', '2', '3'] });
+  const [filters, setFilters] = useState<IWorksRequestFilters>({ page: 1, limit: 10, status: ['1', '2', '3'] });
   const { data: works, revalidate, isValidating: inLoading, error: getWorkError } = useSWR<IPagination<IWork>>(`/works${qsConverter(filters)}`);
   const [workIdToDetails, setWorkIdToDetails] = useState<string>();
   /* END DATA STATE AND REFS */

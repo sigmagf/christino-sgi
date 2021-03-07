@@ -6,7 +6,7 @@ import { FaPlus, FaFilter } from 'react-icons/fa';
 import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/interface/Button';
 import { Select, Input, DatePicker } from '~/interface/Form';
-import { IWorksFilters } from '~/interfaces';
+import { IWorksRequestFilters } from '~/interfaces';
 import { worksStatus as status } from '~/utils/commonSelectOptions';
 import { formatDatabaseDate } from '~/utils/formatString';
 import { onValueInputFocus, onValueInputBlur } from '~/utils/handleInputFormat';
@@ -15,7 +15,7 @@ import { ClientSearchInput } from '../ClientSearchInput';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IWorksFiltersCardProps {
-  onFiltersApplyClick: (data: Omit<IWorksFilters, 'page'|'limit'>) => void;
+  onFiltersApplyClick: (data: Omit<IWorksRequestFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
   workPermission: number;
 }
@@ -34,7 +34,7 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
   /* - BOOLEAN STATES - */
   /* END BOOLEAN STATES */
 
-  const onSubmit: SubmitHandler<Omit<IWorksFilters, 'page'|'limit'>> = (data) => {
+  const onSubmit: SubmitHandler<Omit<IWorksRequestFilters, 'page'|'limit'>> = (data) => {
     const value = data.value?.replace('.', '').replace(',', '.') || '';
     onFiltersApplyClick({ ...data, value, timeCourseStart: formatDatabaseDate(data.timeCourseStart), timeCourseEnd: formatDatabaseDate(data.timeCourseEnd) });
   };
