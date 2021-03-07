@@ -7,6 +7,7 @@ on:
     paths:
       - 'packages/web/**/*'
       - 'packages/common/**/*'
+      - 'package.json'
 jobs:
   deploy:
     runs-on: ubuntu-latest
