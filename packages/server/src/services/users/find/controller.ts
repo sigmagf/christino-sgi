@@ -19,7 +19,7 @@ export class UsersFindController {
 
       return res.status(200).json(user);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

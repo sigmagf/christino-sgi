@@ -19,7 +19,7 @@ export class WorksFindController {
 
       return res.json(work);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

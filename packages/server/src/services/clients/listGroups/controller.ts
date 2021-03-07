@@ -12,7 +12,7 @@ export class ClientsListGroupsController {
       const groups = await this.service.execute();
       return res.status(200).json(groups);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

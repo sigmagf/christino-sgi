@@ -14,7 +14,7 @@ export class UsersDeleteController {
       await this.service.execute({ id });
       return res.status(200).send();
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

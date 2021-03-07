@@ -49,7 +49,7 @@ export class WorksCreateController {
       const work = await this.service.execute({ clientId, serviceId, identifier, value, status, details, history });
       return res.status(201).json(work);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

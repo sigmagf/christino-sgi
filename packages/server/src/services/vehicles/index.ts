@@ -25,7 +25,7 @@ const checkExists = async (req: Request, res: Response, next: NextFunction) => {
 
     return next();
   } catch(err) {
-    return errorWork(res, err);
+    return errorWork(req, res, err);
   }
 };
 

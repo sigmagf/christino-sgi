@@ -1,4 +1,3 @@
-import { IUser } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useState, useRef } from 'react';
@@ -34,7 +33,7 @@ export const ForgotPasswordPage: React.FC = () => {
   const [inLoading, setInLoading] = useState(false);
   /* END BOOLEAN STATES */
 
-  const onSubmit: SubmitHandler<IUser> = async (data) => {
+  const onSubmit: SubmitHandler<{ email: string }> = async (data) => {
     setInLoading(true);
 
     try {

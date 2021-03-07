@@ -15,7 +15,7 @@ export class UsersListController {
       const user = await this.service.execute({ page, limit });
       return res.status(200).json(user);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

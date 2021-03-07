@@ -38,7 +38,7 @@ export class ClientsUpdateController {
       });
       return res.status(200).json(client);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

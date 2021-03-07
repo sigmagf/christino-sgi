@@ -31,7 +31,7 @@ export class VehiclesListController {
       const vehicles = await this.service.execute({ page, limit, filters: { pagination, plateEnd, clientId, status, group, plate, renavam, crv, brandModel, includeTruck } });
       return res.json(vehicles);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

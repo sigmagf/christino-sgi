@@ -28,7 +28,7 @@ export class ClientsCreateController {
       const client = await this.service.execute({ name, document, group, email, phone1, phone2 });
       return res.status(201).json(client);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

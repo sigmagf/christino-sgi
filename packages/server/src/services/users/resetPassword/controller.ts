@@ -14,7 +14,7 @@ export class UsersResetPasswordController {
       await this.service.execute({ email, token, password });
       return res.status(200).send();
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

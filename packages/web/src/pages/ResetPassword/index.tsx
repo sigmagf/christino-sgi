@@ -1,4 +1,3 @@
-import { IUser } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { Form } from '@unform/web';
 import React, { useState, useRef } from 'react';

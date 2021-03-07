@@ -19,7 +19,7 @@ export class VehiclesFindController {
 
       return res.json(vehicle);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

@@ -16,7 +16,7 @@ export class VehiclesUploadCRLVeController {
       await vehiclesUpdateService.execute({ id: req.params.id, crlveIncluded: true, updatedBy: req.user.id });
       return res.status(200).send();
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

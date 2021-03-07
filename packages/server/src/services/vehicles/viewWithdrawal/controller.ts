@@ -25,7 +25,7 @@ export class VehiclesViewWithdrawalController {
       const s3Stream = await s3.getObject({ Bucket: process.env.AWS_S3_BUCKET, Key: `${process.env.AWS_S3_FOLDER_WITHDRAWALS}/${req.params.id}.pdf` }).promise();
       return res.contentType(s3Stream.ContentType).send(s3Stream.Body);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

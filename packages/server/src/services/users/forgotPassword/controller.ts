@@ -14,7 +14,7 @@ export class UsersForgotPasswordController {
       const data = await this.service.execute({ email });
       return res.json(data);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

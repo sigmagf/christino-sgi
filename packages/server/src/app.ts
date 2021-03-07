@@ -18,9 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 app.use(cors({ methods: ['GET', 'POST', 'PUT', 'DELETE'], origin: '*' }));
 
-if(process.env.NODE_ENV === 'development') {
-  app.use(devMiddleware);
-}
+app.use(devMiddleware);
 app.use(authMiddleware);
 
 app.use(routerUsers);
@@ -38,6 +36,6 @@ app.get('/sectors', async (req, res) => {
   return res.json(sectors);
 });
 
-app.use('*', (req, res) => res.status(404).json({ code: 404, message: 'Route not found', details: null }));
+app.use('*', (req, res) => res.status(404).json({ code: 404, message: 'Rota não encontrada!', details: null }));
 
 export { app };

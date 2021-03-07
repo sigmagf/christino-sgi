@@ -24,7 +24,7 @@ export class UsersAuthController {
       const userWithToken = await this.service.execute({ email, password });
       return res.status(201).json(userWithToken);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

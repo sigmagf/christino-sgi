@@ -34,7 +34,7 @@ export class WorksListController {
 
       return res.json(works);
     } catch(err) {
-      return errorWork(res, err);
+      return errorWork(req, res, err);
     }
   }
 }

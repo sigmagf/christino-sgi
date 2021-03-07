@@ -5,7 +5,7 @@ import { IUsersRepository } from '~/repositories/IUsersRepository';
 export class UsersUpdateService {
   constructor(private repository: IUsersRepository) { }
 
-  async execute(data: Omit<IUser, 'createdAt'|'updatedAt'>) {
+  async execute(data: Omit<IUser, 'password'|'createdAt'|'updatedAt'>) {
     if(!await this.repository.findById(data.id)) {
       throw new Error(JSON.stringify({ code: 404, message: 'Usuário não encontrado.', details: null }));
     }
