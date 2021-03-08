@@ -53,7 +53,7 @@ export class Work extends Model<IWork, CreateWorkProps> implements IWork {
     this.belongsTo(models.Client, { foreignKey: { name: 'clientId', field: 'client_id' }, as: 'client' });
     this.belongsTo(models.Service, { foreignKey: { name: 'serviceId', field: 'service_id' }, as: 'service' });
     this.hasMany(models.WorkHistory, { foreignKey: { name: 'workId', field: 'work_id' }, as: 'histories' });
-    this.belongsTo(models.User, { foreignKey: { name: 'craetedBy', field: 'craeted_by' }, as: 'createdByUser' });
+    this.belongsTo(models.User, { foreignKey: { name: 'createdBy', field: 'craeted_by' }, as: 'createdByUser' });
     this.belongsTo(models.User, { foreignKey: { name: 'updatedBy', field: 'updated_by' }, as: 'updatedByUser' });
   }
 }
