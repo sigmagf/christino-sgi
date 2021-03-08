@@ -79,7 +79,7 @@ export class Vehicle extends Model<IVehicle, CreateVehicleProps> implements IVeh
 
   static associate(models: any) {
     this.belongsTo(models.Client, { foreignKey: { name: 'clientId', field: 'client_id' }, as: 'client' });
-    this.belongsTo(models.User, { foreignKey: { name: 'craetedBy', field: 'craeted_by' }, as: 'createdByUser' });
+    this.belongsTo(models.User, { foreignKey: { name: 'createdBy', field: 'craeted_by' }, as: 'createdByUser' });
     this.belongsTo(models.User, { foreignKey: { name: 'updatedBy', field: 'updated_by' }, as: 'updatedByUser' });
   }
 }
