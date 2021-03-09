@@ -9,7 +9,13 @@ import { Vehicle } from '~/entities/sequelize/Vehicle';
 import { Work } from '~/entities/sequelize/Work';
 import { WorkHistory } from '~/entities/sequelize/WorkHistory';
 
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize({
+  dialect: 'postgres',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT, 10), // 😑 Realy?
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
   logging: false,
   define: {
     timestamps: true,

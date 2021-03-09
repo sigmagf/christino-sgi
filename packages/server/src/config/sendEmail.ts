@@ -1,5 +1,4 @@
 import AWS from 'aws-sdk';
-import nodemailer from 'nodemailer';
 
 type Address = {
   name: string;
@@ -17,46 +16,11 @@ type SendMailConfig = {
   body: EmailBody;
 }
 
-// export async function sendEmail({ to, subject, body }: SendMailConfig) {
-//   const transport = nodemailer.createTransport({
-//     host: process.env.SENDINGBLUE_HOST,
-//     port: process.env.SENDINGBLUE_PORT,
-//     auth: {
-//       user: process.env.SENDINGBLUE_USER,
-//       pass: process.env.SENDINGBLUE_PASS,
-//     },
-//   });
-
-//   await transport.sendMail({
-//     from: {
-//       address: 'sgi@christinoconsultoria.com.br',
-//       name: 'Christino | Sistema de Gestao Interno',
-//     },
-//     to,
-//     subject,
-//     html: body.html || undefined,
-//     text: body.text || undefined,
-//   });
-// }
-
 export async function sendEmail({ to, subject, body }: SendMailConfig) {
   const ses = new AWS.SES({ region: process.env.AWS_DEFAULT_REGION });
 
-  let effectiveBody: any;
-
-  if(body.html && !body.text) {
-    effectiveBody = {
-      Html: { Data: body.html },
-    };
-  } else if(body.text && !body.html) {
-    effectiveBody = {
-      Text: { Data: body.text },
-    };
-  } else {
-    effectiveBody = {
-      Html: { Data: body.html },
-      Text: { Data: body.text },
-    };
+  if(!body || (!body.text && !body.html)) {
+    throw new Error('O \'body\' é obrigatório ter o item \'text\' ou \'html\'');
   }
 
   await ses.sendEmail({
@@ -66,7 +30,10 @@ export async function sendEmail({ to, subject, body }: SendMailConfig) {
     },
     Message: {
       Subject: { Data: subject },
-      Body: effectiveBody,
+      Body: {
+        Html: body.html ? { Data: body.html } : undefined,
+        Text: body.text ? { Data: body.text } : undefined,
+      },
     },
   }).promise();
 }

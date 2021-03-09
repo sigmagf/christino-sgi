@@ -24,7 +24,7 @@ const storageTypes = {
 };
 
 export const multerConfigCRLVe: multer.Options = {
-  storage: storageTypes[process.env.MULTER_STORAGE],
+  storage: storageTypes[process.env.MULTER_STORAGE.toLocaleLowerCase()],
   limits: { fileSize: 1 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedMimes = ['application/pdf'];
