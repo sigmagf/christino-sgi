@@ -46,7 +46,7 @@ export class WorksCreateController {
         throw new Error(JSON.stringify({ code: 400, message: 'O item \'status\' é inválido.', details: 'O status deve ser entre \'1\',\'2\',\'3\',\'4\'' }));
       }
 
-      const work = await this.service.execute({ clientId, serviceId, identifier, value, status, details, history });
+      const work = await this.service.execute({ clientId, serviceId, identifier, value, status, details, history, createdBy: req.user?.id, updatedBy: req.user?.id });
       return res.status(201).json(work);
     } catch(err) {
       return errorWork(req, res, err);

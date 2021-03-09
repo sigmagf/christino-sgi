@@ -5,7 +5,7 @@ import { IVehiclesRepository } from '~/repositories/IVehiclesRepository';
 export class VehiclesUpdateService {
   constructor(private repository: IVehiclesRepository) { }
 
-  async execute(data: Partial<Omit<IVehicle, 'client'|'createdAt'|'updatedAt'>>) {
+  async execute(data: Partial<Omit<IVehicle, 'client'|'createdAt'|'updatedAt'|'createdBy'|'createdByUser'|'updatedByUser'|'crlveIncluded'|'withdrawalIncluded'>>) {
     if(!await this.repository.findById(data.id)) {
       throw new Error(JSON.stringify({ code: 404, message: 'Veículo não encontrado.', details: null }));
     }

@@ -2,7 +2,7 @@ import { IWork } from '@christino-sgi/common';
 
 import { IWorksRepository } from '~/repositories/IWorksRepository';
 
-interface IWorksCreateRequestDTO extends Pick<IWork, 'clientId'|'serviceId'|'identifier'|'value'|'status'|'details'> {
+interface IWorksCreateRequestDTO extends Pick<IWork, 'clientId'|'serviceId'|'identifier'|'value'|'status'|'details'|'createdBy'|'updatedBy'> {
   history: string;
 }
 
