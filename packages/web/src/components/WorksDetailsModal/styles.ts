@@ -16,12 +16,7 @@ export const WorksDetailsModalForm = styled(Form)`
                        'HT HT HT HT HT HT HT HT HT HT HT HT';
 
   table {
-    table-layout: fixed;
     width: 1080px;
-    
-    tbody {
-      display: block;
-    }
 
     thead, tbody {
       max-height: 105px;
