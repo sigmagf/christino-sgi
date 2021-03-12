@@ -15,30 +15,37 @@ export const WorksDetailsModalForm = styled(Form)`
                        'HS HS HS HS HS HS HS HS HS HS HS HS'
                        'HT HT HT HT HT HT HT HT HT HT HT HT';
 
-  table {
-    width: 1080px;
-
-    thead, tbody {
-      max-height: 105px;
+  .history-container {
+    table {
       width: 1080px;
-      overflow-y: auto;
 
-      th, td {
-        height: 25px;
-        font-family: 'Roboto Mono', monospace;
+      &nth-child(1) {
+        margin-bottom: 5px;
       }
 
-      th {
-        &:nth-child(1) { width: calc(1080px - 135px); text-align: left; }
-        &:nth-child(2) { width: 125px; }
-      }
+      thead, tbody {
+        max-height: 105px;
+        width: 1080px;
+        overflow-y: auto;
 
-      td {
-        &:nth-child(1) { width: calc(1080px - 125px); }
-        &:nth-child(2) { width: 125px; text-align: center; }
+        th, td {
+          height: 25px;
+          font-family: 'Roboto Mono', monospace;
+        }
+
+        th {
+          &:nth-child(1) { width: calc(1080px - 135px); text-align: left; }
+          &:nth-child(2) { width: 135px; }
+        }
+
+        td {
+          &:nth-child(1) { width: calc(1080px - 125px); }
+          &:nth-child(2) { width: 125px; text-align: center; }
+        }
       }
     }
   }
+  
 
   > :nth-child(1) { grid-area: CI; input { text-transform: uppercase; } } /* CLIENTID */
   > :nth-child(2) { grid-area: CA; } /* CLIENT ADD */
