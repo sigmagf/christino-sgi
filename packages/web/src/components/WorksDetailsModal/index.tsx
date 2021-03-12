@@ -170,7 +170,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
           <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} maxLength={256} />
           { editing && <Input name="history" label="NOVA ENTRADA DO HISTÓRICO" maxLength={115} /> }
 
-          <div>
+          <div className="history-container">
             <Table>
               <thead>
                 <tr>
