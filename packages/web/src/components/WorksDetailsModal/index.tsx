@@ -170,22 +170,26 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
           <TextArea disabled={!editing} name="details" label="DETALHES" rows={3} maxLength={256} />
           { editing && <Input name="history" label="NOVA ENTRADA DO HISTÓRICO" maxLength={115} /> }
 
-          <Table>
-            <thead>
-              <tr>
-                <th>HISTORICO</th>
-                <th>CRIADO EM</th>
-              </tr>
-            </thead>
-            <tbody>
-              {work && work.histories.map((hist) => (
-                <tr key={hist.id}>
-                  <td>{ hist.details }</td>
-                  <td>{ formatDate(hist.createdAt) }</td>
+          <div>
+            <Table>
+              <thead>
+                <tr>
+                  <th>HISTORICO</th>
+                  <th>CRIADO EM</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+            </Table>
+            <Table>
+              <tbody>
+                {work && work.histories.map((hist) => (
+                  <tr key={hist.id}>
+                    <td>{ hist.details }</td>
+                    <td>{ formatDate(hist.createdAt) }</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
         </WorksDetailsModalForm>
         <WorksDetailsActionButtons editing={editing}>
           {workPermission >= 2 && (
