@@ -165,6 +165,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
           await api.put<IVehicle>(`/vehicles/${vehicle.id}`, { ...vehicle, status: 1 }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
           toast.success('Veículo baixado com sucesso! Não se esqueça de enviar a baixa ou o ATPV-e!');
+          onClose();
         }
       } catch(err) {
         if(err instanceof yup.ValidationError) {
@@ -298,7 +299,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
                   <Button type="button" variant="info" disabled={inSubmitProcess} onClick={() => setUploadCRLVeModal(true)}>
                     <FaUpload />&nbsp;&nbsp;&nbsp;ENVIAR CRLVe
                   </Button>
-                  {(vehicle.status === 1 && !vehicle.withdrawalIncluded) && (
+                  {(vehicle.status === 1) && (
                     <Button type="button" variant="info" disabled={inSubmitProcess} onClick={() => setUploadWithdrawalModal(true)}>
                       <FaUpload />&nbsp;&nbsp;&nbsp;ENVIAR BAIXA
                     </Button>
