@@ -18,7 +18,7 @@ export class UsersResetPasswordService {
     }
 
     if(data.token !== dbUser.pwdResetToken) {
-      throw new Error(JSON.stringify({ code: 401, message: 'Token de recuperação inválido.', details: null }));
+      throw new Error(JSON.stringify({ code: 400, message: 'Token de recuperação inválido.', details: null }));
     }
 
     if(dbUser.pwdResetExpires < new Date()) {
