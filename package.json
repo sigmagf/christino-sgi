@@ -1,6 +1,6 @@
 {
   "name": "christino-sgi",
-  "description": "Workspace para o sistema despachante do escritorio christino.",
+  "description": "Workspace para o sistema do escritorio christino.",
   "version": "1.0.0",
   "private": "true",
   "main": "index.js",
@@ -17,15 +17,16 @@
       "packages/*"
     ]
   },
-  "author": {
-    "name": "João Gabriel Furlan e Leonel",
-    "email": "jgfurlan2@gmail.com",
-    "url": "https://furlansolutions.com.br"
-  },
   "devDependencies": {
     "@christino-sgi/eslint-config": "*",
     "@types/node": "^14.6.0",
+    "npm-run-all": "^4.1.5",
     "typescript": "~4.1.3"
+  },
+  "author": {
+    "name": "João Gabriel Furlan e Leonel",
+    "email": "jgfurlan2@gmail.com",
+    "url": "https://github.com/sigmagf"
   },
   "license": "MIT"
 }
