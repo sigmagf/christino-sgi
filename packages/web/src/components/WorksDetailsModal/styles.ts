@@ -23,6 +23,10 @@ export const WorksDetailsModalForm = styled(Form)`
         margin-bottom: 5px;
       }
 
+      &:nth-child(2) {
+        table-layout: fixed;
+      }
+
       thead, tbody {
         max-height: 105px;
         width: 1080px;
