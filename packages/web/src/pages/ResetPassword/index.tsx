@@ -59,11 +59,6 @@ export const ResetPasswordPage: React.FC = () => {
     } catch(err) {
       if(err instanceof yup.ValidationError) {
         err.inner.forEach((error) => toast.error(error.message));
-      } else if(err.response
-                && err.response.data
-                && err.response.data.message
-                && (err.response.data.message === 'Token de recuperação inválido.' || err.response.data.message === 'Token expirado.')) {
-        toast.error('Token inválido ou expirado');
       } else {
         handleHTTPRequestError(err);
       }
