@@ -114,7 +114,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         await api.post(`/vehicles/${vehicle.id}/crlve`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
         onChange({ ...vehicle, crlveIncluded: true });
 
-        toast.success('CRLVe enviada com sucesso!');
+        toast.success('CRLV-e enviado com sucesso!');
         setUploadWithdrawalModal(false);
       } catch(err) {
         handleHTTPRequestError(err);
@@ -164,9 +164,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
           await api.put<IVehicle>(`/vehicles/${vehicle.id}`, { ...vehicle, status: 1 }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
 
-          setDownModal(false);
-          setUploadWithdrawalModal(true);
-          toast.success('Veículo baixado com sucesso!');
+          toast.success('Veículo baixado com sucesso! Não se esqueça de enviar a baixa ou o ATPV-e!');
         }
       } catch(err) {
         if(err instanceof yup.ValidationError) {
@@ -282,7 +280,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
             <>
               {vehicle.crlveIncluded && (
                 <Button type="button" variant="secondary" disabled={inLoadingFile} onClick={handleGetCRLVe}>
-                  <FaEye />&nbsp;&nbsp;&nbsp;VER CRLVe
+                  <FaEye />&nbsp;&nbsp;&nbsp;VER CRLV-e
                 </Button>
               )}
               {(vehicle.status === 1 && vehicle.withdrawalIncluded) && (
@@ -361,7 +359,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
 
       <DropzoneModal
         isOpen={uploadCRLVeModal}
-        header="ENVIAR CRLVe"
+        header="ENVIAR CRLV-e"
         onClose={() => setUploadCRLVeModal(false)}
         inLoading={inLoadingFile}
         onDropAccepted={onUploadCRLVe}
