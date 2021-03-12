@@ -19,7 +19,7 @@ export const WorksDetailsModalForm = styled(Form)`
     table {
       width: 1080px;
 
-      &nth-child(1) {
+      &:nth-child(1) {
         margin-bottom: 5px;
       }
 
