@@ -12,7 +12,7 @@ export class UsersForgotPasswordController {
 
     try {
       const data = await this.service.execute({ email });
-      return res.json(data);
+      return res.status(200).send();
     } catch(err) {
       return errorWork(req, res, err);
     }
