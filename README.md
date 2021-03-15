@@ -5,10 +5,7 @@
 
 Utilize os .env.example em `packages/server` e `packages/web` para configurar as variaveis de ambiente.
 
-> É recomendável utilizar o `heroku` para deploy do back-end (`packages/server`) utilizando os seguintes buildpacks na ordem:
-> https://github.com/lstoll/heroku-buildpack-monorepo
->
-> heroku/nodejs
+> É recomendável utilizar o `heroku` para deploy do back-end (`packages/server`).
 
 ---
 > Para o front-end (`packages/web`) é recomendável utilizar a `vercel`.
