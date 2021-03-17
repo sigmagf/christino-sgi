@@ -1,13 +1,10 @@
 /__legacy__
 /node_modules
-/.vscode
 
-**/.env
+*.env*
+!.env.example
 /dist
-./*docker
 
 /__OLD__
 
-/.response_returns.ts
 /tmp
-!/tmp/**/.gitkeep
