@@ -1,14 +1,10 @@
-node_modules
-dist
-yarn-error.log
+**/node_modules
+/packages/**/dist
+/packages/**/build
 
-!/node_modules/.prisma
-
-/.vercel
+**/yarn-error.log
 
 **/*.env*
-
 !**/.env.example
-.vercel
 
-**.sh
+/pgdata

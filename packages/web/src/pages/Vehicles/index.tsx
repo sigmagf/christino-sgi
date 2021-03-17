@@ -5,14 +5,14 @@ import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Layout } from '~/components/Layout';
-import { VehiclesDataTable } from '~/components/VehiclesDataTable';
-import { VehiclesDetailsModal } from '~/components/VehiclesDetailsModal';
-import { VehiclesFiltersCard } from '~/components/VehiclesFiltersCard';
+import { Button } from '~/components/UI/Button';
+import { Card } from '~/components/UI/Card';
+import { Paginator } from '~/components/UI/Paginator';
+import { DataTable } from '~/components/Vehicles/DataTable';
+import { DetailsModal } from '~/components/Vehicles/DetailsModal';
+import { FiltersCard } from '~/components/Vehicles/FiltersCard';
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
-import { Button } from '~/interface/Button';
-import { Card } from '~/interface/Card';
-import { Paginator } from '~/interface/Paginator';
 import { IVehiclesRequestFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
@@ -114,13 +114,13 @@ export const VehiclesPage: React.FC = () => {
   return (
     <>
       <Layout setPermissions={(perms) => { setDespPermission(perms.despPermission); setCliePermission(perms.cliePermission); }}>
-        <VehiclesFiltersCard
+        <FiltersCard
           onCreateClick={onCreateClick}
           despPermission={despPermission}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
         />
 
-        <VehiclesDataTable
+        <DataTable
           inLoading={inLoading}
           vehicles={vehicles?.data}
           onDetailsClick={onDetailsClick}
@@ -138,7 +138,7 @@ export const VehiclesPage: React.FC = () => {
         </Card>
       </Layout>
 
-      <VehiclesDetailsModal
+      <DetailsModal
         isOpen={detailsModal}
         onClose={onDetailsModalClose}
         vehicle={vehicles?.data.find((el) => el.id === vehicleIdToDetails)}

@@ -9,9 +9,9 @@ import * as yup from 'yup';
 
 import ChristinoLogo from '~/assets/logo-texto.png';
 import { useLocalStorage } from '~/hooks';
-import { Button } from '~/interface/Button';
-import { Card } from '~/interface/Card';
-import { Input } from '~/interface/Form';
+import { Button } from '~/components/UI/Button';
+import { Card } from '~/components/UI/Card';
+import { Input } from '~/components/UI/Form';
 import { IUserAuth } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';

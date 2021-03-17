@@ -6,9 +6,9 @@ import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
 import { useLocalStorage } from '~/hooks';
-import { Button } from '~/interface/Button';
-import { Input } from '~/interface/Form';
-import { Modal } from '~/interface/Modal';
+import { Button } from '~/components/UI/Button';
+import { Input } from '~/components/UI/Form';
+import { Modal } from '~/components/UI/Modal';
 import { api } from '~/utils/api';
 import { formatDocument } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';

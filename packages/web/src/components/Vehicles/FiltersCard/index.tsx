@@ -2,22 +2,22 @@ import { FormHandles } from '@unform/core';
 import React, { useRef } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
 
+import { Button } from '~/components/UI/Button';
+import { Select, Input } from '~/components/UI/Form';
 import { useSWR } from '~/hooks/useSWR';
-import { Button } from '~/interface/Button';
-import { Select, Input } from '~/interface/Form';
 import { IVehiclesRequestFilters } from '~/interfaces';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
 
-import { ClientSearchInput } from '../ClientSearchInput';
-import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
+import { ClientSearchInput } from '../../ClientSearchInput';
+import { FiltersCardContainer, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
-interface IVehiclesFiltersCardProps {
+interface IFiltersCardProps {
   onFiltersApplyClick: (data: Omit<IVehiclesRequestFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
   despPermission: number;
 }
 
-export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
+export const FiltersCard: React.FC<IFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const formRef = useRef<FormHandles>(null);
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
@@ -60,7 +60,7 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
   };
 
   return (
-    <FiltersCard>
+    <FiltersCardContainer>
       <FiltersCardForm ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
         <ClientSearchInput defaultValue={{ value: '', label: 'TODOS' }} includeAll />
         <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
@@ -85,6 +85,6 @@ export const VehiclesFiltersCard: React.FC<IVehiclesFiltersCardProps> = ({ onCre
           <FaFilter />&nbsp;&nbsp;&nbsp;FILTRAR
         </Button>
       </FiltersCardActionButtons>
-    </FiltersCard>
+    </FiltersCardContainer>
   );
 };

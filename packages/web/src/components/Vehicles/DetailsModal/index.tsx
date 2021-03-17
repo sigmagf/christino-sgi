@@ -6,35 +6,30 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
+import { Button } from '~/components/UI/Button';
+import { Input, Select } from '~/components/UI/Form';
+import { Modal } from '~/components/UI/Modal';
 import { useLocalStorage } from '~/hooks';
-import { Button } from '~/interface/Button';
-import { DropzoneModal } from '~/interface/DropzoneModal';
-import { Input, Select } from '~/interface/Form';
-import { Modal } from '~/interface/Modal';
 import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
-import { onDocumentInputBlur, onDocumentInputFocus, onInputBlurMaxLength } from '~/utils/handleInputFormat';
+import { onInputBlurMaxLength } from '~/utils/handleInputFormat';
 
-import { ClientsDetailsModal } from '../ClientsDetailsModal';
-import { ClientSearchInput } from '../ClientSearchInput';
-import { VehiclesDetailsForm, VehiclesDetailsActionButtons, VehiclesDetailsLoadingContainer, VehiclesDetailsDownForm } from './styles';
-import { withdrawalPrintPage } from './withdrawalPrintPage';
+import { ClientsDetailsModal } from '../../ClientsDetailsModal';
+import { ClientSearchInput } from '../../ClientSearchInput';
+import { UploadCRLVeModal } from '../UploadCRLVeModal';
+import { UploadWithdrawalModal } from '../UploadWithdrawalModal';
+import { WithdrawalProtocolModal } from '../WithdrawalProtocolModal';
+import { VehiclesDetailsForm, VehiclesDetailsActionButtons, VehiclesDetailsLoadingContainer } from './styles';
 
 interface IFormDetailsData {
   clientId: string;
   plate: string;
   renavam: string;
   crv: string;
-  brandmodel: string;
+  brandModel: string;
   type: string;
   status: string;
-  details: string;
-}
-
-interface IFormDownData {
-  name: string;
-  document: string;
   details: string;
 }
 
@@ -48,11 +43,10 @@ interface IVehiclesDetailsModalProps {
   cliePermission: number;
 }
 
-export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, onChange, onCRLVeViewClick, despPermission, cliePermission }) => {
+export const DetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, onChange, onCRLVeViewClick, despPermission, cliePermission }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
   const formDetailsRef = useRef<FormHandles>(null);
-  const formDownRef = useRef<FormHandles>(null);
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
@@ -101,82 +95,6 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
     }
   };
   /* END HANDLE GET WITHDRAWAL */
-
-  /* - HANDLE UPLOAD CRLVe - */
-  const onUploadCRLVe = async (files: File[]) => {
-    if(vehicle) {
-      setInLoadingFile(true);
-
-      const data = new FormData();
-      data.append('file', files[0], files[0].name);
-
-      try {
-        await api.post(`/vehicles/${vehicle.id}/crlve`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-        onChange({ ...vehicle, crlveIncluded: true });
-
-        toast.success('CRLV-e enviado com sucesso!');
-        setUploadWithdrawalModal(false);
-      } catch(err) {
-        handleHTTPRequestError(err);
-      }
-
-      setInLoadingFile(false);
-    }
-  };
-  /* END HANDLE UPLOAD CRLVe */
-
-  /* - HANDLE UPLOAD WITHDRAWAL - */
-  const onUploadWithdrawal = async (files: File[]) => {
-    if(vehicle) {
-      setInLoadingFile(true);
-
-      const data = new FormData();
-      data.append('file', files[0], files[0].name);
-
-      try {
-        await api.post(`/vehicles/${vehicle.id}/withdrawal`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-        onChange({ ...vehicle, withdrawalIncluded: true });
-
-        toast.success('Baixa enviada com sucesso!');
-        setUploadWithdrawalModal(false);
-      } catch(err) {
-        handleHTTPRequestError(err);
-      }
-
-      setInLoadingFile(false);
-    }
-  };
-  /* END HANDLE UPLOAD WITHDRAWAL */
-
-  /* - HANDLE DOWN VEHICLE - */
-  const onDownVehicle: SubmitHandler<IFormDownData> = async (data) => {
-    if(vehicle) {
-      try {
-        const scheme = yup.object().shape({ name: yup.string().required('Nome é obrigatório.') });
-        await scheme.validate(data, { abortEarly: false });
-
-        // eslint-disable-next-line no-restricted-globals
-        const win = window.open('', 'popup', `width=${screen.width},height=${screen.height}`);
-        const baseURL = `${window.location.protocol}//${window.location.host}`;
-
-        if(win) {
-          win.document.body.innerHTML = withdrawalPrintPage(vehicle, data, baseURL);
-
-          await api.put<IVehicle>(`/vehicles/${vehicle.id}`, { ...vehicle, status: 1 }, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-          toast.success('Veículo baixado com sucesso! Não se esqueça de enviar a baixa ou o ATPV-e!');
-          onClose();
-        }
-      } catch(err) {
-        if(err instanceof yup.ValidationError) {
-          err.inner.forEach((yupError) => toast.error(yupError.message));
-        } else {
-          handleHTTPRequestError(err);
-        }
-      }
-    }
-  };
-  /* END HANDLE DOWN VEHICLE */
 
   /* - HANDLE VEHICLE EXCLUDE - */
   const onVehicleExclude = async () => {
@@ -234,10 +152,14 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
   /* END SAVE OR UPDATE VEHICLE */
 
   useEffect(() => {
-    if(vehicle) {
-      setEditing(false);
+    if(isOpen) {
+      if(vehicle) {
+        setEditing(false);
+      } else {
+        setEditing(true);
+      }
     } else {
-      setEditing(true);
+      setEditing(false);
     }
 
     setInLoadingFile(false);
@@ -245,7 +167,7 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
     setUploadCRLVeModal(false);
     setDownModal(false);
     setCadClientModal(false);
-  }, [vehicle]);
+  }, [isOpen, vehicle]);
 
   return (
     <>
@@ -349,28 +271,22 @@ export const VehiclesDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isO
         )}
       </Modal>
 
-      <Modal isOpen={downModal} onRequestClose={() => setDownModal(false)} haveHeader header="DADOS DE QUEM ESTA RETIRANDO">
-        <VehiclesDetailsDownForm ref={formDownRef} onSubmit={onDownVehicle}>
-          <Input name="name" label="NOME" />
-          <Input name="document" label="CPF/CNPJ" maxLength={14} onFocus={() => onDocumentInputFocus(formDownRef)} onBlur={() => onDocumentInputBlur(formDownRef)} />
-          <Input name="details" label="DETAILHES" />
-          <Button variant="success">EMITIR BAIXA</Button>
-        </VehiclesDetailsDownForm>
-      </Modal>
-
-      <DropzoneModal
-        isOpen={uploadCRLVeModal}
-        header="ENVIAR CRLV-e"
-        onClose={() => setUploadCRLVeModal(false)}
-        inLoading={inLoadingFile}
-        onDropAccepted={onUploadCRLVe}
+      <WithdrawalProtocolModal
+        isOpen={downModal}
+        onClose={() => setDownModal(false)}
+        vehicle={vehicle}
       />
-      <DropzoneModal
+      <UploadCRLVeModal
+        isOpen={uploadCRLVeModal}
+        onClose={() => setUploadCRLVeModal(false)}
+        onUploadSuccess={() => vehicle && onChange({ ...vehicle, crlveIncluded: true })}
+        vehicleId={vehicle?.id || ''}
+      />
+      <UploadWithdrawalModal
         isOpen={uploadWithdrawalModal}
-        header="ENVIAR BAIXA"
         onClose={() => setUploadWithdrawalModal(false)}
-        inLoading={inLoadingFile}
-        onDropAccepted={onUploadWithdrawal}
+        onUploadSuccess={() => vehicle && onChange({ ...vehicle, withdrawalIncluded: true })}
+        vehicleId={vehicle?.id || ''}
       />
 
       <ClientsDetailsModal

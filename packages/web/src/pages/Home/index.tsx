@@ -6,7 +6,7 @@ import { useTheme } from 'styled-components';
 
 import { Layout } from '~/components/Layout';
 import { useSWR } from '~/hooks/useSWR';
-import { Card } from '~/interface/Card';
+import { Card } from '~/components/UI/Card';
 
 import { HomePageContainer } from './styles';
 

@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  database:
+    image: 'postgres:latest'
+    container_name: sgi-database
+    environment: 
+      POSTGRES_USER: docker
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: sgichristino
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Appnav } from '~/components/Appnav';
 import { useLocalStorage } from '~/hooks';
-import { Button } from '~/interface/Button';
+import { Button } from '~/components/UI/Button';
 import { IUserPermissions } from '~/interfaces';
 import { api } from '~/utils/api';
 

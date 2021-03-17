@@ -8,10 +8,10 @@ import * as yup from 'yup';
 
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
-import { Button } from '~/interface/Button';
-import { Input, Select, TextArea } from '~/interface/Form';
-import { Modal } from '~/interface/Modal';
-import { Table } from '~/interface/Table';
+import { Button } from '~/components/UI/Button';
+import { Input, Select, TextArea } from '~/components/UI/Form';
+import { Modal } from '~/components/UI/Modal';
+import { Table } from '~/components/UI/Table';
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatMoney, formatDate } from '~/utils/formatString';

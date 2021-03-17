@@ -1,7 +1,7 @@
 import { Form } from '@unform/web';
 import styled from 'styled-components';
 
-import { Card } from '~/interface/Card';
+import { Card } from '~/components/UI/Card';
 
 export const FiltersCard = styled(Card)`
   margin-bottom: 15px;

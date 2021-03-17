@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import { FaSearch, FaFilePdf } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 
-import { Badge } from '~/interface/Badge';
-import { Button } from '~/interface/Button';
-import { Table } from '~/interface/Table';
+import { Badge } from '~/components/UI/Badge';
+import { Button } from '~/components/UI/Button';
+import { Table } from '~/components/UI/Table';
 import { vehicleStatus } from '~/utils/commonSelectOptions';
 
 import { DataTableCardContainer, VehiclesStatusBadge } from './styles';
@@ -17,7 +17,7 @@ interface IVehicleDataTableProps {
   onCRLVeViewClick: (id: string) => Promise<void>;
 }
 
-export const VehiclesDataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick, onCRLVeViewClick }) => {
+export const DataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick, onCRLVeViewClick }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
