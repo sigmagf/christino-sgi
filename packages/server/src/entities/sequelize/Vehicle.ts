@@ -2,9 +2,14 @@ import { IClient, IUser, IVehicle } from '@christino-sgi/common';
 import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
 import { v4 } from 'uuid';
 
-type CreateVehicleProps = Optional<Omit<IVehicle, 'client'|'createdByUser'|'updatedByUser'>, 'id'|'createdAt'|'createdBy'|'updatedAt'|'updatedBy'>;
+import { Client } from './Client';
+import { User } from './User';
 
-export class Vehicle extends Model<IVehicle, CreateVehicleProps> implements IVehicle {
+type VehicleCommonOmit = Omit<IVehicle, 'client'|'createdByUser'|'updatedByUser'|'createdAt'|'updatedAt'>;
+type VehicleModelAttributes = Omit<VehicleCommonOmit, 'createdBy'|'updatedBy'>;
+type VehicleCreationAttributes = Optional<VehicleCommonOmit, 'id'|'createdBy'|'updatedBy'>;
+
+export class Vehicle extends Model<VehicleModelAttributes, VehicleCreationAttributes> implements IVehicle {
   id: string;
   clientId: string;
   client: IClient;
@@ -24,12 +29,17 @@ export class Vehicle extends Model<IVehicle, CreateVehicleProps> implements IVeh
   updatedBy?: string;
   updatedByUser?: IUser;
 
-  static init(connection: Sequelize) {
-    super.init({
+  static initialize(connection: Sequelize) {
+    this.init({
       id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: v4(),
+      },
+      clientId: {
+        field: 'client_id',
+        type: DataTypes.UUID,
+        allowNull: false,
       },
       plate: {
         type: DataTypes.STRING,
@@ -77,9 +87,9 @@ export class Vehicle extends Model<IVehicle, CreateVehicleProps> implements IVeh
     }, { sequelize: connection, tableName: 'vehicles' });
   }
 
-  static associate(models: any) {
-    this.belongsTo(models.Client, { foreignKey: { name: 'clientId', field: 'client_id' }, as: 'client' });
-    this.belongsTo(models.User, { foreignKey: { name: 'createdBy', field: 'created_by' }, as: 'createdByUser' });
-    this.belongsTo(models.User, { foreignKey: { name: 'updatedBy', field: 'updated_by' }, as: 'updatedByUser' });
+  static associate() {
+    this.belongsTo(Client, { foreignKey: { name: 'clientId', field: 'client_id' }, as: 'client' });
+    this.belongsTo(User, { foreignKey: { name: 'createdBy', field: 'created_by' }, as: 'createdByUser' });
+    this.belongsTo(User, { foreignKey: { name: 'updatedBy', field: 'updated_by' }, as: 'updatedByUser' });
   }
 }

@@ -2,16 +2,17 @@ import { ISector } from '@christino-sgi/common';
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { v4 } from 'uuid';
 
-type CreateSectorProps = Optional<ISector, 'id'|'createdAt'|'updatedAt'>;
+type SectorModelAttributes = Omit<ISector, 'createdAt'|'updatedAt'>;
+type SectorCreationAttributes = Optional<SectorModelAttributes, 'id'>;
 
-export class Sector extends Model<ISector, CreateSectorProps> implements ISector {
+export class Sector extends Model<SectorModelAttributes, SectorCreationAttributes> implements ISector {
   id: string;
   name: string;
   createdAt: Date;
   updatedAt: Date;
 
-  static init(connection: Sequelize) {
-    super.init({
+  static initialize(connection: Sequelize) {
+    this.init({
       id: {
         type: DataTypes.UUID,
         primaryKey: true,

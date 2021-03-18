@@ -2,9 +2,11 @@ import { IClient } from '@christino-sgi/common';
 import { Model, Sequelize, DataTypes, Optional } from 'sequelize';
 import { v4 } from 'uuid';
 
-type CreateClientProps = Optional<IClient, 'id'|'createdAt'|'updatedAt'>;
+type ClientCommonOmit = Omit<IClient, 'createdAt'|'updatedAt'|'createdByUser'|'updatedByUser'>;
+type ClientModelAttributes = Omit<ClientCommonOmit, 'createdBy'|'updatedBy'>;
+type ClientCreationAttributes = Optional<ClientModelAttributes, 'id'>;
 
-export class Client extends Model<IClient, CreateClientProps> implements IClient {
+export class Client extends Model<ClientModelAttributes, ClientCreationAttributes> implements IClient {
   id: string;
   name: string;
   document: string;
@@ -15,8 +17,8 @@ export class Client extends Model<IClient, CreateClientProps> implements IClient
   createdAt: Date;
   updatedAt: Date;
 
-  static init(sequelize: Sequelize) {
-    super.init({
+  static initialize(sequelize: Sequelize) {
+    this.init({
       id: {
         type: DataTypes.UUID,
         primaryKey: true,

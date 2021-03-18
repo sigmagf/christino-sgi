@@ -2,9 +2,12 @@ import { IWork, IWorkHistory } from '@christino-sgi/common';
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { v4 } from 'uuid';
 
-type CreateWorkHistoryProps = Optional<Omit<IWorkHistory, 'work'>, 'id'|'createdAt'|'updatedAt'>;
+import { Work } from './Work';
 
-export class WorkHistory extends Model<IWorkHistory, CreateWorkHistoryProps> implements IWorkHistory {
+type WorkHistoryModelAttributes = Omit<IWorkHistory, 'createdAt'|'updatedAt'>
+type WorkHistoryCreationAttributes = Optional<WorkHistoryModelAttributes, 'id'>;
+
+export class WorkHistory extends Model<WorkHistoryModelAttributes, WorkHistoryCreationAttributes> implements IWorkHistory {
   id: string;
   workId: string;
   work: IWork;
@@ -12,12 +15,17 @@ export class WorkHistory extends Model<IWorkHistory, CreateWorkHistoryProps> imp
   createdAt: Date;
   updatedAt: Date;
 
-  static init(connection: Sequelize) {
-    super.init({
+  static initialize(connection: Sequelize) {
+    this.init({
       id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: v4(),
+      },
+      workId: {
+        field: 'work_id',
+        type: DataTypes.UUID,
+        allowNull: false,
       },
       details: {
         type: DataTypes.STRING,
@@ -26,7 +34,7 @@ export class WorkHistory extends Model<IWorkHistory, CreateWorkHistoryProps> imp
     }, { sequelize: connection, tableName: 'work_histories' });
   }
 
-  static associate(models: any) {
-    this.belongsTo(models.Work, { foreignKey: { name: 'workId', field: 'work_id' }, as: 'work' });
+  static associate() {
+    this.belongsTo(Work, { foreignKey: { name: 'workId', field: 'work_id' }, as: 'work' });
   }
 }

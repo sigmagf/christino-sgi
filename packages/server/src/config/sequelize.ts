@@ -9,7 +9,7 @@ import { Vehicle } from '~/entities/sequelize/Vehicle';
 import { Work } from '~/entities/sequelize/Work';
 import { WorkHistory } from '~/entities/sequelize/WorkHistory';
 
-const sequelize = new Sequelize({
+export const sequelize = new Sequelize({
   dialect: 'postgres',
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT, 10), // 😑 Realy?
@@ -23,19 +23,56 @@ const sequelize = new Sequelize({
   },
 });
 
-Client.init(sequelize);
-LogError.init(sequelize);
-Sector.init(sequelize);
-Service.init(sequelize);
-User.init(sequelize);
-Vehicle.init(sequelize);
-Work.init(sequelize);
-WorkHistory.init(sequelize);
+export function databaseConnect(cb: () => void) {
+  console.clear();
 
-LogError.associate(sequelize.models);
-Service.associate(sequelize.models);
-Vehicle.associate(sequelize.models);
-WorkHistory.associate(sequelize.models);
-Work.associate(sequelize.models);
+  /* ENTITIES INIT */
+  // Cashflow.initialize(sequelize);
+  // CashflowEntry.initialize(sequelize);
+  Client.initialize(sequelize);
+  LogError.initialize(sequelize);
+  Sector.initialize(sequelize);
+  Service.initialize(sequelize);
+  User.initialize(sequelize);
+  // UserPermission.initialize(sequelize);
+  Vehicle.initialize(sequelize);
+  Work.initialize(sequelize);
+  WorkHistory.initialize(sequelize);
 
-export { sequelize };
+  /* ENTITIES HOOKS */
+  // Cashflow.hooks();
+  // CashflowEntry.hooks();
+  // Client.hooks();
+  // Sector.hooks();
+  // Service.hooks();
+  // User.hooks();
+  // UserPermission.hooks();
+  // Vehicle.hooks();
+  // Work.hooks();
+  // WorkHistory.hooks();
+
+  /* ENTITIES RELATIONS */
+  // Cashflow.associate();
+  // CashflowEntry.associate();
+  // Client.associate();
+  LogError.associate();
+  // Sector.associate();
+  Service.associate();
+  // User.associate();
+  // UserPermission.associate();
+  Vehicle.associate();
+  Work.associate();
+  WorkHistory.associate();
+
+  console.log(` ✔ Conectado ao banco de dados '${sequelize.config.database}' no host '${sequelize.config.host}'.`);
+
+  /* CALLBACK (EXPRESS INIT) */
+  cb();
+
+  /* CLOSE CONNECTION ON SERVICE STOP */
+  process.on('SIGINT', () => {
+    sequelize.connectionManager.close().then(() => {
+      console.log(' ✗ Conexão com o banco de dados encerrada.');
+    });
+  });
+}

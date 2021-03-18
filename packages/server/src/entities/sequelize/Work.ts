@@ -2,9 +2,16 @@ import { IClient, IService, IUser, IWork, IWorkHistory } from '@christino-sgi/co
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 import { v4 } from 'uuid';
 
-type CreateWorkProps = Optional<Omit<IWork, 'client'|'service'|'histories'|'createdByUser'|'updatedByUser'>, 'id'|'createdAt'|'createdBy'|'updatedAt'|'updatedBy'>;
+import { Client } from './Client';
+import { Service } from './Service';
+import { User } from './User';
+import { WorkHistory } from './WorkHistory';
 
-export class Work extends Model<IWork, CreateWorkProps> implements IWork {
+type WorkCommonOmit = Omit<IWork, 'client'|'service'|'histories'|'cashflow'|'createdByUser'|'updatedByUser'|'createdAt'|'updatedAt'>;
+type WorkModelAttributes = Omit<WorkCommonOmit, |'createdBy'|'updatedBy'>;
+type WorkCreationAttributes = Optional<WorkCommonOmit, 'id'|'value'|'createdBy'|'updatedBy'>;
+
+export class Work extends Model<WorkModelAttributes, WorkCreationAttributes> implements IWork {
   id: string;
   clientId: string;
   client: IClient;
@@ -22,12 +29,22 @@ export class Work extends Model<IWork, CreateWorkProps> implements IWork {
   updatedBy?: string;
   updatedByUser?: IUser;
 
-  static init(connection: Sequelize) {
-    super.init({
+  static initialize(connection: Sequelize) {
+    this.init({
       id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: v4(),
+      },
+      clientId: {
+        field: 'client_id',
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      serviceId: {
+        field: 'service_id',
+        type: DataTypes.UUID,
+        allowNull: false,
       },
       identifier: {
         type: DataTypes.STRING,
@@ -49,11 +66,11 @@ export class Work extends Model<IWork, CreateWorkProps> implements IWork {
     }, { sequelize: connection, tableName: 'works' });
   }
 
-  static associate(models: any) {
-    this.belongsTo(models.Client, { foreignKey: { name: 'clientId', field: 'client_id' }, as: 'client' });
-    this.belongsTo(models.Service, { foreignKey: { name: 'serviceId', field: 'service_id' }, as: 'service' });
-    this.hasMany(models.WorkHistory, { foreignKey: { name: 'workId', field: 'work_id' }, as: 'histories' });
-    this.belongsTo(models.User, { foreignKey: { name: 'createdBy', field: 'created_by' }, as: 'createdByUser' });
-    this.belongsTo(models.User, { foreignKey: { name: 'updatedBy', field: 'updated_by' }, as: 'updatedByUser' });
+  static associate() {
+    this.belongsTo(Client, { foreignKey: { name: 'clientId', field: 'client_id' }, as: 'client' });
+    this.belongsTo(Service, { foreignKey: { name: 'serviceId', field: 'service_id' }, as: 'service' });
+    this.hasMany(WorkHistory, { foreignKey: { name: 'workId', field: 'work_id' }, as: 'histories' });
+    this.belongsTo(User, { foreignKey: { name: 'createdBy', field: 'created_by' }, as: 'createdByUser' });
+    this.belongsTo(User, { foreignKey: { name: 'updatedBy', field: 'updated_by' }, as: 'updatedByUser' });
   }
 }

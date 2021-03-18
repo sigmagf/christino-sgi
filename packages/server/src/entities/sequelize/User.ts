@@ -1,11 +1,10 @@
 import { IUser } from '@christino-sgi/common';
-import bcrypt from 'bcryptjs';
 import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
 import { v4 } from 'uuid';
 
 type CreateUserProps = Optional<Omit<IUser, 'pwdResetToken'|'pwdResetExpires'>, 'id'|'createdAt'|'updatedAt'>;
 
-export class User extends Model<IUser, CreateUserProps> implements IUser {
+export class User extends Model<Omit<IUser, 'createdAt'|'updatedAt'>, CreateUserProps> implements IUser {
   id: string;
   name: string;
   email: string;
@@ -20,8 +19,8 @@ export class User extends Model<IUser, CreateUserProps> implements IUser {
   createdAt: Date;
   updatedAt: Date;
 
-  static init(connection: Sequelize) {
-    super.init({
+  static initialize(connection: Sequelize) {
+    this.init({
       id: {
         type: DataTypes.UUID,
         primaryKey: true,

@@ -2,22 +2,31 @@ import { ISector, IService } from '@christino-sgi/common';
 import { Model, DataTypes, Sequelize, Optional } from 'sequelize';
 import { v4 } from 'uuid';
 
-type CreateServiceProps = Optional<Omit<IService, 'sector'>, 'id'|'createdAt'|'updatedAt'>;
+import { Sector } from './Sector';
 
-export class Service extends Model<IService, CreateServiceProps> implements IService {
+type ServiceModelAttributes = Omit<IService, 'sector'|'createdAt'|'updatedAt'>;
+type ServiceCreationAttributes = Optional<ServiceModelAttributes, 'id'>;
+
+export class Service extends Model<ServiceModelAttributes, ServiceCreationAttributes> implements IService {
   id: string;
   name: string;
   sectorId: string;
-  sector: ISector;
   createdAt: Date;
   updatedAt: Date;
 
-  static init(connection: Sequelize) {
-    super.init({
+  sector: ISector;
+
+  static initialize(connection: Sequelize) {
+    this.init({
       id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: v4(),
+      },
+      sectorId: {
+        field: 'sector_id',
+        type: DataTypes.UUID,
+        allowNull: false,
       },
       name: {
         type: DataTypes.STRING,
@@ -26,7 +35,7 @@ export class Service extends Model<IService, CreateServiceProps> implements ISer
     }, { sequelize: connection, tableName: 'services' });
   }
 
-  static associate(models: any) {
-    this.belongsTo(models.Sector, { foreignKey: { name: 'sectorId', field: 'sector_id' }, as: 'sector' });
+  static associate() {
+    this.belongsTo(Sector, { foreignKey: { name: 'sectorId', field: 'sector_id' }, as: 'sector' });
   }
 }
