@@ -8,9 +8,9 @@ import { Layout } from '~/components/Layout';
 import { Button } from '~/components/UI/Button';
 import { Card } from '~/components/UI/Card';
 import { Paginator } from '~/components/UI/Paginator';
-import { DataTable } from '~/components/Vehicles/DataTable';
-import { DetailsModal } from '~/components/Vehicles/DetailsModal';
-import { FiltersCard } from '~/components/Vehicles/FiltersCard';
+import { VehiclesDataTable } from '~/components/Vehicles/DataTable';
+import { VehiclesDetailsModal } from '~/components/Vehicles/DetailsModal';
+import { VehiclesFiltersCard } from '~/components/Vehicles/FiltersCard';
 import { useLocalStorage } from '~/hooks';
 import { useSWR } from '~/hooks/useSWR';
 import { IVehiclesRequestFilters } from '~/interfaces';
@@ -114,13 +114,13 @@ export const VehiclesPage: React.FC = () => {
   return (
     <>
       <Layout setPermissions={(perms) => { setDespPermission(perms.despPermission); setCliePermission(perms.cliePermission); }}>
-        <FiltersCard
+        <VehiclesFiltersCard
           onCreateClick={onCreateClick}
           despPermission={despPermission}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
         />
 
-        <DataTable
+        <VehiclesDataTable
           inLoading={inLoading}
           vehicles={vehicles?.data}
           onDetailsClick={onDetailsClick}
@@ -138,7 +138,7 @@ export const VehiclesPage: React.FC = () => {
         </Card>
       </Layout>
 
-      <DetailsModal
+      <VehiclesDetailsModal
         isOpen={detailsModal}
         onClose={onDetailsModalClose}
         vehicle={vehicles?.data.find((el) => el.id === vehicleIdToDetails)}

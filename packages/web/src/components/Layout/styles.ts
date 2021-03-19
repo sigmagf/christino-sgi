@@ -10,7 +10,7 @@ export const AppMain = styled.main`
   overflow-y: auto;
 `;
 
-export const UserBarContainer = styled.div`
+export const AppHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -3,15 +3,15 @@ import { FormHandles, SubmitHandler } from '@unform/core';
 import React, { useRef } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
 
-import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/components/UI/Button';
 import { Select, Input, DatePicker } from '~/components/UI/Form';
+import { useSWR } from '~/hooks/useSWR';
 import { IWorksRequestFilters } from '~/interfaces';
 import { worksStatus as status } from '~/utils/commonSelectOptions';
 import { formatDatabaseDate } from '~/utils/formatString';
 import { onValueInputFocus, onValueInputBlur } from '~/utils/handleInputFormat';
 
-import { ClientSearchInput } from '../ClientSearchInput';
+import { ClientsSearchInput } from '../Clients/SearchInput';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IWorksFiltersCardProps {
@@ -97,7 +97,7 @@ export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateCli
   return (
     <FiltersCard>
       <FiltersCardForm ref={formRef} onSubmit={onSubmit}>
-        <ClientSearchInput defaultValue={{ label: 'TODOS', value: '' }} includeAll />
+        <ClientsSearchInput defaultValue={{ label: 'TODOS', value: '' }} includeAll />
         <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
         <Select label="STATUS" name="status" options={status} isMulti defaultValue={status.filter((el) => el.value !== '4')} />
 

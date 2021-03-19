@@ -8,7 +8,7 @@ import { useSWR } from '~/hooks/useSWR';
 import { IVehiclesRequestFilters } from '~/interfaces';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
 
-import { ClientSearchInput } from '../../ClientSearchInput';
+import { ClientsSearchInput } from '../../Clients/SearchInput';
 import { FiltersCardContainer, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IFiltersCardProps {
@@ -17,7 +17,7 @@ interface IFiltersCardProps {
   despPermission: number;
 }
 
-export const FiltersCard: React.FC<IFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
+export const VehiclesFiltersCard: React.FC<IFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const formRef = useRef<FormHandles>(null);
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
@@ -62,7 +62,7 @@ export const FiltersCard: React.FC<IFiltersCardProps> = ({ onCreateClick, onFilt
   return (
     <FiltersCardContainer>
       <FiltersCardForm ref={formRef} onSubmit={(data) => onFiltersApplyClick(data)}>
-        <ClientSearchInput defaultValue={{ value: '', label: 'TODOS' }} includeAll />
+        <ClientsSearchInput defaultValue={{ value: '', label: 'TODOS' }} includeAll />
         <Select label="GRUPO" name="group" options={handleGroups()} defaultValue={{ label: 'TODOS', value: '' }} />
         <Select label="STATUS" name="status" options={status} defaultValue={[status[1], status[2], status[3]]} isMulti />
 

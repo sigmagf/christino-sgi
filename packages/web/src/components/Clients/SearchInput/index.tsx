@@ -1,12 +1,12 @@
 import { IClient } from '@christino-sgi/common';
 import React, { useState } from 'react';
 
-import { useLocalStorage } from '~/hooks';
 import { Select } from '~/components/UI/Form';
+import { useLocalStorage } from '~/hooks';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 
-interface IClientSearchInput {
+interface ISearchInput {
   disabled?: boolean;
   label?: string;
   name?: string;
@@ -17,7 +17,7 @@ interface IClientSearchInput {
   };
 }
 
-export const ClientSearchInput: React.FC<IClientSearchInput> = ({ disabled = false, label = 'CLIENTE', name = 'clientId', defaultValue, includeAll = false }) => {
+export const ClientsSearchInput: React.FC<ISearchInput> = ({ disabled = false, label = 'CLIENTE', name = 'clientId', defaultValue, includeAll = false }) => {
   const storage = useLocalStorage();
   let timer: NodeJS.Timeout;
 

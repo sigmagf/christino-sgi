@@ -8,17 +8,17 @@ import { Button } from '~/components/UI/Button';
 import { Table } from '~/components/UI/Table';
 import { formatDocument } from '~/utils/formatString';
 
-import { DataTableCardContainer } from './styles';
+import { DataTableContainer } from './styles';
 
-interface IClientsDataTableProps {
+interface IDataTableProps {
   clients: IClient[] | undefined;
   inLoading: boolean;
   onDetailsClick: (id: string) => void;
 }
 
-export const ClientsDataTable: React.FC<IClientsDataTableProps> = ({ clients, inLoading, onDetailsClick }) => {
+export const ClientsDataTable: React.FC<IDataTableProps> = ({ clients, inLoading, onDetailsClick }) => {
   return (
-    <DataTableCardContainer style={{ position: 'relative' }}>
+    <DataTableContainer style={{ position: 'relative' }}>
       { inLoading && (
         <div style={{ position: 'absolute', marginTop: 25, top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
           <ReactLoading type="bars" />
@@ -67,6 +67,6 @@ export const ClientsDataTable: React.FC<IClientsDataTableProps> = ({ clients, in
           ))}
         </tbody>
       </Table>
-    </DataTableCardContainer>
+    </DataTableContainer>
   );
 };

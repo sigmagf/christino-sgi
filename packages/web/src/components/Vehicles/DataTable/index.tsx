@@ -10,14 +10,14 @@ import { vehicleStatus } from '~/utils/commonSelectOptions';
 
 import { DataTableCardContainer, VehiclesStatusBadge } from './styles';
 
-interface IVehicleDataTableProps {
+interface IDataTableProps {
   vehicles: IVehicle[] | undefined;
   inLoading: boolean;
   onDetailsClick: (id: string) => void;
   onCRLVeViewClick: (id: string) => Promise<void>;
 }
 
-export const DataTable: React.FC<IVehicleDataTableProps> = ({ vehicles, inLoading, onDetailsClick, onCRLVeViewClick }) => {
+export const VehiclesDataTable: React.FC<IDataTableProps> = ({ vehicles, inLoading, onDetailsClick, onCRLVeViewClick }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 

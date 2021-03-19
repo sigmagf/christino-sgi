@@ -15,11 +15,11 @@ import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { onInputBlurMaxLength } from '~/utils/handleInputFormat';
 
-import { ClientsDetailsModal } from '../../ClientsDetailsModal';
-import { ClientSearchInput } from '../../ClientSearchInput';
-import { UploadCRLVeModal } from '../UploadCRLVeModal';
-import { UploadWithdrawalModal } from '../UploadWithdrawalModal';
-import { WithdrawalProtocolModal } from '../WithdrawalProtocolModal';
+import { ClientsDetailsModal } from '../../Clients/DetailsModal';
+import { ClientsSearchInput } from '../../Clients/SearchInput';
+import { VehiclesUploadCRLVeModal } from '../UploadCRLVeModal';
+import { VehiclesUploadWithdrawalModal } from '../UploadWithdrawalModal';
+import { VehiclesWithdrawalProtocolModal } from '../WithdrawalProtocolModal';
 import { VehiclesDetailsForm, VehiclesDetailsActionButtons, VehiclesDetailsLoadingContainer } from './styles';
 
 interface IFormDetailsData {
@@ -33,7 +33,7 @@ interface IFormDetailsData {
   details: string;
 }
 
-interface IVehiclesDetailsModalProps {
+interface IDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   vehicle?: IVehicle;
@@ -43,7 +43,7 @@ interface IVehiclesDetailsModalProps {
   cliePermission: number;
 }
 
-export const DetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, vehicle, onChange, onCRLVeViewClick, despPermission, cliePermission }) => {
+export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle, onChange, onCRLVeViewClick, despPermission, cliePermission }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
   const formDetailsRef = useRef<FormHandles>(null);
@@ -153,11 +153,7 @@ export const DetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onC
 
   useEffect(() => {
     if(isOpen) {
-      if(vehicle) {
-        setEditing(false);
-      } else {
-        setEditing(true);
-      }
+      setEditing(!vehicle);
     } else {
       setEditing(false);
     }
@@ -182,7 +178,7 @@ export const DetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onC
             }
           }
         >
-          <ClientSearchInput
+          <ClientsSearchInput
             disabled={!editing}
             defaultValue={vehicle && { value: vehicle.clientId, label: `${vehicle.client.document.padStart(14, '*')} - ${vehicle.client.name}` }}
           />
@@ -271,18 +267,18 @@ export const DetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onC
         )}
       </Modal>
 
-      <WithdrawalProtocolModal
+      <VehiclesWithdrawalProtocolModal
         isOpen={downModal}
         onClose={() => setDownModal(false)}
         vehicle={vehicle}
       />
-      <UploadCRLVeModal
+      <VehiclesUploadCRLVeModal
         isOpen={uploadCRLVeModal}
         onClose={() => setUploadCRLVeModal(false)}
         onUploadSuccess={() => vehicle && onChange({ ...vehicle, crlveIncluded: true })}
         vehicleId={vehicle?.id || ''}
       />
-      <UploadWithdrawalModal
+      <VehiclesUploadWithdrawalModal
         isOpen={uploadWithdrawalModal}
         onClose={() => setUploadWithdrawalModal(false)}
         onUploadSuccess={() => vehicle && onChange({ ...vehicle, withdrawalIncluded: true })}

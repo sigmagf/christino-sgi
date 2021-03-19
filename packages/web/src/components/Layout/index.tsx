@@ -4,13 +4,13 @@ import { FaSignOutAlt, FaCog } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
 
-import { Appnav } from '~/components/Appnav';
-import { useLocalStorage } from '~/hooks';
+import { AppNav } from '~/components/AppNav';
 import { Button } from '~/components/UI/Button';
+import { useLocalStorage } from '~/hooks';
 import { IUserPermissions } from '~/interfaces';
 import { api } from '~/utils/api';
 
-import { AppContent, AppMain, UserBarContainer } from './styles';
+import { AppContent, AppMain, AppHeader } from './styles';
 
 interface ILayoutProps {
   setPermissions?: (perms: IUserPermissions) => void;
@@ -66,9 +66,9 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
 
   return (
     <>
-      <Appnav perms={perms} />
+      <AppNav perms={perms} />
       <AppMain>
-        <UserBarContainer>
+        <AppHeader>
           <div className="user-name">
             Olá, <strong style={{ fontWeight: 'bold' }}>{ storage.getItem('userName') }</strong>
           </div>
@@ -78,7 +78,7 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
             <Button variant="secondary"><FaCog size={17} /></Button>
             <img src={`https://www.codeapi.io/initials/${storage.getItem('userName')?.replaceAll(' ', '%20')}`} alt="" />
           </div>
-        </UserBarContainer>
+        </AppHeader>
 
         <AppContent>
           { children }

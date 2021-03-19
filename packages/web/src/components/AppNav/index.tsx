@@ -21,7 +21,7 @@ interface IAppnavProps {
   perms?: IUserPermissions;
 }
 
-export const Appnav: React.FC<IAppnavProps> = ({ perms }) => {
+export const AppNav: React.FC<IAppnavProps> = ({ perms }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const { pathname } = useLocation();
   const navigate = useNavigate();

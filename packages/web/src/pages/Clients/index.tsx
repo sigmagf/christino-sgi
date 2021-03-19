@@ -4,14 +4,14 @@ import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { ClientsDataTable } from '~/components/ClientsDataTable';
-import { ClientsDetailsModal } from '~/components/ClientsDetailsModal';
+import { ClientsDataTable } from '~/components/Clients/DataTable';
+import { ClientsDetailsModal } from '~/components/Clients/DetailsModal';
 import { Layout } from '~/components/Layout';
-import { useLocalStorage } from '~/hooks';
-import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/components/UI/Button';
 import { Card } from '~/components/UI/Card';
 import { Paginator } from '~/components/UI/Paginator';
+import { useLocalStorage } from '~/hooks';
+import { useSWR } from '~/hooks/useSWR';
 import { IClientsRequestFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';

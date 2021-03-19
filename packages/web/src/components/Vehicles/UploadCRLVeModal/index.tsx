@@ -13,7 +13,7 @@ interface IUploadCRLVeModal {
   vehicleId: string;
 }
 
-export const UploadCRLVeModal: React.FC<IUploadCRLVeModal> = ({ isOpen, onClose, onUploadSuccess, vehicleId }) => {
+export const VehiclesUploadCRLVeModal: React.FC<IUploadCRLVeModal> = ({ isOpen, onClose, onUploadSuccess, vehicleId }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */

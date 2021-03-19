@@ -13,7 +13,7 @@ interface IUploadWithdrawalModal {
   vehicleId: string;
 }
 
-export const UploadWithdrawalModal: React.FC<IUploadWithdrawalModal> = ({ isOpen, onClose, onUploadSuccess, vehicleId }) => {
+export const VehiclesUploadWithdrawalModal: React.FC<IUploadWithdrawalModal> = ({ isOpen, onClose, onUploadSuccess, vehicleId }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */

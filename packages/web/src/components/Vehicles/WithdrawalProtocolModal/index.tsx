@@ -27,7 +27,7 @@ interface IUploadWithdrawalModal {
   vehicle?: IVehicle;
 }
 
-export const WithdrawalProtocolModal: React.FC<IUploadWithdrawalModal> = ({ isOpen, onClose, vehicle }) => {
+export const VehiclesWithdrawalProtocolModal: React.FC<IUploadWithdrawalModal> = ({ isOpen, onClose, vehicle }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);

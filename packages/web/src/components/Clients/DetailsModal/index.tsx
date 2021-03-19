@@ -5,10 +5,10 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
-import { useLocalStorage } from '~/hooks';
 import { Button } from '~/components/UI/Button';
 import { Input } from '~/components/UI/Form';
 import { Modal } from '~/components/UI/Modal';
+import { useLocalStorage } from '~/hooks';
 import { api } from '~/utils/api';
 import { formatDocument } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
@@ -26,14 +26,14 @@ interface IFormData {
   phone2: string;
 }
 
-interface IVehiclesDetailsModalProps {
+interface IDetailsModalProps {
   isOpen: boolean;
   client?: IClient;
   onClose: () => void;
   cliePermission: number;
 }
 
-export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOpen, onClose, client, cliePermission }) => {
+export const ClientsDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, client, cliePermission }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);
@@ -95,14 +95,14 @@ export const ClientsDetailsModal: React.FC<IVehiclesDetailsModalProps> = ({ isOp
   };
 
   useEffect(() => {
-    if(client) {
-      setInSubmitProcess(false);
-      setEditing(false);
+    if(isOpen) {
+      setEditing(!client);
     } else {
-      setInSubmitProcess(false);
-      setEditing(true);
+      setEditing(false);
     }
-  }, [client]);
+
+    setInSubmitProcess(false);
+  }, [client, isOpen]);
 
   return (
     <>

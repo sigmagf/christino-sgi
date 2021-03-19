@@ -6,20 +6,20 @@ import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
-import { useLocalStorage } from '~/hooks';
-import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/components/UI/Button';
 import { Input, Select, TextArea } from '~/components/UI/Form';
 import { Modal } from '~/components/UI/Modal';
 import { Table } from '~/components/UI/Table';
+import { useLocalStorage } from '~/hooks';
+import { useSWR } from '~/hooks/useSWR';
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatMoney, formatDate } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { onValueInputBlur, onValueInputFocus } from '~/utils/handleInputFormat';
 
-import { ClientsDetailsModal } from '../ClientsDetailsModal';
-import { ClientSearchInput } from '../ClientSearchInput';
+import { ClientsDetailsModal } from '../Clients/DetailsModal';
+import { ClientsSearchInput } from '../Clients/SearchInput';
 import { WorksDetailsModalForm, WorksDetailsActionButtons, WorksDetailsLoadingContainer } from './styles';
 
 interface IFormData {
@@ -121,18 +121,14 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
   };
 
   useEffect(() => {
-    if(work) {
-      setEditing(false);
-      setInSubmitProcess(false);
-
-      setEditing(false);
+    if(isOpen) {
+      setEditing(!work);
     } else {
-      setEditing(true);
-      setInSubmitProcess(false);
-
-      setEditing(true);
+      setEditing(false);
     }
-  }, [work]);
+
+    setInSubmitProcess(false);
+  }, [isOpen, work]);
 
   return (
     <>
@@ -147,7 +143,7 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
             status: worksStatus.find((el) => el.value === work.status.toString()),
           }}
         >
-          <ClientSearchInput
+          <ClientsSearchInput
             disabled={!!work || !editing}
             defaultValue={work && { value: work.clientId, label: `${work.client.document.padStart(14, '*')} - ${work.client.name}` }}
           />
