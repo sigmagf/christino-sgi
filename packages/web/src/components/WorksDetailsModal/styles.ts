@@ -24,7 +24,8 @@ export const WorksDetailsModalForm = styled(Form)`
       }
 
       &:nth-child(2) {
-        table-layout: fixed;
+        max-height: 105px;
+        overflow-y: auto;
       }
 
       thead, tbody {
