@@ -12,3 +12,8 @@
 ### SERVER 0.5.13 | WEB 0.0.27 (07/03/2021)
 - **[web]** Adicionado a tela de solicitação e recuperacao de senha;
 - **[server]** Finalizado a recuperação de senha utilizando o SES da AWS;
+
+### SERVER 0.5.14 | WEB 0.0.28 (19/03/2021)
+- **[web]** Bug fix;
+- **[server]** Bug fix;
+- Github workflows re-adicionados;
