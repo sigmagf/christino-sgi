@@ -1,6 +1,6 @@
 import { IClient, IVehicle } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import { Button } from '~/components/UI/Button';
 import { Input } from '~/components/UI/Form';
 import { Modal } from '~/components/UI/Modal';
+import { UserPermissionsContext } from '~/contexts/UserPermissions';
 import { useLocalStorage } from '~/hooks';
 import { api } from '~/utils/api';
 import { formatDocument } from '~/utils/formatString';
@@ -30,13 +31,13 @@ interface IDetailsModalProps {
   isOpen: boolean;
   client?: IClient;
   onClose: () => void;
-  cliePermission: number;
 }
 
-export const ClientsDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, client, cliePermission }) => {
+export const ClientsDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, client }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);
+  const { cliePermission } = useContext(UserPermissionsContext);
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
@@ -103,6 +104,10 @@ export const ClientsDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onCl
 
     setInSubmitProcess(false);
   }, [client, isOpen]);
+
+  if(cliePermission < 1) {
+    return <></>;
+  }
 
   return (
     <>

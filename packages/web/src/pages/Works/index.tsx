@@ -1,18 +1,19 @@
 import { IPagination, IWork } from '@christino-sgi/common';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { Layout } from '~/components/Layout';
-import { WorksDataTable } from '~/components/WorksDataTable';
-import { WorksDetailsModal } from '~/components/WorksDetailsModal';
-import { WorksFiltersCard } from '~/components/WorksFiltersCard';
-import { useLocalStorage } from '~/hooks';
-import { useSWR } from '~/hooks/useSWR';
 import { Button } from '~/components/UI/Button';
 import { Card } from '~/components/UI/Card';
 import { Paginator } from '~/components/UI/Paginator';
+import { WorksDataTable } from '~/components/Works/DataTable';
+import { WorksDetailsModal } from '~/components/Works/DetailsModal';
+import { WorksFiltersCard } from '~/components/Works/FiltersCard';
+import { UserPermissionsContext } from '~/contexts/UserPermissions';
+import { useLocalStorage } from '~/hooks';
+import { useSWR } from '~/hooks';
 import { IWorksRequestFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
@@ -24,9 +25,8 @@ export const WorksPage: React.FC = () => {
   document.title = 'Ordem de Serviço | Christino';
 
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
-  const [workPermission, setWorkPermission] = useState(-1);
-  const [cliePermission, setCliePermission] = useState(-1);
   const storage = useLocalStorage();
+  const { workPermission } = useContext(UserPermissionsContext);
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
@@ -78,6 +78,7 @@ export const WorksPage: React.FC = () => {
   }, [getWorkError]);
 
   if(workPermission === 0) {
+    alert('Usuário não tem acesso ao módulo de ordem de serviço!');
     return <Navigate to="/" replace />;
   }
 
@@ -89,10 +90,9 @@ export const WorksPage: React.FC = () => {
 
   return (
     <>
-      <Layout setPermissions={(perms) => { setWorkPermission(perms.workPermission); setCliePermission(perms.cliePermission); }}>
+      <Layout>
         <WorksFiltersCard
           onCreateClick={onCreateClick}
-          workPermission={workPermission}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
         />
 
@@ -113,13 +113,13 @@ export const WorksPage: React.FC = () => {
         </Card>
       </Layout>
 
-      <WorksDetailsModal
-        isOpen={detailsModal}
-        onClose={onDetailsModalClose}
-        work={works?.data.find((el) => el.id === workIdToDetails)}
-        workPermission={workPermission}
-        cliePermission={cliePermission}
-      />
+      {detailsModal && (
+        <WorksDetailsModal
+          isOpen={detailsModal}
+          onClose={onDetailsModalClose}
+          work={works?.data.find((el) => el.id === workIdToDetails)}
+        />
+      )}
     </>
   );
 };

@@ -1,28 +1,29 @@
 import { IService, ISector } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
 
+import { ClientsSearchInput } from '~/components/Clients/SearchInput';
 import { Button } from '~/components/UI/Button';
 import { Select, Input, DatePicker } from '~/components/UI/Form';
-import { useSWR } from '~/hooks/useSWR';
+import { UserPermissionsContext } from '~/contexts/UserPermissions';
+import { useSWR } from '~/hooks';
 import { IWorksRequestFilters } from '~/interfaces';
 import { worksStatus as status } from '~/utils/commonSelectOptions';
 import { formatDatabaseDate } from '~/utils/formatString';
 import { onValueInputFocus, onValueInputBlur } from '~/utils/handleInputFormat';
 
-import { ClientsSearchInput } from '../Clients/SearchInput';
 import { FiltersCard, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IWorksFiltersCardProps {
   onFiltersApplyClick: (data: Omit<IWorksRequestFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
-  workPermission: number;
 }
 
-export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, workPermission }) => {
+export const WorksFiltersCard: React.FC<IWorksFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const formRef = useRef<FormHandles>(null);
+  const { workPermission } = useContext(UserPermissionsContext);
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */

@@ -1,72 +1,33 @@
-import { IUser } from '@christino-sgi/common';
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { FaSignOutAlt, FaCog } from 'react-icons/fa';
-import ReactLoading from 'react-loading';
 import { useNavigate } from 'react-router-dom';
 
 import { AppNav } from '~/components/AppNav';
 import { Button } from '~/components/UI/Button';
 import { useLocalStorage } from '~/hooks';
-import { IUserPermissions } from '~/interfaces';
-import { api } from '~/utils/api';
 
 import { AppContent, AppMain, AppHeader } from './styles';
 
-interface ILayoutProps {
-  setPermissions?: (perms: IUserPermissions) => void;
-}
-
-export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => {
+export const Layout: React.FC = ({ children }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
   const navigate = useNavigate();
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
-  const [perms, setLocalPerms] = useState<IUserPermissions>();
   /* END DATA STATE AND REFS */
 
   /* - BOOLEAN STATES - */
-  const [validFinished, setValidFinished] = useState(false);
   /* END BOOLEAN STATES */
-
-  const validate = useCallback(async () => {
-    try {
-      const response = await api.get<IUser>('/users/valid', { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-
-      setLocalPerms(response.data);
-
-      if(setPermissions) {
-        setPermissions(response.data);
-      }
-    } catch(err) {
-      storage.setItem('token', null);
-      navigate('/login');
-    }
-
-    setValidFinished(true);
-  }, [navigate, setPermissions, storage]);
 
   const onLogout = () => {
     navigate('/login');
     storage.setItem('token', null);
   };
 
-  useEffect(() => {
-    validate();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  if(!validFinished) {
-    return (
-      <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <ReactLoading type="bars" />
-      </div>
-    );
-  }
-
   return (
     <>
-      <AppNav perms={perms} />
+      <AppNav />
       <AppMain>
         <AppHeader>
           <div className="user-name">
@@ -82,6 +43,7 @@ export const Layout: React.FC<ILayoutProps> = ({ children, setPermissions }) => 
 
         <AppContent>
           { children }
+
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50 }}>
             CHRISTINO - SISTEMA DE GESTAO INTERNO v0.0.27 (07/03/2021)
           </div>

@@ -17,3 +17,6 @@
 - **[web]** Bug fix;
 - **[server]** Bug fix;
 - Github workflows re-adicionados;
+
+### SERVER 0.5.14 | WEB 0.0.29 (21/03/2021)
+- **[web]** Mudado a forma de salvar as permissões do usuário;

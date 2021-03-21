@@ -5,8 +5,8 @@ import { Line } from 'react-chartjs-2';
 import { useTheme } from 'styled-components';
 
 import { Layout } from '~/components/Layout';
-import { useSWR } from '~/hooks/useSWR';
 import { Card } from '~/components/UI/Card';
+import { useSWR } from '~/hooks';
 
 import { HomePageContainer } from './styles';
 
@@ -103,20 +103,6 @@ export const HomePage: React.FC = () => {
         </Card>
 
         <Card style={{ gridArea: 'E' }}>
-          <Line
-            data={{
-              labels: commonLabels,
-              datasets: [{
-                label: 'ESCRITORIO',
-                data: [cEscr(0), cEscr(1), cEscr(2), cEscr(3), cEscr(4), cEscr(5), cEscr(6), cEscr(7), cEscr(8), cEscr(9), cEscr(10), cEscr(11)],
-                ...commonDataset,
-              }],
-            }}
-            options={commonOptions}
-          />
-        </Card>
-
-        <Card style={{ gridArea: 'C' }}>
           <Line
             data={{
               labels: commonLabels,

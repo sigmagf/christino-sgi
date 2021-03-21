@@ -1,25 +1,25 @@
 import { IService, IWork } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { FaPlus } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
+import { ClientsDetailsModal } from '~/components/Clients/DetailsModal';
+import { ClientsSearchInput } from '~/components/Clients/SearchInput';
 import { Button } from '~/components/UI/Button';
 import { Input, Select, TextArea } from '~/components/UI/Form';
 import { Modal } from '~/components/UI/Modal';
 import { Table } from '~/components/UI/Table';
-import { useLocalStorage } from '~/hooks';
-import { useSWR } from '~/hooks/useSWR';
+import { UserPermissionsContext } from '~/contexts/UserPermissions';
+import { useLocalStorage, useSWR } from '~/hooks';
 import { api } from '~/utils/api';
 import { worksStatus } from '~/utils/commonSelectOptions';
 import { formatMoney, formatDate } from '~/utils/formatString';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { onValueInputBlur, onValueInputFocus } from '~/utils/handleInputFormat';
 
-import { ClientsDetailsModal } from '../Clients/DetailsModal';
-import { ClientsSearchInput } from '../Clients/SearchInput';
 import { WorksDetailsModalForm, WorksDetailsActionButtons, WorksDetailsLoadingContainer } from './styles';
 
 interface IFormData {
@@ -36,13 +36,12 @@ interface IWorksDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   work?: IWork;
-  workPermission: number;
-  cliePermission: number;
 }
 
-export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work, workPermission, cliePermission }) => {
-  const storage = useLocalStorage();
+export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, onClose, work }) => {
+  const { workPermission } = useContext(UserPermissionsContext);
 
+  const storage = useLocalStorage();
   const formRef = useRef<FormHandles>(null);
 
   const [cadClientModal, setCadClientModal] = useState(false);
@@ -220,7 +219,6 @@ export const WorksDetailsModal: React.FC<IWorksDetailsModalProps> = ({ isOpen, o
       <ClientsDetailsModal
         isOpen={cadClientModal}
         onClose={() => setCadClientModal(false)}
-        cliePermission={cliePermission}
       />
     </>
   );

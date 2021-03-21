@@ -41,5 +41,5 @@ export interface IUserAuth {
   token: string;
 }
 
-export type IUserPermissions = Omit<IUser, 'id'|'name'|'email'|'password'|'createdAt'|'updatedAt'>;
+export type IUserPermissions = Omit<IUser, 'id'|'name'|'email'|'password'|'pwdResetToken'|'pwdResetExpires'|'createdAt'|'updatedAt'>;
 /* END BACKEND */

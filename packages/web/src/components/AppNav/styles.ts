@@ -1,8 +1,6 @@
 import { lighten, shade } from 'polished';
 import styled, { css } from 'styled-components';
 
-/* INTERFACES */
-
 interface IAppnavCommonStyledProps {
   expanded: boolean;
 }
@@ -10,8 +8,6 @@ interface IAppnavCommonStyledProps {
 interface IAppnavItemStyledProps {
   selected: boolean;
 }
-
-/* CSS ONLY */
 
 const appnavExpandedItemLabel = css`
   display: flex;

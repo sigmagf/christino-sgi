@@ -35,7 +35,6 @@ export const VehiclesUploadCRLVeModal: React.FC<IUploadCRLVeModal> = ({ isOpen, 
 
       try {
         await api.post(`/vehicles/${vehicleId}/crlve`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
-        // ;
 
         toast.success('CRLV-e enviado com sucesso!');
         onUploadSuccess();

@@ -1,22 +1,24 @@
 import { IVehicle } from '@christino-sgi/common';
 import { FormHandles, SubmitHandler } from '@unform/core';
-import React, { useRef, useState, useEffect } from 'react';
+import { AxiosResponse } from 'axios';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { FaEye, FaPlus, FaUpload } from 'react-icons/fa';
 import ReactLoading from 'react-loading';
 import { toast } from 'react-toastify';
 import * as yup from 'yup';
 
+import { ClientsDetailsModal } from '~/components/Clients/DetailsModal';
+import { ClientsSearchInput } from '~/components/Clients/SearchInput';
 import { Button } from '~/components/UI/Button';
 import { Input, Select } from '~/components/UI/Form';
 import { Modal } from '~/components/UI/Modal';
+import { UserPermissionsContext } from '~/contexts/UserPermissions';
 import { useLocalStorage } from '~/hooks';
 import { api } from '~/utils/api';
 import { vehicleStatus as status } from '~/utils/commonSelectOptions';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
 import { onInputBlurMaxLength } from '~/utils/handleInputFormat';
 
-import { ClientsDetailsModal } from '../../Clients/DetailsModal';
-import { ClientsSearchInput } from '../../Clients/SearchInput';
 import { VehiclesUploadCRLVeModal } from '../UploadCRLVeModal';
 import { VehiclesUploadWithdrawalModal } from '../UploadWithdrawalModal';
 import { VehiclesWithdrawalProtocolModal } from '../WithdrawalProtocolModal';
@@ -39,14 +41,14 @@ interface IDetailsModalProps {
   vehicle?: IVehicle;
   onChange: (vehicle: IVehicle) => void;
   onCRLVeViewClick: (id: string) => Promise<void>;
-  despPermission: number;
-  cliePermission: number;
+  onWithdrawalViewClick: (id: string) => Promise<void>;
 }
 
-export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle, onChange, onCRLVeViewClick, despPermission, cliePermission }) => {
+export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onClose, vehicle, onChange, onCRLVeViewClick, onWithdrawalViewClick }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const storage = useLocalStorage();
   const formDetailsRef = useRef<FormHandles>(null);
+  const { despPermission } = useContext(UserPermissionsContext);
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
@@ -76,21 +78,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
   const handleGetWithdrawal = async () => {
     if(vehicle) {
       setInLoadingFile(true);
-
-      try {
-        const response = await api.get(`/vehicles/${vehicle.id}/withdrawal`, { headers: { authorization: `Bearer ${storage.getItem('token')}` }, responseType: 'blob' });
-        const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-
-        // eslint-disable-next-line no-restricted-globals
-        const win = window.open(url, 'popup', `width=${screen.width},height=${screen.height}`);
-
-        if(!win) {
-          toast.error('Ative o popup em seu navegador.');
-        }
-      } catch(err) {
-        handleHTTPRequestError(err);
-      }
-
+      await onWithdrawalViewClick(vehicle.id);
       setInLoadingFile(false);
     }
   };
@@ -103,7 +91,7 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
       try {
         if(window.confirm('Deseja realmente excluir este veículo?')) {
-          await api.delete(`/vehicles/${vehicle.id}`, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+          await api.delete(`/vehicles/${vehicle.id}`);
           toast.success('Veículo excluido com sucesso!');
           onClose();
         }
@@ -131,13 +119,19 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
       await scheme.validate(data, { abortEarly: false });
 
+      let response: AxiosResponse<IVehicle>;
       if(vehicle) {
-        await api.put<IVehicle>(`/vehicles/${vehicle.id}`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        response = await api.put<IVehicle>(`/vehicles/${vehicle.id}`, data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       } else {
-        await api.post<IVehicle>('/vehicles', data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
+        response = await api.post<IVehicle>('/vehicles', data, { headers: { authorization: `Bearer ${storage.getItem('token')}` } });
       }
 
       onClose();
+
+      if(response) {
+        onChange(response.data);
+      }
+
       toast.success(`Veículo ${vehicle ? 'atualizado' : 'cadastrado'} com sucesso!`);
     } catch(err) {
       if(err instanceof yup.ValidationError) {
@@ -287,7 +281,6 @@ export const VehiclesDetailsModal: React.FC<IDetailsModalProps> = ({ isOpen, onC
 
       <ClientsDetailsModal
         isOpen={cadClientModal}
-        cliePermission={cliePermission}
         onClose={() => setCadClientModal(false)}
       />
     </>

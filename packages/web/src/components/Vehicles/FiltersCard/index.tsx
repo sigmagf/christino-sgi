@@ -1,25 +1,26 @@
 import { FormHandles } from '@unform/core';
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import { FaPlus, FaFilter } from 'react-icons/fa';
 
+import { ClientsSearchInput } from '~/components/Clients/SearchInput';
 import { Button } from '~/components/UI/Button';
 import { Select, Input } from '~/components/UI/Form';
-import { useSWR } from '~/hooks/useSWR';
+import { UserPermissionsContext } from '~/contexts/UserPermissions';
+import { useSWR } from '~/hooks';
 import { IVehiclesRequestFilters } from '~/interfaces';
 import { vehiclePlateEnd as plateEnd, vehicleStatus as status } from '~/utils/commonSelectOptions';
 
-import { ClientsSearchInput } from '../../Clients/SearchInput';
 import { FiltersCardContainer, FiltersCardActionButtons, FiltersCardForm } from './styles';
 
 interface IFiltersCardProps {
   onFiltersApplyClick: (data: Omit<IVehiclesRequestFilters, 'page'|'limit'>) => void;
   onCreateClick: () => void;
-  despPermission: number;
 }
 
-export const VehiclesFiltersCard: React.FC<IFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick, despPermission }) => {
+export const VehiclesFiltersCard: React.FC<IFiltersCardProps> = ({ onCreateClick, onFiltersApplyClick }) => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const formRef = useRef<FormHandles>(null);
+  const { despPermission } = useContext(UserPermissionsContext);
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
@@ -29,18 +30,16 @@ export const VehiclesFiltersCard: React.FC<IFiltersCardProps> = ({ onCreateClick
   /* - BOOLEAN STATES - */
   /* END BOOLEAN STATES */
 
-  const includeTruckOptions = [
-    {
-      value: '0',
-      label: 'SEM CAMINHOES',
-    }, {
-      value: '1',
-      label: 'COM CAMINHOES',
-    }, {
-      value: '2',
-      label: 'SÓ CAMINHOES',
-    },
-  ];
+  const includeTruckOptions = [{
+    value: '0',
+    label: 'SEM CAMINHOES',
+  }, {
+    value: '1',
+    label: 'COM CAMINHOES',
+  }, {
+    value: '2',
+    label: 'SÓ CAMINHOES',
+  }];
 
   const handleGroups = () => {
     if(groups) {

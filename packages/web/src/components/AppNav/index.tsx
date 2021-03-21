@@ -1,12 +1,11 @@
 import React from 'react';
 import { IconType } from 'react-icons';
-import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, FaReceipt, FaUser } from 'react-icons/fa';
+import { FaHome, FaAngleLeft, FaAngleRight, FaUsers, FaCar, FaReceipt } from 'react-icons/fa';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import LogoWithText from '~/assets/logo-texto.png';
 import LogoWithoutText from '~/assets/logo.png';
 import { usePersistedState } from '~/hooks';
-import { IUserPermissions } from '~/interfaces';
 
 import { AppnavContainer, AppnavContent, AppnavControllers, AppnavHeader, AppnavItem } from './styles';
 
@@ -17,11 +16,7 @@ interface IMenuItem {
   path: string;
 }
 
-interface IAppnavProps {
-  perms?: IUserPermissions;
-}
-
-export const AppNav: React.FC<IAppnavProps> = ({ perms }) => {
+export const AppNav: React.FC = () => {
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -52,11 +47,6 @@ export const AppNav: React.FC<IAppnavProps> = ({ perms }) => {
       label: 'Clientes',
       path: '/clients',
     },
-    (perms && perms.userPermission > 1) ? {
-      icon: FaUser,
-      label: 'Usuários',
-      path: '/users',
-    } : null,
   ];
 
   return (

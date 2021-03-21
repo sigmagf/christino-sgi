@@ -1,5 +1,5 @@
 import { IClient, IPagination } from '@christino-sgi/common';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -10,8 +10,9 @@ import { Layout } from '~/components/Layout';
 import { Button } from '~/components/UI/Button';
 import { Card } from '~/components/UI/Card';
 import { Paginator } from '~/components/UI/Paginator';
+import { UserPermissionsContext } from '~/contexts/UserPermissions';
 import { useLocalStorage } from '~/hooks';
-import { useSWR } from '~/hooks/useSWR';
+import { useSWR } from '~/hooks';
 import { IClientsRequestFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
@@ -23,8 +24,8 @@ export const ClientsPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
 
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
-  const [cliePermission, setCliePermission] = useState(-1);
   const storage = useLocalStorage();
+  const { cliePermission } = useContext(UserPermissionsContext);
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
   /* - DATA STATE AND REFS - */
@@ -69,19 +70,20 @@ export const ClientsPage: React.FC = () => {
     }
   }, [getClientsError]);
 
-  if(cliePermission === 0) {
-    return <Navigate to="/" replace />;
-  }
-
   const printButton = (
     <Button variant="info" disabled={inLoadingPrint} onClick={onPrintClick}>
       <FaPrint />&nbsp;&nbsp;&nbsp;IMPRIMIR
     </Button>
   );
 
+  if(cliePermission < 1) {
+    alert('Usuário não tem acesso ao modulo de clientes!');
+    return <Navigate to="/" />;
+  }
+
   return (
     <>
-      <Layout setPermissions={(perms) => setCliePermission(perms.cliePermission)}>
+      <Layout>
         <ClientsDataTable inLoading={inLoading} clients={clients?.data} onDetailsClick={onDetailsClick} />
 
         <Card style={{ margin: '15px 0' }}>
@@ -94,12 +96,14 @@ export const ClientsPage: React.FC = () => {
           />
         </Card>
       </Layout>
-      <ClientsDetailsModal
-        isOpen={detailsModal}
-        onClose={onDetailsModalClose}
-        client={clients?.data.find((el) => el.id === clientIdToDetails)}
-        cliePermission={cliePermission}
-      />
+
+      {detailsModal && (
+        <ClientsDetailsModal
+          isOpen={detailsModal}
+          onClose={onDetailsModalClose}
+          client={clients?.data.find((el) => el.id === clientIdToDetails)}
+        />
+      )}
     </>
   );
 };

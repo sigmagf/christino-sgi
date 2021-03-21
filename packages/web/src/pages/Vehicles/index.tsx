@@ -1,5 +1,5 @@
 import { IPagination, IVehicle } from '@christino-sgi/common';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { FaPrint } from 'react-icons/fa';
 import { Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -11,8 +11,8 @@ import { Paginator } from '~/components/UI/Paginator';
 import { VehiclesDataTable } from '~/components/Vehicles/DataTable';
 import { VehiclesDetailsModal } from '~/components/Vehicles/DetailsModal';
 import { VehiclesFiltersCard } from '~/components/Vehicles/FiltersCard';
-import { useLocalStorage } from '~/hooks';
-import { useSWR } from '~/hooks/useSWR';
+import { UserPermissionsContext } from '~/contexts/UserPermissions';
+import { useLocalStorage, useSWR } from '~/hooks';
 import { IVehiclesRequestFilters } from '~/interfaces';
 import { api } from '~/utils/api';
 import { handleHTTPRequestError } from '~/utils/handleHTTPRequestError';
@@ -24,9 +24,8 @@ export const VehiclesPage: React.FC = () => {
   document.title = 'Veiculos | Christino';
 
   /* - VARIABLES INSTANTIATE AND USER PERMISSIONS - */
-  const [despPermission, setDespPermission] = useState(-1);
-  const [cliePermission, setCliePermission] = useState(-1);
   const storage = useLocalStorage();
+  const { despPermission } = useContext(UserPermissionsContext);
   let winCRLVe: Window | null;
   /* END VARIABLES INSTANTIATE AND USER PERMISSIONS */
 
@@ -52,6 +51,7 @@ export const VehiclesPage: React.FC = () => {
     setVehicleIdToDetails(vehicle.id);
   };
 
+  /* - HANDLE GET CRLV-e - */
   const onCRLVeViewClick = async (id: string) => {
     try {
       const response = await api.get(`/vehicles/${id}/crlve`, { headers: { authorization: `Bearer ${storage.getItem('token')}` }, responseType: 'blob' });
@@ -65,6 +65,23 @@ export const VehiclesPage: React.FC = () => {
       winCRLVe = window.open(url, 'popup', `width=${screen.width},height=${screen.height}`);
 
       if(!winCRLVe) {
+        toast.error('Ative o popup em seu navegador.');
+      }
+    } catch(err) {
+      handleHTTPRequestError(err);
+    }
+  };
+
+  /* - HANDLE GET WITHDRAWAL */
+  const onWithdrawalViewClick = async (id: string) => {
+    try {
+      const response = await api.get(`/vehicles/${id}/withdrawal`, { headers: { authorization: `Bearer ${storage.getItem('token')}` }, responseType: 'blob' });
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+
+      // eslint-disable-next-line no-restricted-globals
+      const win = window.open(url, 'popup', `width=${screen.width},height=${screen.height}`);
+
+      if(!win) {
         toast.error('Ative o popup em seu navegador.');
       }
     } catch(err) {
@@ -102,6 +119,7 @@ export const VehiclesPage: React.FC = () => {
   }, [getVehiclesError]);
 
   if(despPermission === 0) {
+    alert('Usuário não tem acesso ao módulo veículos!');
     return <Navigate to="/" replace />;
   }
 
@@ -113,10 +131,9 @@ export const VehiclesPage: React.FC = () => {
 
   return (
     <>
-      <Layout setPermissions={(perms) => { setDespPermission(perms.despPermission); setCliePermission(perms.cliePermission); }}>
+      <Layout>
         <VehiclesFiltersCard
           onCreateClick={onCreateClick}
-          despPermission={despPermission}
           onFiltersApplyClick={(data) => setFilters({ ...filters, ...data, page: 1 })}
         />
 
@@ -138,15 +155,16 @@ export const VehiclesPage: React.FC = () => {
         </Card>
       </Layout>
 
-      <VehiclesDetailsModal
-        isOpen={detailsModal}
-        onClose={onDetailsModalClose}
-        vehicle={vehicles?.data.find((el) => el.id === vehicleIdToDetails)}
-        onChange={onVehicleChange}
-        onCRLVeViewClick={onCRLVeViewClick}
-        despPermission={despPermission}
-        cliePermission={cliePermission}
-      />
+      {detailsModal && (
+        <VehiclesDetailsModal
+          isOpen={detailsModal}
+          onClose={onDetailsModalClose}
+          vehicle={vehicles?.data.find((el) => el.id === vehicleIdToDetails)}
+          onChange={onVehicleChange}
+          onCRLVeViewClick={onCRLVeViewClick}
+          onWithdrawalViewClick={onWithdrawalViewClick}
+        />
+      )}
     </>
   );
 };

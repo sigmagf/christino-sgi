@@ -1,6 +1,4 @@
 import React from 'react';
-import { isMobile } from 'react-device-detect';
-import { FaExclamationTriangle } from 'react-icons/fa';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
 
@@ -10,7 +8,6 @@ import { theme } from '~/styles/theme';
 import { StyledToastContainer } from './components/StyledToastContainer';
 import { NotFoundErrorPage } from './pages/404';
 import { ClientsPage } from './pages/Clients';
-import { ForgotPasswordPage } from './pages/ForgotPassword';
 import { HomePage } from './pages/Home';
 import { LoginPage } from './pages/Login';
 import { ResetPasswordPage } from './pages/ResetPassword';
@@ -21,44 +18,27 @@ import { SecureRoute } from './utils/secureRoute';
 export const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
-      {isMobile ? (
-        <div className="in-mobile">
-          <div>
-            <FaExclamationTriangle size={200} />
-            <h1>
-              SISTEMA NÃO DISPONIVEL
-            </h1>
-            <h6>
-              O sistema deve ser acessado pelo computador, agradecemos a compreenção!
-            </h6>
-          </div>
-        </div>
-      ) : (
-        <>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/forgotPassword" element={<ForgotPasswordPage />} />
-              <Route path="/resetPassword/:token" element={<ResetPasswordPage />} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/resetPassword/:token" element={<ResetPasswordPage />} />
 
-              <SecureRoute path="/" element={<HomePage />} />
-              <SecureRoute path="/vehicles" element={<VehiclesPage />} />
-              <SecureRoute path="/clients" element={<ClientsPage />} />
-              <SecureRoute path="/works" element={<WorksPage />} />
+          <SecureRoute path="/" element={<HomePage />} />
+          <SecureRoute path="/vehicles" element={<VehiclesPage />} />
+          <SecureRoute path="/clients" element={<ClientsPage />} />
+          <SecureRoute path="/works" element={<WorksPage />} />
 
-              <Route path="*" element={<NotFoundErrorPage />} />
-            </Routes>
-          </BrowserRouter>
+          <Route path="*" element={<NotFoundErrorPage />} />
+        </Routes>
+      </BrowserRouter>
 
-          <StyledToastContainer
-            pauseOnHover
-            newestOnTop
-            position="top-center"
-            limit={5}
-            autoClose={10000}
-          />
-        </>
-      )}
+      <StyledToastContainer
+        pauseOnHover
+        newestOnTop
+        position="top-center"
+        limit={5}
+        autoClose={10000}
+      />
       <GlobalStyle />
     </ThemeProvider>
   );
