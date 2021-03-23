@@ -44,9 +44,8 @@ export const Layout: React.FC = ({ children }) => {
         <AppContent>
           { children }
 
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 50 }}>
-            CHRISTINO - SISTEMA DE GESTAO INTERNO v0.0.27 (07/03/2021)
-            <br />
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column', height: 50 }}>
+            <span>CHRISTINO - SISTEMA DE GESTAO INTERNO v0.0.27 (07/03/2021)</span>
             <span>
               CRIADO POR <a href="https://github.com/sigmagf" style={{ color: '#fff'}}  onClick={(e) => { e.preventDefault(); window.open('https://github.com/sigmagf'); }}>JOÃO GABRIEL</a>.
             </span>
